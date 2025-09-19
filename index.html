@@ -121,6 +121,7 @@
       justify-content: center;
       gap: 0.8rem;
       margin-bottom: 0.3rem;
+      flex-wrap: wrap;
     }
     .conta-btn {
       padding: .54rem .9rem;
@@ -139,11 +140,54 @@
       color: #fff;
       transform: scale(1.14);
     }
-    /* Mascote infantil */
     .mascote {
       font-size: 1.85rem;
       margin-bottom: .5rem;
       display: block;
+    }
+    #dica-texto {
+      margin-top: 8px;
+      font-style: italic;
+      color: #4a4a4a;
+    }
+    #contas-personalizadas {
+      margin-top: 15px;
+      padding: 10px;
+      background: #e6f7ff;
+      border-radius: 10px;
+      font-size: 1rem;
+      color: #073763;
+      box-shadow: inset 0 0 8px #b3d9ff;
+    }
+    input[type="number"], select {
+      padding: 0.4rem 0.6rem;
+      margin: 0 .2rem 0 .2rem;
+      font-size: 1.05rem;
+      border-radius: 6px;
+      border: 2px solid #5ee978;
+      width: 60px;
+      text-align: center;
+      outline:none;
+    }
+    input[type="number"]:focus, select:focus {
+      border-color: #07c875;
+    }
+    #btn-resolver-personalizado {
+      background: #5ee978;
+      color: #275031;
+      font-weight: bold;
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      border: none;
+      font-size: 1.1rem;
+      margin-left: 8px;
+      transition: background 0.25s ease;
+    }
+    #btn-resolver-personalizado:hover {
+      background: #07c875;
+      color: white;
+      transform: scale(1.08);
     }
   </style>
 </head>
@@ -171,6 +215,8 @@
         <div class="jogo-titulo">Jogo das Letras ✏️</div>
         <div id="letras-jogo" class="jogo-letras"></div>
         <div id="letras-botoes"></div>
+        <button onclick="mostrarDica()" class="conta-btn" style="background:#339af0;">Mostrar Dica</button>
+        <div id="dica-texto"></div>
         <div id="letras-mensagem"></div>
         <button onclick="iniciaJogoLetras()" style="margin-top:.9rem;background:#ffd23f;" class="conta-btn">Novo Jogo</button>
       </div>
@@ -184,6 +230,21 @@
           <div id="conta-mensagem"></div>
         </div>
         <button onclick="novaConta()" style="background:#5ee978;" class="conta-btn">Nova Conta</button>
+        <div id="contas-personalizadas">
+          <h3>Conta Personalizada</h3>
+          <label for="num1">Número 1:</label>
+          <input type="number" id="num1" min="0" max="100" />
+          <select id="operacao-personalizada">
+            <option value="+">+</option>
+            <option value="-">-</option>
+            <option value="*">x</option>
+            <option value="/">÷</option>
+          </select>
+          <label for="num2">Número 2:</label>
+          <input type="number" id="num2" min="0" max="100" />
+          <button id="btn-resolver-personalizado" onclick="resolverContaPersonalizada()">Resolver</button>
+          <div id="resultado-personalizado" style="margin-top:10px;font-weight:bold;"></div>
+        </div>
       </div>
     </div>
   </section>
@@ -217,23 +278,31 @@
 
     /* === Jogo das Letras === */
     const palavras = [
-      {texto: "GATO", dica: "Animal que mia"},
       {texto: "SOL", dica: "Brilha no céu"},
-      {texto: "SAPO", dica: "Pula e faz croac"},
-      {texto: "BOLA", dica: "Tem formato redondo"},
-      {texto: "FLOR", dica: "Nasce no jardim"},
+      {texto: "BOLA", dica: "Serve para brincar e rolar"},
+      {texto: "GATO", dica: "Animal que mia"},
+      {texto: "SAPO", dica: "Verde, pula e adora lagoas"},
       {texto: "PEIXE", dica: "Nada na água"},
-      {texto: "FADA", dica: "Tem asas e pó mágico"},
-      {texto: "LUA", dica: "Aparece à noite"},
+      {texto: "LUA", dica: "Aparece de noite"},
+      {texto: "URSO", dica: "Animal grande e peludo"},
+      {texto: "FLOR", dica: "Colorida, cheirosa e nasce no jardim"},
+      {texto: "FADA", dica: "Tem asas e espalha pó mágico"},
       {texto: "RATO", dica: "Gosta de queijo"},
-      {texto: "URSO", dica: "Bem peludo!"},
+      {texto: "PIPOLHO", dica: "Inseto na cabeça"},
+      {texto: "SABONETE", dica: "Usa-se para ficar limpo"},
+      {texto: "VENTO", dica: "Sente mas não vê"},
+      {texto: "LIVRO", dica: "Tem páginas, letras e conta histórias"},
+      {texto: "PIOLHO", dica: "Vida difícil, vive de cabeça em cabeça"}
     ];
     let palavraSorteada = null;
     let letrasDescobertas = [];
     let tentativasLetras = 0;
+    let dicaMostrada = false;
 
     function iniciaJogoLetras() {
       document.getElementById("letras-mensagem").textContent = '';
+      document.getElementById("dica-texto").textContent = '';
+      dicaMostrada = false;
       tentativasLetras = 0;
       palavraSorteada = palavras[Math.floor(Math.random() * palavras.length)];
       letrasDescobertas = Array(palavraSorteada.texto.length).fill(null);
@@ -247,7 +316,7 @@
       }).join('');
       document.getElementById("letras-jogo").innerHTML = `
         <div style="font-size:.94rem;margin-bottom:.7rem;">
-         <span style="color:#e58c36">Dica:</span> ${palavraSorteada.dica}
+         Palavras de ${palavraSorteada.texto.length} letras
         </div>${slots}`;
     }
 
@@ -261,6 +330,7 @@
     }
 
     function tentaLetra(letra) {
+      if (dicaMostrada === false) document.getElementById("dica-texto").textContent = '';
       let encontrou = false;
       palavraSorteada.texto.split('').forEach((l, idx) => {
         if (l === letra) {
@@ -279,26 +349,48 @@
         Array.from(document.getElementsByClassName("letras-btn")).forEach(btn => btn.disabled = true);
       }
     }
+    function mostrarDica() {
+      if (!dicaMostrada && palavraSorteada) {
+        document.getElementById("dica-texto").textContent = "Dica: " + palavraSorteada.dica;
+        dicaMostrada = true;
+      }
+    }
 
     /* === Jogo das Continhas === */
     function geraConta() {
-      const a = Math.floor(Math.random()*8)+2;
-      const b = Math.floor(Math.random()*8)+1;
-      const operacao = Math.random() > 0.6 ? '-' : '+';
+      const a = Math.floor(Math.random()*20)+1;
+      const b = Math.floor(Math.random()*20)+1;
+      const ops = ['+', '-', '*', '/'];
+      const operacao = ops[Math.floor(Math.random() * ops.length)];
       let pergunta = '';
       let respostaCerta = 0;
-      if (operacao === '+') {
-        pergunta = `${a} + ${b}`;
-        respostaCerta = a + b;
-      } else {
-        pergunta = `${(a+b)} - ${b}`;
-        respostaCerta = a;
+      switch(operacao) {
+        case '+':
+          pergunta = `${a} + ${b}`;
+          respostaCerta = a + b;
+          break;
+        case '-':
+          let maior = Math.max(a,b);
+          let menor = Math.min(a,b);
+          pergunta = `${maior} - ${menor}`;
+          respostaCerta = maior - menor;
+          break;
+        case '*':
+          pergunta = `${a} x ${b}`;
+          respostaCerta = a * b;
+          break;
+        case '/':
+          // Ajustar para divisão exata
+          respostaCerta = a;
+          const dividido = a * b;
+          pergunta = `${dividido} ÷ ${b}`;
+          break;
       }
       // Embaralha opções
       const opcoes = [respostaCerta];
-      while (opcoes.length < 3) {
-        let sugestao = respostaCerta + Math.floor(Math.random()*5) - 2;
-        if (!opcoes.includes(sugestao) && sugestao > 0) opcoes.push(sugestao);
+      while (opcoes.length < 4) {
+        let sug = respostaCerta + Math.floor(Math.random()*7) - 3;
+        if (!opcoes.includes(sug) && sug >= 0) opcoes.push(sug);
       }
       return {
         pergunta,
@@ -306,6 +398,7 @@
         opcoes: opcoes.sort(() => Math.random() - 0.5)
       };
     }
+
     let contaAtual = null;
 
     function novaConta() {
@@ -326,7 +419,30 @@
       Array.from(document.getElementById("conta-opcoes").children).forEach(btn=>btn.disabled=true);
     }
 
-    // Inicializa jogos já prontos ao abrir a aba Jogos
+    /* === Conta personalizada === */
+    function resolverContaPersonalizada() {
+      const num1 = Number(document.getElementById("num1").value);
+      const num2 = Number(document.getElementById("num2").value);
+      const op = document.getElementById("operacao-personalizada").value;
+      if (isNaN(num1) || isNaN(num2)) {
+        alert("Por favor, insira números válidos.");
+        return;
+      }
+      if (op === '/' && num2 === 0) {
+        alert("Divisão por zero não é permitida.");
+        return;
+      }
+      let resultado = 0;
+      switch(op) {
+        case '+': resultado = num1 + num2; break;
+        case '-': resultado = num1 - num2; break;
+        case '*': resultado = num1 * num2; break;
+        case '/': resultado = (num1 / num2).toFixed(2); break;
+      }
+      document.getElementById("resultado-personalizado").textContent = `Resultado: ${resultado}`;
+    }
+
+    // Inicializa jogos ao carregar
     document.addEventListener("DOMContentLoaded", () => {
       iniciaJogoLetras();
       novaConta();
