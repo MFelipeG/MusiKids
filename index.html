@@ -46,126 +46,178 @@
     section {
       display: none;
       padding: 1rem;
+      max-width: 960px;
+      margin: 0 auto;
     }
     section.active {
       display: block;
     }
     .card {
       background: #fff;
-      padding: 1.2rem;
-      border-radius: 16px;
-      margin: 1.5rem auto;
-      width: 92%;
-      max-width: 440px;
-      box-shadow: 0 3px 10px rgba(50,100,200,0.09);
+      padding: 1.6rem 1.5rem;
+      border-radius: 20px;
+      margin: 2rem auto;
+      max-width: 920px;
+      box-shadow: 0 4px 14px rgba(50,100,200,0.1);
       font-family: inherit;
+      text-align: center;
     }
+    /* Estilo para abas internas */
+    #games-tab-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    #games-tab-buttons button {
+      padding: 0.7rem 1.4rem;
+      font-size: 1.15rem;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 1px 4px 10px #7abaff95;
+      background: #4dabf7;
+      color: white;
+      transition: background 0.3s ease, transform 0.17s ease;
+      min-width: 150px;
+    }
+    #games-tab-buttons button:hover {
+      background: #339af0;
+      transform: scale(1.06);
+    }
+    #games-tab-buttons button.active-tab {
+      background: #ff6b6b;
+      box-shadow: 1px 4px 14px #ff6b6bcc;
+      transform: scale(1.08);
+    }
+    /* Ajustes para jogo único mostrado */
+    .game-section {
+      display: none;
+      padding: 1.2rem 0;
+    }
+    .game-section.active-game {
+      display: block;
+    }
+
     /* Estilo infantil para jogos */
     .jogo-titulo {
-      font-size: 1.3rem;
+      font-size: 1.38rem;
       color: #f5921b;
-      margin-bottom: .7rem;
+      margin-bottom: 1rem;
       letter-spacing: .02em;
+      font-weight: bold;
     }
     .jogo-letras, .jogo-contas {
       background: #f7f6d2;
-      border-radius: 12px;
-      padding: 0.8rem;
-      margin: 10px 0 18px 0;
-      min-height: 70px;
+      border-radius: 14px;
+      padding: 1rem;
+      margin: 10px 0 20px 0;
+      min-height: 90px;
     }
     .letras-btn {
-      padding: .44rem .85rem;
-      margin: 0 .3rem .7rem .3rem;
+      padding: .5rem 1rem;
+      margin: 0 .35rem .85rem .35rem;
       border: none;
       background: #5ee978;
       color: #275031;
-      font-size: 1.25rem;
+      font-size: 1.3rem;
       font-family: inherit;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
       transition: background 0.2s, transform .15s;
+      min-width: 38px;
     }
     .letras-btn:hover {
       background: #07c875;
       color: #fff;
-      transform: scale(1.14);
+      transform: scale(1.15);
     }
     .letras-slot {
       display: inline-block;
-      min-width: 28px;
-      min-height: 38px;
-      font-size: 1.35rem;
-      margin: 0 4px;
-      border-bottom: 2px solid #ccc;
+      min-width: 32px;
+      min-height: 44px;
+      font-size: 1.5rem;
+      margin: 0 6px;
+      border-bottom: 3px solid #ccc;
+      font-weight: bold;
+      letter-spacing: 0.11rem;
     }
     .correto {
       color: #32a852;
-      font-weight: bold;
-      font-size: 1.2rem;
-      margin: .9rem 0 0 0;
+      font-weight: bolder;
+      font-size: 1.3rem;
+      margin: 1.1rem 0 0 0;
+      user-select: none;
     }
     .errado {
       color: #ea5454;
-      font-weight: bold;
-      font-size: 1.2rem;
-      margin: .9rem 0 0 0;
+      font-weight: bolder;
+      font-size: 1.3rem;
+      margin: 1.1rem 0 0 0;
+      user-select: none;
     }
     .conta-pergunta {
-      font-size: 1.15rem;
-      margin-bottom: 6px;
+      font-size: 1.25rem;
+      margin-bottom: 9px;
       color: #1565c0;
+      font-weight: 600;
     }
     .conta-opcoes {
       display: flex;
       justify-content: center;
-      gap: 0.8rem;
-      margin-bottom: 0.3rem;
+      gap: 1rem;
+      margin-bottom: 0.7rem;
       flex-wrap: wrap;
     }
     .conta-btn {
-      padding: .54rem .9rem;
-      margin-top: .17rem;
+      padding: .65rem 1.1rem;
+      margin-top: .25rem;
       border: none;
       background: #ffd23f;
       color: #514511;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       font-family: inherit;
-      border-radius: 8px;
+      border-radius: 12px;
       cursor: pointer;
       transition: background 0.15s, transform .14s;
+      min-width: 100px;
     }
     .conta-btn:hover {
       background: #f2ae2e;
       color: #fff;
-      transform: scale(1.14);
+      transform: scale(1.15);
     }
     .mascote {
-      font-size: 1.85rem;
-      margin-bottom: .5rem;
+      font-size: 2rem;
+      margin-bottom: .7rem;
       display: block;
+      user-select: none;
     }
     #dica-texto {
-      margin-top: 8px;
+      margin-top: 10px;
       font-style: italic;
       color: #4a4a4a;
+      user-select: none;
     }
     #contas-personalizadas {
-      margin-top: 15px;
-      padding: 10px;
+      margin-top: 25px;
+      padding: 15px;
       background: #e6f7ff;
-      border-radius: 10px;
-      font-size: 1rem;
+      border-radius: 14px;
+      font-size: 1.1rem;
       color: #073763;
-      box-shadow: inset 0 0 8px #b3d9ff;
+      box-shadow: inset 0 0 11px #b3d9ff;
+      text-align: center;
     }
     input[type="number"], select {
-      padding: 0.4rem 0.6rem;
-      margin: 0 .2rem 0 .2rem;
-      font-size: 1.05rem;
-      border-radius: 6px;
+      padding: 0.5rem 0.7rem;
+      margin: 0 .3rem 0 .3rem;
+      font-size: 1.1rem;
+      border-radius: 8px;
       border: 2px solid #5ee978;
-      width: 60px;
+      width: 70px;
       text-align: center;
       outline:none;
     }
@@ -176,18 +228,54 @@
       background: #5ee978;
       color: #275031;
       font-weight: bold;
-      padding: 0.55rem 1rem;
-      border-radius: 8px;
+      padding: 0.65rem 1.3rem;
+      border-radius: 12px;
       cursor: pointer;
       border: none;
-      font-size: 1.1rem;
-      margin-left: 8px;
+      font-size: 1.2rem;
+      margin-left: 12px;
       transition: background 0.25s ease;
     }
     #btn-resolver-personalizado:hover {
       background: #07c875;
       color: white;
-      transform: scale(1.08);
+      transform: scale(1.1);
+    }
+    /* Responsividade */
+    @media (max-width: 480px) {
+      .card {
+        margin: 1.1rem 0.5rem;
+        padding: 1rem;
+        width: 98%;
+      }
+      .letras-btn {
+        font-size: 1.1rem;
+        padding: .4rem .7rem;
+        min-width: 32px;
+      }
+      .conta-btn {
+        min-width: 80px;
+        font-size: 1rem;
+        padding: .5rem .8rem;
+      }
+      .letras-slot {
+        font-size: 1.25rem;
+        min-width: 26px;
+        min-height: 34px;
+      }
+      input[type="number"], select {
+        width: 50px;
+        font-size: 1rem;
+        padding: 0.4rem 0.5rem;
+      }
+      #btn-resolver-personalizado {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        margin-left: 6px;
+      }
+      #games-tab-buttons {
+        gap: 1rem;
+      }
     }
   </style>
 </head>
@@ -210,8 +298,13 @@
   <section id="games">
     <div class="card">
       <h2>Jogos Educativos 🎮</h2>
+      <div id="games-tab-buttons">
+        <button id="btn-letras" class="active-tab" onclick="mostrarJogo('letras')">Jogo das Letrinhas</button>
+        <button id="btn-contas" onclick="mostrarJogo('contas')">Jogo das Continhas</button>
+      </div>
+
       <!-- Jogo das Letras -->
-      <div>
+      <div id="jogo-letras" class="game-section active-game">
         <div class="jogo-titulo">Jogo das Letras ✏️</div>
         <div id="letras-jogo" class="jogo-letras"></div>
         <div id="letras-botoes"></div>
@@ -220,9 +313,9 @@
         <div id="letras-mensagem"></div>
         <button onclick="iniciaJogoLetras()" style="margin-top:.9rem;background:#ffd23f;" class="conta-btn">Novo Jogo</button>
       </div>
-      <hr style="margin:2.1rem 0 2.1rem 0;border:dashed #f7ac9b 1.5px;">
+
       <!-- Jogo das Continhas -->
-      <div>
+      <div id="jogo-contas" class="game-section">
         <div class="jogo-titulo">Jogo das Continhas ➕</div>
         <div class="jogo-contas">
           <div id="conta-pergunta" class="conta-pergunta"></div>
@@ -266,7 +359,7 @@
     </div>
   </section>
   <script>
-    // TAB navigation
+    // TAB navigation site inteiro
     function showTab(tabId) {
       document.querySelectorAll("nav button").forEach(btn => btn.classList.remove("active"));
       document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
@@ -274,6 +367,26 @@
       document.querySelectorAll("nav button").forEach((btn, idx) => {
         if (["home","games","music","stories"].indexOf(tabId) === idx) btn.classList.add("active");
       });
+    }
+
+    // Abas internas dentro do Jogos
+    function mostrarJogo(jogo) {
+      const botaoLetras = document.getElementById("btn-letras");
+      const botaoContas = document.getElementById("btn-contas");
+      const jogoLetras = document.getElementById("jogo-letras");
+      const jogoContas = document.getElementById("jogo-contas");
+
+      if (jogo === 'letras') {
+        botaoLetras.classList.add("active-tab");
+        botaoContas.classList.remove("active-tab");
+        jogoLetras.classList.add("active-game");
+        jogoContas.classList.remove("active-game");
+      } else {
+        botaoContas.classList.add("active-tab");
+        botaoLetras.classList.remove("active-tab");
+        jogoContas.classList.add("active-game");
+        jogoLetras.classList.remove("active-game");
+      }
     }
 
     /* === Jogo das Letras === */
