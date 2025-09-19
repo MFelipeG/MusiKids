@@ -1,200 +1,115 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Musikids Jogo das Letrinhas</title>
-  <style>
-    body {
-      font-family: 'Comic Sans MS', 'Baloo', Arial, sans-serif;
-      background: #f7f9fc;
-      margin: 0; padding: 1.5rem;
-      text-align: center;
-      color: #333;
-    }
-    h1 {
-      color: #f5921b;
-      margin-bottom: 1rem;
-      text-shadow: 1px 1px 2px #c78b2e;
-    }
-    .jogo-letras {
-      background: #f7f6d2;
-      border-radius: 14px;
-      padding: 1rem;
-      margin: 10px auto 20px auto;
-      max-width: 500px;
-      min-height: 90px;
-      user-select: none;
-      font-weight: bold;
-      font-size: 1.6rem;
-    }
-    .letras-btn {
-      padding: .5rem 1rem;
-      margin: 0 .35rem .85rem .35rem;
-      border: none;
-      background: #5ee978;
-      color: #275031;
-      font-size: 1.4rem;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.2s, transform .15s;
-      min-width: 38px;
-      font-family: inherit;
-    }
-    .letras-btn:hover {
-      background: #07c875;
-      color: #fff;
-      transform: scale(1.15);
-    }
-    .letras-slot {
-      display: inline-block;
-      min-width: 35px;
-      min-height: 46px;
-      font-size: 1.5rem;
-      margin: 0 6px;
-      border-bottom: 3px solid #ccc;
-      letter-spacing: 0.14rem;
-    }
-    #dica-texto {
-      margin-top: 15px;
-      font-style: italic;
-      color: #4a4a4a;
-    }
-    #msg {
-      margin-top: 20px;
-      font-weight: bold;
-      font-size: 1.3rem;
-    }
-    button#novo-jogo {
-      margin-top: 25px;
-      background: #ffd23f;
-      border: none;
-      padding: 1rem 2rem;
-      font-weight: bold;
-      font-size: 1.12rem;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: background 0.25s ease;
-    }
-    button#novo-jogo:hover {
-      background: #f2ae2e;
-    }
-    button#btn-dica {
-      background: #339af0;
-      border: none;
-      color: white;
-      padding: 0.8rem 1.8rem;
-      font-weight: 600;
-      margin-top: 15px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 1.1rem;
-      transition: background 0.25s ease;
-    }
-    button#btn-dica:hover {
-      background: #2370d9;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Quebra-Cabeça Simples</title>
+<style>
+  body {
+    font-family: 'Comic Sans MS', 'Baloo', Arial, sans-serif;
+    background: #f7f9fc;
+    color: #333;
+    text-align: center;
+    margin: 0; padding: 1.5rem;
+  }
+  h1 {
+    color: #e67e22;
+    margin-bottom: 1rem;
+    text-shadow: 1px 1px 3px #d37a14;
+  }
+  #quebra-cabeca {
+    width: 320px;
+    height: 320px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 5px;
+    user-select: none;
+  }
+  .peca {
+    background-image: url('https://i.imgur.com/1Q9Z1Z9.jpg');
+    background-size: 300% 300%;
+    border-radius: 12px;
+    cursor: grab;
+    border: 2px solid transparent;
+  }
+  .peca.dragging {
+    opacity: 0.7;
+    border-color: #27ae60;
+  }
+  button {
+    margin-top: 25px;
+    padding: 1rem 2rem;
+    background: #e67e22;
+    border: none;
+    border-radius: 12px;
+    font-weight: bold;
+    color: white;
+    font-size: 1.15rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  button:hover {
+    background: #d96613;
+  }
+</style>
 </head>
 <body>
-  <h1>Jogo das Letrinhas ✏️</h1>
-  <div class="jogo-letras" id="campo-palavra"></div>
-  <div id="botoes-letras"></div>
-  <button id="btn-dica" onclick="mostrarDica()">Mostrar Dica</button>
-  <div id="dica-texto"></div>
-  <div id="msg"></div>
-  <button id="novo-jogo" onclick="iniciarJogo()">Novo Jogo</button>
+  <h1>Quebra-Cabeça Simples 🧩</h1>
+  <div id="quebra-cabeca"></div>
+  <button onclick="embaralhar()">Embaralhar Peças</button>
+
   <script>
-    const palavras = [
-      {texto: "SOL", dica: "Brilha no céu"},
-      {texto: "BOLA", dica: "Serve para brincar e rolar"},
-      {texto: "GATO", dica: "Animal que mia"},
-      {texto: "SAPO", dica: "Verde, pula e adora lagoas"},
-      {texto: "PEIXE", dica: "Nada na água"},
-      {texto: "LUA", dica: "Aparece à noite"},
-      {texto: "URSO", dica: "Animal grande e peludo"},
-      {texto: "FLOR", dica: "Colorida, cheirosa e nasce no jardim"},
-      {texto: "FADA", dica: "Tem asas e espalha pó mágico"},
-      {texto: "RATO", dica: "Gosta de queijo"},
-      {texto: "PIPOLHO", dica: "Inseto na cabeça"},
-      {texto: "SABONETE", dica: "Usa-se para ficar limpo"},
-      {texto: "VENTO", dica: "Sente mas não vê"},
-      {texto: "LIVRO", dica: "Tem páginas, letras e conta histórias"},
-      {texto: "PIOLHO", dica: "Vida difícil, vive de cabeça em cabeça"}
-    ];
-    let palavraSelecionada = null;
-    let letrasReveladas = [];
-    let tentativas = 0;
-    let dicaRevelada = false;
+    const quebraCabeca = document.getElementById('quebra-cabeca');
+    const tamanho = 3; // 3x3 peças
+    let pecas = [];
 
-    function iniciarJogo() {
-      palavraSelecionada = palavras[Math.floor(Math.random() * palavras.length)];
-      letrasReveladas = Array(palavraSelecionada.texto.length).fill(null);
-      tentativas = 0;
-      dicaRevelada = false;
-      document.getElementById('dica-texto').textContent = '';
-      document.getElementById('msg').textContent = '';
-      montarPalavra();
-      montarBotoes();
-    }
-
-    function montarPalavra() {
-      const container = document.getElementById('campo-palavra');
-      container.innerHTML = palavraSelecionada.texto.split('').map((l, i) => {
-        return `<span class="letras-slot">${letrasReveladas[i] ? l.toUpperCase() : '_'}</span>`;
-      }).join('');
-    }
-
-    function montarBotoes() {
-      const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-      const container = document.getElementById('botoes-letras');
-      container.innerHTML = '';
-      for (const letra of letras) {
-        const estaDesabilitado = letrasReveladas.includes(letra);
-        const btn = document.createElement("button");
-        btn.textContent = letra;
-        btn.disabled = estaDesabilitado;
-        btn.className = "letras-btn";
-        btn.onclick = () => tentarLetra(letra);
-        container.appendChild(btn);
+    // Cria peças com background posicionado
+    function criarPecas() {
+      pecas = [];
+      quebraCabeca.innerHTML = '';
+      for(let i=0; i<tamanho*tamanho; i++) {
+        let peca = document.createElement('div');
+        peca.classList.add('peca');
+        // Calcula posição na imagem (zoom da imagem 300%)
+        let x = (i % tamanho) * 100;
+        let y = Math.floor(i / tamanho) * 100;
+        peca.style.backgroundPosition = `-${x}% -${y}%`;
+        peca.setAttribute('data-posicao', i);
+        peca.setAttribute('draggable', true);
+        quebraCabeca.appendChild(peca);
+        pecas.push(peca);
       }
     }
 
-    function tentarLetra(letra) {
-      if (!dicaRevelada) document.getElementById('dica-texto').textContent = '';
-      let acertou = false;
-      palavraSelecionada.texto.split('').forEach((l, i) => {
-        if (l === letra) {
-          letrasReveladas[i] = letra;
-          acertou = true;
-        }
-      });
-      montarPalavra();
-      montarBotoes();
-      tentativas++;
-      if (!acertou && tentativas > palavraSelecionada.texto.length + 2) {
-        document.getElementById('msg').innerHTML = `💨 Acabaram as tentativas! A palavra era <strong>${palavraSelecionada.texto}</strong>.`;
-        desabilitarBotoes();
-      } else if (!letrasReveladas.includes(null)) {
-        document.getElementById('msg').innerHTML = `🎉 Parabéns, você acertou!`;
-        desabilitarBotoes();
+    // Arrastar e soltar
+    let arrastandoPeca = null;
+
+    quebraCabeca.addEventListener('dragstart', (e) => {
+      arrastandoPeca = e.target;
+      e.target.classList.add('dragging');
+    });
+    quebraCabeca.addEventListener('dragend', (e) => {
+      e.target.classList.remove('dragging');
+      arrastandoPeca = null;
+    });
+
+    quebraCabeca.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      const alvo = e.target;
+      if(alvo.classList.contains('peca') && alvo !== arrastandoPeca) {
+        quebraCabeca.insertBefore(arrastandoPeca, alvo.nextSibling);
+      }
+    });
+
+    function embaralhar() {
+      for (let i = quebraCabeca.children.length; i >= 0; i--) {
+        quebraCabeca.appendChild(quebraCabeca.children[Math.random() * i | 0]);
       }
     }
 
-    function desabilitarBotoes() {
-      const botoes = document.querySelectorAll('.letras-btn');
-      botoes.forEach(btn => btn.disabled = true);
-    }
-
-    function mostrarDica() {
-      if (!dicaRevelada) {
-        document.getElementById('dica-texto').textContent = `Dica: ${palavraSelecionada.dica}`;
-        dicaRevelada = true;
-      }
-    }
-
-    // Inicia jogo ao carregar a página
-    window.onload = iniciarJogo;
+    criarPecas();
   </script>
 </body>
 </html>
