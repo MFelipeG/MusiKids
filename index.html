@@ -1,52 +1,120 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Musikids Hub - Home</title>
-  <style>
-    body {
-      font-family: 'Comic Sans MS', 'Baloo', Arial, sans-serif;
-      background: #f7f9fc;
-      margin: 0; padding: 2rem; text-align: center;
-      color: #333;
-      display: flex;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MusiKids Fun</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+  body {
+    margin: 0;
+    font-family: 'Baloo 2', cursive, Arial, sans-serif;
+    background: linear-gradient(135deg, #FFDDC1 0%, #FEC8D8 50%, #D291BC 100%);
+    color: #333;
+    text-align: center;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  header {
+    background: #FF77A9;
+    padding: 1.6rem 1rem;
+    color: white;
+    font-size: 2.25rem;
+    font-weight: 900;
+    letter-spacing: 0.12em;
+    box-shadow: 0 4px 12px rgba(255, 119, 169, 0.6);
+    user-select: none;
+  }
+  main {
+    flex: 1;
+    padding: 2rem 1rem 4rem 1rem;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+  .card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 8px 22px rgba(198, 112, 137, 0.35);
+    width: 280px;
+    padding: 2rem 1.5rem;
+    cursor: pointer;
+    transition: transform 0.25s, box-shadow 0.3s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    user-select: none;
+  }
+  .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 28px rgba(198, 112, 137, 0.5);
+  }
+  .card h2 {
+    color: #FF4C8B;
+    margin: 0 0 0.8rem 0;
+    font-size: 1.6rem;
+  }
+  .card p {
+    font-size: 1rem;
+    color: #7b4573;
+    line-height: 1.45;
+    margin: 0 0 1.2rem 0;
+  }
+  .card-icon {
+    font-size: 4.8rem;
+    margin-bottom: 1rem;
+    color: #FF4C8B;
+  }
+  a.card-link {
+    text-decoration: none;
+    color: inherit;
+  }
+  footer {
+    padding: 1rem 0;
+    background: #FF77A9;
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    user-select: none;
+    box-shadow: 0 -4px 12px rgba(255, 119, 169, 0.6);
+  }
+  /* Responsivo */
+  @media (max-width: 680px) {
+    main {
       flex-direction: column;
       align-items: center;
+      padding-bottom: 4rem;
     }
-    h1 {
-      color: #ff6b6b;
-      margin-bottom: 2rem;
-      text-shadow: 1px 1px 3px #d88;
+    .card {
+      width: 90%;
+      max-width: 340px;
     }
-    nav a {
-      display: block;
-      background: #4dabf7;
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      padding: 1rem 2rem;
-      border-radius: 14px;
-      margin: 1rem 0;
-      width: 250px;
-      font-size: 1.3rem;
-      transition: background 0.3s, transform 0.2s;
-      box-shadow: 1px 3px 8px #c8e6ffaa;
-    }
-    nav a:hover {
-      background: #339af0;
-      transform: scale(1.05);
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
-  <h1>🎵 Musikids Hub</h1>
-  <nav>
-    <a href="jogos/letrinhas/index.html">Jogo das Letrinhas ✏️</a>
-    <a href="jogos/continhas/index.html">Jogo das Continhas ➕</a>
-    <a href="jogos/velha/index.html">Jogo da Velha ❌⭕</a>
-    <a href="jogos/quebra-cabeca/index.html">Quebra-Cabeça 🧩</a>
-    <a href="jogos/pintar/index.html">Jogo de Pintar 🎨</a>
-  </nav>
+  <header>MusiKids Fun</header>
+  <main>
+    <a href="jogos/letrinhas/index.html" class="card card-link" aria-label="Jogos - Venha se divertir e aprender com nossos jogos">
+      <div class="card-icon">🎮</div>
+      <h2>Jogos</h2>
+      <p>Venha se divertir e aprender com nossos jogos.</p>
+    </a>
+    <a href="musicas/index.html" class="card card-link" aria-label="Músicas - Escuta uma música enquanto se diverte">
+      <div class="card-icon">🎶</div>
+      <h2>Músicas</h2>
+      <p>Escuta uma música enquanto se diverte.</p>
+    </a>
+    <a href="livros/index.html" class="card card-link" aria-label="Livros - Venha ler histórias incríveis nesses ebooks maravilhosos">
+      <div class="card-icon">📚</div>
+      <h2>Livros</h2>
+      <p>Venha ler histórias incríveis nesses ebooks maravilhosos.</p>
+    </a>
+  </main>
+  <footer>
+    Me surpreenda com as melhores coisas ✨
+  </footer>
 </body>
 </html>
