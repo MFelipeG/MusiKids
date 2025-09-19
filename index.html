@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Musikids Hub</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f7f9fc;
+      color: #333;
+      text-align: center;
+    }
+    header {
+      background: #ff6b6b;
+      padding: 1rem;
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    nav button {
+      padding: 0.6rem 1rem;
+      border: none;
+      border-radius: 8px;
+      background: #4dabf7;
+      color: white;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s;
+    }
+    nav button:hover {
+      background: #339af0;
+    }
+    section {
+      display: none;
+      padding: 1rem;
+    }
+    section.active {
+      display: block;
+    }
+    .card {
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      margin: 1rem auto;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <header>🎵 Musikids Hub</header>
+  <nav>
+    <button onclick="showTab('home')">Início</button>
+    <button onclick="showTab('games')">Jogos</button>
+    <button onclick="showTab('music')">Músicas</button>
+    <button onclick="showTab('stories')">Histórias</button>
+  </nav>
+
+  <section id="home" class="active">
+    <div class="card">
+      <h2>Bem-vindo ao Musikids 🎉</h2>
+      <p>Aqui as crianças aprendem brincando!</p>
+    </div>
+  </section>
+
+  <section id="games">
+    <div class="card">
+      <h2>Jogos Educativos 🎮</h2>
+      <p>Em breve: continhas, letras e mais!</p>
+    </div>
+  </section>
+
+  <section id="music">
+    <div class="card">
+      <h2>Músicas 🎶</h2>
+      <audio controls>
+        <source src="musica.mp3" type="audio/mpeg">
+        Seu navegador não suporta áudio.
+      </audio>
+    </div>
+  </section>
+
+  <section id="stories">
+    <div class="card">
+      <h2>Histórias 📚</h2>
+      <a href="historinha.pdf" target="_blank">📖 Ler historinha</a>
+    </div>
+  </section>
+
+  <script>
+    function showTab(tabId) {
+      document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
+      document.getElementById(tabId).classList.add("active");
+    }
+  </script>
+</body>
+</html>
