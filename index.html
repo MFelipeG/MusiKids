@@ -7,17 +7,19 @@
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Comic Sans MS', 'Baloo', 'Arial', sans-serif;
       background: #f7f9fc;
       color: #333;
       text-align: center;
     }
     header {
-      background: #ff6b6b;
+      background: linear-gradient(90deg, #ff6b6b 60%, #f0e130 100%);
       padding: 1rem;
       color: white;
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       font-weight: bold;
+      letter-spacing: .03em;
+      text-shadow: 2px 2px 6px #d88;
     }
     nav {
       display: flex;
@@ -28,15 +30,18 @@
     nav button {
       padding: 0.6rem 1rem;
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       background: #4dabf7;
       color: white;
       cursor: pointer;
       font-size: 1rem;
-      transition: background 0.3s;
+      transition: background 0.3s, transform 0.2s;
+      font-family: inherit;
+      box-shadow: 1px 3px 8px #c8e6ff6e;
     }
-    nav button:hover {
+    nav button:hover, nav button.active {
       background: #339af0;
+      transform: scale(1.07);
     }
     section {
       display: none;
@@ -46,39 +51,142 @@
       display: block;
     }
     .card {
-      background: white;
-      padding: 1rem;
-      border-radius: 10px;
-      margin: 1rem auto;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      background: #fff;
+      padding: 1.2rem;
+      border-radius: 16px;
+      margin: 1.5rem auto;
+      width: 92%;
+      max-width: 440px;
+      box-shadow: 0 3px 10px rgba(50,100,200,0.09);
+      font-family: inherit;
+    }
+    /* Estilo infantil para jogos */
+    .jogo-titulo {
+      font-size: 1.3rem;
+      color: #f5921b;
+      margin-bottom: .7rem;
+      letter-spacing: .02em;
+    }
+    .jogo-letras, .jogo-contas {
+      background: #f7f6d2;
+      border-radius: 12px;
+      padding: 0.8rem;
+      margin: 10px 0 18px 0;
+      min-height: 70px;
+    }
+    .letras-btn {
+      padding: .44rem .85rem;
+      margin: 0 .3rem .7rem .3rem;
+      border: none;
+      background: #5ee978;
+      color: #275031;
+      font-size: 1.25rem;
+      font-family: inherit;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, transform .15s;
+    }
+    .letras-btn:hover {
+      background: #07c875;
+      color: #fff;
+      transform: scale(1.14);
+    }
+    .letras-slot {
+      display: inline-block;
+      min-width: 28px;
+      min-height: 38px;
+      font-size: 1.35rem;
+      margin: 0 4px;
+      border-bottom: 2px solid #ccc;
+    }
+    .correto {
+      color: #32a852;
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin: .9rem 0 0 0;
+    }
+    .errado {
+      color: #ea5454;
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin: .9rem 0 0 0;
+    }
+    .conta-pergunta {
+      font-size: 1.15rem;
+      margin-bottom: 6px;
+      color: #1565c0;
+    }
+    .conta-opcoes {
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      margin-bottom: 0.3rem;
+    }
+    .conta-btn {
+      padding: .54rem .9rem;
+      margin-top: .17rem;
+      border: none;
+      background: #ffd23f;
+      color: #514511;
+      font-size: 1.1rem;
+      font-family: inherit;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s, transform .14s;
+    }
+    .conta-btn:hover {
+      background: #f2ae2e;
+      color: #fff;
+      transform: scale(1.14);
+    }
+    /* Mascote infantil */
+    .mascote {
+      font-size: 1.85rem;
+      margin-bottom: .5rem;
+      display: block;
     }
   </style>
 </head>
 <body>
   <header>🎵 Musikids Hub</header>
   <nav>
-    <button onclick="showTab('home')">Início</button>
+    <button onclick="showTab('home')" class="active">Início</button>
     <button onclick="showTab('games')">Jogos</button>
     <button onclick="showTab('music')">Músicas</button>
     <button onclick="showTab('stories')">Histórias</button>
   </nav>
-
   <section id="home" class="active">
     <div class="card">
+      <span class="mascote">🦊🐒🐘</span>
       <h2>Bem-vindo ao Musikids 🎉</h2>
       <p>Aqui as crianças aprendem brincando!</p>
+      <p style="font-size:1rem">Descubra jogos, músicas e histórias!</p>
     </div>
   </section>
-
   <section id="games">
     <div class="card">
       <h2>Jogos Educativos 🎮</h2>
-      <p>Em breve: continhas, letras e mais!</p>
+      <!-- Jogo das Letras -->
+      <div>
+        <div class="jogo-titulo">Jogo das Letras ✏️</div>
+        <div id="letras-jogo" class="jogo-letras"></div>
+        <div id="letras-botoes"></div>
+        <div id="letras-mensagem"></div>
+        <button onclick="iniciaJogoLetras()" style="margin-top:.9rem;background:#ffd23f;" class="conta-btn">Novo Jogo</button>
+      </div>
+      <hr style="margin:2.1rem 0 2.1rem 0;border:dashed #f7ac9b 1.5px;">
+      <!-- Jogo das Continhas -->
+      <div>
+        <div class="jogo-titulo">Jogo das Continhas ➕</div>
+        <div class="jogo-contas">
+          <div id="conta-pergunta" class="conta-pergunta"></div>
+          <div id="conta-opcoes" class="conta-opcoes"></div>
+          <div id="conta-mensagem"></div>
+        </div>
+        <button onclick="novaConta()" style="background:#5ee978;" class="conta-btn">Nova Conta</button>
+      </div>
     </div>
   </section>
-
   <section id="music">
     <div class="card">
       <h2>Músicas 🎶</h2>
@@ -86,21 +194,143 @@
         <source src="musica.mp3" type="audio/mpeg">
         Seu navegador não suporta áudio.
       </audio>
+      <p style="font-size:.97rem;margin-top:.2rem">Envie suas músicas favoritas para adicionar aqui!</p>
     </div>
   </section>
-
   <section id="stories">
     <div class="card">
       <h2>Histórias 📚</h2>
       <a href="historinha.pdf" target="_blank">📖 Ler historinha</a>
+      <p style="font-size:.93rem;">Mais livros em PDF em breve!</p>
     </div>
   </section>
-
   <script>
+    // TAB navigation
     function showTab(tabId) {
+      document.querySelectorAll("nav button").forEach(btn => btn.classList.remove("active"));
       document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
       document.getElementById(tabId).classList.add("active");
+      document.querySelectorAll("nav button").forEach((btn, idx) => {
+        if (["home","games","music","stories"].indexOf(tabId) === idx) btn.classList.add("active");
+      });
     }
+
+    /* === Jogo das Letras === */
+    const palavras = [
+      {texto: "GATO", dica: "Animal que mia"},
+      {texto: "SOL", dica: "Brilha no céu"},
+      {texto: "SAPO", dica: "Pula e faz croac"},
+      {texto: "BOLA", dica: "Tem formato redondo"},
+      {texto: "FLOR", dica: "Nasce no jardim"},
+      {texto: "PEIXE", dica: "Nada na água"},
+      {texto: "FADA", dica: "Tem asas e pó mágico"},
+      {texto: "LUA", dica: "Aparece à noite"},
+      {texto: "RATO", dica: "Gosta de queijo"},
+      {texto: "URSO", dica: "Bem peludo!"},
+    ];
+    let palavraSorteada = null;
+    let letrasDescobertas = [];
+    let tentativasLetras = 0;
+
+    function iniciaJogoLetras() {
+      document.getElementById("letras-mensagem").textContent = '';
+      tentativasLetras = 0;
+      palavraSorteada = palavras[Math.floor(Math.random() * palavras.length)];
+      letrasDescobertas = Array(palavraSorteada.texto.length).fill(null);
+      renderLetrasJogo();
+      renderLetrasBotoes();
+    }
+
+    function renderLetrasJogo() {
+      const slots = palavraSorteada.texto.split('').map((letra, idx) => {
+        return `<span class="letras-slot">${letrasDescobertas[idx] ? letra.toUpperCase() : '_'}</span>`;
+      }).join('');
+      document.getElementById("letras-jogo").innerHTML = `
+        <div style="font-size:.94rem;margin-bottom:.7rem;">
+         <span style="color:#e58c36">Dica:</span> ${palavraSorteada.dica}
+        </div>${slots}`;
+    }
+
+    function renderLetrasBotoes() {
+      const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      let botoes = '';
+      for (let l of letras) {
+        botoes += `<button class="letras-btn" onclick="tentaLetra('${l}')" ${letrasDescobertas.includes(l) ? 'disabled' : ''}>${l}</button>`;
+      }
+      document.getElementById("letras-botoes").innerHTML = botoes;
+    }
+
+    function tentaLetra(letra) {
+      let encontrou = false;
+      palavraSorteada.texto.split('').forEach((l, idx) => {
+        if (l === letra) {
+          letrasDescobertas[idx] = letra;
+          encontrou = true;
+        }
+      });
+      renderLetrasJogo();
+      renderLetrasBotoes();
+      tentativasLetras++;
+      if (!encontrou && tentativasLetras > palavraSorteada.texto.length + 2) {
+        document.getElementById("letras-mensagem").innerHTML = `<span class="errado">💨 Acabaram suas tentativas!<br> A palavra era <b>${palavraSorteada.texto}</b></span>`;
+        Array.from(document.getElementsByClassName("letras-btn")).forEach(btn => btn.disabled = true);
+      } else if (letrasDescobertas.filter(Boolean).length === palavraSorteada.texto.length) {
+        document.getElementById("letras-mensagem").innerHTML = `<span class="correto">🎉 Parabéns, você acertou!</span>`;
+        Array.from(document.getElementsByClassName("letras-btn")).forEach(btn => btn.disabled = true);
+      }
+    }
+
+    /* === Jogo das Continhas === */
+    function geraConta() {
+      const a = Math.floor(Math.random()*8)+2;
+      const b = Math.floor(Math.random()*8)+1;
+      const operacao = Math.random() > 0.6 ? '-' : '+';
+      let pergunta = '';
+      let respostaCerta = 0;
+      if (operacao === '+') {
+        pergunta = `${a} + ${b}`;
+        respostaCerta = a + b;
+      } else {
+        pergunta = `${(a+b)} - ${b}`;
+        respostaCerta = a;
+      }
+      // Embaralha opções
+      const opcoes = [respostaCerta];
+      while (opcoes.length < 3) {
+        let sugestao = respostaCerta + Math.floor(Math.random()*5) - 2;
+        if (!opcoes.includes(sugestao) && sugestao > 0) opcoes.push(sugestao);
+      }
+      return {
+        pergunta,
+        resposta: respostaCerta,
+        opcoes: opcoes.sort(() => Math.random() - 0.5)
+      };
+    }
+    let contaAtual = null;
+
+    function novaConta() {
+      document.getElementById("conta-mensagem").textContent = '';
+      contaAtual = geraConta();
+      document.getElementById("conta-pergunta").textContent = `Quanto é ${contaAtual.pergunta}?`;
+      document.getElementById("conta-opcoes").innerHTML = contaAtual.opcoes.map(
+        n => `<button class="conta-btn" onclick="respondeConta(${n})">${n}</button>`
+      ).join('');
+    }
+
+    function respondeConta(n) {
+      if (n === contaAtual.resposta) {
+        document.getElementById("conta-mensagem").innerHTML = `<span class="correto">🎉 Muito bem!</span>`;
+      } else {
+        document.getElementById("conta-mensagem").innerHTML = `<span class="errado">😅 Tente outra vez!</span>`;
+      }
+      Array.from(document.getElementById("conta-opcoes").children).forEach(btn=>btn.disabled=true);
+    }
+
+    // Inicializa jogos já prontos ao abrir a aba Jogos
+    document.addEventListener("DOMContentLoaded", () => {
+      iniciaJogoLetras();
+      novaConta();
+    });
   </script>
 </body>
 </html>
