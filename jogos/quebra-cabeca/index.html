@@ -2,114 +2,303 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Quebra-Cabeça Simples</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Quebra-Cabeça - MusiKids Fun</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
   body {
-    font-family: 'Comic Sans MS', 'Baloo', Arial, sans-serif;
-    background: #f7f9fc;
+    margin: 0;
+    background: linear-gradient(135deg, #a0eaff 0%, #ffbad2 100%);
+    font-family: 'Baloo 2', cursive, Arial, sans-serif;
     color: #333;
     text-align: center;
-    margin: 0; padding: 1.5rem;
+    min-height: 100vh;
+    user-select: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
-  h1 {
-    color: #e67e22;
-    margin-bottom: 1rem;
-    text-shadow: 1px 1px 3px #d37a14;
+  header {
+    font-weight: 900;
+    font-size: 2.1rem;
+    margin: 1.5rem 0;
+    color: #ff4c8b;
+    text-shadow: 0 2px 8px #ffe1ee;
   }
-  #quebra-cabeca {
-    width: 320px;
-    height: 320px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(3, 100px);
-    grid-template-rows: repeat(3, 100px);
-    gap: 5px;
+  #config {
+    width: 300px;
+    background: #fff1f9;
+    border-radius: 18px;
+    padding: 1.3rem 1.6rem;
+    box-shadow: 0 6px 30px #ffcce1a0;
+    margin-bottom: 2rem;
+  }
+  label {
+    font-weight: 700;
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #d23065;
     user-select: none;
   }
-  .peca {
-    background-image: url('https://i.imgur.com/1Q9Z1Z9.jpg');
-    background-size: 300% 300%;
+  select {
+    width: 100%;
+    padding: 0.4rem 0.6rem;
+    font-size: 1.0rem;
     border-radius: 12px;
-    cursor: grab;
-    border: 2px solid transparent;
-  }
-  .peca.dragging {
-    opacity: 0.7;
-    border-color: #27ae60;
-  }
-  button {
-    margin-top: 25px;
-    padding: 1rem 2rem;
-    background: #e67e22;
-    border: none;
-    border-radius: 12px;
-    font-weight: bold;
-    color: white;
-    font-size: 1.15rem;
+    border: 2px solid #ff2d7f;
+    background: white;
     cursor: pointer;
-    transition: background 0.3s ease;
+    user-select: none;
   }
-  button:hover {
-    background: #d96613;
+  button, a.btn {
+    margin-top: 1rem;
+    padding: 1rem 2rem;
+    font-weight: bold;
+    border-radius: 20px;
+    border: none;
+    background-color: #ff4c8b;
+    color: #fff;
+    font-size: 1.25rem;
+    cursor: pointer;
+    box-shadow: 0 10px 20px #ffadc3cc;
+    transition: background-color 0.3s ease, transform 0.25s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+  button:hover, a.btn:hover {
+    background-color: #e93c73;
+    transform: scale(1.04);
+  }
+  #puzzle-container {
+    position: relative;
+    max-width: 500px;
+    width: 90vw;
+    background: #fff0f7;
+    border-radius: 20px;
+    box-shadow: 0 8px 38px #ffa4c5cc;
+    user-select: none;
+  }
+  #puzzle {
+    display: grid;
+    gap: 2px;
+    margin: auto;
+    background: #ffbad2cc;
+    border-radius: 20px;
+    overflow: hidden;
+    user-select: none;
+  }
+  .piece {
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    cursor: grab;
+    user-select: none;
+    border-radius: 10px;
+    box-shadow: 0 8px 19px #ff70a0aa;
+    transition: box-shadow 0.25s;
+  }
+  .piece.dragging {
+    cursor: grabbing;
+    box-shadow: 0 14px 28px #ff377aee;
+  }
+  #instructions {
+    margin: 0.8rem 0 12px 0;
+    font-weight: bold;
+    color: #d22a64;
+    user-select: none;
+  }
+  @media (max-width: 600px) {
+    .piece {
+      border-radius: 8px;
+      box-shadow: 0 5px 15px #ff70a0cc;
+    }
   }
 </style>
 </head>
 <body>
-  <h1>Quebra-Cabeça Simples 🧩</h1>
-  <div id="quebra-cabeca"></div>
-  <button onclick="embaralhar()">Embaralhar Peças</button>
+<header>Quebra-Cabeça - MusiKids Fun</header>
 
-  <script>
-    const quebraCabeca = document.getElementById('quebra-cabeca');
-    const tamanho = 3; // 3x3 peças
-    let pecas = [];
+<div id="config" aria-label="Configurações do quebra-cabeça">
+  <label for="pieces-select">Escolha a quantidade de peças:</label>
+  <select id="pieces-select" aria-describedby="pieces-desc">
+    <option value="9" selected>9 peças (3x3)</option>
+    <option value="15">15 peças (5x3)</option>
+    <option value="20">20 peças (5x4)</option>
+  </select>
+  <div id="pieces-desc" hidden>Selecione o número de peças para montar o quebra-cabeça.</div>
 
-    // Cria peças com background posicionado
-    function criarPecas() {
-      pecas = [];
-      quebraCabeca.innerHTML = '';
-      for(let i=0; i<tamanho*tamanho; i++) {
-        let peca = document.createElement('div');
-        peca.classList.add('peca');
-        // Calcula posição na imagem (zoom da imagem 300%)
-        let x = (i % tamanho) * 100;
-        let y = Math.floor(i / tamanho) * 100;
-        peca.style.backgroundPosition = `-${x}% -${y}%`;
-        peca.setAttribute('data-posicao', i);
-        peca.setAttribute('draggable', true);
-        quebraCabeca.appendChild(peca);
-        pecas.push(peca);
+  <label for="image-select">Selecione a imagem para o jogo:</label>
+  <select id="image-select" aria-describedby="image-desc">
+    <option value="https://cdn.pixabay.com/photo/2017/02/18/18/10/elephant-2070963_1280.jpg" selected>Elefante</option>
+    <option value="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg">Árvore</option>
+    <option value="https://cdn.pixabay.com/photo/2016/01/22/15/36/dog-1151516_1280.jpg">Cachorro</option>
+  </select>
+  <div id="image-desc" hidden>Escolha uma imagem para o quebra-cabeça.</div>
+
+  <button id="start-btn" aria-label="Iniciar o quebra-cabeça">Iniciar Quebra-Cabeça</button>
+  <a href="../index.html" class="btn" aria-label="Voltar ao menu de jogos" style="width: 100%;">← Voltar ao Menu de Jogos</a>
+</div>
+
+<div id="instructions" aria-live="polite"></div>
+
+<div id="puzzle-container" aria-label="Área do quebra-cabeça" tabindex="0" aria-live="polite" aria-atomic="true" hidden>
+  <div id="puzzle"></div>
+</div>
+
+<script>
+  const puzzle = document.getElementById('puzzle');
+  const piecesSelect = document.getElementById('pieces-select');
+  const imageSelect = document.getElementById('image-select');
+  const startBtn = document.getElementById('start-btn');
+  const instructions = document.getElementById('instructions');
+  const puzzleContainer = document.getElementById('puzzle-container');
+
+  let rows, cols, totalPieces;
+  let pieces = [];
+  let originalPositions = [];
+  let imageUrl;
+
+  function determineGrid(totalPieces) {
+    if (totalPieces === 9) {
+      rows = 3; cols = 3;
+    } else if (totalPieces === 15) {
+      rows = 3; cols = 5;
+    } else if (totalPieces === 20) {
+      rows = 4; cols = 5;
+    } else {
+      rows = 3; cols = 3;
+    }
+  }
+
+  function shuffle(array) {
+    for (let i = array.length -1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i +1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  startBtn.onclick = () => {
+    totalPieces = Number(piecesSelect.value);
+    determineGrid(totalPieces);
+    imageUrl = imageSelect.value;
+    puzzleContainer.hidden = false;
+    instructions.textContent = `Monte o quebra-cabeça de ${totalPieces} peças!`;
+    setupPuzzle();
+  };
+
+  function setupPuzzle() {
+    puzzle.innerHTML = '';
+    puzzle.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+    puzzle.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
+    pieces = [];
+    originalPositions = [];
+
+    for(let r=0; r<rows; r++){
+      for(let c=0; c<cols; c++){
+        const idx = r*cols + c;
+        if(idx >= totalPieces) break;
+
+        const piece = document.createElement('div');
+        piece.classList.add('piece');
+        piece.style.backgroundImage = `url(${imageUrl})`;
+
+        // backgroundPosition % para cada peça
+        piece.style.backgroundSize = `${cols*100}% ${rows*100}%`;
+        piece.style.backgroundPosition = `${(c * 100)/(cols-1)}% ${(r * 100)/(rows-1)}%`;
+
+        // Definindo dimensões automáticas por grid
+        piece.setAttribute('draggable', true);
+        piece.dataset.index = idx;
+
+        puzzle.appendChild(piece);
+        pieces.push(piece);
+        originalPositions.push(idx);
       }
     }
+    // Embaralhar peças na tela
+    shufflePieces();
+    addDragListeners();
+  }
 
-    // Arrastar e soltar
-    let arrastandoPeca = null;
-
-    quebraCabeca.addEventListener('dragstart', (e) => {
-      arrastandoPeca = e.target;
-      e.target.classList.add('dragging');
+  function shufflePieces() {
+    // Shuffle a ordem das peças no DOM
+    const shuffledPositions = [...originalPositions];
+    shuffle(shuffledPositions);
+    puzzle.innerHTML = '';
+    shuffledPositions.forEach(pos => {
+      puzzle.appendChild(pieces[pos]);
     });
-    quebraCabeca.addEventListener('dragend', (e) => {
-      e.target.classList.remove('dragging');
-      arrastandoPeca = null;
-    });
+  }
 
-    quebraCabeca.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      const alvo = e.target;
-      if(alvo.classList.contains('peca') && alvo !== arrastandoPeca) {
-        quebraCabeca.insertBefore(arrastandoPeca, alvo.nextSibling);
-      }
+  function addDragListeners() {
+    pieces.forEach(piece => {
+      piece.addEventListener('dragstart', dragStart);
+      piece.addEventListener('dragover', dragOver);
+      piece.addEventListener('drop', dropPiece);
+      piece.addEventListener('dragenter', dragEnter);
+      piece.addEventListener('dragleave', dragLeave);
+      piece.addEventListener('dragend', dragEnd);
     });
+  }
 
-    function embaralhar() {
-      for (let i = quebraCabeca.children.length; i >= 0; i--) {
-        quebraCabeca.appendChild(quebraCabeca.children[Math.random() * i | 0]);
-      }
+  let draggedPiece = null;
+
+  function dragStart(e) {
+    draggedPiece = e.target;
+    e.dataTransfer.effectAllowed = 'move';
+    setTimeout(() => draggedPiece.classList.add('dragging'), 0);
+  }
+
+  function dragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if(e.target !== draggedPiece) e.target.classList.add('drag-over');
+  }
+
+  function dragEnter(e) {
+    if(e.target !== draggedPiece) e.target.classList.add('drag-over');
+  }
+
+  function dragLeave(e) {
+    e.target.classList.remove('drag-over');
+  }
+
+  function dropPiece(e) {
+    e.preventDefault();
+    if(e.target !== draggedPiece) {
+      swapPieces(draggedPiece, e.target);
     }
+    e.target.classList.remove('drag-over');
+  }
 
-    criarPecas();
-  </script>
+  function dragEnd() {
+    draggedPiece.classList.remove('dragging');
+    pieces.forEach(p => p.classList.remove('drag-over'));
+    checkComplete();
+  }
+
+  function swapPieces(piece1, piece2) {
+    const parent = piece1.parentNode;
+    const idx1 = Array.from(parent.children).indexOf(piece1);
+    const idx2 = Array.from(parent.children).indexOf(piece2);
+
+    if(idx1 < idx2){
+      parent.insertBefore(piece2, piece1);
+      parent.insertBefore(piece1, parent.children[idx2]);
+    } else {
+      parent.insertBefore(piece1, piece2);
+      parent.insertBefore(piece2, parent.children[idx1]);
+    }
+  }
+
+  function checkComplete() {
+    const currentOrder = Array.from(puzzle.children).map(p => Number(p.dataset.index));
+    if(currentOrder.every((val, idx) => val === idx)){
+      instructions.textContent = 'Parabéns! Você completou o quebra-cabeça!';
+    } else {
+      instructions.textContent = `Monte o quebra-cabeça de ${totalPieces} peças!`;
+    }
+  }
+</script>
 </body>
 </html>
