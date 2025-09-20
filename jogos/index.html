@@ -14,6 +14,9 @@
     overflow-x: hidden;
     background: linear-gradient(120deg, #FFD23F 0%, #FF77A9 50%, #77DDFF 100%);
     animation: animateBG 12s ease-in-out infinite;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   @keyframes animateBG {
     0% { background-position: 0% 50%; }
@@ -21,7 +24,6 @@
     100% { background-position: 0% 50%; }
   }
   .menu-btn {
-    display: inline-block;
     margin: 2rem auto 1.5rem auto;
     padding: 1rem 2.5rem;
     background: #6427C7;
@@ -46,19 +48,19 @@
     font-weight: bold;
     letter-spacing: 0.06em;
     text-shadow: 1px 3px 9px #ffb3dd88;
+    user-select: none;
   }
+
   .jogos-container {
-    position: relative;
-    width: 95vw;
-    max-width: 1080px;
-    height: 620px;
-    margin: 0 auto;
-    border-radius: 15px;
+    display: grid;
+    grid-template-columns: repeat(2, 260px);
+    grid-gap: 28px 24px;
+    justify-content: center;
+    padding-bottom: 3rem;
+    width: 100%;
+    max-width: 580px;
   }
   .jogo-card {
-    position: absolute;
-    width: 200px;
-    min-height: 60px;
     background: rgba(255,255,255,0.97);
     border-radius: 22px;
     box-shadow: 0 9px 36px rgba(70,70,120,0.14), 0 1.5px 16px #fc9ce799;
@@ -72,34 +74,38 @@
     align-items: center;
     justify-content: center;
     font-size: 1.18rem;
-    z-index: 9;
     cursor: pointer;
     user-select: none;
     border: 3px solid #fff3a3;
+    min-height: 100px;
+    box-sizing: border-box;
+    user-select: none;
   }
   .jogo-card:hover {
-    transform: scale(1.07) rotate(-3deg);
-    box-shadow: 0 13px 48px #ff77a9bb, 0 2px 20px #ffd23fdc;
+    transform: scale(1.08) rotate(-3deg);
+    box-shadow: 0 15px 48px #ff77a9bb, 0 4px 20px #ffd23fdc;
     background: #ffe9fb;
     color: #fb4177;
   }
   .jogo-emoji {
-    font-size: 2.2rem;
+    font-size: 2.3rem;
     margin-bottom: 0.7rem;
+    user-select: none;
   }
-  @media (max-width:900px) {
-    .jogos-container { height: 800px; }
-    .jogo-card { width: 40vw; font-size: 1.08rem; padding: 1.4rem .5rem 1rem .5rem;}
-  }
-  @media (max-width:600px) {
-    .jogos-container { 
-      height: 1500px;
-      max-width: 99vw;
+
+  @media (max-width:480px) {
+    .jogos-container {
+      grid-template-columns: 1fr;
+      max-width: 90vw;
+      gap: 20px 12px;
     }
-    .jogo-card { 
-      width: 74vw; 
-      font-size: 1rem; 
-      padding: 0.9rem .3rem 0.6rem .3rem;
+    .jogo-card {
+      min-height: 84px;
+      font-size: 1.07rem;
+      padding: 1.75rem 0.8rem 1rem 0.8rem;
+    }
+    .jogo-emoji {
+      font-size: 1.9rem;
     }
   }
 </style>
@@ -107,7 +113,7 @@
 <body>
   <a href="../index.html" class="menu-btn">🏠 Menu Principal</a>
   <h1>🎮 Encontre seu Jogo Favorito!</h1>
-  <div class="jogos-container" id="jogosContainer">
+  <div class="jogos-container">
     <a href="letrinhas/index.html" class="jogo-card"><span class="jogo-emoji">✏️</span>Jogo das Letrinhas</a>
     <a href="continhas/index.html" class="jogo-card"><span class="jogo-emoji">➕</span>Jogo das Continhas</a>
     <a href="velha/index.html" class="jogo-card"><span class="jogo-emoji">❌⭕</span>Jogo da Velha</a>
@@ -119,59 +125,5 @@
     <a href="labirinto/index.html" class="jogo-card"><span class="jogo-emoji">🏞️</span>Jogo do Labirinto</a>
     <a href="encaixe/index.html" class="jogo-card"><span class="jogo-emoji">🟦🟧🟩</span>Arrastar e Soltar Formas</a>
   </div>
-  <script>
-    function distributionGrid() {
-      const container = document.getElementById('jogosContainer');
-      const cards = Array.from(container.querySelectorAll('.jogo-card'));
-      const rows = 3;
-      const cols = 4;
-      const padding = 20;
-
-      const containerWidth = container.clientWidth;
-      const containerHeight = container.clientHeight;
-
-      const cellWidth = (containerWidth - padding * (cols + 1)) / cols;
-      const cellHeight = (containerHeight - padding * (rows + 1)) / rows;
-
-      // Gera todas as posições possíveis da grade
-      const positions = [];
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-          positions.push({
-            x: padding + c * (cellWidth + padding),
-            y: padding + r * (cellHeight + padding),
-            width: cellWidth,
-            height: cellHeight
-          });
-        }
-      }
-
-      // Embaralha as posições para distribuir aleatoriamente
-      function shuffle(array) {
-        for (let i = array.length -1; i > 0; i--){
-          const j = Math.floor(Math.random() * (i+1));
-          [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
-      }
-      shuffle(positions);
-
-      cards.forEach((card, index) => {
-        const pos = positions[index];
-        card.style.left = `${pos.x}px`;
-        card.style.top = `${pos.y}px`;
-        card.style.width = `${pos.width}px`;
-        card.style.height = `${pos.height}px`;
-
-        // Aplica rotação e leve escala para efeito lúdico
-        const rotation = (Math.random() * 12) - 6;
-        const scale = 0.85 + (Math.random() * 0.25); // escala entre 0.85 e 1.1
-        card.style.transform = `rotate(${rotation}deg) scale(${scale})`;
-      })
-    }
-
-    window.onload = distributionGrid;
-    window.onresize = distributionGrid;
-  </script>
 </body>
 </html>
