@@ -12,11 +12,30 @@
     text-align: center;
     margin: 2rem;
   }
+  .menu-btn {
+    display: inline-block;
+    margin-bottom: 2rem;
+    padding: 0.8rem 2rem;
+    background: #ff77a9;
+    color: white;
+    font-weight: bold;
+    font-size: 1.14rem;
+    border: none;
+    border-radius: 18px;
+    text-decoration: none;
+    box-shadow: 1px 3px 12px #FFB3DD55;
+    transition: background 0.3s, transform 0.25s;
+    cursor: pointer;
+  }
+  .menu-btn:hover {
+    background: #e25597;
+    transform: scale(1.06);
+  }
   h1 {
     color: #ff6b6b;
     margin-bottom: 2rem;
   }
-  a {
+  a.jogo-link {
     display: block;
     margin: 1rem auto;
     padding: 1rem 2rem;
@@ -27,18 +46,25 @@
     text-decoration: none;
     border-radius: 14px;
     transition: background 0.3s ease;
+    font-size: 1.18rem;
   }
-  a:hover {
+  a.jogo-link:hover {
     background: #339af0;
   }
 </style>
 </head>
 <body>
+  <a href="../index.html" class="menu-btn">🏠 Menu Principal</a>
   <h1>🎮 Selecione um Jogo</h1>
-  <a href="letrinhas/index.html">Jogo das Letrinhas ✏️</a>
-  <a href="continhas/index.html">Jogo das Continhas ➕</a>
-  <a href="velha/index.html">Jogo da Velha ❌⭕</a>
-  <a href="quebra-cabeca/index.html">Quebra-Cabeça 🧩</a>
-  <a href="pintar/index.html">Jogo de Pintar 🎨</a>
+  <a href="letrinhas/index.html" class="jogo-link">Jogo das Letrinhas ✏️</a>
+  <a href="continhas/index.html" class="jogo-link">Jogo das Continhas ➕</a>
+  <a href="velha/index.html" class="jogo-link">Jogo da Velha ❌⭕</a>
+  <a href="quebra-cabeca/index.html" class="jogo-link">Quebra-Cabeça 🧩</a>
+  <a href="pintar/index.html" class="jogo-link">Jogo de Pintar 🎨</a>
+  <a href="forca/index.html" class="jogo-link">Jogo da Forca 🔠</a>
+  <a href="caca-palavras/index.html" class="jogo-link">Caça-Palavras 🔍</a>
+  <a href="memoria/index.html" class="jogo-link">Jogo da Memória 🃏</a>
+  <a href="labirinto/index.html" class="jogo-link">Jogo do Labirinto 🏞️</a>
+  <a href="encaixe/index.html" class="jogo-link">Arrastar e Soltar Formas 🟦🟧🟩</a>
 </body>
 </html>
