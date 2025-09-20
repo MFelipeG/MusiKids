@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Arrastar e Soltar Formas - MusiKids Fun</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+  body {
+    margin: 0; padding: 1.5rem;
+    background: linear-gradient(135deg, #f78ca0 0%, #f9748f 19%, #fd868c 60%, #fe9a8b 100%);
+    font-family: 'Baloo 2', cursive, Arial, sans-serif;
+    text-align: center;
+    user-select: none;
+    min-height: 100vh;
+  }
+  h1 {
+    color: #6a1b9a;
+    margin-bottom: 1.5rem;
+  }
+  #shapes {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .shape {
+    width: 70px;
+    height: 70px;
+    border-radius: 16px;
+    cursor: grab;
+    user-select: none;
+    border: 4px solid #62267f;
+  }
+  .square {
+    background-color: #7e57c2;
+  }
+  .circle {
+    background-color: #9575cd;
+    border-radius: 50%;
+  }
+  .triangle {
+    width: 0;
+    height: 0;
+    border-left: 35px solid transparent;
+    border-right: 35px solid transparent;
+    border-bottom: 70px solid #9575cd;
+    border-radius: 0;
+    margin: 0 10px;
+    cursor: grab;
+  }
+  #dropzones {
+    display: flex;
+    justify-content: center;
+    gap: 2.2rem;
+  }
+  .dropzone {
+    width: 80px;
+    height: 80px;
+    border: 3px dashed #62267f;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .dropzone.filled {
+    border-style: solid;
+    background-color: #b39ddb;
+  }
+  #msg {
+    margin-top: 1.8rem;
+    font-weight: bold;
+    color: #4a148c;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+<h1>🟦🟧🟩 Arrastar e Soltar Formas</h1>
+<div id="shapes">
+  <div draggable="true" id="square" class="shape square" aria-label="Quadrado"></div>
+  <div draggable="true" id="circle" class="shape circle" aria-label="Círculo"></div>
+  <div draggable="true" id="triangle" class="triangle" aria-label="Triângulo"></div>
+</div>
+<div id="dropzones">
+  <div data-shape="square" class="dropzone" aria-label="Área para quadrado"></div>
+  <div data-shape="circle" class="dropzone" aria-label="Área para círculo"></div>
+  <div data-shape="triangle" class="dropzone" aria-label="Área para triângulo"></div>
+</div>
+<div id="msg" role="alert" aria-live="polite"></div>
+<script>
+  const shapes = document.querySelectorAll('.shape');
+  const dropzones = document.querySelectorAll('.dropzone');
+  const msg = document.getElementById('msg');
+
+  shapes.forEach(shape => {
+    shape.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', e.target.id);
+      msg.textContent = '';
+    });
+  });
+
+  dropzones.forEach(dropzone => {
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.style.backgroundColor = '#d1c4e9';
+    });
+    dropzone.addEventListener('dragleave', (e) => {
+      dropzone.style.backgroundColor = '';
+    });
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.style.backgroundColor = '';
+      const draggedId = e.dataTransfer.getData('text/plain');
+      const draggedShape = document.getElementById(draggedId);
+      const expectedShape = dropzone.getAttribute('data-shape');
+
+      if(draggedId === expectedShape) {
+        dropzone.classList.add('filled');
+        draggedShape.style.visibility = 'hidden';
+        msg.textContent = '🎉 Acertou! Palavra correta.';
+        checkWin();
+      } else {
+        msg.textContent = '😕 Tente outra vez!';
+      }
+    });
+  });
+
+  function checkWin() {
+    const filledZones = document.querySelectorAll('.dropzone.filled').length;
+    if(filledZones === dropzones.length) {
+      setTimeout(() => alert('🎉 Parabéns! Você encaixou todas as formas!'), 150);
+    }
+  }
+</script>
+</body>
+</html>
