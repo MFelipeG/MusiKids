@@ -119,40 +119,35 @@
   #line-win {
     pointer-events: none;
     position: absolute;
-    background: linear-gradient(90deg, #f50057, #2e7d32);
-    border-radius: 3px;
+    background: black; /* linha preta */
+    border-radius: 6px;
     z-index: 10;
-    top: 50%;
-    left: 0;
-    transform-origin: left center;
     display: none;
   }
-  /* Linha Vitória posições */
   #line-win.horizontal {
+    height: 8px; /* linha grossa */
     width: 374px;
+    left: 50%;
+    transform: translateX(-50%);
   }
   #line-win.vertical {
-    width: 6px;
+    width: 8px; /* linha grossa */
     height: 374px;
-    top: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  #line-win.diagonal1, #line-win.diagonal2 {
+    width: 420px;
+    height: 8px; /* linha grossa */
+    top: 50%;
     left: 50%;
-    transform-origin: center top;
+    transform-origin: center center;
   }
   #line-win.diagonal1 {
-    width: 420px;
-    height: 6px;
-    top: 50%;
-    left: 50%;
     transform: translate(-50%, -50%) rotate(45deg);
-    transform-origin: center center;
   }
   #line-win.diagonal2 {
-    width: 420px;
-    height: 6px;
-    top: 50%;
-    left: 50%;
     transform: translate(-50%, -50%) rotate(-45deg);
-    transform-origin: center center;
   }
   #restartBtn, #btn-return {
     background: #2e7d32;
@@ -173,17 +168,17 @@
 <body>
 <header>Jogo da Velha - MusiKids Fun</header>
 <div id="config" role="region" aria-label="Configurações do jogo">
-  <div class="input-group" style="margin-bottom: 1rem;">
+  <div class="input-group" style="margin-bottom:1rem;">
     <label for="mode">Selecionar modo de jogo:</label>
-    <select id="mode" aria-describedby="modeDesc" style="width: auto; display: inline-block;">
+    <select id="mode" aria-describedby="modeDesc" style="width:auto; display:inline-block;">
       <option value="1vs1">1 vs 1</option>
       <option value="1vscpu">1 vs Computador</option>
     </select>
     <div id="modeDesc" hidden>Método de jogo: contra outro jogador ou contra o computador.</div>
   </div>
 
-  <div id="players-names" style="margin-bottom: 1rem;">
-    <div class="input-row" id="players1vs1">
+  <div id="players-names" style="margin-bottom:1rem;">
+    <div class="input-row" id="players1vs1" style="display:flex; gap:12px;">
       <div>
         <label for="player1-name">Nome do Jogador 1:</label>
         <input type="text" id="player1-name" placeholder="Jogador 1" maxlength="12" />
@@ -201,7 +196,7 @@
 
   <div id="cpu-difficulty-group" style="display:none; margin-bottom: 1rem;">
     <label for="cpu-difficulty">Dificuldade do computador:</label>
-    <select id="cpu-difficulty" aria-describedby="cpuDiffDesc" style="width: auto; display: inline-block;">
+    <select id="cpu-difficulty" aria-describedby="cpuDiffDesc" style="width:auto; display:inline-block;">
       <option value="easy">Fácil</option>
       <option value="medium" selected>Médio</option>
       <option value="hard">Difícil</option>
@@ -241,9 +236,9 @@
   const lineWin = document.getElementById('line-win');
 
   const winCombos = [
-    [0,1,2],[3,4,5],[6,7,8], // linhas
-    [0,3,6],[1,4,7],[2,5,8], // colunas
-    [0,4,8],[2,4,6]          // diagonais
+    [0,1,2],[3,4,5],[6,7,8],
+    [0,3,6],[1,4,7],[2,5,8],
+    [0,4,8],[2,4,6]
   ];
 
   let board = Array(9).fill(null);
@@ -299,9 +294,7 @@
     initGame();
   });
 
-  restartBtn.addEventListener('click', () => {
-    initGame();
-  });
+  restartBtn.addEventListener('click', initGame);
 
   btnReturn.addEventListener('click', () => {
     gameDiv.style.display = 'none';
@@ -405,46 +398,40 @@
     lineWin.className = '';
     if(type === 'horizontal') {
       lineWin.classList.add('horizontal');
-      lineWin.style.top = `${index * 134 + 61}px`;
-      lineWin.style.left = '83px';
-      lineWin.style.height = '6px';
+      lineWin.style.top = `${134 * index + 62}px`;
+      lineWin.style.left = '50%';
       lineWin.style.width = '374px';
-      lineWin.style.transform = 'none';
+      lineWin.style.height = '8px';
+      lineWin.style.transform = 'translateX(-50%)';
     } else if(type === 'vertical') {
       lineWin.classList.add('vertical');
-      lineWin.style.left = `${index * 134 + 61}px`;
-      lineWin.style.top = '83px';
-      lineWin.style.width = '6px';
+      lineWin.style.left = `${134 * index + 62}px`;
+      lineWin.style.top = '50%';
+      lineWin.style.width = '8px';
       lineWin.style.height = '374px';
-      lineWin.style.transform = 'none';
+      lineWin.style.transform = 'translateY(-50%)';
     } else if(type === 'diagonal1') {
       lineWin.classList.add('diagonal1');
       lineWin.style.width = '420px';
-      lineWin.style.height = '6px';
-      lineWin.style.top = '190px';
-      lineWin.style.left = '190px';
+      lineWin.style.height = '8px';
+      lineWin.style.top = '50%';
+      lineWin.style.left = '50%';
       lineWin.style.transform = 'translate(-50%, -50%) rotate(45deg)';
     } else if(type === 'diagonal2') {
       lineWin.classList.add('diagonal2');
       lineWin.style.width = '420px';
-      lineWin.style.height = '6px';
-      lineWin.style.top = '190px';
-      lineWin.style.left = '190px';
+      lineWin.style.height = '8px';
+      lineWin.style.top = '50%';
+      lineWin.style.left = '50%';
       lineWin.style.transform = 'translate(-50%, -50%) rotate(-45deg)';
     }
   }
 
   function cpuPlay() {
     switch(cpuDifficulty) {
-      case 'easy':
-        playRandom();
-        break;
-      case 'medium':
-        if(!tryToWinOrBlock()) playRandom();
-        break;
-      case 'hard':
-        if(!tryToWinOrBlock()) playPerfect();
-        break;
+      case 'easy': playRandom(); break;
+      case 'medium': if(!tryToWinOrBlock()) playRandom(); break;
+      case 'hard': if(!tryToWinOrBlock()) playPerfect(); break;
     }
   }
 
