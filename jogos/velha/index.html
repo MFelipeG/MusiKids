@@ -70,6 +70,9 @@
     transition: background 0.3s ease, transform 0.25s;
     margin-top: 1rem;
     width: 100%;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
   }
   button:hover, .btn:hover {
     background: #e03e72;
@@ -121,14 +124,6 @@
     min-height: 32px;
     color: #bf1650;
     margin-top: 15px;
-  }
-  #restartBtn, #btn-return {
-    background: #2e7d32;
-    width: 48%;
-    margin-top: 20px;
-  }
-  #restartBtn:hover, #btn-return:hover {
-    background: #256227;
   }
   #controls {
     display: flex;
@@ -209,7 +204,7 @@
   <div id="message" role="alert" aria-live="polite"></div>
   <div id="controls">
     <button id="restartBtn" aria-label="Reiniciar jogo">Reiniciar</button>
-    <button id="btn-return" aria-label="Voltar para o menu de jogos">← Menu de Jogos</button>
+    <a href="../index.html" id="btn-return" role="button" aria-label="Voltar para o menu de jogos" class="btn">← Menu de Jogos</a>
   </div>
 </div>
 <div id="confetti"></div>
@@ -228,7 +223,6 @@
   const boardDiv = document.getElementById('board');
   const messageDiv = document.getElementById('message');
   const restartBtn = document.getElementById('restartBtn');
-  const btnReturn = document.getElementById('btn-return');
   const confettiContainer = document.getElementById('confetti');
 
   const winCombos = [
@@ -278,13 +272,6 @@
   restartBtn.addEventListener('click', () => {
     clearConfetti();
     initGame();
-  });
-
-  btnReturn.addEventListener('click', () => {
-    gameDiv.style.display = 'none';
-    configDiv.style.display = 'block';
-    clearBoard();
-    clearConfetti();
   });
 
   function initGame() {
@@ -466,7 +453,7 @@
     for(let combo of winCombos) {
       const [a,b,c] = combo;
       if(brd[a] && brd[a] === brd[b] && brd[a] === brd[c]) {
-        return brd;
+        return combo;
       }
     }
     if(brd.every(cell => cell !== null)) return 'tie';
