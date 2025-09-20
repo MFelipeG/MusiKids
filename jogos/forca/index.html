@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Jogo da Forca - MusiKids Fun</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+  body {
+    font-family: 'Baloo 2', cursive, Arial, sans-serif;
+    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+    margin: 0; padding: 1.5rem;
+    color: #4a4a4a;
+    text-align: center;
+    user-select: none;
+  }
+  h1 {
+    color: #d94f4f;
+    margin-bottom: 1rem;
+  }
+  #wordContainer {
+    font-size: 2.2rem;
+    letter-spacing: 0.3rem;
+    margin: 2rem 0 1.5rem 0;
+  }
+  #lettersContainer {
+    margin: 1rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+  }
+  .letter-btn {
+    background: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 0.9rem 1.3rem;
+    font-weight: bold;
+    font-size: 1.2rem;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.3s;
+  }
+  .letter-btn:disabled {
+    background: #ac4444;
+    cursor: not-allowed;
+  }
+  .letter-btn:hover:not(:disabled) {
+    background: #d94343;
+  }
+  #msg {
+    font-size: 1.3rem;
+    margin-top: 1rem;
+    font-weight: 700;
+    color: #d94f4f;
+    min-height: 28px;
+  }
+  #reset-btn {
+    margin-top: 20px;
+    background: #d94f4f;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 1rem 2rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.3s;
+  }
+  #reset-btn:hover {
+    background: #a03c3c;
+  }
+</style>
+</head>
+<body>
+<h1>Jogo da Forca 🔠</h1>
+<div id="wordContainer" aria-label="Palavra para encontrar"></div>
+<div id="lettersContainer"></div>
+<div id="msg" role="alert" aria-live="polite"></div>
+<button id="reset-btn">Reiniciar Jogo</button>
+
+<script>
+  const words = ["SOL", "BOLA", "GATO", "SAPO", "LUA", "PEIXE", "FLOR", "URSO", "FADA", "RATO"];
+  let chosenWord;
+  let guessedLetters;
+  let failedTries;
+  const maxTries = 6;
+
+  const wordContainer = document.getElementById('wordContainer');
+  const lettersContainer = document.getElementById('lettersContainer');
+  const msg = document.getElementById('msg');
+  const resetBtn = document.getElementById('reset-btn');
+
+  function startGame() {
+    chosenWord = words[Math.floor(Math.random() * words.length)];
+    guessedLetters = new Set();
+    failedTries = 0;
+    msg.textContent = '';
+    renderWord();
+    generateLetters();
+  }
+
+  function renderWord() {
+    let display = '';
+    for (let ch of chosenWord) {
+      display += guessedLetters.has(ch) ? ch + ' ' : '_ ';
+    }
+    wordContainer.textContent = display.trim();
+  }
+
+  function generateLetters() {
+    lettersContainer.innerHTML = '';
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    for (let ch of alphabet) {
+      const button = document.createElement('button');
+      button.textContent = ch;
+      button.className = 'letter-btn';
+      button.disabled = guessedLetters.has(ch) || failedTries >= maxTries;
+      button.addEventListener('click', () => {
+        guessedLetters.add(ch);
+        if (!chosenWord.includes(ch)) {
+          failedTries++;
+        }
+        renderWord();
+        button.disabled = true;
+        checkGameStatus();
+      });
+      lettersContainer.appendChild(button);
+    }
+  }
+
+  function checkGameStatus() {
+    if (!wordContainer.textContent.includes('_')) {
+      msg.textContent = "🎉 Parabéns! Você acertou a palavra!";
+      disableAllLetters();
+    } else if (failedTries >= maxTries) {
+      msg.textContent = `😞 Fim de jogo! A palavra era: ${chosenWord}`;
+      disableAllLetters();
+    } else {
+      msg.textContent = `Tentativas restantes: ${maxTries - failedTries}`;
+    }
+  }
+
+  function disableAllLetters() {
+    const buttons = lettersContainer.querySelectorAll('button');
+    buttons.forEach(btn => btn.disabled = true);
+  }
+
+  resetBtn.addEventListener('click', () => {
+    startGame();
+  });
+
+  window.onload = startGame;
+</script>
+</body>
+</html>
