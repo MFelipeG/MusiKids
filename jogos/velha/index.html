@@ -127,18 +127,18 @@
     display: none;
   }
   #line-win.horizontal {
-    height: 8px;
-    width: calc(3 * 120px + 2 * 14px);
-    left: 14px;
+    height: 4px;
+    width: calc(3 * 100px + 2 * 14px);
+    left: 40px;
   }
   #line-win.vertical {
-    width: 8px;
-    height: calc(3 * 120px + 2 * 14px);
-    top: 14px;
+    width: 4px;
+    height: calc(3 * 100px + 2 * 14px);
+    top: 40px;
   }
   #line-win.diagonal1, #line-win.diagonal2 {
-    width: calc(3 * 120px + 2 * 14px);
-    height: 8px;
+    width: calc(3 * 100px + 2 * 14px);
+    height: 4px;
     top: 50%;
     left: 50%;
     transform-origin: center center;
@@ -186,22 +186,12 @@
     animation-iteration-count: infinite;
   }
   @keyframes confetti-fall {
-    0% {
-      top: -20px;
-      opacity: 1;
-    }
-    100% {
-      top: 110vh;
-      opacity: 0;
-    }
+    0% { top: -20px; opacity: 1; }
+    100% { top: 110vh; opacity: 0; }
   }
   @keyframes confetti-spin {
-    0% {
-      transform: rotate(0deg);
-    }
-    100% {
-      transform: rotate(360deg);
-    }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
   }
 </style>
 </head>
@@ -330,7 +320,10 @@
     initGame();
   });
 
-  restartBtn.addEventListener('click', initGame);
+  restartBtn.addEventListener('click', () => {
+    clearConfetti();
+    initGame();
+  });
 
   btnReturn.addEventListener('click', () => {
     gameDiv.style.display = 'none';
@@ -437,29 +430,29 @@
     lineWin.className = '';
     if(type === 'horizontal') {
       lineWin.classList.add('horizontal');
-      lineWin.style.top = `${index * (120 + 14) + 120/2 - 4}px`;
-      lineWin.style.left = '14px';
-      lineWin.style.width = 'calc(3 * 120px + 2 * 14px)';
-      lineWin.style.height = '8px';
+      lineWin.style.top = `${index * (114) + 70}px`;
+      lineWin.style.left = '40px';
+      lineWin.style.width = 'calc(3 * 100px + 2 * 14px)';
+      lineWin.style.height = '4px';
       lineWin.style.transform = 'none';
     } else if(type === 'vertical') {
       lineWin.classList.add('vertical');
-      lineWin.style.left = `${index * (120 + 14) + 120/2 - 4}px`;
-      lineWin.style.top = '14px';
-      lineWin.style.width = '8px';
-      lineWin.style.height = 'calc(3 * 120px + 2 * 14px)';
+      lineWin.style.left = `${index * (114) + 70}px`;
+      lineWin.style.top = '40px';
+      lineWin.style.width = '4px';
+      lineWin.style.height = 'calc(3 * 100px + 2 * 14px)';
       lineWin.style.transform = 'none';
     } else if(type === 'diagonal1') {
       lineWin.classList.add('diagonal1');
-      lineWin.style.width = 'calc(3 * 120px + 2 * 14px)';
-      lineWin.style.height = '8px';
+      lineWin.style.width = 'calc(3 * 100px + 2 * 14px)';
+      lineWin.style.height = '4px';
       lineWin.style.top = '50%';
       lineWin.style.left = '50%';
       lineWin.style.transform = 'translate(-50%, -50%) rotate(45deg)';
     } else if(type === 'diagonal2') {
       lineWin.classList.add('diagonal2');
-      lineWin.style.width = 'calc(3 * 120px + 2 * 14px)';
-      lineWin.style.height = '8px';
+      lineWin.style.width = 'calc(3 * 100px + 2 * 14px)';
+      lineWin.style.height = '4px';
       lineWin.style.top = '50%';
       lineWin.style.left = '50%';
       lineWin.style.transform = 'translate(-50%, -50%) rotate(-45deg)';
