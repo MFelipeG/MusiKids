@@ -87,7 +87,6 @@
     gap: 14px;
     justify-content: center;
     margin-top: 15px;
-    position: relative;
   }
   .cell {
     background: #ffe3eb;
@@ -111,20 +110,17 @@
   .cell.O {
     color: #2e7d32;
   }
+  .cell.win {
+    background-color: #ff6f91;
+    color: white !important;
+    box-shadow: 0 0 14px #ff6f91aa;
+  }
   #message {
     font-size: 1.3rem;
     font-weight: 700;
     min-height: 32px;
     color: #bf1650;
     margin-top: 15px;
-  }
-  #line-win {
-    pointer-events: none;
-    position: absolute;
-    background: black;
-    border-radius: 6px;
-    z-index: 10;
-    display: none;
   }
   #restartBtn, #btn-return {
     background: #2e7d32;
@@ -211,7 +207,6 @@
 <div id="game">
   <div id="board" role="grid" aria-label="Tabuleiro do jogo da velha"></div>
   <div id="message" role="alert" aria-live="polite"></div>
-  <div id="line-win"></div>
   <div id="controls">
     <button id="restartBtn" aria-label="Reiniciar jogo">Reiniciar</button>
     <button id="btn-return" aria-label="Voltar para o menu de jogos">← Menu de Jogos</button>
@@ -234,7 +229,6 @@
   const messageDiv = document.getElementById('message');
   const restartBtn = document.getElementById('restartBtn');
   const btnReturn = document.getElementById('btn-return');
-  const lineWin = document.getElementById('line-win');
   const confettiContainer = document.getElementById('confetti');
 
   const winCombos = [
@@ -249,6 +243,7 @@
   let mode = '1vs1';
   let players = ['Jogador 1', 'Jogador 2'];
   let cpuDifficulty = 'medium';
+  let winningCells = [];
 
   modeSelect.addEventListener('change', e => {
     mode = e.target.value;
@@ -298,7 +293,7 @@
     currentPlayer = 'X';
     gameActive = true;
     clearBoard();
-    lineWin.style.display = 'none';
+    winningCells = [];
     messageDiv.textContent = `${players[0]} (X) começa!`;
     renderBoard();
     if(mode === '1vscpu' && currentPlayer === 'O') {
@@ -316,6 +311,7 @@
     for(let i=0; i<9; i++) {
       const cell = document.createElement('div');
       cell.classList.add('cell');
+      if(winningCells.includes(i)) cell.classList.add('win');
       cell.dataset.index = i;
       if(board[i]) {
         cell.textContent = board[i];
@@ -341,17 +337,21 @@
 
   function makeMove(idx, player) {
     board[idx] = player;
-    renderBoard();
     const winInfo = checkWin(player);
     if(winInfo) {
       gameActive = false;
-      showWinLine(winInfo);
+      winningCells = winInfo;
       messageDiv.textContent = `${players[player === 'X' ? 0 : 1]} venceu! 🎉`;
+      renderBoard();
       showConfetti();
     } else if(board.every(cell => cell !== null)) {
       gameActive = false;
+      winningCells = [];
       messageDiv.textContent = "Empate! 🤝";
+      renderBoard();
       clearConfetti();
+    } else {
+      renderBoard();
     }
   }
 
@@ -369,49 +369,6 @@
       }
     }
     return null;
-  }
-
-  function showWinLine(combo) {
-    lineWin.style.display = 'block';
-    lineWin.className = '';
-    const cells = combo.map(i => boardDiv.querySelector(`.cell[data-index="${i}"]`));
-    if(cells.some(c => !c)) return;
-    const rect0 = cells[0].getBoundingClientRect();
-    const rect1 = cells[1].getBoundingClientRect();
-    const rect2 = cells[2].getBoundingClientRect();
-    const boardRect = boardDiv.getBoundingClientRect();
-    const padding = 4;
-    if(rect0.top === rect1.top && rect1.top === rect2.top) {
-      const top = rect0.top + rect0.height/2 - boardRect.top - padding/2;
-      const left = rect0.left - boardRect.left + padding;
-      const width = rect2.right - rect0.left - 2*padding;
-      lineWin.style.top = `${top}px`;
-      lineWin.style.left = `${left}px`;
-      lineWin.style.width = `${width}px`;
-      lineWin.style.height = `${padding}px`;
-      lineWin.style.transform = 'none';
-    } else if(rect0.left === rect1.left && rect1.left === rect2.left) {
-      const left = rect0.left + rect0.width/2 - boardRect.left - padding/2;
-      const top = rect0.top - boardRect.top + padding;
-      const height = rect2.bottom - rect0.top - 2*padding;
-      lineWin.style.left = `${left}px`;
-      lineWin.style.top = `${top}px`;
-      lineWin.style.width = `${padding}px`;
-      lineWin.style.height = `${height}px`;
-      lineWin.style.transform = 'none';
-    } else {
-      const centerX = (rect0.left + rect2.right)/2 - boardRect.left;
-      const centerY = (rect0.top + rect2.bottom)/2 - boardRect.top;
-      const length = Math.hypot(rect2.right - rect0.left, rect2.bottom - rect0.top) - padding*2;
-      lineWin.style.width = `${length}px`;
-      lineWin.style.height = `${padding}px`;
-      lineWin.style.left = `${centerX}px`;
-      lineWin.style.top = `${centerY}px`;
-      const angle = rect0.left < rect2.left ? 45 : -45;
-      lineWin.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
-    }
-    lineWin.style.background = 'black';
-    lineWin.style.borderRadius = '4px';
   }
 
   function cpuPlay() {
@@ -509,7 +466,7 @@
     for(let combo of winCombos) {
       const [a,b,c] = combo;
       if(brd[a] && brd[a] === brd[b] && brd[a] === brd[c]) {
-        return brd[a];
+        return brd;
       }
     }
     if(brd.every(cell => cell !== null)) return 'tie';
