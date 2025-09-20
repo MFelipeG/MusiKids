@@ -126,29 +126,6 @@
     z-index: 10;
     display: none;
   }
-  #line-win.horizontal {
-    height: 4px;
-    width: calc(3 * 100px + 2 * 14px);
-    left: 40px;
-  }
-  #line-win.vertical {
-    width: 4px;
-    height: calc(3 * 100px + 2 * 14px);
-    top: 40px;
-  }
-  #line-win.diagonal1, #line-win.diagonal2 {
-    width: calc(3 * 100px + 2 * 14px);
-    height: 4px;
-    top: 50%;
-    left: 50%;
-    transform-origin: center center;
-  }
-  #line-win.diagonal1 {
-    transform: translate(-50%, -50%) rotate(45deg);
-  }
-  #line-win.diagonal2 {
-    transform: translate(-50%, -50%) rotate(-45deg);
-  }
   #restartBtn, #btn-return {
     background: #2e7d32;
     width: 48%;
@@ -164,7 +141,7 @@
     margin: 0 auto;
   }
 
-  /* Confete container */
+  /* Confetti container */
   #confetti {
     pointer-events: none;
     position: fixed;
@@ -415,48 +392,51 @@
     lineWin.style.display = 'block';
     lineWin.className = '';
     const indexSet = new Set(combo);
-    if(indexSet.has(0) && indexSet.has(1) && indexSet.has(2)) setLinePosition('horizontal', 0);
-    else if(indexSet.has(3) && indexSet.has(4) && indexSet.has(5)) setLinePosition('horizontal', 1);
-    else if(indexSet.has(6) && indexSet.has(7) && indexSet.has(8)) setLinePosition('horizontal', 2);
-    else if(indexSet.has(0) && indexSet.has(3) && indexSet.has(6)) setLinePosition('vertical', 0);
-    else if(indexSet.has(1) && indexSet.has(4) && indexSet.has(7)) setLinePosition('vertical', 1);
-    else if(indexSet.has(2) && indexSet.has(5) && indexSet.has(8)) setLinePosition('vertical', 2);
-    else if(indexSet.has(0) && indexSet.has(4) && indexSet.has(8)) setLinePosition('diagonal1');
-    else if(indexSet.has(2) && indexSet.has(4) && indexSet.has(6)) setLinePosition('diagonal2');
-  }
+    // Busca as células no DOM para posicionar a linha sobre as letras
+    const cells = combo.map(i => boardDiv.querySelector(`.cell[data-index="${i}"]`));
+    if(cells.some(c => !c)) return;
 
-  function setLinePosition(type, index) {
-    lineWin.style.display = 'block';
-    lineWin.className = '';
-    if(type === 'horizontal') {
-      lineWin.classList.add('horizontal');
-      lineWin.style.top = `${index * (114) + 70}px`;
-      lineWin.style.left = '40px';
-      lineWin.style.width = 'calc(3 * 100px + 2 * 14px)';
-      lineWin.style.height = '4px';
+    const rect0 = cells[0].getBoundingClientRect();
+    const rect1 = cells[1].getBoundingClientRect();
+    const rect2 = cells[2].getBoundingClientRect();
+    const boardRect = boardDiv.getBoundingClientRect();
+
+    const padding = 4; // espessura da linha
+
+    if(rect0.top === rect1.top && rect1.top === rect2.top) {
+      // horizontal
+      const top = rect0.top + rect0.height/2 - boardRect.top - padding/2;
+      const left = rect0.left - boardRect.left + padding;
+      const width = rect2.right - rect0.left - 2*padding;
+      lineWin.style.top = `${top}px`;
+      lineWin.style.left = `${left}px`;
+      lineWin.style.width = `${width}px`;
+      lineWin.style.height = `${padding}px`;
       lineWin.style.transform = 'none';
-    } else if(type === 'vertical') {
-      lineWin.classList.add('vertical');
-      lineWin.style.left = `${index * (114) + 70}px`;
-      lineWin.style.top = '40px';
-      lineWin.style.width = '4px';
-      lineWin.style.height = 'calc(3 * 100px + 2 * 14px)';
+    } else if(rect0.left === rect1.left && rect1.left === rect2.left) {
+      // vertical
+      const left = rect0.left + rect0.width/2 - boardRect.left - padding/2;
+      const top = rect0.top - boardRect.top + padding;
+      const height = rect2.bottom - rect0.top - 2*padding;
+      lineWin.style.left = `${left}px`;
+      lineWin.style.top = `${top}px`;
+      lineWin.style.width = `${padding}px`;
+      lineWin.style.height = `${height}px`;
       lineWin.style.transform = 'none';
-    } else if(type === 'diagonal1') {
-      lineWin.classList.add('diagonal1');
-      lineWin.style.width = 'calc(3 * 100px + 2 * 14px)';
-      lineWin.style.height = '4px';
-      lineWin.style.top = '50%';
-      lineWin.style.left = '50%';
-      lineWin.style.transform = 'translate(-50%, -50%) rotate(45deg)';
-    } else if(type === 'diagonal2') {
-      lineWin.classList.add('diagonal2');
-      lineWin.style.width = 'calc(3 * 100px + 2 * 14px)';
-      lineWin.style.height = '4px';
-      lineWin.style.top = '50%';
-      lineWin.style.left = '50%';
-      lineWin.style.transform = 'translate(-50%, -50%) rotate(-45deg)';
+    } else {
+      // diagonal
+      const centerX = (rect0.left + rect2.right)/2 - boardRect.left;
+      const centerY = (rect0.top + rect2.bottom)/2 - boardRect.top;
+      const length = Math.hypot(rect2.right - rect0.left, rect2.bottom - rect0.top) - padding*2;
+      lineWin.style.width = `${length}px`;
+      lineWin.style.height = `${padding}px`;
+      lineWin.style.left = `${centerX}px`;
+      lineWin.style.top = `${centerY}px`;
+      const angle = rect0.left < rect2.left ? 45 : -45;
+      lineWin.style.transform = `translate(-50%, -50%) rotate(${angle}deg)`;
     }
+    lineWin.style.background = 'black';
+    lineWin.style.borderRadius = '4px';
   }
 
   function cpuPlay() {
@@ -561,9 +541,8 @@
     return null;
   }
 
-  // Confetti effect
   function showConfetti() {
-    clearConfetti(); 
+    clearConfetti();
     const colors = ['#f44336','#ffeb3b','#4caf50','#2196f3','#ff9800','#9c27b0','#00bcd4','#ffc107'];
     const count = 150;
     for(let i=0; i<count; i++) {
@@ -577,6 +556,7 @@
     }
     setTimeout(clearConfetti, 7000);
   }
+
   function clearConfetti() {
     confettiContainer.innerHTML = '';
   }
