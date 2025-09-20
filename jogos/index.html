@@ -52,8 +52,9 @@
     position: relative;
     width: 95vw;
     max-width: 1080px;
-    height: 620px;
+    height: 600px;
     margin: 0 auto;
+    border-radius: 15px;
   }
   .jogo-card {
     position: absolute;
@@ -125,8 +126,8 @@
       const container = document.getElementById('jogosContainer');
       const cards = Array.from(container.querySelectorAll('.jogo-card'));
       // Define limites
-      let width = container.offsetWidth - 220;
-      let height = container.offsetHeight - 110;
+      let width = container.clientWidth - 220;
+      let height = container.clientHeight - 110;
       cards.forEach((card, idx) => {
         // Cores e leves rotações para parecer ainda mais flutuante
         let left = Math.random() * width;
@@ -137,7 +138,10 @@
         card.style.transform = `rotate(${rot}deg) scale(${1+Math.random()*0.08})`;
       });
     }
-    window.onload = shufflePositions;
+    // Delay pequeno para garantir layout já calculado
+    window.onload = () => {
+      setTimeout(shufflePositions, 150);
+    };
     window.onresize = shufflePositions;
   </script>
 </body>
