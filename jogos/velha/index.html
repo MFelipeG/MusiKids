@@ -140,8 +140,6 @@
     max-width: 460px;
     margin: 0 auto;
   }
-
-  /* Confetti container */
   #confetti {
     pointer-events: none;
     position: fixed;
@@ -187,16 +185,16 @@
     <div class="input-row" id="players1vs1" style="display:flex; gap:12px;">
       <div>
         <label for="player1-name">Nome do Jogador 1:</label>
-        <input type="text" id="player1-name" placeholder="Jogador 1" maxlength="12" />
+        <input type="text" id="player1-name" placeholder="Jogador 1" maxlength="12" value="Jogador 1" />
       </div>
       <div>
         <label for="player2-name">Nome do Jogador 2:</label>
-        <input type="text" id="player2-name" placeholder="Jogador 2" maxlength="12" />
+        <input type="text" id="player2-name" placeholder="Jogador 2" maxlength="12" value="Jogador 2" />
       </div>
     </div>
     <div id="player-cpu" style="display:none;">
       <label for="player1-name-cpu">Nome do Jogador:</label>
-      <input type="text" id="player1-name-cpu" placeholder="Jogador" maxlength="12" />
+      <input type="text" id="player1-name-cpu" placeholder="Jogador" maxlength="12" value="Jogador"/>
     </div>
   </div>
   <div id="cpu-difficulty-group" style="display:none; margin-bottom: 1rem;">
@@ -268,26 +266,11 @@
 
   startBtn.addEventListener('click', () => {
     if(mode === '1vs1') {
-      const p1 = player1NameInput.value.trim();
-      const p2 = player2NameInput.value.trim();
-      if(!p1) {
-        alert('Digite o nome do Jogador 1.');
-        player1NameInput.focus();
-        return;
-      }
-      if(!p2) {
-        alert('Digite o nome do Jogador 2.');
-        player2NameInput.focus();
-        return;
-      }
+      const p1 = player1NameInput.value.trim() || 'Jogador 1';
+      const p2 = player2NameInput.value.trim() || 'Jogador 2';
       players = [p1, p2];
     } else {
-      const p1 = player1NameCpuInput.value.trim();
-      if(!p1) {
-        alert('Digite o nome do Jogador.');
-        player1NameCpuInput.focus();
-        return;
-      }
+      const p1 = player1NameCpuInput.value.trim() || 'Jogador';
       players = [p1, 'Computador']; 
     }
     cpuDifficulty = cpuDifficultySelect.value;
@@ -391,20 +374,14 @@
   function showWinLine(combo) {
     lineWin.style.display = 'block';
     lineWin.className = '';
-    const indexSet = new Set(combo);
-    // Busca as células no DOM para posicionar a linha sobre as letras
     const cells = combo.map(i => boardDiv.querySelector(`.cell[data-index="${i}"]`));
     if(cells.some(c => !c)) return;
-
     const rect0 = cells[0].getBoundingClientRect();
     const rect1 = cells[1].getBoundingClientRect();
     const rect2 = cells[2].getBoundingClientRect();
     const boardRect = boardDiv.getBoundingClientRect();
-
-    const padding = 4; // espessura da linha
-
+    const padding = 4;
     if(rect0.top === rect1.top && rect1.top === rect2.top) {
-      // horizontal
       const top = rect0.top + rect0.height/2 - boardRect.top - padding/2;
       const left = rect0.left - boardRect.left + padding;
       const width = rect2.right - rect0.left - 2*padding;
@@ -414,7 +391,6 @@
       lineWin.style.height = `${padding}px`;
       lineWin.style.transform = 'none';
     } else if(rect0.left === rect1.left && rect1.left === rect2.left) {
-      // vertical
       const left = rect0.left + rect0.width/2 - boardRect.left - padding/2;
       const top = rect0.top - boardRect.top + padding;
       const height = rect2.bottom - rect0.top - 2*padding;
@@ -424,7 +400,6 @@
       lineWin.style.height = `${height}px`;
       lineWin.style.transform = 'none';
     } else {
-      // diagonal
       const centerX = (rect0.left + rect2.right)/2 - boardRect.left;
       const centerY = (rect0.top + rect2.bottom)/2 - boardRect.top;
       const length = Math.hypot(rect2.right - rect0.left, rect2.bottom - rect0.top) - padding*2;
