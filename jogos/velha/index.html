@@ -119,26 +119,24 @@
   #line-win {
     pointer-events: none;
     position: absolute;
-    background: black; /* linha preta */
+    background: black;
     border-radius: 6px;
     z-index: 10;
     display: none;
   }
   #line-win.horizontal {
-    height: 8px; /* linha grossa */
-    width: 374px;
-    left: 50%;
-    transform: translateX(-50%);
+    height: 8px;
+    width: calc(3 * 120px + 2 * 14px);
+    left: 14px;
   }
   #line-win.vertical {
-    width: 8px; /* linha grossa */
-    height: 374px;
-    top: 50%;
-    transform: translateY(-50%);
+    width: 8px;
+    height: calc(3 * 120px + 2 * 14px);
+    top: 14px;
   }
   #line-win.diagonal1, #line-win.diagonal2 {
-    width: 420px;
-    height: 8px; /* linha grossa */
+    width: calc(3 * 120px + 2 * 14px);
+    height: 8px;
     top: 50%;
     left: 50%;
     transform-origin: center center;
@@ -176,7 +174,6 @@
     </select>
     <div id="modeDesc" hidden>Método de jogo: contra outro jogador ou contra o computador.</div>
   </div>
-
   <div id="players-names" style="margin-bottom:1rem;">
     <div class="input-row" id="players1vs1" style="display:flex; gap:12px;">
       <div>
@@ -193,7 +190,6 @@
       <input type="text" id="player1-name-cpu" placeholder="Jogador" maxlength="12" />
     </div>
   </div>
-
   <div id="cpu-difficulty-group" style="display:none; margin-bottom: 1rem;">
     <label for="cpu-difficulty">Dificuldade do computador:</label>
     <select id="cpu-difficulty" aria-describedby="cpuDiffDesc" style="width:auto; display:inline-block;">
@@ -203,10 +199,8 @@
     </select>
     <div id="cpuDiffDesc" hidden>Escolha a dificuldade do computador.</div>
   </div>
-
   <button id="startBtn" aria-label="Começar o jogo">Começar</button>
 </div>
-
 <div id="game">
   <div id="board" role="grid" aria-label="Tabuleiro do jogo da velha"></div>
   <div id="message" role="alert" aria-live="polite"></div>
@@ -216,7 +210,6 @@
     <button id="btn-return" aria-label="Voltar para o menu de jogos">← Menu de Jogos</button>
   </div>
 </div>
-
 <script>
   const modeSelect = document.getElementById('mode');
   const player1NameInput = document.getElementById('player1-name');
@@ -234,20 +227,17 @@
   const restartBtn = document.getElementById('restartBtn');
   const btnReturn = document.getElementById('btn-return');
   const lineWin = document.getElementById('line-win');
-
   const winCombos = [
     [0,1,2],[3,4,5],[6,7,8],
     [0,3,6],[1,4,7],[2,5,8],
     [0,4,8],[2,4,6]
   ];
-
   let board = Array(9).fill(null);
   let currentPlayer = 'X';
   let gameActive = false;
   let mode = '1vs1';
   let players = ['Jogador 1', 'Jogador 2'];
   let cpuDifficulty = 'medium';
-
   modeSelect.addEventListener('change', e => {
     mode = e.target.value;
     if(mode === '1vs1') {
@@ -261,7 +251,6 @@
       player1NameCpuInput.value = 'Jogador';
     }
   });
-
   startBtn.addEventListener('click', () => {
     if(mode === '1vs1') {
       const p1 = player1NameInput.value.trim();
@@ -287,21 +276,17 @@
       players = [p1, 'Computador']; 
     }
     cpuDifficulty = cpuDifficultySelect.value;
-
     configDiv.style.display = 'none';
     gameDiv.style.display = 'block';
     messageDiv.textContent = `${players[0]} (X) começa!`;
     initGame();
   });
-
   restartBtn.addEventListener('click', initGame);
-
   btnReturn.addEventListener('click', () => {
     gameDiv.style.display = 'none';
     configDiv.style.display = 'block';
     clearBoard();
   });
-
   function initGame() {
     board.fill(null);
     currentPlayer = 'X';
@@ -310,16 +295,13 @@
     lineWin.style.display = 'none';
     messageDiv.textContent = `${players[0]} (X) começa!`;
     renderBoard();
-
     if(mode === '1vscpu' && currentPlayer === 'O') {
       setTimeout(cpuPlay, 600);
     }
   }
-
   function clearBoard() {
     boardDiv.innerHTML = '';
   }
-
   function renderBoard() {
     boardDiv.innerHTML = '';
     boardDiv.style.position = 'relative';
@@ -335,12 +317,10 @@
       boardDiv.appendChild(cell);
     }
   }
-
   function onCellClick(e) {
     const idx = +e.target.dataset.index;
     if(!gameActive || board[idx]) return;
     if(mode === '1vscpu' && currentPlayer === 'O') return;
-
     makeMove(idx, currentPlayer);
     if(gameActive) {
       switchPlayer();
@@ -349,7 +329,6 @@
       }
     }
   }
-
   function makeMove(idx, player) {
     board[idx] = player;
     renderBoard();
@@ -363,13 +342,11 @@
       messageDiv.textContent = "Empate! 🤝";
     }
   }
-
   function switchPlayer() {
     currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
     const playerName = players[currentPlayer === 'X' ? 0 : 1];
     messageDiv.textContent = `Vez de ${playerName} (${currentPlayer})`;
   }
-
   function checkWin(player) {
     for(let combo of winCombos) {
       if(combo.every(i => board[i] === player)) {
@@ -378,11 +355,9 @@
     }
     return null;
   }
-
   function showWinLine(combo) {
     lineWin.style.display = 'block';
     lineWin.className = '';
-
     const indexSet = new Set(combo);
     if(indexSet.has(0) && indexSet.has(1) && indexSet.has(2)) setLinePosition('horizontal', 0);
     else if(indexSet.has(3) && indexSet.has(4) && indexSet.has(5)) setLinePosition('horizontal', 1);
@@ -393,40 +368,38 @@
     else if(indexSet.has(0) && indexSet.has(4) && indexSet.has(8)) setLinePosition('diagonal1');
     else if(indexSet.has(2) && indexSet.has(4) && indexSet.has(6)) setLinePosition('diagonal2');
   }
-
   function setLinePosition(type, index) {
     lineWin.className = '';
     if(type === 'horizontal') {
       lineWin.classList.add('horizontal');
-      lineWin.style.top = `${134 * index + 62}px`;
-      lineWin.style.left = '50%';
-      lineWin.style.width = '374px';
+      lineWin.style.top = `${index * (120 + 14) + 120/2 - 4}px`;
+      lineWin.style.left = '14px';
+      lineWin.style.width = 'calc(3 * 120px + 2 * 14px)';
       lineWin.style.height = '8px';
-      lineWin.style.transform = 'translateX(-50%)';
+      lineWin.style.transform = 'none';
     } else if(type === 'vertical') {
       lineWin.classList.add('vertical');
-      lineWin.style.left = `${134 * index + 62}px`;
-      lineWin.style.top = '50%';
+      lineWin.style.left = `${index * (120 + 14) + 120/2 - 4}px`;
+      lineWin.style.top = '14px';
       lineWin.style.width = '8px';
-      lineWin.style.height = '374px';
-      lineWin.style.transform = 'translateY(-50%)';
+      lineWin.style.height = 'calc(3 * 120px + 2 * 14px)';
+      lineWin.style.transform = 'none';
     } else if(type === 'diagonal1') {
       lineWin.classList.add('diagonal1');
-      lineWin.style.width = '420px';
+      lineWin.style.width = 'calc(3 * 120px + 2 * 14px)';
       lineWin.style.height = '8px';
       lineWin.style.top = '50%';
       lineWin.style.left = '50%';
       lineWin.style.transform = 'translate(-50%, -50%) rotate(45deg)';
     } else if(type === 'diagonal2') {
       lineWin.classList.add('diagonal2');
-      lineWin.style.width = '420px';
+      lineWin.style.width = 'calc(3 * 120px + 2 * 14px)';
       lineWin.style.height = '8px';
       lineWin.style.top = '50%';
       lineWin.style.left = '50%';
       lineWin.style.transform = 'translate(-50%, -50%) rotate(-45deg)';
     }
   }
-
   function cpuPlay() {
     switch(cpuDifficulty) {
       case 'easy': playRandom(); break;
@@ -434,7 +407,6 @@
       case 'hard': if(!tryToWinOrBlock()) playPerfect(); break;
     }
   }
-
   function playRandom() {
     const freePositions = board.map((v,i) => v === null ? i : null).filter(i => i !== null);
     if(freePositions.length === 0) return;
@@ -442,7 +414,6 @@
     makeMove(idx, currentPlayer);
     switchPlayer();
   }
-
   function tryToWinOrBlock() {
     const target = findWinningOrBlockingMove(currentPlayer) || findWinningOrBlockingMove(currentPlayer === 'X' ? 'O' : 'X');
     if(target !== null) {
@@ -452,7 +423,6 @@
     }
     return false;
   }
-
   function findWinningOrBlockingMove(player) {
     for(let combo of winCombos) {
       const vals = combo.map(i => board[i]);
@@ -462,11 +432,10 @@
     }
     return null;
   }
-
   function playPerfect() {
     let bestScore = -Infinity;
     let move;
-    for(let i=0; i<9; i++) {
+    for(let i = 0; i < 9; i++) {
       if(board[i] === null) {
         board[i] = currentPlayer;
         let score = minimax(board, false);
@@ -484,7 +453,6 @@
       playRandom();
     }
   }
-
   function minimax(brd, isMaximizing) {
     let winner = checkWinner(brd);
     if(winner !== null) {
@@ -517,7 +485,6 @@
       return bestScore;
     }
   }
-
   function checkWinner(brd) {
     for(let combo of winCombos) {
       const [a,b,c] = combo;
