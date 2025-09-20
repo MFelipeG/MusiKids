@@ -1,6 +1,546 @@
 <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Jogo da Velha - MusiKids Fun</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+  body {
+    margin: 0;
+    padding: 1.5rem;
+    font-family: 'Baloo 2', cursive, Arial, sans-serif;
+    background: linear-gradient(135deg, #a2d9ff 0%, #ffc9de 100%);
+    color: #222;
+    text-align: center;
+    min-height: 100vh;
+    user-select: none;
+  }
+  header {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #ff007f;
+    margin-bottom: 1rem;
+    text-shadow: 1px 1px 3px #f06292;
+  }
+  #config, #game, #result {
+    margin: 0 auto 1.8rem auto;
+    max-width: 460px;
+    background: #fff3f7;
+    border-radius: 18px;
+    padding: 1.5rem 1.8rem;
+    box-shadow: 2px 6px 15px rgba(255, 0, 127, 0.25);
+    text-align: left;
+  }
+  label {
+    font-weight: 700;
+    margin-right: 8px;
+  }
+  select, input[type="text"] {
+    border-radius: 8px;
+    border: 2.5px solid #f8bbd0;
+    font-family: 'Baloo 2', cursive, Arial, sans-serif;
+    height: 36px;
+    font-size: 1rem;
+    padding: 0 1rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  #config .input-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 1rem;
+  }
+  #config .input-row > div {
+    flex: 1;
+  }
+  button, .btn {
+    background: #ff4c8b;
+    border: none;
+    border-radius: 16px;
+    padding: 1rem 2.4rem;
+    color: white;
+    font-size: 1.25rem;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 6px 20px rgba(255,76,139,0.5);
+    transition: background 0.3s ease, transform 0.25s;
+    margin-top: 1rem;
+    width: 100%;
+  }
+  button:hover, .btn:hover {
+    background: #e03e72;
+    transform: scale(1.05);
+  }
+  #game {
+    display: none;
+    text-align: center;
+  }
+  #board {
+    display: grid;
+    grid-template-columns: repeat(3, 120px);
+    grid-template-rows: repeat(3, 120px);
+    gap: 14px;
+    justify-content: center;
+    margin-top: 15px;
+    position: relative;
+  }
+  .cell {
+    background: #ffe3eb;
+    border-radius: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 5rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    user-select: none;
+    box-shadow: 0 4px 12px rgba(255,76,139,0.25);
+  }
+  .cell:hover {
+    background-color: #ffccd7;
+  }
+  .cell.X {
+    color: #f50057;
+  }
+  .cell.O {
+    color: #2e7d32;
+  }
+  #message {
+    font-size: 1.3rem;
+    font-weight: 700;
+    min-height: 30px;
+    color: #bf1650;
+    margin-top: 15px;
+  }
+  #line-win {
+    pointer-events: none;
+    position: absolute;
+    background: linear-gradient(90deg, #f50057, #2e7d32);
+    border-radius: 3px;
+    z-index: 10;
+    top: 50%;
+    left: 0;
+    transform-origin: left center;
+    display: none;
+  }
+  /* Linha Vitória posições */
+  #line-win.horizontal {
+    width: 374px;
+  }
+  #line-win.vertical {
+    width: 6px;
+    height: 374px;
+    top: 0;
+    left: 50%;
+    transform-origin: center top;
+  }
+  #line-win.diagonal1 {
+    width: 420px;
+    height: 6px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+    transform-origin: center center;
+  }
+  #line-win.diagonal2 {
+    width: 420px;
+    height: 6px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    transform-origin: center center;
+  }
+  #restartBtn, #btn-return {
+    background: #2e7d32;
+    width: 48%;
+    margin-top: 20px;
+  }
+  #restartBtn:hover, #btn-return:hover {
+    background: #256227;
+  }
+  #controls {
+    display: flex;
+    justify-content: space-between;
+    max-width: 460px;
+    margin: 0 auto;
+  }
+</style>
+</head>
+<body>
+<header>Jogo da Velha - MusiKids Fun</header>
+<div id="config" role="region" aria-label="Configurações do jogo">
+  <div class="input-group" style="margin-bottom: 1rem;">
+    <label for="mode">Selecionar modo de jogo:</label>
+    <select id="mode" aria-describedby="modeDesc" style="width: auto; display: inline-block;">
+      <option value="1vs1">1 vs 1</option>
+      <option value="1vscpu">1 vs Computador</option>
+    </select>
+    <div id="modeDesc" hidden>Método de jogo: contra outro jogador ou contra o computador.</div>
+  </div>
 
-<html lang="pt-BR"> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1"/> <title>Jogo da Velha - MusiKids Fun</title> <style> @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap'); body { margin: 0; padding: 1.5rem; font-family: 'Baloo 2', cursive, Arial, sans-serif; background: linear-gradient(135deg, #a2d9ff 0%, #ffc9de 100%); color: #222; text-align: center; min-height: 100vh; user-select: none; } header { font-size: 2rem; font-weight: 900; color: #ff007f; margin-bottom: 1rem; text-shadow: 1px 1px 3px #f06292; } #config, #game, #result { margin: 0 auto 1.8rem auto; max-width: 460px; background: #fff3f7; border-radius: 18px; padding: 1.5rem 1.8rem; box-shadow: 2px 6px 15px rgba(255, 0, 127, 0.25); } label { font-weight: 700; margin-right: 8px; } select, input[type="text"] { border-radius: 8px; border: 2.5px solid #f8bbd0; font-family: 'Baloo 2', cursive, Arial, sans-serif; height: 36px; font-size: 1rem; padding: 0 1rem; margin-bottom: 1rem; } #config select, #config input[type="text"] { width: 180px; } #config .input-group { margin-bottom: 1rem; } button, .btn { background: #ff4c8b; border: none; border-radius: 16px; padding: 1rem 2.4rem; color: white; font-size: 1.25rem; font-weight: bold; cursor: pointer; user-select: none; box-shadow: 0 6px 20px rgba(255,76,139,0.5); transition: background 0.3s ease, transform 0.25s; margin-top: 1rem; } button:hover, .btn:hover { background: #e03e72; transform: scale(1.05); } #game { display: none; } #board { display: grid; grid-template-columns: repeat(3, 120px); grid-template-rows: repeat(3, 120px); gap: 14px; justify-content: center; margin-top: 15px; position: relative; } .cell { background: #ffe3eb; border-radius: 14px; display: flex; justify-content: center; align-items: center; font-size: 5rem; font-weight: 900; cursor: pointer; transition: background-color 0.3s; user-select: none; box-shadow: 0 4px 12px rgba(255,76,139,0.25); } .cell:hover { background-color: #ffccd7; } .cell.X { color: #f50057; } .cell.O { color: #2e7d32; } #message { font-size: 1.3rem; font-weight: 700; min-height: 30px; color: #bf1650; margin-top: 15px; } #line-win { pointer-events: none; position: absolute; height: 6px; background: linear-gradient(90deg, #f50057, #2e7d32); border-radius: 3px; z-index: 10; top: 50%; left: 0; transform-origin: left center; } /* Linha da vitória - posições */ #line-win.horizontal { width: 374px; } #line-win.vertical { width: 6px; height: 374px; top: 0; left: 50%; transform-origin: center top; } #line-win.diagonal1 { width: 420px; height: 6px; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(45deg); transform-origin: center center; } #line-win.diagonal2 { width: 420px; height: 6px; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); transform-origin: center center; } #btn-return { background: #2e7d32; margin-top: 20px; } #btn-return:hover { background: #256227; } </style> </head> <body> <header>Jogo da Velha - MusiKids Fun</header> <div id="config" role="region" aria-label="Configurações do jogo"> <div class="input-group"> <label for="mode">Selecione o modo:</label> <select id="mode" aria-describedby="modeDesc"> <option value="1vs1">1 vs 1</option> <option value="1vscpu">1 vs Computador</option> </select> <div id="modeDesc" hidden>Método de jogo: contra outro jogador ou contra o computador.</div> </div> <div id="players-names"> <div class="input-group"> <label for="player1-name">Nome do Jogador 1:</label> <input type="text" id="player1-name" placeholder="Jogador 1" maxlength="12" /> </div> <div class="input-group" id="player2-group"> <label for="player2-name">Nome do Jogador 2:</label> <input type="text" id="player2-name" placeholder="Jogador 2" maxlength="12" /> </div> </div> <div id="cpu-difficulty-group" style="display:none;"> <label for="cpu-difficulty">Dificuldade do computador:</label> <select id="cpu-difficulty" aria-describedby="cpuDiffDesc"> <option value="easy">Fácil</option> <option value="medium" selected>Médio</option> <option value="hard">Difícil</option> </select> <div id="cpuDiffDesc" hidden>Escolha a dificuldade do computador.</div> </div>
-<button id="startBtn" aria-label="Começar o jogo">Começar</button>
+  <div id="players-names" style="margin-bottom: 1rem;">
+    <div class="input-row" id="players1vs1">
+      <div>
+        <label for="player1-name">Nome do Jogador 1:</label>
+        <input type="text" id="player1-name" placeholder="Jogador 1" maxlength="12" />
+      </div>
+      <div>
+        <label for="player2-name">Nome do Jogador 2:</label>
+        <input type="text" id="player2-name" placeholder="Jogador 2" maxlength="12" />
+      </div>
+    </div>
+    <div id="player-cpu" style="display:none;">
+      <label for="player1-name-cpu">Nome do Jogador:</label>
+      <input type="text" id="player1-name-cpu" placeholder="Jogador" maxlength="12" />
+    </div>
+  </div>
 
-</div> <div id="game"> <div id="board" role="grid" aria-label="Tabuleiro do jogo da velha"></div> <div id="message" role="alert" aria-live="polite"></div> <div id="line-win"></div> <button id="restartBtn" aria-label="Reiniciar jogo">Reiniciar</button> <button id="btn-return" aria-label="Voltar para o menu de jogos">← Voltar ao Menu de Jogos</button> </div> <script> const modeSelect = document.getElementById('mode'); const player1NameInput = document.getElementById('player1-name'); const player2NameInput = document.getElementById('player2-name'); const player2Group = document.getElementById('player2-group'); const cpuDifficultyGroup = document.getElementById('cpu-difficulty-group'); const cpuDifficultySelect = document.getElementById('cpu-difficulty'); const startBtn = document.getElementById('startBtn'); const gameDiv = document.getElementById('game'); const configDiv = document.getElementById('config'); const boardDiv = document.getElementById('board'); const messageDiv = document.getElementById('message'); const restartBtn = document.getElementById('restartBtn'); const btnReturn = document.getElementById('btn-return'); const lineWin = document.getElementById('line-win'); const winCombos = [ ,,, // linhas ,,, // colunas , // diagonais ]; let board = Array(9).fill(null); let currentPlayer = 'X'; let gameActive = false; let mode = '1vs1'; let players = ['Jogador 1', 'Jogador 2']; let cpuDifficulty = 'medium'; modeSelect.addEventListener('change', e => { mode = e.target.value; if(mode === '1vs1') { player2Group.style.display = 'block'; cpuDifficultyGroup.style.display = 'none'; } else { player2Group.style.display = 'none'; cpuDifficultyGroup.style.display = 'block'; player2NameInput.value = 'Computador'; } }); startBtn.addEventListener('click', () => { const p1 = player1NameInput.value.trim(); const p2 = player2NameInput.value.trim(); if(p1 === '') { alert('Por favor, digite o nome do Jogador 1.'); player1NameInput.focus(); return; } if(mode === '1vs1' && p2 === '') { alert('Por favor, digite o nome do Jogador 2.'); player2NameInput.focus(); return; } players = p1; players = mode === '1vs1' ? p2 : 'Computador'; cpuDifficulty = cpuDifficultySelect.value; configDiv.style.display = 'none'; gameDiv.style.display = 'block'; messageDiv.textContent = `${players} (X) começa!`; initGame(); }); restartBtn.addEventListener('click', () => { initGame(); }); btnReturn.addEventListener('click', () => { gameDiv.style.display = 'none'; configDiv.style.display = 'block'; clearBoard(); }); function initGame() { board.fill(null); currentPlayer = 'X'; gameActive = true; clearBoard(); lineWin.style.display = 'none'; messageDiv.textContent = `${players} (X) começa!`; renderBoard(); if(mode === '1vscpu' && currentPlayer === 'O') { setTimeout(cpuPlay, 600); } } function clearBoard() { boardDiv.innerHTML = ''; } function renderBoard() { boardDiv.innerHTML = ''; boardDiv.style.position = 'relative'; for(let i=0; i<9; i++) { const cell = document.createElement('div'); cell.classList.add('cell'); cell.dataset.index = i; if(board[i]) { cell.textContent = board[i]; cell.classList.add(board[i]); } cell.addEventListener('click', onCellClick); boardDiv.appendChild(cell); } } function onCellClick(e) { const idx = +e.target.dataset.index; if(!gameActive || board[idx]) return; if(mode === '1vscpu' && currentPlayer === 'O') return; makeMove(idx, currentPlayer); if(gameActive) { switchPlayer(); if(mode === '1vscpu' && currentPlayer === 'O') { setTimeout(cpuPlay, 600); } } } function makeMove(idx, player) { board[idx] = player; renderBoard(); const winInfo = checkWin(player); if(winInfo) { gameActive = false; showWinLine(winInfo); messageDiv.textContent = `${players[player === 'X' ? 0 : 1]} venceu! 🎉`; } else if(board.every(cell => cell !== null)) { gameActive = false; messageDiv.textContent = "Empate! 🤝"; } } function switchPlayer() { currentPlayer = currentPlayer === 'X' ? 'O' : 'X'; const playerName = players[currentPlayer === 'X' ? 0 : 1]; messageDiv.textContent = `Vez de ${playerName} (${currentPlayer})`; } function checkWin(player) { for(let combo of winCombos) { if(combo.every(i => board[i] === player)) { return combo; } } return null; } function showWinLine(combo) { lineWin.style.display = 'block'; const indexSet = new Set(combo); // Mapeia linha/coluna/diagonal baseada na combinação // Mapear a posição da linha de vitória baseada no padrão dos combos // Linhas horizontais if(indexSet.has(0) && indexSet.has(1) && indexSet.has(2)) setLinePosition('horizontal', 0); else if(indexSet.has(3) && indexSet.has(4) && indexSet.has(5)) setLinePosition('horizontal', 1); else if(indexSet.has(6) && indexSet.has(7) && indexSet.has(8)) setLinePosition('horizontal', 2); // Colunas verticais else if(indexSet.has(0) && indexSet.has(3) && indexSet.has(6)) setLinePosition('vertical', 0); else if(indexSet.has(1) && indexSet.has(4) && indexSet.has(7)) setLinePosition('vertical', 1); else if(indexSet.has(2) && indexSet.has(5) && indexSet.has(8)) setLinePosition('vertical', 2); // Diagonais else if(indexSet.has(0) && indexSet.has(4) && indexSet.has(8)) setLinePosition('diagonal1'); else if(indexSet.has(2) && indexSet.has(4) && indexSet.has(6)) setLinePosition('diagonal2'); } function setLinePosition(type, iter){ lineWin.className = ''; if(type === 'horizontal') { lineWin.classList.add('horizontal'); lineWin.style.top = `${iter * 134 + 61}px`; // 134 é o total com gap lineWin.style.left = '83px'; lineWin.style.height = '6px'; lineWin.style.width = '374px'; lineWin.style.transform = 'none'; } else if(type === 'vertical'){ lineWin.classList.add('vertical'); lineWin.style.left = `${iter * 134 + 61}px`; lineWin.style.top = '83px'; lineWin.style.width = '6px'; lineWin.style.height = '374px'; lineWin.style.transform = 'none'; } else if(type === 'diagonal1') { lineWin.classList.add('diagonal1'); lineWin.style.width = '420px'; lineWin.style.height = '6px'; lineWin.style.top = '190px'; lineWin.style.left = '190px'; lineWin.style.transform = 'translate(-50%, -50%) rotate(45deg)'; } else if(type === 'diagonal2'){ lineWin.classList.add('diagonal2'); lineWin.style.width = '420px'; lineWin.style.height = '6px'; lineWin.style.top = '190px'; lineWin.style.left = '190px'; lineWin.style.transform = 'translate(-50%, -50%) rotate(-45deg)'; } } // CPU Jogador baseado em dificuldade function cpuPlay() { switch (cpuDifficulty) { case 'easy': playRandom(); break; case 'medium': if(!tryToWinOrBlock()) playRandom(); break; case 'hard': if(!tryToWinOrBlock()) playPerfect(); break; } } // Jogada aleatória function playRandom() { const freePositions = board.map((v,i) => v === null ? i : null).filter(i => i!==null); if(freePositions.length === 0) return; const idx = freePositions[Math.floor(Math.random() * freePositions.length)]; makeMove(idx, currentPlayer); switchPlayer(); } // Tenta ganhar ou bloquear function tryToWinOrBlock() { const target = findWinningOrBlockingMove(currentPlayer) || findWinningOrBlockingMove(currentPlayer==='X'?'O':'X'); if(target !== null) { makeMove(target, currentPlayer); switchPlayer(); return true; } return false; } // Procura posição ganhadora/block function findWinningOrBlockingMove(player) { for(let combo of winCombos) { const vals = combo.map(i => board[i]); if(vals.filter(v => v===player).length === 2 && vals.includes(null)) { return combo[vals.indexOf(null)]; } } return null; } // Jogada perfeita minimax simplificado function playPerfect() { let bestScore = -Infinity; let move; for(let i=0; i<9; i++){ if(board[i] === null){ board[i] = currentPlayer; let score = minimax(board, false); board[i] = null; if(score > bestScore){ bestScore = score; move = i; } } } if(move !== undefined) { makeMove(move, currentPlayer); switchPlayer(); } else { playRandom(); } } function minimax(boardState, isMaximizing) { let winner = checkWinner(boardState); if (winner !== null) { if(winner === currentPlayer) return 10; else if(winner === 'tie') return 0; else return -10; } if(isMaximizing) { let bestScore = -Infinity; for(let i=0; i<9; i++){ if(boardState[i] === null){ boardState[i] = currentPlayer; let score = minimax(boardState, false); boardState[i] = null; bestScore = Math.max(score, bestScore); } } return bestScore; } else { let opponent = currentPlayer === 'X' ? 'O' : 'X'; let bestScore = Infinity; for(let i=0; i<9; i++){ if(boardState[i] === null){ boardState[i] = opponent; let score = minimax(boardState, true); boardState[i] = null; bestScore = Math.min(score, bestScore); } } return bestScore; } } function checkWinner(brd) { for(let combo of winCombos){ const [a,b,c] = combo; if(brd[a] && brd[a] === brd[b] && brd[a] === brd[c]){ return brd[a]; } } if(brd.every(cell => cell !== null)) return 'tie'; return null; } </script> <!-- Linha Vitória --> <style> #line-win { pointer-events:none; position:absolute; background: linear-gradient(90deg, #f50057, #2e7d32); border-radius: 3px; z-index: 50; display: none; } #line-win.horizontal, #line-win.diagonal1, #line-win.diagonal2 { height: 6px; width: 374px; } #line-win.vertical { width: 6px; height: 374px; } </style> </body> </html>
+  <div id="cpu-difficulty-group" style="display:none; margin-bottom: 1rem;">
+    <label for="cpu-difficulty">Dificuldade do computador:</label>
+    <select id="cpu-difficulty" aria-describedby="cpuDiffDesc" style="width: auto; display: inline-block;">
+      <option value="easy">Fácil</option>
+      <option value="medium" selected>Médio</option>
+      <option value="hard">Difícil</option>
+    </select>
+    <div id="cpuDiffDesc" hidden>Escolha a dificuldade do computador.</div>
+  </div>
+
+  <button id="startBtn" aria-label="Começar o jogo">Começar</button>
+</div>
+
+<div id="game">
+  <div id="board" role="grid" aria-label="Tabuleiro do jogo da velha"></div>
+  <div id="message" role="alert" aria-live="polite"></div>
+  <div id="line-win"></div>
+  <div id="controls">
+    <button id="restartBtn" aria-label="Reiniciar jogo">Reiniciar</button>
+    <button id="btn-return" aria-label="Voltar para o menu de jogos">← Menu de Jogos</button>
+  </div>
+</div>
+
+<script>
+  const modeSelect = document.getElementById('mode');
+  const player1NameInput = document.getElementById('player1-name');
+  const player2NameInput = document.getElementById('player2-name');
+  const players1vs1 = document.getElementById('players1vs1');
+  const playerCpu = document.getElementById('player-cpu');
+  const player1NameCpuInput = document.getElementById('player1-name-cpu');
+  const cpuDifficultyGroup = document.getElementById('cpu-difficulty-group');
+  const cpuDifficultySelect = document.getElementById('cpu-difficulty');
+  const startBtn = document.getElementById('startBtn');
+  const gameDiv = document.getElementById('game');
+  const configDiv = document.getElementById('config');
+  const boardDiv = document.getElementById('board');
+  const messageDiv = document.getElementById('message');
+  const restartBtn = document.getElementById('restartBtn');
+  const btnReturn = document.getElementById('btn-return');
+  const lineWin = document.getElementById('line-win');
+
+  const winCombos = [
+    [0,1,2],[3,4,5],[6,7,8], // linhas
+    [0,3,6],[1,4,7],[2,5,8], // colunas
+    [0,4,8],[2,4,6]          // diagonais
+  ];
+
+  let board = Array(9).fill(null);
+  let currentPlayer = 'X';
+  let gameActive = false;
+  let mode = '1vs1';
+  let players = ['Jogador 1', 'Jogador 2'];
+  let cpuDifficulty = 'medium';
+
+  modeSelect.addEventListener('change', e => {
+    mode = e.target.value;
+    if(mode === '1vs1') {
+      players1vs1.style.display = 'flex';
+      playerCpu.style.display = 'none';
+      cpuDifficultyGroup.style.display = 'none';
+    } else {
+      players1vs1.style.display = 'none';
+      playerCpu.style.display = 'block';
+      cpuDifficultyGroup.style.display = 'block';
+      player1NameCpuInput.value = 'Jogador';
+    }
+  });
+
+  startBtn.addEventListener('click', () => {
+    if(mode === '1vs1') {
+      const p1 = player1NameInput.value.trim();
+      const p2 = player2NameInput.value.trim();
+      if(!p1) {
+        alert('Digite o nome do Jogador 1.');
+        player1NameInput.focus();
+        return;
+      }
+      if(!p2) {
+        alert('Digite o nome do Jogador 2.');
+        player2NameInput.focus();
+        return;
+      }
+      players = [p1, p2];
+    } else {
+      const p1 = player1NameCpuInput.value.trim();
+      if(!p1) {
+        alert('Digite o nome do Jogador.');
+        player1NameCpuInput.focus();
+        return;
+      }
+      players = [p1, 'Computador']; 
+    }
+    cpuDifficulty = cpuDifficultySelect.value;
+
+    configDiv.style.display = 'none';
+    gameDiv.style.display = 'block';
+    messageDiv.textContent = `${players[0]} (X) começa!`;
+    initGame();
+  });
+
+  restartBtn.addEventListener('click', () => {
+    initGame();
+  });
+
+  btnReturn.addEventListener('click', () => {
+    gameDiv.style.display = 'none';
+    configDiv.style.display = 'block';
+    clearBoard();
+  });
+
+  function initGame() {
+    board.fill(null);
+    currentPlayer = 'X';
+    gameActive = true;
+    clearBoard();
+    lineWin.style.display = 'none';
+    messageDiv.textContent = `${players[0]} (X) começa!`;
+    renderBoard();
+
+    if(mode === '1vscpu' && currentPlayer === 'O') {
+      setTimeout(cpuPlay, 600);
+    }
+  }
+
+  function clearBoard() {
+    boardDiv.innerHTML = '';
+  }
+
+  function renderBoard() {
+    boardDiv.innerHTML = '';
+    boardDiv.style.position = 'relative';
+    for(let i=0; i<9; i++) {
+      const cell = document.createElement('div');
+      cell.classList.add('cell');
+      cell.dataset.index = i;
+      if(board[i]) {
+        cell.textContent = board[i];
+        cell.classList.add(board[i]);
+      }
+      cell.addEventListener('click', onCellClick);
+      boardDiv.appendChild(cell);
+    }
+  }
+
+  function onCellClick(e) {
+    const idx = +e.target.dataset.index;
+    if(!gameActive || board[idx]) return;
+    if(mode === '1vscpu' && currentPlayer === 'O') return;
+
+    makeMove(idx, currentPlayer);
+    if(gameActive) {
+      switchPlayer();
+      if(mode === '1vscpu' && currentPlayer === 'O') {
+        setTimeout(cpuPlay, 600);
+      }
+    }
+  }
+
+  function makeMove(idx, player) {
+    board[idx] = player;
+    renderBoard();
+    const winInfo = checkWin(player);
+    if(winInfo) {
+      gameActive = false;
+      showWinLine(winInfo);
+      messageDiv.textContent = `${players[player === 'X' ? 0 : 1]} venceu! 🎉`;
+    } else if(board.every(cell => cell !== null)) {
+      gameActive = false;
+      messageDiv.textContent = "Empate! 🤝";
+    }
+  }
+
+  function switchPlayer() {
+    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+    const playerName = players[currentPlayer === 'X' ? 0 : 1];
+    messageDiv.textContent = `Vez de ${playerName} (${currentPlayer})`;
+  }
+
+  function checkWin(player) {
+    for(let combo of winCombos) {
+      if(combo.every(i => board[i] === player)) {
+        return combo;
+      }
+    }
+    return null;
+  }
+
+  function showWinLine(combo) {
+    lineWin.style.display = 'block';
+    lineWin.className = '';
+
+    const indexSet = new Set(combo);
+    if(indexSet.has(0) && indexSet.has(1) && indexSet.has(2)) setLinePosition('horizontal', 0);
+    else if(indexSet.has(3) && indexSet.has(4) && indexSet.has(5)) setLinePosition('horizontal', 1);
+    else if(indexSet.has(6) && indexSet.has(7) && indexSet.has(8)) setLinePosition('horizontal', 2);
+    else if(indexSet.has(0) && indexSet.has(3) && indexSet.has(6)) setLinePosition('vertical', 0);
+    else if(indexSet.has(1) && indexSet.has(4) && indexSet.has(7)) setLinePosition('vertical', 1);
+    else if(indexSet.has(2) && indexSet.has(5) && indexSet.has(8)) setLinePosition('vertical', 2);
+    else if(indexSet.has(0) && indexSet.has(4) && indexSet.has(8)) setLinePosition('diagonal1');
+    else if(indexSet.has(2) && indexSet.has(4) && indexSet.has(6)) setLinePosition('diagonal2');
+  }
+
+  function setLinePosition(type, index) {
+    lineWin.className = '';
+    if(type === 'horizontal') {
+      lineWin.classList.add('horizontal');
+      lineWin.style.top = `${index * 134 + 61}px`;
+      lineWin.style.left = '83px';
+      lineWin.style.height = '6px';
+      lineWin.style.width = '374px';
+      lineWin.style.transform = 'none';
+    } else if(type === 'vertical') {
+      lineWin.classList.add('vertical');
+      lineWin.style.left = `${index * 134 + 61}px`;
+      lineWin.style.top = '83px';
+      lineWin.style.width = '6px';
+      lineWin.style.height = '374px';
+      lineWin.style.transform = 'none';
+    } else if(type === 'diagonal1') {
+      lineWin.classList.add('diagonal1');
+      lineWin.style.width = '420px';
+      lineWin.style.height = '6px';
+      lineWin.style.top = '190px';
+      lineWin.style.left = '190px';
+      lineWin.style.transform = 'translate(-50%, -50%) rotate(45deg)';
+    } else if(type === 'diagonal2') {
+      lineWin.classList.add('diagonal2');
+      lineWin.style.width = '420px';
+      lineWin.style.height = '6px';
+      lineWin.style.top = '190px';
+      lineWin.style.left = '190px';
+      lineWin.style.transform = 'translate(-50%, -50%) rotate(-45deg)';
+    }
+  }
+
+  function cpuPlay() {
+    switch(cpuDifficulty) {
+      case 'easy':
+        playRandom();
+        break;
+      case 'medium':
+        if(!tryToWinOrBlock()) playRandom();
+        break;
+      case 'hard':
+        if(!tryToWinOrBlock()) playPerfect();
+        break;
+    }
+  }
+
+  function playRandom() {
+    const freePositions = board.map((v,i) => v === null ? i : null).filter(i => i !== null);
+    if(freePositions.length === 0) return;
+    const idx = freePositions[Math.floor(Math.random() * freePositions.length)];
+    makeMove(idx, currentPlayer);
+    switchPlayer();
+  }
+
+  function tryToWinOrBlock() {
+    const target = findWinningOrBlockingMove(currentPlayer) || findWinningOrBlockingMove(currentPlayer === 'X' ? 'O' : 'X');
+    if(target !== null) {
+      makeMove(target, currentPlayer);
+      switchPlayer();
+      return true;
+    }
+    return false;
+  }
+
+  function findWinningOrBlockingMove(player) {
+    for(let combo of winCombos) {
+      const vals = combo.map(i => board[i]);
+      if(vals.filter(v => v===player).length === 2 && vals.includes(null)) {
+        return combo[vals.indexOf(null)];
+      }
+    }
+    return null;
+  }
+
+  function playPerfect() {
+    let bestScore = -Infinity;
+    let move;
+    for(let i=0; i<9; i++) {
+      if(board[i] === null) {
+        board[i] = currentPlayer;
+        let score = minimax(board, false);
+        board[i] = null;
+        if(score > bestScore) {
+          bestScore = score;
+          move = i;
+        }
+      }
+    }
+    if(move !== undefined) {
+      makeMove(move, currentPlayer);
+      switchPlayer();
+    } else {
+      playRandom();
+    }
+  }
+
+  function minimax(brd, isMaximizing) {
+    let winner = checkWinner(brd);
+    if(winner !== null) {
+      if(winner === currentPlayer) return 10;
+      else if(winner === 'tie') return 0;
+      else return -10;
+    }
+    if(isMaximizing) {
+      let bestScore = -Infinity;
+      for(let i=0; i<9; i++) {
+        if(brd[i] === null) {
+          brd[i] = currentPlayer;
+          let score = minimax(brd, false);
+          brd[i] = null;
+          bestScore = Math.max(score, bestScore);
+        }
+      }
+      return bestScore;
+    } else {
+      let opponent = currentPlayer === 'X' ? 'O' : 'X';
+      let bestScore = Infinity;
+      for(let i=0; i<9; i++) {
+        if(brd[i] === null) {
+          brd[i] = opponent;
+          let score = minimax(brd, true);
+          brd[i] = null;
+          bestScore = Math.min(score, bestScore);
+        }
+      }
+      return bestScore;
+    }
+  }
+
+  function checkWinner(brd) {
+    for(let combo of winCombos) {
+      const [a,b,c] = combo;
+      if(brd[a] && brd[a] === brd[b] && brd[a] === brd[c]) {
+        return brd[a];
+      }
+    }
+    if(brd.every(cell => cell !== null)) return 'tie';
+    return null;
+  }
+</script>
+</body>
+</html>
