@@ -12,14 +12,13 @@
     min-height: 100vh;
     text-align: center;
     overflow-x: hidden;
-    /* Fundo animado colorido */
     background: linear-gradient(120deg, #FFD23F 0%, #FF77A9 50%, #77DDFF 100%);
     animation: animateBG 12s ease-in-out infinite;
   }
   @keyframes animateBG {
-    0% { background-position: 0% 50%;}
-    50% { background-position: 100% 50%;}
-    100% { background-position: 0% 50%;}
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
   }
   .menu-btn {
     display: inline-block;
@@ -52,7 +51,7 @@
     position: relative;
     width: 95vw;
     max-width: 1080px;
-    height: 600px;
+    height: 620px;
     margin: 0 auto;
     border-radius: 15px;
   }
@@ -121,64 +120,58 @@
     <a href="encaixe/index.html" class="jogo-card"><span class="jogo-emoji">🟦🟧🟩</span>Arrastar e Soltar Formas</a>
   </div>
   <script>
-    function checkCollision(x, y, cards, currentIndex) {
-      const margin = 15; // margem extra para evitar proximidade demais
-      for(let i = 0; i < cards.length; i++) {
-        if(i === currentIndex) continue;
-        const c = cards[i].getBoundingClientRect();
-        const newX = x, newY = y;
-        // Obter posição relativa ao container
-        let cardX = cards[i].offsetLeft;
-        let cardY = cards[i].offsetTop;
-        let cardWidth = cards[i].offsetWidth + margin;
-        let cardHeight = cards[i].offsetHeight + margin;
-
-        // Verificar se novo retângulo sobrepõe retângulo do cartão i
-        if(newX < cardX + cardWidth &&
-           newX + cards[currentIndex].offsetWidth + margin > cardX &&
-           newY < cardY + cardHeight &&
-           newY + cards[currentIndex].offsetHeight + margin > cardY) {
-          return true; // colisão detectada
-        }
-      }
-      return false; // sem colisao
-    }
-
-    function distributeCards() {
+    function distributionGrid() {
       const container = document.getElementById('jogosContainer');
       const cards = Array.from(container.querySelectorAll('.jogo-card'));
-      const maxAttempts = 100;
+      const rows = 3;
+      const cols = 4;
+      const padding = 20;
+
       const containerWidth = container.clientWidth;
       const containerHeight = container.clientHeight;
 
-      for(let i=0; i < cards.length; i++) {
-        let attempts = 0;
-        let posX, posY;
+      const cellWidth = (containerWidth - padding * (cols + 1)) / cols;
+      const cellHeight = (containerHeight - padding * (rows + 1)) / rows;
 
-        // Tenta encontrar posição sem colisão até maxAttempts
-        do {
-          posX = Math.random() * (containerWidth - cards[i].offsetWidth);
-          posY = Math.random() * (containerHeight - cards[i].offsetHeight);
-          attempts++;
-        } while(checkCollision(posX, posY, cards, i) && attempts < maxAttempts);
-
-        // Se não encontrou posição, aceita última posição mesmo assim
-        cards[i].style.left = posX + 'px';
-        cards[i].style.top = posY + 'px';
-
-        // Aplica rotação e escala flutuante
-        const rotation = (Math.random() * 12) - 6; // -6° a +6°
-        const scale = 1 + (Math.random() * 0.08);
-        cards[i].style.transform = `rotate(${rotation}deg) scale(${scale})`;
+      // Gera todas as posições possíveis da grade
+      const positions = [];
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          positions.push({
+            x: padding + c * (cellWidth + padding),
+            y: padding + r * (cellHeight + padding),
+            width: cellWidth,
+            height: cellHeight
+          });
+        }
       }
+
+      // Embaralha as posições para distribuir aleatoriamente
+      function shuffle(array) {
+        for (let i = array.length -1; i > 0; i--){
+          const j = Math.floor(Math.random() * (i+1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+      }
+      shuffle(positions);
+
+      cards.forEach((card, index) => {
+        const pos = positions[index];
+        card.style.left = `${pos.x}px`;
+        card.style.top = `${pos.y}px`;
+        card.style.width = `${pos.width}px`;
+        card.style.height = `${pos.height}px`;
+
+        // Aplica rotação e leve escala para efeito lúdico
+        const rotation = (Math.random() * 12) - 6;
+        const scale = 0.85 + (Math.random() * 0.25); // escala entre 0.85 e 1.1
+        card.style.transform = `rotate(${rotation}deg) scale(${scale})`;
+      })
     }
 
-    window.onload = function() {
-      distributeCards();
-    }
-    window.onresize = function() {
-      distributeCards();
-    }
+    window.onload = distributionGrid;
+    window.onresize = distributionGrid;
   </script>
 </body>
 </html>
