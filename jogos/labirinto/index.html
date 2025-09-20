@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Labirinto - MusiKids Fun</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+  body {
+    margin: 0; padding: 1rem;
+    background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+    font-family: 'Baloo 2', cursive, Arial, sans-serif;
+    user-select: none;
+    color: #1a1a1a;
+    text-align: center;
+  }
+  h1 {
+    margin-bottom: 1.2rem;
+    color: #114b8c;
+  }
+  #game {
+    margin: 0 auto;
+    background: #d6f0ff;
+    border-radius: 20px;
+    max-width: 340px;
+    max-height: 340px;
+    position: relative;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  }
+  .row {
+    display: flex;
+  }
+  .cell {
+    width: 34px;
+    height: 34px;
+    border: 1.5px solid #114b8c;
+    box-sizing: border-box;
+    background: #c9e7ff;
+    position: relative;
+  }
+  .cell.wall {
+    background: #114b8c;
+  }
+  .player {
+    background: #ff6666;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+  }
+  .goal {
+    background: #55cc55;
+    border-radius: 6px;
+  }
+  #instructions {
+    margin: 1rem auto 20px auto;
+    max-width: 340px;
+    font-weight: bold;
+    color: #114b8c;
+  }
+</style>
+</head>
+<body>
+<h1>🏞️ Labirinto</h1>
+<div id="instructions">
+  Use as setas do teclado para mover o círculo vermelho até o quadrado verde.
+</div>
+<div id="game" tabindex="0" aria-label="Labirinto"></div>
+<script>
+  const mazeLayout = [
+    [1,1,1,1,1,1,1,1,1,1],
+    [1,0,0,0,0,1,0,0,0,1],
+    [1,0,1,1,0,1,0,1,0,1],
+    [1,0,1,0,0,0,0,1,0,1],
+    [1,0,1,0,1,1,0,1,0,1],
+    [1,0,0,0,0,0,0,1,0,1],
+    [1,0,1,1,1,1,0,1,0,1],
+    [1,0,0,0,0,0,0,0,0,1],
+    [1,1,1,1,1,1,1,1,2,1]
+  ];
+  const rows = mazeLayout.length;
+  const cols = mazeLayout[0].length;
+  const gameBoard = document.getElementById('game');
+  let playerPos = {row: 1, col: 1};
+
+  function createMaze() {
+    gameBoard.innerHTML = '';
+    for(let r=0; r<rows; r++) {
+      const rowDiv = document.createElement('div');
+      rowDiv.classList.add('row');
+      for(let c=0; c<cols; c++) {
+        const cell = document.createElement('div');
+        cell.classList.add('cell');
+        if(mazeLayout[r][c] === 1) cell.classList.add('wall');
+        if(r === playerPos.row && c === playerPos.col) cell.classList.add('player');
+        if(mazeLayout[r][c] === 2) cell.classList.add('goal');
+        rowDiv.appendChild(cell);
+      }
+      gameBoard.appendChild(rowDiv);
+    }
+  }
+  
+  function canMove(r, c) {
+    return r >= 0 && c >=0 && r < rows && c < cols && mazeLayout[r][c] !== 1;
+  }
+  
+  function movePlayer(dr, dc) {
+    const newRow = playerPos.row + dr;
+    const newCol = playerPos.col + dc;
+    if(canMove(newRow, newCol)) {
+      playerPos.row = newRow;
+      playerPos.col = newCol;
+      createMaze();
+      checkWin();
+    }
+  }
+  function checkWin() {
+    if(mazeLayout[playerPos.row][playerPos.col] === 2) {
+      setTimeout(() => alert("🎉 Parabéns! Você saiu do labirinto!"), 100);
+    }
+  }
+
+  window.onload = () => {
+    createMaze();
+    gameBoard.focus();
+  }
+
+  gameBoard.addEventListener('keydown', (e) => {
+    switch(e.key) {
+      case 'ArrowUp': movePlayer(-1,0); break;
+      case 'ArrowDown': movePlayer(1,0); break;
+      case 'ArrowLeft': movePlayer(0,-1); break;
+      case 'ArrowRight': movePlayer(0,1); break;
+    }
+  });
+</script>
+</body>
+</html>
