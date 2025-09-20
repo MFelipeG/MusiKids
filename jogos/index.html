@@ -121,28 +121,64 @@
     <a href="encaixe/index.html" class="jogo-card"><span class="jogo-emoji">🟦🟧🟩</span>Arrastar e Soltar Formas</a>
   </div>
   <script>
-    // Distribuição aleatória das posições das caixas dos jogos
-    function shufflePositions() {
+    function checkCollision(x, y, cards, currentIndex) {
+      const margin = 15; // margem extra para evitar proximidade demais
+      for(let i = 0; i < cards.length; i++) {
+        if(i === currentIndex) continue;
+        const c = cards[i].getBoundingClientRect();
+        const newX = x, newY = y;
+        // Obter posição relativa ao container
+        let cardX = cards[i].offsetLeft;
+        let cardY = cards[i].offsetTop;
+        let cardWidth = cards[i].offsetWidth + margin;
+        let cardHeight = cards[i].offsetHeight + margin;
+
+        // Verificar se novo retângulo sobrepõe retângulo do cartão i
+        if(newX < cardX + cardWidth &&
+           newX + cards[currentIndex].offsetWidth + margin > cardX &&
+           newY < cardY + cardHeight &&
+           newY + cards[currentIndex].offsetHeight + margin > cardY) {
+          return true; // colisão detectada
+        }
+      }
+      return false; // sem colisao
+    }
+
+    function distributeCards() {
       const container = document.getElementById('jogosContainer');
       const cards = Array.from(container.querySelectorAll('.jogo-card'));
-      // Define limites
-      let width = container.clientWidth - 220;
-      let height = container.clientHeight - 110;
-      cards.forEach((card, idx) => {
-        // Cores e leves rotações para parecer ainda mais flutuante
-        let left = Math.random() * width;
-        let top = Math.random() * height;
-        let rot = Math.random() * 12 - 6;
-        card.style.left = `${left}px`;
-        card.style.top = `${top}px`;
-        card.style.transform = `rotate(${rot}deg) scale(${1+Math.random()*0.08})`;
-      });
+      const maxAttempts = 100;
+      const containerWidth = container.clientWidth;
+      const containerHeight = container.clientHeight;
+
+      for(let i=0; i < cards.length; i++) {
+        let attempts = 0;
+        let posX, posY;
+
+        // Tenta encontrar posição sem colisão até maxAttempts
+        do {
+          posX = Math.random() * (containerWidth - cards[i].offsetWidth);
+          posY = Math.random() * (containerHeight - cards[i].offsetHeight);
+          attempts++;
+        } while(checkCollision(posX, posY, cards, i) && attempts < maxAttempts);
+
+        // Se não encontrou posição, aceita última posição mesmo assim
+        cards[i].style.left = posX + 'px';
+        cards[i].style.top = posY + 'px';
+
+        // Aplica rotação e escala flutuante
+        const rotation = (Math.random() * 12) - 6; // -6° a +6°
+        const scale = 1 + (Math.random() * 0.08);
+        cards[i].style.transform = `rotate(${rotation}deg) scale(${scale})`;
+      }
     }
-    // Delay pequeno para garantir layout já calculado
-    window.onload = () => {
-      setTimeout(shufflePositions, 150);
-    };
-    window.onresize = shufflePositions;
+
+    window.onload = function() {
+      distributeCards();
+    }
+    window.onresize = function() {
+      distributeCards();
+    }
   </script>
 </body>
 </html>
