@@ -221,6 +221,13 @@
     <img src="https://i.imgur.com/gK9fI8H.png" class="palette-item" draggable="true" alt="Tartaruga para colorir" />
     <img src="https://i.imgur.com/o2Y0Z4j.png" class="palette-item" draggable="true" alt="Garota para colorir" />
     
+    <img src="https://i.imgur.com/5D6W8jV.png" class="palette-item" draggable="true" alt="Unicórnio para colorir" />
+    <img src="https://i.imgur.com/Kz6Z43a.png" class="palette-item" draggable="true" alt="Leão para colorir" />
+    <img src="https://i.imgur.com/FwFqJmR.png" class="palette-item" draggable="true" alt="Foguete para colorir" />
+    <img src="https://i.imgur.com/pQ12J7g.png" class="palette-item" draggable="true" alt="Castelo para colorir" />
+    <img src="https://i.imgur.com/Z4w01p4.png" class="palette-item" draggable="true" alt="Flor para colorir" />
+    <img src="https://i.imgur.com/vH9XwR1.png" class="palette-item" draggable="true" alt="Elefante para colorir" />
+    
     <h3 style="margin-top: 20px;">Formas Geométricas</h3>
     <div class="palette-shape circle" draggable="true" role="img" aria-label="Círculo"></div>
     <div class="palette-shape square" draggable="true" role="img" aria-label="Quadrado"></div>
@@ -322,6 +329,8 @@
         paintArea.removeChild(action.element);
       } else if (action.type === 'fill') {
         action.element.setAttribute("fill", action.oldColor);
+      } else if (action.type === 'transform') { // Undo para transformar/mover
+        action.element.setAttribute("transform", action.oldTransform);
       }
       redoStack.push(action);
       updateUndoRedoButtons();
@@ -334,6 +343,8 @@
         paintArea.appendChild(action.element);
       } else if (action.type === 'fill') {
         action.element.setAttribute("fill", action.newColor);
+      } else if (action.type === 'transform') { // Redo para transformar/mover
+        action.element.setAttribute("transform", action.newTransform);
       }
       undoStack.push(action);
       updateUndoRedoButtons();
@@ -417,7 +428,7 @@
         if (currentTool !== 'bucket') return;
         const target = e.target;
         // Pinta qualquer forma (rect, circle, polygon) ou paths fechados
-        if (['rect', 'circle', 'polygon', 'path'].includes(target.tagName.toLowerCase())) {
+        if (['rect', 'circle', 'polygon', 'path', 'image'].includes(target.tagName.toLowerCase())) {
             const oldColor = target.getAttribute('fill') || 'none';
             if (oldColor === currentColor) return; // Não faz nada se já for da mesma cor
 
@@ -494,20 +505,20 @@
     function makeDraggableAndSelectable(el) {
         let isDragging = false;
         let offset;
+        let startTransform; // Guarda o estado inicial para o undo
 
         el.addEventListener("mousedown", (e) => {
-            // CORREÇÃO: Impede o evento de chegar na área de pintura, evitando o desenho de linhas
             e.stopPropagation(); 
             
-            // Permite arrastar apenas com a ferramenta de lápis/pincel (para mover)
             if(['pencil', 'brush'].includes(currentTool)) {
                 selectTool('pencil'); // Muda para uma ferramenta de "seleção"
                 selectElement(el);
                 isDragging = true;
                 const pt = getSVGPoint(e);
                 
+                startTransform = el.getAttribute("transform") || ""; // Salva o estado inicial
+                
                 const transform = el.transform.baseVal;
-                // Consolida as transformações para obter uma única matriz
                 const matrix = transform.consolidate()?.matrix || paintArea.createSVGMatrix();
                 
                 offset = {
@@ -533,6 +544,11 @@
             if (isDragging) {
                 isDragging = false;
                 el.style.cursor = "grab";
+                // Adiciona a ação de transformação ao histórico de undo
+                const newTransform = el.getAttribute("transform") || "";
+                if (newTransform !== startTransform) {
+                    pushUndo({ type: 'transform', element: el, oldTransform: startTransform, newTransform: newTransform });
+                }
             }
         };
 
