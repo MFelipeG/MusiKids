@@ -12,6 +12,8 @@
     font-family: 'Baloo 2', cursive, Arial, sans-serif;
     user-select: none;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
   header {
     font-size: 2rem;
@@ -47,11 +49,11 @@
     top: 60px;
     left: 15px;
     background: #264653cc;
-    padding: 10px;
+    padding: 12px;
     border-radius: 20px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     z-index: 900;
   }
   .tool-btn {
@@ -67,7 +69,7 @@
     justify-content: center;
     font-size: 24px;
     color: #264653;
-    transition: background-color 0.25s ease;
+    transition: background-color 0.25s;
   }
   .tool-btn.selected {
     background: #2a9d8f;
@@ -76,31 +78,118 @@
   .tool-btn:hover {
     background: #d8f3dc;
   }
+  #color-palette {
+    display: flex;
+    flex-wrap: wrap;
+    width: 220px;
+    gap: 8px;
+    margin-top: 10px;
+    justify-content: center;
+  }
+  .color-dot {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid transparent;
+    box-shadow: 0 1px 3px #00000055;
+    transition: border-color 0.2s;
+  }
+  .color-dot.selected {
+    border-color: #2a9d8f;
+    box-shadow: 0 0 8px #2a9d8f;
+  }
+  #image-palette {
+    position: fixed;
+    top: 60px;
+    right: 15px;
+    width: 200px;
+    background: #f7e8dfcc;
+    border-radius: 18px;
+    padding: 8px;
+    box-shadow: 0 8px 30px #d98e5caa;
+    overflow-y: auto;
+    max-height: 75vh;
+    user-select: none;
+    z-index: 900;
+  }
+  #image-palette h3 {
+    margin: 0 0 8px 0;
+    color: #d76f51;
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-align: center;
+  }
+  .palette-image {
+    width: 90%;
+    margin: 6px auto;
+    border: 3px solid transparent;
+    border-radius: 14px;
+    cursor: grab;
+    transition: border-color 0.2s;
+    display: block;
+  }
+  .palette-image.dragging {
+    opacity: 0.6;
+    cursor: grabbing;
+  }
+  .palette-image:hover {
+    border-color: #d76f51;
+  }
   #canvas-container {
     margin-left: 90px;
     margin-top: 60px;
     height: calc(100vh - 60px);
     overflow: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   svg#paint-area {
     border: 3px solid #264653;
     border-radius: 20px;
     background: #fff9f0;
-    max-width: 95vw;
+    max-width: 90vw;
     max-height: 85vh;
     display: block;
-    margin: auto;
+    user-select: none;
+    touch-action: none;
   }
   path.outline {
     stroke: #264653;
     stroke-width: 3;
     fill: none;
+    pointer-events: none;
   }
   path.fillable {
     fill: white;
     stroke: #264653;
     stroke-width: 2;
     cursor: pointer;
+  }
+  #undo-redo {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+  .undo-redo-btn {
+    padding: 10px 20px;
+    border-radius: 16px;
+    border: none;
+    font-weight: 700;
+    background-color: #2a9d8f;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 6px 15px #2a9d8fcc;
+    transition: background-color 0.3s ease;
+  }
+  .undo-redo-btn:disabled {
+    background-color: #999999aa;
+    cursor: not-allowed;
+  }
+  .undo-redo-btn:hover:not(:disabled) {
+    background-color: #21867a;
   }
 </style>
 </head>
@@ -113,34 +202,47 @@
   <button class="tool-btn" id="tool-brush" title="Pincel - traço grosso" aria-pressed="false" aria-label="Selecionar Pincel">🖌️</button>
   <button class="tool-btn" id="tool-eraser" title="Borracha - apagar pintura" aria-pressed="false" aria-label="Selecionar Borracha">🩹</button>
   <button class="tool-btn" id="tool-bucket" title="Balde de tinta - preencher" aria-pressed="false" aria-label="Selecionar Balde de Tinta">🪣</button>
-  <button class="tool-btn" id="btn-clear" title="Limpar tudo" aria-label="Limpar pintura">🧹</button>
+  <input type="color" id="color-picker" title="Escolha a cor da tinta" value="#ff4c8b" 
+         style="margin-top:10px; border-radius:10px; width: 44px; height:44px; border:none; cursor:pointer" aria-label="Selecione cor" />
+</div>
+
+<div id="undo-redo">
+  <button class="undo-redo-btn" id="undo-btn" disabled aria-label="Desfazer última ação">↩️ Desfazer</button>
+  <button class="undo-redo-btn" id="redo-btn" disabled aria-label="Refazer última ação">↪️ Refazer</button>
+</div>
+
+<div id="image-palette" aria-label="Paleta de imagens para pintar">
+  <h3>Imagens para Pintar</h3>
+  <img src="https://cdn.pixabay.com/photo/2016/10/18/21/06/dinosaur-1784536_1280.jpg" class="palette-image" draggable="true" alt="Dinossauro" />
+  <img src="https://cdn.pixabay.com/photo/2014/04/10/10/02/owl-319913_1280.jpg" class="palette-image" draggable="true" alt="Coruja" />
+  <img src="https://cdn.pixabay.com/photo/2016/01/22/15/36/dog-1151516_1280.jpg" class="palette-image" draggable="true" alt="Cachorro" />
+  <img src="https://cdn.pixabay.com/photo/2016/03/27/19/17/turtle-1280223_1280.jpg" class="palette-image" draggable="true" alt="Tartaruga" />
+  <img src="https://cdn.pixabay.com/photo/2017/06/20/23/21/girl-2421590_1280.jpg" class="palette-image" draggable="true" alt="Garota" />
 </div>
 
 <div id="canvas-container">
   <svg id="paint-area" viewBox="0 0 600 400" role="img" aria-label="Área de pintura">
-    <!-- Contornos do desenho para o balde preencher -->
-    <path class="outline" d="M150 100 C 180 80, 210 80, 240 100 S 270 130, 300 110" />
-    <path class="outline" d="M400 150 Q 430 120, 460 150 T 520 160" />
-    <!-- Áreas coloridas para preencher com balde -->
-    <path class="fillable" data-fill default-fill="#ffffff" d="M100,100 L200,100 L200,200 L100,200 Z" />
-    <path class="fillable" data-fill default-fill="#ffffff" d="M350,120 L450,120 L450,220 L350,220 Z" />
+    <!-- Contornos para balde preencher -->
+    <path class="outline" d="M100 120 Q 160 50, 220 120 T 340 120" />
+    <path class="outline" d="M400 180 Q 460 130, 520 180 T 580 190" />
   </svg>
 </div>
 
 <script>
   const btnBack = document.getElementById('btn-back');
-  btnBack.onclick = () => {
-    location.href = '../index.html'; // volta ao menu principal
-  };
+  btnBack.onclick = () => location.href = '../index.html';
 
   const tools = {
     pencil: document.getElementById('tool-pencil'),
     brush: document.getElementById('tool-brush'),
     eraser: document.getElementById('tool-eraser'),
     bucket: document.getElementById('tool-bucket'),
-    clear: document.getElementById('btn-clear'),
   };
+  const colorPicker = document.getElementById('color-picker');
+  const undoBtn = document.getElementById('undo-btn');
+  const redoBtn = document.getElementById('redo-btn');
   let currentTool = 'pencil';
+  let currentColor = colorPicker.value;
 
   const paintArea = document.getElementById('paint-area');
   const svgNS = "http://www.w3.org/2000/svg";
@@ -148,49 +250,81 @@
   let currentPath = null;
   let pathData = '';
 
-  function selectTool(toolName) {
-    currentTool = toolName;
-    Object.keys(tools).forEach(key => {
-      if(tools[key].classList) {
-        tools[key].classList.toggle('selected', key === toolName);
-        tools[key].setAttribute('aria-pressed', key === toolName);
-      }
+  // Undo / Redo stacks
+  let undoStack = [];
+  let redoStack = [];
+
+  function selectTool(name) {
+    currentTool = name;
+    Object.entries(tools).forEach(([key, btn]) => {
+      btn.classList.toggle('selected', key === name);
+      btn.setAttribute('aria-pressed', key === name);
     });
   }
-  tools.pencil.onclick = () => selectTool('pencil');
-  tools.brush.onclick = () => selectTool('brush');
-  tools.eraser.onclick = () => selectTool('eraser');
-  tools.bucket.onclick = () => selectTool('bucket');
-  tools.clear.onclick = () => clearPainting();
-
-  function createNewPath() {
-    const p = document.createElementNS(svgNS, 'path');
-    p.setAttribute('fill', 'none');
-    p.setAttribute('stroke', '#000');
-    if(currentTool === 'brush') {
-      p.setAttribute('stroke-width', '8');
-      p.setAttribute('stroke-linejoin', 'round');
-      p.setAttribute('stroke-linecap', 'round');
-    } else {
-      p.setAttribute('stroke-width', '2');
-      p.setAttribute('stroke-linejoin', 'round');
-      p.setAttribute('stroke-linecap', 'round');
+  Object.entries(tools).forEach(([key, btn]) => {
+    btn.onclick = () => {
+      selectTool(key);
+      redoStack = []; // limpa refazer ao trocar ferramenta
+      updateUndoRedoButtons();
     }
-    paintArea.appendChild(p);
-    return p;
+  });
+
+  colorPicker.oninput = e => {
+    currentColor = e.target.value;
+  };
+
+  function pushUndo(action) {
+    undoStack.push(action);
+    if(undoStack.length > 50) undoStack.shift(); // limite pra não gerar vazamento
+    redoStack = [];
+    updateUndoRedoButtons();
   }
 
+  undoBtn.onclick = () => {
+    if(undoStack.length === 0) return;
+    const last = undoStack.pop();
+    if(last.type === 'draw' || last.type === 'erase' || last.type === 'image') {
+      paintArea.removeChild(last.element);
+      redoStack.push(last);
+    } else if(last.type === 'fill') {
+      last.element.setAttribute('fill', last.oldColor);
+      redoStack.push(last);
+    }
+    updateUndoRedoButtons();
+  };
+  redoBtn.onclick = () => {
+    if(redoStack.length === 0) return;
+    const last = redoStack.pop();
+    if(last.type === 'draw' || last.type === 'erase' || last.type === 'image') {
+      paintArea.appendChild(last.element);
+      undoStack.push(last);
+    } else if(last.type === 'fill') {
+      last.element.setAttribute('fill', last.newColor);
+      undoStack.push(last);
+    }
+    updateUndoRedoButtons();
+  };
+
+  function updateUndoRedoButtons() {
+    undoBtn.disabled = undoStack.length === 0;
+    redoBtn.disabled = redoStack.length === 0;
+  }
+
+  // Drawing handlers
   paintArea.addEventListener('mousedown', e => {
-    if(currentTool === 'bucket') return; // balde usa click diferente
+    if(currentTool === 'bucket') return;
     drawing = true;
     const pt = getSVGPoint(e);
     pathData = `M ${pt.x} ${pt.y}`;
-    currentPath = createNewPath();
+    currentPath = document.createElementNS(svgNS, 'path');
+    currentPath.setAttribute('fill', 'none');
+    currentPath.setAttribute('stroke', currentTool === 'eraser' ? '#fff' : currentColor);
+    currentPath.setAttribute('stroke-width', currentTool === 'brush' ? '8' : (currentTool === 'eraser' ? '12' : '2'));
+    currentPath.setAttribute('stroke-linejoin', 'round');
+    currentPath.setAttribute('stroke-linecap', 'round');
     currentPath.setAttribute('d', pathData);
-    if(currentTool === 'eraser') {
-      currentPath.setAttribute('stroke', '#fff');
-      currentPath.setAttribute('stroke-width', '12');
-    }
+    paintArea.appendChild(currentPath);
+    pushUndo({type: currentTool === 'eraser' ? 'erase' : 'draw', element: currentPath});
   });
   paintArea.addEventListener('mousemove', e => {
     if(!drawing || !currentPath) return;
@@ -198,36 +332,84 @@
     pathData += ` L ${pt.x} ${pt.y}`;
     currentPath.setAttribute('d', pathData);
   });
-  paintArea.addEventListener('mouseup', e => {
+  function stopDrawing() {
     drawing = false;
     currentPath = null;
-  });
-  paintArea.addEventListener('mouseleave', e => {
-    drawing = false;
-    currentPath = null;
-  });
+  }
+  paintArea.addEventListener('mouseup', stopDrawing);
+  paintArea.addEventListener('mouseleave', stopDrawing);
 
-  // Balde de tinta - preenche área clicada
-  paintArea.querySelectorAll('path.fillable').forEach(path => {
+  // Bucket fill support
+  paintArea.querySelectorAll('path.outline').forEach(path => {
     path.addEventListener('click', e => {
       if(currentTool !== 'bucket') return;
-      let color = '#000000'; // cor padrão se nenhuma for selecionada
-      // pegar cor do lápis ou pincel selecionado (no exemplo, sempre preto)
-      if(currentTool === 'bucket') color = '#ff4c8b'; 
-      path.setAttribute('fill', color);
+      const oldColor = path.getAttribute('fill') || 'none';
+      path.setAttribute('fill', currentColor);
+      pushUndo({type:'fill', element: path, oldColor: oldColor, newColor: currentColor});
     });
   });
 
-  function clearPainting() {
-    // Remove todos paths que não sejam fillable
-    [...paintArea.querySelectorAll('path')].forEach(path => {
-      if(path.classList.contains('fillable')) {
-        path.setAttribute('fill', path.getAttribute('default-fill') || 'white');
-      } else {
-        path.remove();
+  // Drag & Drop images from palette into SVG
+  const paletteImages = document.querySelectorAll('.palette-image');
+  paletteImages.forEach(img => {
+    img.addEventListener('dragstart', e => {
+      e.dataTransfer.setData('text/plain', e.target.src);
+    });
+  });
+
+  paintArea.addEventListener('dragover', e => {
+    e.preventDefault();
+  });
+  paintArea.addEventListener('drop', e => {
+    e.preventDefault();
+    const url = e.dataTransfer.getData('text/plain');
+    if(url) {
+      const pt = getSVGPoint(e);
+      const img = document.createElementNS(svgNS, 'image');
+      img.setAttributeNS('http://www.w3.org/1999/xlink', 'href', url);
+      img.setAttribute('x', pt.x - 50);
+      img.setAttribute('y', pt.y - 50);
+      img.setAttribute('height', 100);
+      img.setAttribute('width', 100);
+      img.style.cursor = 'grab';
+      paintArea.appendChild(img);
+      pushUndo({type:'image', element: img});
+      makeSVGDraggable(img);
+    }
+  });
+
+  // Drag inside SVG for images
+  function makeSVGDraggable(element) {
+    let dragging = false;
+    let offsetX, offsetY;
+
+    element.addEventListener('mousedown', e => {
+      e.preventDefault();
+      dragging = true;
+      const pt = getSVGPoint(e);
+      offsetX = pt.x - parseFloat(element.getAttribute('x'));
+      offsetY = pt.y - parseFloat(element.getAttribute('y'));
+      element.style.cursor = 'grabbing';
+    });
+    paintArea.addEventListener('mousemove', e => {
+      if(dragging){
+        const pt = getSVGPoint(e);
+        element.setAttribute('x', pt.x - offsetX);
+        element.setAttribute('y', pt.y - offsetY);
       }
     });
-    instructions.textContent = '';
+    paintArea.addEventListener('mouseup', e => {
+      if(dragging){
+        dragging = false;
+        element.style.cursor = 'grab';
+      }
+    });
+    paintArea.addEventListener('mouseleave', e => {
+      if(dragging){
+        dragging = false;
+        element.style.cursor = 'grab';
+      }
+    });
   }
 
   function getSVGPoint(event) {
