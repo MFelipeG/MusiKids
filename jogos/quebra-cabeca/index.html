@@ -82,6 +82,7 @@
     border-radius: 20px;
     box-shadow: 0 8px 38px #ffa4c5cc;
     user-select: none;
+    margin-bottom: 2rem;
   }
   #puzzle {
     display: grid;
@@ -159,7 +160,7 @@
 </div>
 
 <div id="instructions" aria-live="polite"></div>
-<div id="puzzle-container" aria-label="Área do quebra-cabeça" tabindex="0" aria-live="polite" aria-atomic="true" hidden>
+<div id="puzzle-container" aria-label="Área do quebra-cabeça" tabindex="0" aria-live="polite" aria-atomic="true" style="display:none;">
   <div id="puzzle"></div>
 </div>
 
@@ -195,7 +196,7 @@
     totalPieces = Number(piecesSelect.value);
     determineGrid(totalPieces);
     imageUrl = imageSelect.value;
-    puzzleContainer.hidden = false;
+    puzzleContainer.style.display = '';
     instructions.textContent = `Monte o quebra-cabeça de ${totalPieces} peças!`;
     setupPuzzle();
   };
@@ -226,7 +227,7 @@
       }
     }
     shufflePieces();
-    addDragListeners();
+    assignDragEvents();
   }
 
   function shufflePieces() {
@@ -236,10 +237,11 @@
     shuffledPositions.forEach(pos => {
       puzzle.appendChild(pieces[pos]);
     });
+    assignDragEvents();
   }
 
-  function addDragListeners() {
-    pieces.forEach(piece => {
+  function assignDragEvents() {
+    Array.from(puzzle.children).forEach(piece => {
       piece.addEventListener('dragstart', dragStart);
       piece.addEventListener('dragover', dragOver);
       piece.addEventListener('drop', dropPiece);
@@ -275,8 +277,10 @@
     e.target.classList.remove('drag-over');
   }
   function dragEnd() {
-    draggedPiece.classList.remove('dragging');
-    pieces.forEach(p => p.classList.remove('drag-over'));
+    if (draggedPiece) {
+      draggedPiece.classList.remove('dragging');
+    }
+    Array.from(puzzle.children).forEach(p => p.classList.remove('drag-over'));
     checkComplete();
   }
   function swapPieces(piece1, piece2) {
