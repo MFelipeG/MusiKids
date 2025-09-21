@@ -15,11 +15,6 @@
     overflow: hidden;
     display: flex; flex-direction: column;
   }
-  header { /* Mantido para possível uso futuro, mas não visível no layout atual */
-    font-size: 2rem; font-weight: 900;
-    text-align: center; padding: 10px 0;
-    background: #e2a343; color: #5B4215; user-select: none;
-  }
   #btn-back {
     position: fixed; top: 10px; left: 10px;
     background: #3B7994; color: white;
@@ -85,8 +80,8 @@
 
   /* Paletas direita de imagens e formas */
   #palette-container {
-    position: fixed; top: 70px; right: 10px; /* Ajustado para nova altura */
-    width: 210px; max-height: calc(100vh - 80px); /* Ajustado para nova altura */
+    position: fixed; top: 70px; right: 10px;
+    width: 210px; max-height: calc(100vh - 90px); /* Ajustado para nova altura */
     background: #fdeed6cc;
     border-radius: 20px;
     box-shadow: 0 5px 18px rgba(168, 84, 14, 0.7);
@@ -141,13 +136,14 @@
   #paint-area-container {
     margin-left: 80px;
     margin-right: 230px; /* Espaço para a paleta da direita */
-    margin-top: 20px;
+    /* CORREÇÃO: Aumentado o espaço no topo para não cobrir o botão */
+    margin-top: 50px; 
     flex-grow: 1;
     overflow: auto;
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative; /* Necessário para posicionar o undo/redo */
+    position: relative; 
   }
   #undo-redo-container {
       position: absolute;
@@ -215,19 +211,13 @@
 
   <div id="palette-container" aria-label="Paletas de imagens e formas">
     <h3>Imagens para pintar</h3>
-    <img src="https://i.imgur.com/u1VLkNj.png" class="palette-item" draggable="true" alt="Dinossauro para colorir" />
-    <img src="https://i.imgur.com/xIuBv3y.png" class="palette-item" draggable="true" alt="Coruja para colorir" />
-    <img src="https://i.imgur.com/fL3xQ7B.png" class="palette-item" draggable="true" alt="Cachorro para colorir" />
-    <img src="https://i.imgur.com/gK9fI8H.png" class="palette-item" draggable="true" alt="Tartaruga para colorir" />
-    <img src="https://i.imgur.com/o2Y0Z4j.png" class="palette-item" draggable="true" alt="Garota para colorir" />
     
-    <img src="https://i.imgur.com/5D6W8jV.png" class="palette-item" draggable="true" alt="Unicórnio para colorir" />
-    <img src="https://i.imgur.com/Kz6Z43a.png" class="palette-item" draggable="true" alt="Leão para colorir" />
-    <img src="https://i.imgur.com/FwFqJmR.png" class="palette-item" draggable="true" alt="Foguete para colorir" />
-    <img src="https://i.imgur.com/pQ12J7g.png" class="palette-item" draggable="true" alt="Castelo para colorir" />
-    <img src="https://i.imgur.com/Z4w01p4.png" class="palette-item" draggable="true" alt="Flor para colorir" />
-    <img src="https://i.imgur.com/vH9XwR1.png" class="palette-item" draggable="true" alt="Elefante para colorir" />
-    
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEyIDJsMy4wOSAxMy41OEwyMiAxMlY5bC03LjQyIDEuMzdMMTIgMloiLz48cGF0aCBkPSJNMjIgOWwtNy40MiAxLjM3TDEyIDE5bDIuNTgtNy42M0wyMiA5WiIvPjxwYXRoIGQ9Ik0xMiAyTCA1LjUgOS4zMUwyIDhsMTAgMTBMMjIgOGwtMy41IDUuNjNMMTIgMloiLz48L3N2Zz4=" class="palette-item" draggable="true" alt="Estrela para colorir" />
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTE5Ljg0IDEwLjE2Yy0uMTEgMC0uMjItLjAxLS4zMy0uMDMtMS4wNy0uMTktMi4wMS0uNTMtMi44My0uOTgtLjgyLS40Ni0xLjU0LTEuMDQtMi4xMS0xLjczLS41My0uNjQtLjktMS40Mi0xLjA3LTIuMjctLjE2LS44My0uMDgtMS42OS4xOS0yLjQ5LjI3LS44MS43NS0xLjU0IDEuMzctMi4xM0E1LjcgNS43IDAgMCAxIDE3LjM5IDBjMS41NSAwIDMuMDMuNTkgNC4xMyAxLjYzLjM4LjM1LjcxLjczIDEgMS4xMS44MSAxLjA3IDEuMjkgMi40IDEuNDUgMy44Mi4xNiAxLjQyLS4wMyAyLjg4LS41NyA0LjIyLS4xOC40NS0uMzguOS0uNjEgMS4zMy0uNDcuOS0xLjA4IDEuNzEtMS44MSAyLjM5YTcuMjQgNy4yNCAwIDAgMS0yLjQtMS41MXptLTQuNTUgNi44N2MtLjM0IDAtLjY4LS4wMi0xLjAyLS4wNmExMi45MiAxMi45MiAwIDAgMS0zLjU2LS44M2MtMS4yOS0uNDgtMi41My0xLjE0LTMuNjYtMS45NS0xLjEzLS44Mi0yLjE0LTEuOC0yLjk2LTIuODktLjgyLTEuMDgtMS40Ni0yLjI3LTEuODctMy41NmExMi40MyAxMi40MyAwIDAgMS0uNi00Ljc1Yy4xMS0uNjQuMy0xLjI4LjU0LTEuOEE4Ljg0IDguODQgMCAwIDEgMy42MyAyLjdjLjM1LS4zLjcyLS41NyAxLjEtLjc5LjM4LS4yMS43OC0uMzggMS4yLS40OUExLjQ0IDEuNDQgMCAwIDEgNyAxLjVjLjMyLjM2LjU0LjguNjUgMS4yOC4xMS40OC4xMyAxIC4wMiAxLjQ5LS4xMS40OS0uMzQuOTYtLjY0IDEuMzgtLjU1LjczLTEuMyAxLjM0LTIuMTMgMS43NmEzLjY4IDMuNjggMCAwIDAtMS4yNiAyLjgxYzAgLjkzLjI5IDEuODUuODIgMi42OC41My44NCAxLjIzIDEuNTkgMi4wNCAyLjE5LjgxLjYgMS43IDEuMDYgMi42MyAxLjM1YTkuMSA5LjEgMCAwIDAgMy4xNC4zOWMuNDkgMCAuOTgtLjA0IDEuNDYtLjEyem00LjU1LTYuODciLz48L3N2Zz4=" class="palette-item" draggable="true" alt="Coração para colorir" />
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTIxIDEzYy0uNTUgMC0xIC40NS0xIDF2NWgtMThWOGMwLS41NS0uNDUtMS0xLTFzLTEgLjQ1LTEgMXYxMGMwIC41NS40NSAxIDEgMWgxMGMuNTUgMCAxLS40NSAxLTF2LTloNmMuNTUgMCAxLS40NSAxLTFoLTJjLS41NSAwLTEtLjQ1LTEtMVptLTIuNSA5SDYuNWMtLjI4IDAtLjUtLjIyLS41LS41VjE0aDEyLjV2Ny41YzAgLjI4LS4yMi41LS41LjVabS04LjUtMTNoLTdjLS41NSAwLTEtLjQ1LTEtMXMuNDUtMSAxLTFoN2MuNTUgMCAxIC40NSAxIDFzLS40NSAxLTEgMVptMTAtNEg0Yy0uNTUgMC0xLS40NS0xLTFzLjQ1LTEgMS0xaDE0Yy41NSAwIDEgLjQ1IDEgMXMtLjQ1IDEtMSAxWiIvPjwvc3ZnPg==" class="palette-item" draggable="true" alt="Carro para colorir" />
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTUgMTJjMCAxLjQuNzYgMi42MyAyIDMuNWwzIDMuNUMxMS40NyAyMC40MyAxMy42NCAyMSAxNiAyMWM0LjQxIDAgOC0zLjU5IDgtOHMtMy41OS04LTgtOGMtMi4zNiAwLTQuNTMuOTctNi4wNSAyLjVMMTAgMTBoLTZWM2wzIDNjMS4yOC0xLjI4IDIuOTctMiA0LjgtMnM0LjE3LjczIDUuNzggMi4wMmMxLjYxIDEuMjkgMi43MiAzLjA5IDIuOTYgNS4wNGgzLjI2djJoLTMuMDJjLS4yNCAyLjE2LTEuNDYgNC4xLTMuMjIgNS41Ni0xLjc2IDEuNDYtMy45OCAyLjE5LTYuMjggMS45My0xLjk1LS4yMi0zLjc0LTEuMDktNS4xMS0yLjQ2bC0zLTMuNUMxLjczIDE0LjYxIDEgMTMuMzUgMSAxMmg0WiIvPjwvc3ZnPg==" class="palette-item" draggable="true" alt="Dinossauro para colorir" />
+    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTIyIDguNTh2MS45MWwtMi4xOS0uNDRhNy4zNSA3LjM1IDAgMCAxLTIuNjkgMS4zM0wxNiAxMy4yMlYxNWwtMS41Ni0uNDFhNi41MiA2LjUyIDAgMCAxLTIuMzYgMEwxMSA5LjQxIDcuNSAxMC41OSA1IDguNThWNi42N2wyLjE5LjQ0YTcuMzUgNy4zNSAwIDAgMSAyLjY5LTEuMzNMMTEgMy45N3YtMS44bDEuNTYuNDFhNi41MiA2LjUyIDAgMCAxIDIuMzYgMEwxOSAyLjU5bDMyLjQxIDMuNDFINjhsMi4xOSA3LjU5WiIvPjwvc3ZnPg==" class="palette-item" draggable="true" alt="Foguete para colorir" />
+
     <h3 style="margin-top: 20px;">Formas Geométricas</h3>
     <div class="palette-shape circle" draggable="true" role="img" aria-label="Círculo"></div>
     <div class="palette-shape square" draggable="true" role="img" aria-label="Quadrado"></div>
@@ -252,7 +242,7 @@
       pencil: document.getElementById("tool-pencil"),
       eraser: document.getElementById("tool-eraser"),
       brush: document.getElementById("tool-brush"),
-      bucket: document.getElementById("tool-bucket"), // Ferramenta balde adicionada
+      bucket: document.getElementById("tool-bucket"),
     };
     const scaleControls = document.getElementById("scale-controls");
     const scaleIncrease = document.getElementById("scale-increase");
@@ -268,7 +258,7 @@
     let currentPath = null;
     let pathData = "";
 
-    let selectedElement = null; // Elemento selecionado (para arrastar e escalar)
+    let selectedElement = null; 
     let undoStack = [];
     let redoStack = [];
 
@@ -292,22 +282,22 @@
         if (!selectedElement) return;
 
         const el = selectedElement;
-        // Usa o atributo transform para escalar, que funciona em todos os elementos SVG
-        let currentTransform = el.getAttribute("transform") || "";
+        const oldTransform = el.getAttribute("transform") || "";
+        let currentTransform = oldTransform;
         let scaleMatch = currentTransform.match(/scale\(([^)]+)\)/);
         let currentScale = scaleMatch ? parseFloat(scaleMatch[1]) : 1;
         
         let newScale = currentScale * factor;
-        if (newScale < 0.1 || newScale > 10) return; // Limites de escala
+        if (newScale < 0.1 || newScale > 10) return;
 
-        // Remove a escala antiga e adiciona a nova
         let otherTransforms = currentTransform.replace(/scale\([^)]+\)/, '').trim();
-        el.setAttribute("transform", `${otherTransforms} scale(${newScale})`);
+        const newTransform = `${otherTransforms} scale(${newScale})`.trim();
+        el.setAttribute("transform", newTransform);
+        pushUndo({type: 'transform', element: el, oldTransform: oldTransform, newTransform: newTransform});
     }
 
     scaleIncrease.addEventListener("click", () => scaleSelected(1.1));
     scaleDecrease.addEventListener("click", () => scaleSelected(0.9));
-
 
     // --- Funções de Desfazer/Refazer (Undo/Redo) ---
     function updateUndoRedoButtons() {
@@ -329,7 +319,7 @@
         paintArea.removeChild(action.element);
       } else if (action.type === 'fill') {
         action.element.setAttribute("fill", action.oldColor);
-      } else if (action.type === 'transform') { // Undo para transformar/mover
+      } else if (action.type === 'transform') {
         action.element.setAttribute("transform", action.oldTransform);
       }
       redoStack.push(action);
@@ -343,7 +333,7 @@
         paintArea.appendChild(action.element);
       } else if (action.type === 'fill') {
         action.element.setAttribute("fill", action.newColor);
-      } else if (action.type === 'transform') { // Redo para transformar/mover
+      } else if (action.type === 'transform') {
         action.element.setAttribute("transform", action.newTransform);
       }
       undoStack.push(action);
@@ -361,7 +351,6 @@
           tools[key].setAttribute("aria-pressed", key === tool ? "true" : "false");
         }
       }
-       // Deseleciona qualquer forma se trocar para uma ferramenta de desenho
       if (['pencil', 'eraser', 'brush', 'bucket'].includes(tool)) {
           deselectAll();
       }
@@ -385,11 +374,8 @@
     }
 
     paintArea.addEventListener("mousedown", (e) => {
-        // CORREÇÃO: Só desenha se clicar no fundo da área de pintura
         if (e.target !== paintArea) return;
-        
-        deselectAll(); // Deseleciona formas ao clicar no fundo
-
+        deselectAll(); 
         if (['pencil', 'eraser', 'brush'].includes(currentTool)) {
             isDrawing = true;
             const pt = getSVGPoint(e);
@@ -413,7 +399,13 @@
     });
     
     const endDrawing = () => {
-        if (isDrawing) {
+        if (isDrawing && currentPath) {
+            // CORREÇÃO: Fecha o caminho do desenho para que possa ser pintado
+            pathData += " Z";
+            currentPath.setAttribute("d", pathData);
+            // Agora o desenho se torna uma forma fechada e pintável
+            currentPath.setAttribute("fill", "white"); // Dá um fundo branco para ser clicável
+
             pushUndo({ type: 'add', element: currentPath });
             isDrawing = false;
             currentPath = null;
@@ -423,30 +415,26 @@
     paintArea.addEventListener("mouseup", endDrawing);
     paintArea.addEventListener("mouseleave", endDrawing);
 
-    // CORREÇÃO: Lógica do balde de tinta usando delegação de evento
     paintArea.addEventListener("click", (e) => {
         if (currentTool !== 'bucket') return;
         const target = e.target;
-        // Pinta qualquer forma (rect, circle, polygon) ou paths fechados
-        if (['rect', 'circle', 'polygon', 'path', 'image'].includes(target.tagName.toLowerCase())) {
-            const oldColor = target.getAttribute('fill') || 'none';
-            if (oldColor === currentColor) return; // Não faz nada se já for da mesma cor
+        if (['rect', 'circle', 'polygon', 'path'].includes(target.tagName.toLowerCase())) {
+            const oldColor = target.getAttribute('fill') || 'white';
+            if (oldColor.toLowerCase() === currentColor.toLowerCase()) return;
 
             target.setAttribute('fill', currentColor);
             pushUndo({ type: 'fill', element: target, oldColor: oldColor, newColor: currentColor });
         }
     });
 
-
     // --- Lógica de Arrastar e Soltar (Drag and Drop) ---
     document.querySelectorAll(".palette-item, .palette-shape").forEach((item) => {
       item.addEventListener("dragstart", (e) => {
-        const payload = {
+        e.dataTransfer.setData("application/json", JSON.stringify({
             type: item.classList.contains("palette-item") ? "image" : "shape",
             src: item.src || null,
             shape: [...item.classList].find((c) => ["circle", "square", "triangle"].includes(c)),
-        };
-        e.dataTransfer.setData("application/json", JSON.stringify(payload));
+        }));
       });
     });
 
@@ -455,9 +443,7 @@
     paintArea.addEventListener("drop", (e) => {
         e.preventDefault();
         let data;
-        try {
-            data = JSON.parse(e.dataTransfer.getData("application/json"));
-        } catch (err) { return; }
+        try { data = JSON.parse(e.dataTransfer.getData("application/json")); } catch (err) { return; }
 
         const pt = getSVGPoint(e);
         let el;
@@ -471,27 +457,13 @@
             el.setAttribute("height", 150);
         } else if (data.type === "shape" && data.shape) {
             if (data.shape === "circle") {
-                el = document.createElementNS(svgNS, "circle");
-                el.setAttribute("cx", pt.x);
-                el.setAttribute("cy", pt.y);
-                el.setAttribute("r", 50);
+                el = document.createElementNS(svgNS, "circle"); el.setAttribute("cx", pt.x); el.setAttribute("cy", pt.y); el.setAttribute("r", 50);
             } else if (data.shape === "square") {
-                el = document.createElementNS(svgNS, "rect");
-                el.setAttribute("x", pt.x - 50);
-                el.setAttribute("y", pt.y - 50);
-                el.setAttribute("width", 100);
-                el.setAttribute("height", 100);
-                el.setAttribute("rx", 10);
+                el = document.createElementNS(svgNS, "rect"); el.setAttribute("x", pt.x - 50); el.setAttribute("y", pt.y - 50); el.setAttribute("width", 100); el.setAttribute("height", 100); el.setAttribute("rx", 10);
             } else if (data.shape === "triangle") {
-                el = document.createElementNS(svgNS, "polygon");
-                const size = 60;
-                el.setAttribute("points", `${pt.x},${pt.y - size} ${pt.x - size},${pt.y + size} ${pt.x + size},${pt.y + size}`);
+                el = document.createElementNS(svgNS, "polygon"); const size = 60; el.setAttribute("points", `${pt.x},${pt.y - size} ${pt.x - size},${pt.y + size} ${pt.x + size},${pt.y + size}`);
             }
-            if(el) {
-                el.setAttribute("fill", "white");
-                el.setAttribute("stroke", "black");
-                el.setAttribute("stroke-width", 3);
-            }
+            if(el) { el.setAttribute("fill", "white"); el.setAttribute("stroke", "black"); el.setAttribute("stroke-width", 3); }
         }
         
         if (el) {
@@ -499,32 +471,27 @@
             paintArea.appendChild(el);
             pushUndo({ type: 'add', element: el });
             makeDraggableAndSelectable(el);
+            selectElement(el); // Seleciona o novo elemento automaticamente
         }
     });
 
     function makeDraggableAndSelectable(el) {
         let isDragging = false;
         let offset;
-        let startTransform; // Guarda o estado inicial para o undo
+        let startTransform;
 
         el.addEventListener("mousedown", (e) => {
-            e.stopPropagation(); 
+            e.stopPropagation();
+            // CORREÇÃO: Permite selecionar a forma com qualquer ferramenta
+            selectElement(el);
             
-            if(['pencil', 'brush'].includes(currentTool)) {
-                selectTool('pencil'); // Muda para uma ferramenta de "seleção"
-                selectElement(el);
+            // Mas só permite arrastar com as ferramentas certas (lápis ou pincel)
+            if (['pencil', 'brush'].includes(currentTool)) {
                 isDragging = true;
                 const pt = getSVGPoint(e);
-                
-                startTransform = el.getAttribute("transform") || ""; // Salva o estado inicial
-                
-                const transform = el.transform.baseVal;
-                const matrix = transform.consolidate()?.matrix || paintArea.createSVGMatrix();
-                
-                offset = {
-                    x: pt.x - matrix.e,
-                    y: pt.y - matrix.f,
-                };
+                startTransform = el.getAttribute("transform") || "";
+                const matrix = el.transform.baseVal.consolidate()?.matrix || paintArea.createSVGMatrix();
+                offset = { x: pt.x - matrix.e, y: pt.y - matrix.f };
                 el.style.cursor = "grabbing";
             }
         });
@@ -534,7 +501,6 @@
             const pt = getSVGPoint(e);
             const newX = pt.x - offset.x;
             const newY = pt.y - offset.y;
-            
             let currentTransform = el.getAttribute("transform") || "";
             let scalePart = currentTransform.match(/scale\([^)]+\)/)?.[0] || "";
             el.setAttribute("transform", `translate(${newX} ${newY}) ${scalePart}`);
@@ -544,14 +510,12 @@
             if (isDragging) {
                 isDragging = false;
                 el.style.cursor = "grab";
-                // Adiciona a ação de transformação ao histórico de undo
                 const newTransform = el.getAttribute("transform") || "";
                 if (newTransform !== startTransform) {
                     pushUndo({ type: 'transform', element: el, oldTransform: startTransform, newTransform: newTransform });
                 }
             }
         };
-
         paintArea.addEventListener("mouseup", stopDragging);
         paintArea.addEventListener("mouseleave", stopDragging);
     }
