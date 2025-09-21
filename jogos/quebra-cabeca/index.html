@@ -26,7 +26,7 @@
     text-shadow: 0 2px 8px #ffe1ee;
   }
   #config {
-    width: 300px;
+    width: 320px;
     background: #fff1f9;
     border-radius: 18px;
     padding: 1.3rem 1.6rem;
@@ -49,6 +49,7 @@
     background: white;
     cursor: pointer;
     user-select: none;
+    margin-bottom: 12px;
   }
   button, a.btn {
     margin-top: 1rem;
@@ -61,9 +62,13 @@
     font-size: 1.25rem;
     cursor: pointer;
     box-shadow: 0 10px 20px #ffadc3cc;
-    transition: background-color 0.3s ease, transform 0.25s ease;
+    transition: background-color 0.3s, transform 0.25s;
     text-decoration: none;
     display: inline-block;
+    width: 48%;
+    margin-left: 1%;
+    margin-right: 1%;
+    box-sizing: border-box;
   }
   button:hover, a.btn:hover {
     background-color: #e93c73;
@@ -111,6 +116,16 @@
       border-radius: 8px;
       box-shadow: 0 5px 15px #ff70a0cc;
     }
+    #config { width: 98vw; }
+    #puzzle-container { width: 99vw; max-width: 99vw; }
+  }
+  #btns-row {
+    display: flex;
+    flex-direction: row;
+    gap: 4%;
+    width: 100%;
+    justify-content: center;
+    margin-top: 1rem;
   }
 </style>
 </head>
@@ -124,22 +139,26 @@
     <option value="15">15 peças (5x3)</option>
     <option value="20">20 peças (5x4)</option>
   </select>
-  <div id="pieces-desc" hidden>Selecione o número de peças para montar o quebra-cabeça.</div>
-
-  <label for="image-select">Selecione a imagem para o jogo:</label>
-  <select id="image-select" aria-describedby="image-desc">
-    <option value="https://cdn.pixabay.com/photo/2017/02/18/18/10/elephant-2070963_1280.jpg" selected>Elefante</option>
+  <label for="image-select">Escolha a imagem do quebra-cabeça:</label>
+  <select id="image-select">
+    <option value="https://cdn.pixabay.com/photo/2017/02/18/18/10/elephant-2070963_1280.jpg">Elefante</option>
     <option value="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg">Árvore</option>
     <option value="https://cdn.pixabay.com/photo/2016/01/22/15/36/dog-1151516_1280.jpg">Cachorro</option>
+    <option value="https://cdn.pixabay.com/photo/2017/01/20/00/30/mountains-1993642_1280.jpg">Montanhas</option>
+    <option value="https://cdn.pixabay.com/photo/2016/10/18/21/22/dinosaur-1750154_1280.png">Dinossauro desenho</option>
+    <option value="https://cdn.pixabay.com/photo/2014/04/10/11/03/owl-320934_1280.jpg">Coruja</option>
+    <option value="https://cdn.pixabay.com/photo/2020/02/18/00/00/cat-4858831_1280.jpg">Gatinho</option>
+    <option value="https://cdn.pixabay.com/photo/2016/03/27/19/17/turtle-1280223_1280.jpg">Tartaruga</option>
+    <option value="https://cdn.pixabay.com/photo/2017/06/20/19/22/frog-2427460_1280.jpg">Sapo</option>
+    <option value="https://cdn.pixabay.com/photo/2018/04/01/11/27/children-3289820_1280.jpg">Crianças brincando</option>
   </select>
-  <div id="image-desc" hidden>Escolha uma imagem para o quebra-cabeça.</div>
-
-  <button id="start-btn" aria-label="Iniciar o quebra-cabeça">Iniciar Quebra-Cabeça</button>
-  <a href="../index.html" class="btn" aria-label="Voltar ao menu de jogos" style="width: 100%;">← Voltar ao Menu de Jogos</a>
+  <div id="btns-row">
+    <button id="start-btn" aria-label="Iniciar o quebra-cabeça">Iniciar Jogo</button>
+    <a href="../index.html" class="btn" aria-label="Voltar ao menu de jogos">← Menu de Jogos</a>
+  </div>
 </div>
 
 <div id="instructions" aria-live="polite"></div>
-
 <div id="puzzle-container" aria-label="Área do quebra-cabeça" tabindex="0" aria-live="polite" aria-atomic="true" hidden>
   <div id="puzzle"></div>
 </div>
@@ -158,15 +177,10 @@
   let imageUrl;
 
   function determineGrid(totalPieces) {
-    if (totalPieces === 9) {
-      rows = 3; cols = 3;
-    } else if (totalPieces === 15) {
-      rows = 3; cols = 5;
-    } else if (totalPieces === 20) {
-      rows = 4; cols = 5;
-    } else {
-      rows = 3; cols = 3;
-    }
+    if (totalPieces == 9) { rows = 3; cols = 3; }
+    else if (totalPieces == 15) { rows = 3; cols = 5; }
+    else if (totalPieces == 20) { rows = 4; cols = 5; }
+    else { rows = 3; cols = 3; }
   }
 
   function shuffle(array) {
@@ -201,12 +215,8 @@
         const piece = document.createElement('div');
         piece.classList.add('piece');
         piece.style.backgroundImage = `url(${imageUrl})`;
-
-        // backgroundPosition % para cada peça
         piece.style.backgroundSize = `${cols*100}% ${rows*100}%`;
         piece.style.backgroundPosition = `${(c * 100)/(cols-1)}% ${(r * 100)/(rows-1)}%`;
-
-        // Definindo dimensões automáticas por grid
         piece.setAttribute('draggable', true);
         piece.dataset.index = idx;
 
@@ -215,13 +225,11 @@
         originalPositions.push(idx);
       }
     }
-    // Embaralhar peças na tela
     shufflePieces();
     addDragListeners();
   }
 
   function shufflePieces() {
-    // Shuffle a ordem das peças no DOM
     const shuffledPositions = [...originalPositions];
     shuffle(shuffledPositions);
     puzzle.innerHTML = '';
@@ -248,21 +256,17 @@
     e.dataTransfer.effectAllowed = 'move';
     setTimeout(() => draggedPiece.classList.add('dragging'), 0);
   }
-
   function dragOver(e) {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
     if(e.target !== draggedPiece) e.target.classList.add('drag-over');
   }
-
   function dragEnter(e) {
     if(e.target !== draggedPiece) e.target.classList.add('drag-over');
   }
-
   function dragLeave(e) {
     e.target.classList.remove('drag-over');
   }
-
   function dropPiece(e) {
     e.preventDefault();
     if(e.target !== draggedPiece) {
@@ -270,13 +274,11 @@
     }
     e.target.classList.remove('drag-over');
   }
-
   function dragEnd() {
     draggedPiece.classList.remove('dragging');
     pieces.forEach(p => p.classList.remove('drag-over'));
     checkComplete();
   }
-
   function swapPieces(piece1, piece2) {
     const parent = piece1.parentNode;
     const idx1 = Array.from(parent.children).indexOf(piece1);
@@ -290,7 +292,6 @@
       parent.insertBefore(piece2, parent.children[idx1]);
     }
   }
-
   function checkComplete() {
     const currentOrder = Array.from(puzzle.children).map(p => Number(p.dataset.index));
     if(currentOrder.every((val, idx) => val === idx)){
