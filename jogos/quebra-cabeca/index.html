@@ -2,212 +2,160 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Quebra-Cabeça - MusiKids Fun</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Baloo&display=swap');
   body {
     margin: 0;
     background: linear-gradient(135deg, #a0eaff 0%, #ffbad2 100%);
-    font-family: 'Baloo 2', cursive, Arial, sans-serif;
-    color: #333;
-    text-align: center;
-    min-height: 100vh;
-    user-select: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    font-family: 'Baloo', cursive, Arial, sans-serif;
+    display: flex; flex-direction: column; align-items: center;
+    min-height: 100vh; user-select: none; padding: 1.5rem;
   }
   header {
-    font-weight: 900;
-    font-size: 2.1rem;
-    margin: 1.5rem 0;
-    color: #ff4c8b;
-    text-shadow: 0 2px 8px #ffe1ee;
+    font-size: 2.1rem; font-weight: 900; margin-bottom: 1.5rem;
+    color: #ff4c8b; text-shadow: 0 2px 8px #ffe1ee;
   }
   #config {
-    width: 320px;
-    background: #fff1f9;
-    border-radius: 18px;
-    padding: 1.3rem 1.6rem;
-    box-shadow: 0 6px 30px #ffcce1a0;
-    margin-bottom: 2rem;
+    width: 320px; padding: 1.5rem; border-radius: 18px; background: #fff1f9;
+    box-shadow: 0 0 30px #ffcce1a0; margin-bottom: 2rem;
   }
   label {
-    font-weight: 700;
-    display: block;
-    margin-bottom: 0.5rem;
-    color: #d23065;
+    display: block; font-weight: 700; margin-bottom: 0.5rem; color: #d23065;
     user-select: none;
   }
   select {
-    width: 100%;
-    padding: 0.4rem 0.6rem;
-    font-size: 1.0rem;
-    border-radius: 12px;
-    border: 2px solid #ff2d7f;
-    background: white;
-    cursor: pointer;
-    user-select: none;
-    margin-bottom: 12px;
+    width: 100%; padding: 0.4rem 0.6rem; font-size: 1rem;
+    border-radius: 12px; border: 2px solid #ff2d7f; background: white;
+    cursor: pointer; user-select: none; margin-bottom: 12px;
   }
   button, a.btn {
-    margin-top: 1rem;
-    padding: 1rem 2rem;
-    font-weight: bold;
-    border-radius: 20px;
-    border: none;
-    background-color: #ff4c8b;
-    color: #fff;
-    font-size: 1.25rem;
-    cursor: pointer;
-    box-shadow: 0 10px 20px #ffadc3cc;
-    transition: background-color 0.3s, transform 0.25s;
-    text-decoration: none;
-    display: inline-block;
-    width: 48%;
-    margin-left: 1%;
-    margin-right: 1%;
-    box-sizing: border-box;
+    display: inline-block; width: 48%; margin: 0 1%;
+    background: #ff4c8b; color: #fff; font-weight: 700;
+    font-size: 1.25rem; padding: 1rem; border-radius: 20px; border: none;
+    cursor: pointer; box-shadow: 0 10px 20px #ffadc3b0;
+    user-select: none; text-decoration: none; text-align: center;
+    transition: background-color 0.3s ease, transform 0.25s ease;
   }
   button:hover, a.btn:hover {
-    background-color: #e93c73;
-    transform: scale(1.04);
+    background: #e93c73; transform: scale(1.04);
   }
   #puzzle-container {
-    position: relative;
-    max-width: 500px;
-    width: 90vw;
-    background: #fff0f7;
-    border-radius: 20px;
-    box-shadow: 0 8px 38px #ffa4c5cc;
-    user-select: none;
-    margin-bottom: 2rem;
+    display: none; margin-bottom: 2rem; background: #fff1f8;
+    border-radius: 20px; overflow: hidden; user-select: none;
+    box-shadow: 0 0 30px #ffc8d8a0;
   }
   #puzzle {
-    display: grid;
-    gap: 2px;
-    margin: auto;
-    background: #ffbad2cc;
-    border-radius: 20px;
-    overflow: hidden;
-    user-select: none;
+    display: grid; gap: 2px; border-radius: 20px;
+    user-select: none; margin: auto;
   }
   .piece {
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    cursor: grab;
-    user-select: none;
-    border-radius: 10px;
-    box-shadow: 0 8px 19px #ff70a0aa;
+    cursor: grab; user-select: none; background-repeat: no-repeat;
+    border-radius: 10px; box-shadow: 0 8px 19px #ff70a0aa;
     transition: box-shadow 0.25s;
+    background-size: 100% 100%;
   }
   .piece.dragging {
-    cursor: grabbing;
-    box-shadow: 0 14px 28px #ff377aee;
+    cursor: grabbing; box-shadow: 0 14px 28px #ff377bee;
   }
   #instructions {
-    margin: 0.8rem 0 12px 0;
-    font-weight: bold;
-    color: #d22a64;
-    user-select: none;
+    font-weight: 700; margin-top: 0; margin-bottom: 0.75rem;
+    color: #d23065; user-select: none; min-height: 2.3em;
   }
-  @media (max-width: 600px) {
-    .piece {
-      border-radius: 8px;
-      box-shadow: 0 5px 15px #ff70a0cc;
-    }
-    #config { width: 98vw; }
-    #puzzle-container { width: 99vw; max-width: 99vw; }
-  }
-  #btns-row {
-    display: flex;
-    flex-direction: row;
-    gap: 4%;
-    width: 100%;
-    justify-content: center;
-    margin-top: 1rem;
+  @media (max-width: 520px) {
+    #config { width: 95vw; }
+    #puzzle { width: 95vw; }
   }
 </style>
 </head>
 <body>
 <header>Quebra-Cabeça - MusiKids Fun</header>
 
-<div id="config" aria-label="Configurações do quebra-cabeça">
-  <label for="pieces-select">Escolha a quantidade de peças:</label>
-  <select id="pieces-select" aria-describedby="pieces-desc">
+<div id="config" role="region" aria-label="Configurações do quebra-cabeça">
+  <label for="pieces-select">Selecione a quantidade de peças:</label>
+  <select id="pieces-select" aria-describedby="pieces-desc" aria-required="true">
     <option value="9" selected>9 peças (3x3)</option>
     <option value="15">15 peças (5x3)</option>
     <option value="20">20 peças (5x4)</option>
   </select>
-  <label for="image-select">Escolha a imagem do quebra-cabeça:</label>
-  <select id="image-select">
-    <option value="https://cdn.pixabay.com/photo/2017/02/18/18/10/elephant-2070963_1280.jpg">Elefante</option>
+
+  <label for="image-select">Selecione a imagem:</label>
+  <select id="image-select" aria-describedby="image-desc" aria-required="true">
+    <option value="https://cdn.pixabay.com/photo/2017/02/18/18/10/elephant-2070963_1280.jpg" selected>Elefante</option>
     <option value="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg">Árvore</option>
     <option value="https://cdn.pixabay.com/photo/2016/01/22/15/36/dog-1151516_1280.jpg">Cachorro</option>
-    <!-- Adicione suas próprias imagens aqui: -->
-    <!-- <option value="imagens/meu_desenho1.jpg">Dinossauro do Canal</option> -->
+    <option value="https://cdn.pixabay.com/photo/2017/01/20/00/30/mountains-1993642_1280.jpg">Montanhas</option>
+    <option value="https://cdn.pixabay.com/photo/2016/10/18/21/06/dinosaur-1784536_1280.jpg">Dinossauro</option>
+    <option value="https://cdn.pixabay.com/photo/2014/04/10/10/02/owl-319913_1280.jpg">Coruja</option>
+    <option value="https://cdn.pixabay.com/photo/2017/06/20/23/21/girl-2421590_1280.jpg">Garota brincando</option>
+    <option value="https://cdn.pixabay.com/photo/2016/03/27/19/17/turtle-1280223_1280.jpg">Tartaruga</option>
+    <option value="https://cdn.pixabay.com/photo/2018/02/20/18/03/children-3165159_1280.jpg">Crianças</option>
+    <option value="https://cdn.pixabay.com/photo/2019/11/28/18/19/cats-4653248_1280.jpg">Gatinhos</option>
   </select>
+
   <div id="btns-row">
-    <button id="start-btn" aria-label="Iniciar o quebra-cabeça">Iniciar Jogo</button>
-    <a href="../index.html" class="btn" aria-label="Voltar ao menu de jogos">← Menu de Jogos</a>
+    <button id="start-btn" aria-label="Iniciar Quebra-Cabeça">Iniciar Quebra-Cabeça</button>
+    <a href="../index.html" role="button" class="btn" aria-label="Voltar ao Menu de Jogos">← Voltar ao Menu</a>
   </div>
 </div>
 
-<div id="instructions" aria-live="polite"></div>
-<div id="puzzle-container" aria-label="Área do quebra-cabeça" tabindex="0" aria-live="polite" aria-atomic="true" style="display:none;">
+<p id="instructions" aria-live="polite"></p>
+
+<div id="puzzle-container" role="main" aria-label="Área do Quebra-Cabeça" tabindex="0" hidden>
   <div id="puzzle"></div>
 </div>
 
+<div id="confetti"></div>
+
 <script>
-  const puzzle = document.getElementById('puzzle');
-  const piecesSelect = document.getElementById('pieces-select');
-  const imageSelect = document.getElementById('image-select');
-  const startBtn = document.getElementById('start-btn');
-  const instructions = document.getElementById('instructions');
-  const puzzleContainer = document.getElementById('puzzle-container');
+  const puzzle = document.getElementById("puzzle");
+  const piecesSelect = document.getElementById("pieces-select");
+  const imageSelect = document.getElementById("image-select");
+  const startBtn = document.getElementById("start-btn");
+  const instructions = document.getElementById("instructions");
+  const puzzleContainer = document.getElementById("puzzle-container");
+  const confettiContainer = document.getElementById("confetti");
 
   let rows, cols, totalPieces;
   let pieces = [];
   let originalPositions = [];
   let imageUrl;
 
-  function determineGrid(totalPieces) {
-    if (totalPieces == 9) { rows = 3; cols = 3; }
-    else if (totalPieces == 15) { rows = 3; cols = 5; }
-    else if (totalPieces == 20) { rows = 4; cols = 5; }
-    else { rows = 3; cols = 3; }
+  function determineGrid(total) {
+    if(total === 9){ rows = 3; cols = 3; }
+    else if(total === 15){ rows = 3; cols =5;}
+    else if(total === 20){ rows = 4; cols =5;}
+    else { rows =3; cols =3;}
   }
 
-  function shuffle(array) {
-    for (let i = array.length -1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i +1));
+  function shuffle(array){
+    for(let i = array.length - 1; i > 0; i--){
+      const j = Math.floor(Math.random()*(i+1));
       [array[i], array[j]] = [array[j], array[i]];
     }
-    return array;
   }
 
   startBtn.onclick = () => {
     totalPieces = Number(piecesSelect.value);
     determineGrid(totalPieces);
     imageUrl = imageSelect.value;
-    instructions.textContent = `Carregando imagem...`;
-    // Só cria as peças após a imagem estar realmente pronta
-    const img = new window.Image();
+    instructions.textContent = "Carregando imagem...";
+    const img = new Image();
     img.onload = () => {
-      puzzleContainer.style.display = '';
+      puzzleContainer.hidden = false;
       instructions.textContent = `Monte o quebra-cabeça de ${totalPieces} peças!`;
-      setupPuzzle();
+      createPuzzle();
     };
     img.onerror = () => {
-      instructions.textContent = 'Erro ao carregar a imagem!';
-      puzzleContainer.style.display = 'none';
+      instructions.textContent = "Erro ao carregar a imagem, tente outra.";
+      puzzleContainer.hidden = true;
     };
     img.src = imageUrl;
   };
 
-  function setupPuzzle() {
-    puzzle.innerHTML = '';
+  function createPuzzle() {
+    puzzle.innerHTML = "";
     puzzle.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
     puzzle.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
     pieces = [];
@@ -218,12 +166,12 @@
         const idx = r*cols + c;
         if(idx >= totalPieces) break;
 
-        const piece = document.createElement('div');
-        piece.classList.add('piece');
+        const piece = document.createElement("div");
+        piece.classList.add("piece");
         piece.style.backgroundImage = `url(${imageUrl})`;
         piece.style.backgroundSize = `${cols*100}% ${rows*100}%`;
-        piece.style.backgroundPosition = `${(c * 100)/(cols-1)}% ${(r * 100)/(rows-1)}%`;
-        piece.setAttribute('draggable', true);
+        piece.style.backgroundPosition = `${(c*100)/(cols-1)}% ${(r*100)/(rows-1)}%`;
+        piece.draggable = true;
         piece.dataset.index = idx;
 
         puzzle.appendChild(piece);
@@ -231,81 +179,82 @@
         originalPositions.push(idx);
       }
     }
+
     shufflePieces();
-    assignDragEvents();
   }
 
-  function shufflePieces() {
-    const shuffledPositions = [...originalPositions];
-    shuffle(shuffledPositions);
-    puzzle.innerHTML = '';
-    shuffledPositions.forEach(pos => {
-      puzzle.appendChild(pieces[pos]);
-    });
-    assignDragEvents();
+  function shufflePieces(){
+    shuffle(originalPositions);
+    originalPositions.forEach(i => puzzle.appendChild(pieces[i]));
+    addListeners();
   }
 
-  function assignDragEvents() {
-    Array.from(puzzle.children).forEach(piece => {
-      piece.addEventListener('dragstart', dragStart);
-      piece.addEventListener('dragover', dragOver);
-      piece.addEventListener('drop', dropPiece);
-      piece.addEventListener('dragenter', dragEnter);
-      piece.addEventListener('dragleave', dragLeave);
-      piece.addEventListener('dragend', dragEnd);
+  function addListeners(){
+    puzzle.querySelectorAll(".piece").forEach(piece => {
+      piece.addEventListener("dragstart", dragStart);
+      piece.addEventListener("dragover", dragOver);
+      piece.addEventListener("drop", drop);
+      piece.addEventListener("dragenter", dragEnter);
+      piece.addEventListener("dragleave", dragLeave);
+      piece.addEventListener("dragend", dragEnd);
     });
   }
 
-  let draggedPiece = null;
+  let dragged = null;
 
-  function dragStart(e) {
-    draggedPiece = e.target;
-    e.dataTransfer.effectAllowed = 'move';
-    setTimeout(() => draggedPiece.classList.add('dragging'), 0);
+  function dragStart(e){
+    dragged = e.target;
+    e.dataTransfer.effectAllowed = "move";
+    setTimeout(() => dragged.classList.add("dragging"), 0);
   }
-  function dragOver(e) {
+
+  function dragOver(e){
     e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-    if(e.target !== draggedPiece) e.target.classList.add('drag-over');
+    e.dataTransfer.dropEffect = "move";
+    if(e.target !== dragged) e.target.classList.add("drag-over");
   }
-  function dragEnter(e) {
-    if(e.target !== draggedPiece) e.target.classList.add('drag-over');
+
+  function dragEnter(e){
+    if(e.target !== dragged) e.target.classList.add("drag-over");
   }
-  function dragLeave(e) {
-    e.target.classList.remove('drag-over');
+
+  function dragLeave(e){
+    e.target.classList.remove("drag-over");
   }
-  function dropPiece(e) {
+
+  function drop(e){
     e.preventDefault();
-    if(e.target !== draggedPiece) {
-      swapPieces(draggedPiece, e.target);
-    }
-    e.target.classList.remove('drag-over');
+    if(e.target !== dragged) swapPieces(dragged, e.target);
+    e.target.classList.remove("drag-over");
   }
-  function dragEnd() {
-    if (draggedPiece) {
-      draggedPiece.classList.remove('dragging');
-    }
-    Array.from(puzzle.children).forEach(p => p.classList.remove('drag-over'));
+
+  function dragEnd(){
+    if(dragged) dragged.classList.remove("dragging");
+    puzzle.querySelectorAll(".piece").forEach(p => p.classList.remove("drag-over"));
     checkComplete();
   }
-  function swapPieces(piece1, piece2) {
-    const parent = piece1.parentNode;
-    const idx1 = Array.from(parent.children).indexOf(piece1);
-    const idx2 = Array.from(parent.children).indexOf(piece2);
+
+  function swapPieces(p1, p2){
+    let parent = p1.parentNode;
+    let idx1 = Array.from(parent.children).indexOf(p1);
+    let idx2 = Array.from(parent.children).indexOf(p2);
 
     if(idx1 < idx2){
-      parent.insertBefore(piece2, piece1);
-      parent.insertBefore(piece1, parent.children[idx2]);
-    } else {
-      parent.insertBefore(piece1, piece2);
-      parent.insertBefore(piece2, parent.children[idx1]);
+      parent.insertBefore(p2, p1);
+      parent.insertBefore(p1, parent.children[idx2]);
+    }
+    else{
+      parent.insertBefore(p1, p2);
+      parent.insertBefore(p2, parent.children[idx1]);
     }
   }
-  function checkComplete() {
-    const currentOrder = Array.from(puzzle.children).map(p => Number(p.dataset.index));
-    if(currentOrder.every((val, idx) => val === idx)){
-      instructions.textContent = 'Parabéns! Você completou o quebra-cabeça!';
-    } else {
+
+  function checkComplete(){
+    let order = Array.from(puzzle.children).map(p => Number(p.dataset.index));
+    if(order.every((val,i) => val === i)){
+      instructions.textContent = "Parabéns! Você completou o quebra-cabeça!";
+    }
+    else{
       instructions.textContent = `Monte o quebra-cabeça de ${totalPieces} peças!`;
     }
   }
