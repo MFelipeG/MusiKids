@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Jogo de Pintura - MusiKids Fun</title>
+<title>Jogo de Pintura - Musi Kids Fun</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Baloo&display=swap');
   html, body {
@@ -12,145 +12,174 @@
     font-family: 'Baloo', cursive, Arial, sans-serif;
     user-select: none;
     overflow: hidden;
-    display: flex; flex-direction: column;
+    display: flex;
+    flex-direction: column;
   }
   header {
-    font-size: 2rem; font-weight: 900; color: #d76f51;
-    padding: 10px 0; text-align: center;
-    background: #e9c46a; box-shadow: 0 3px 6px rgba(187,133,97,0.67);
+    font-size: 2rem;
+    color: #d76f51;
+    font-weight: 900;
+    text-align: center;
+    padding: 10px 0;
+    background: #e9c46a;
+    box-shadow: 0 3px 6px rgba(187,133,97,0.67);
     user-select: none;
   }
   #btn-back {
-    position: fixed; top: 10px; left: 10px;
-    background: #2a9d8f; color: white; font-weight: 700;
-    padding: 10px 18px; border: none; border-radius: 20px;
-    cursor: pointer; box-shadow: 0 6px 15px rgba(42,157,143,0.8);
-    user-select: none; z-index: 1000;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: #2a9d8f;
+    color: white;
+    padding: 10px 18px;
+    font-weight: 700;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(42,157,143,0.8);
+    z-index: 1000;
+    user-select: none;
     transition: background-color 0.3s ease;
   }
-  #btn-back:hover { background: #21867a; }
-
-  #top-controls {
-    position: fixed; top: 10px; left: 60px; right: 10px;
-    background: rgba(38,70,83,0.85);
-    border-radius: 25px;
-    padding: 5px 10px;
-    display: flex; align-items: center; gap: 12px;
-    z-index: 999;
+  #btn-back:hover {
+    background: #21867a;
   }
-  .tool-button {
+  #top-bar {
+    position: fixed;
+    top: 10px;
+    left: 60px;
+    right: 20px;
+    height: 54px;
+    background: rgba(38, 70, 83, 0.9);
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 0 12px;
+    z-index: 900;
+  }
+  #top-bar button, #top-bar input[type=color] {
+    height: 40px;
+    border-radius: 12px;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    user-select: none;
+    padding: 0 12px;
+    background: #2a9d8f;
+    color: white;
+    transition: background-color 0.3s ease;
+  }
+  #top-bar button:hover, #top-bar input[type=color]:hover {
+    background: #21867a;
+  }
+  #top-bar button:disabled {
+    background: #555;
+    cursor: not-allowed;
+  }
+  #toolbar {
+    position: fixed;
+    top: 70px;
+    left: 10px;
+    width: 52px;
+    background: rgba(38,70,83,0.9);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px 6px;
+    z-index: 900;
+  }
+  .tool-btn {
+    width: 44px;
+    height: 44px;
     border-radius: 14px;
     border: none;
-    width: 44px; height: 44px;
-    font-size: 24px;
+    background: #ffffffcc;
     color: #264653;
-    background: #fff;
-    box-shadow: 0 4px 9px rgba(0,0,0,0.2);
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
-    display: flex; justify-content: center; align-items: center;
-    transition: background-color 0.25s, color 0.25s;
     user-select: none;
+    box-shadow: 0 4px 9px rgba(0,0,0,0.2);
+    transition: background-color 0.2s ease;
   }
-  .tool-button.selected {
+  .tool-btn.selected {
     background: #2a9d8f;
-    color: #fff;
+    color: white;
   }
-  .tool-button:hover {
+  .tool-btn:hover {
     background: #d8f3dc;
   }
   #color-picker {
-    width: 44px; height: 44px; border-radius: 14px; border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    border: none;
+    margin-top: 6px;
     cursor: pointer;
   }
-
-  #undo-redo {
-    display: flex; gap: 10px; margin-left: auto;
-  }
-  #undo-redo button {
-    background: #2a9d8f; border: none; border-radius: 14px;
-    color: white; font-weight: 700; cursor: pointer;
-    padding: 8px 14px; font-size: 18px;
-    box-shadow: 0 5px 12px rgba(42,157,143,0.7);
-    user-select: none;
-  }
-  #undo-redo button:disabled {
-    background: #999;
-    cursor: not-allowed;
-  }
-  #undo-redo button:not(:disabled):hover {
-    background: #21867a;
-  }
-  
   #palette-container {
-    position: fixed; top: 70px; right: 10px;
-    background: #FDEBD0CC;
-    border-radius: 20px;
-    width: 200px;
-    max-height: 80vh;
+    position: fixed;
+    top: 140px;
+    left: 10px;
+    width: 60px;
+    max-height: 44vh;
     overflow-y: auto;
-    padding: 10px;
-    box-shadow: 0 5px 15px rgba(168,84,14,0.7);
+    background: rgba(255, 182, 132, 0.9);
+    border-radius: 20px;
+    padding: 10px 5px;
     z-index: 900;
   }
-  #palette-container h3 {
-    margin: 0 0 10px;
-    font-weight: 700;
-    color: #B45408;
-    text-align: center;
-  }
-  .palette-image, .palette-shape {
-    width: 90%; margin: 5px auto;
+  #palette-container .palette-item {
+    width: 44px;
+    height: 44px;
+    margin: 8px auto;
     cursor: grab;
     border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(105,52,9,0.5);
-    display: block;
-    user-select: none;
+    box-shadow: 0 3px 7px rgba(168,84,14,0.7);
   }
-  .palette-image.dragging, .palette-shape.dragging {
-    opacity: 0.5;
-    cursor: grabbing;
-  }
-  .palette-shape {
-    height: 80px;
-    background: #ff7f50;
-  }
-  .palette-shape.circle {
-    border-radius: 50%;
-    background: #f94144;
-  }
-  .palette-shape.square {
-    background: #f3722c;
-  }
-  .palette-shape.triangle {
-    width: 0; height: 0;
-    background: none;
-    border-left: 40px solid transparent;
-    border-right: 40px solid transparent;
-    border-bottom: 80px solid #f9844a;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  #canvas-container {
-    margin-left: 90px;
-    margin-top: 70px;
-    height: calc(100vh - 70px);
-    overflow: auto;
+  #palette-container .shape-item {
     display: flex;
     justify-content: center;
     align-items: center;
+    background: #f3722c;
+    color: white;
+    font-size: 26px;
+    user-select: none;
+  }
+  #palette-container .circle {
+    border-radius: 50%;
+  }
+  #palette-container .triangle {
+    width: 0;
+    height: 0;
+    border-left: 22px solid transparent;
+    border-right: 22px solid transparent;
+    border-bottom: 38px solid #f9844a;
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+  #paint-area-container {
+    margin-left: 80px;
+    margin-top: 70px;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
   }
   svg#paint-area {
+    border-radius: 16px;
     border: 3px solid #264653;
-    border-radius: 20px;
     background: #fff9f0;
-    max-width: 95vw;
-    max-height: 85vh;
+    max-width: 90vw;
+    max-height: 80vh;
     display: block;
     user-select: none;
-    touch-action: none;
   }
-
   path.outline {
     stroke: #264653;
     stroke-width: 3;
@@ -158,60 +187,54 @@
     pointer-events: none;
   }
   path.fillable {
-    fill: white;
+    cursor: pointer;
     stroke: #264653;
     stroke-width: 2;
-    cursor: pointer;
+    fill: white;
   }
 </style>
-</head>
 <body>
 
 <button id="btn-back" aria-label="Voltar ao menu" title="Voltar ao menu">← Menu</button>
 
-<div id="top-controls">
-  <button class="tool-button selected" id="tool-pencil" title="Lápis - pintar livre" aria-pressed="true" aria-label="Selecionar Lápis">✏️</button>
-  <button class="tool-button" id="tool-brush" title="Pincel - traçado grosso" aria-pressed="false" aria-label="Selecionar Pincel">🖌️</button>
-  <button class="tool-button" id="tool-eraser" title="Borracha - apagar" aria-pressed="false" aria-label="Selecionar Borracha">🩹</button>
-  <button class="tool-button" id="tool-bucket" title="Balde - área para pintar" aria-pressed="false" aria-label="Selecionar Balde">🪣</button>
-  <input type="color" id="color-picker" title="Escolher cor" aria-label="Selecionar cor" value="#ff4a74" />
-  <div id="undo-redo" role="group" aria-label="Desfazer e refazer">
-    <button id="undo-btn" disabled aria-label="Desfazer">↩️</button>
-    <button id="redo-btn" disabled aria-label="Refazer">↪️</button>
-  </div>
+<div id="top-bar" role="toolbar" aria-label="Controles do desenho">
+  <button id="undo-btn" title="Desfazer" disabled>↩️</button>
+  <button id="redo-btn" title="Refazer" disabled>↪️</button>
+  <button id="clear-btn" title="Apagar tudo">🧹</button>
+  <input id="color-picker" type="color" value="#ff4a74" title="Selecionar cor" aria-label="Selecionar cor"/>
 </div>
 
-<div id="palette-container" aria-label="Paleta de imagens e formas">
-  <h3>Imagens para arrastar</h3>
-  <img src="https://cdn.pixabay.com/photo/2016/10/18/21/06/dinosaur-1784536_1280.jpg" class="palette-image" draggable="true" alt="Dinossauro" />
-  <img src="https://cdn.pixabay.com/photo/2014/04/10/10/02/owl-319913_1280.jpg" class="palette-image" draggable="true" alt="Coruja" />
-  <img src="https://cdn.pixabay.com/photo/2016/01/22/15/36/dog-1151516_1280.jpg" class="palette-image" draggable="true" alt="Cachorro" />
-  <img src="https://cdn.pixabay.com/photo/2016/03/27/19/17/turtle-1280223_1280.jpg" class="palette-image" draggable="true" alt="Tartaruga" />
-  <img src="https://cdn.pixabay.com/photo/2017/06/20/23/21/girl-2421590_1280.jpg" class="palette-image" draggable="true" alt="Garota" />
-
-  <h3>Formas geométricas</h3>
-  <div class="palette-shape circle" draggable="true" aria-label="Círculo"></div>
-  <div class="palette-shape square" draggable="true" aria-label="Quadrado"></div>
-  <div class="palette-shape triangle" draggable="true" aria-label="Triângulo"></div>
+<div id="toolbar" role="toolbar" aria-label="Ferramentas">
+  <button class="tool-btn selected" id="tool-pencil" title="Lápis" aria-pressed="true">✏️</button>
+  <button class="tool-btn" id="tool-brush" title="Pincel" aria-pressed="false">🖌️</button>
+  <button class="tool-btn" id="tool-eraser" title="Borracha" aria-pressed="false">🩹</button>
+  <button class="tool-btn" id="tool-bucket" title="Balde" aria-pressed="false">🪣</button>
 </div>
 
-<div id="canvas-container">
+<div id="palette-container" aria-label="Paleta de imagens e figuras">
+  <img src="https://cdn.pixabay.com/photo/2016/10/18/21/06/dinosaur-1784536_1280.jpg" class="palette-item" draggable="true" alt="Dinossauro" />
+  <img src="https://cdn.pixabay.com/photo/2014/04/10/10/02/owl-319913_1280.jpg" class="palette-item" draggable="true" alt="Coruja" />
+  <img src="https://cdn.pixabay.com/photo/2016/01/22/15/36/dog-1151516_1280.jpg" class="palette-item" draggable="true" alt="Cachorro" />
+  <img src="https://cdn.pixabay.com/photo/2016/03/27/19/17/turtle-1280223_1280.jpg" class="palette-item" draggable="true" alt="Tartaruga" />
+  <img src="https://cdn.pixabay.com/photo/2017/06/20/23/21/girl-2421590_1280.jpg" class="palette-item" draggable="true" alt="Garota" />
+  <div class="palette-item circle" draggable="true" title="Círculo"></div>
+  <div class="palette-item triangle" draggable="true" title="Triângulo"></div>
+  <div class="palette-item" draggable="true" title="Quadrado" style="border-radius: 12px; background: #f3722c; height:44px;"></div>
+</div>
+
+<div id="paint-area-container">
   <svg id="paint-area" viewBox="0 0 600 400" role="img" aria-label="Área de pintura">
-    <!-- Contornos para balde -->
     <path class="outline" d="M100 120 Q 160 50, 220 120 T 340 120" />
     <path class="outline" d="M400 180 Q 460 130, 520 180 T 580 190" />
-    <!-- Áreas vazias para pintura balde -->
-    <path class="fillable" data-filled="false" d="M90 110 L350 110 L350 130 L90 130 Z" />
-    <path class="fillable" data-filled="false" d="M390 170 L590 170 L590 200 L390 200 Z" />
+    <path class="fillable" d="M90 110 L350 110 L350 130 L90 130 Z" />
+    <path class="fillable" d="M390 170 L590 170 L590 200 L390 200 Z" />
   </svg>
 </div>
 
 <script>
-  // Back to menu
   const btnBack = document.getElementById('btn-back');
   btnBack.onclick = () => location.href = '../index.html';
 
-  // Tools and UI
   const tools = {
     pencil: document.getElementById('tool-pencil'),
     brush: document.getElementById('tool-brush'),
@@ -221,92 +244,99 @@
   const colorPicker = document.getElementById('color-picker');
   const undoBtn = document.getElementById('undo-btn');
   const redoBtn = document.getElementById('redo-btn');
-  const clearBtn = null; // removed clear button, implemented in toolbar already
+  const clearBtn = document.getElementById('clear-btn');
+  const paintArea = document.getElementById('paint-area');
+  const svgNS = "http://www.w3.org/2000/svg";
 
   let currentTool = 'pencil';
   let currentColor = colorPicker.value;
+  let drawing = false;
+  let currentPath = null;
+  let pathData = '';
 
-  // Undo/Redo stack
   let undoStack = [];
   let redoStack = [];
 
-  function selectTool(toolName) {
-    currentTool = toolName;
-    Object.entries(tools).forEach(([k, btn]) => {
-      btn.classList.toggle('selected', k === toolName);
-      btn.setAttribute('aria-pressed', k === toolName);
-    });
-    redoStack = [];
-    updateUndoRedoButtons();
+  function updateUndoRedoButtons(){
+    undoBtn.disabled = undoStack.length === 0;
+    redoBtn.disabled = redoStack.length === 0;
   }
-  Object.entries(tools).forEach(([k, btn]) => {
-    btn.onclick = () => selectTool(k);
-  });
 
-  colorPicker.oninput = e => currentColor = e.target.value;
-
-  function pushUndo(action) {
+  function pushUndo(action){
     undoStack.push(action);
-    if (undoStack.length > 50) undoStack.shift();
+    if(undoStack.length > 50) undoStack.shift();
     redoStack = [];
     updateUndoRedoButtons();
   }
 
   undoBtn.onclick = () => {
-    if (undoStack.length === 0) return;
+    if(undoStack.length === 0) return;
     const action = undoStack.pop();
-    if (action.type === 'draw' || action.type === 'erase' || action.type === 'image') {
+    if(action.type === 'draw' || action.type === 'erase' || action.type === 'image') {
       paintArea.removeChild(action.element);
       redoStack.push(action);
-    } else if (action.type === 'fill') {
+    }
+    else if(action.type === 'fill'){
       action.element.setAttribute('fill', action.oldColor);
       action.element.setAttribute('data-filled', action.oldFilled);
       redoStack.push(action);
-    } else if (action.type === 'clear') {
+    }
+    else if(action.type === 'clear'){
       action.elements.forEach(el => paintArea.appendChild(el));
       redoStack.push(action);
     }
     updateUndoRedoButtons();
   };
+
   redoBtn.onclick = () => {
-    if (redoStack.length === 0) return;
+    if(redoStack.length === 0) return;
     const action = redoStack.pop();
-    if (action.type === 'draw' || action.type === 'erase' || action.type === 'image') {
+    if(action.type === 'draw' || action.type === 'erase' || action.type === 'image'){
       paintArea.appendChild(action.element);
       undoStack.push(action);
-    } else if (action.type === 'fill') {
+    }
+    else if(action.type === 'fill'){
       action.element.setAttribute('fill', action.newColor);
       action.element.setAttribute('data-filled', 'true');
       undoStack.push(action);
-    } else if (action.type === 'clear') {
+    }
+    else if(action.type === 'clear'){
       action.elements.forEach(el => paintArea.removeChild(el));
       undoStack.push(action);
     }
     updateUndoRedoButtons();
   };
 
-  function updateUndoRedoButtons() {
-    undoBtn.disabled = undoStack.length === 0;
-    redoBtn.disabled = redoStack.length === 0;
+  clearBtn.onclick = () => {
+    const allDrawn = [...paintArea.querySelectorAll('path, image')].filter(el => !el.classList.contains('outline') && !el.classList.contains('fillable'));
+    if(allDrawn.length === 0) return;
+    allDrawn.forEach(el => paintArea.removeChild(el));
+    pushUndo({type:'clear', elements: allDrawn});
+  };
+
+  colorPicker.oninput = (e) => {
+    currentColor = e.target.value;
+  };
+
+  function selectTool(name){
+    currentTool = name;
+    for(let key in tools){
+      tools[key].classList.toggle('selected', key === name);
+      tools[key].setAttribute('aria-pressed', key === name ? 'true' : 'false');
+    }
+    redoStack = [];
+    updateUndoRedoButtons();
   }
 
-  function clearPaint() {
-    const toRemove = [...paintArea.querySelectorAll('path, image')].filter(el => !el.classList.contains('outline') && !el.classList.contains('fillable'));
-    if (toRemove.length === 0) return;
-    toRemove.forEach(el => paintArea.removeChild(el));
-    pushUndo({ type: 'clear', elements: toRemove });
+  for(let key in tools){
+    tools[key].addEventListener('click', () => selectTool(key));
   }
+  selectTool('pencil');
 
   // Drawing logic
-  const paintArea = document.getElementById('paint-area');
-  const svgNS = "http://www.w3.org/2000/svg";
-  let drawing = false;
-  let currentPath = null;
-  let pathData = '';
-
   paintArea.addEventListener('mousedown', e => {
-    if (currentTool === 'bucket') return;
-    if (e.target.classList.contains('palette-image') || e.target.tagName === 'image') return;
+    if(currentTool === 'bucket') return;
+    if(e.target.classList.contains('palette-item') || e.target.tagName === 'image') return;
     drawing = true;
     const pt = getSVGPoint(e);
     pathData = `M ${pt.x} ${pt.y}`;
@@ -318,51 +348,50 @@
     currentPath.setAttribute('stroke-linecap', 'round');
     currentPath.setAttribute('d', pathData);
     paintArea.appendChild(currentPath);
-    pushUndo({ type: currentTool === 'eraser' ? 'erase' : 'draw', element: currentPath });
+    pushUndo({type: currentTool === 'eraser' ? 'erase' : 'draw', element: currentPath});
   });
+
   paintArea.addEventListener('mousemove', e => {
-    if (!drawing || !currentPath) return;
+    if(!drawing || !currentPath) return;
     const pt = getSVGPoint(e);
     pathData += ` L ${pt.x} ${pt.y}`;
     currentPath.setAttribute('d', pathData);
   });
-  function stopDrawing() {
+
+  function stopDrawing(){
     drawing = false;
     currentPath = null;
   }
+
   paintArea.addEventListener('mouseup', stopDrawing);
   paintArea.addEventListener('mouseleave', stopDrawing);
 
-  // Bucket fill improved
+  // Bucket fill function
   paintArea.querySelectorAll('path.fillable').forEach(path => {
     path.addEventListener('click', e => {
-      if (currentTool !== 'bucket') return;
-      const element = e.target;
-      const oldColor = element.getAttribute('fill') || 'none';
-      const oldFilled = element.getAttribute('data-filled') || 'false';
+      if(currentTool !== 'bucket') return;
+      const el = e.target;
+      const oldCol = el.getAttribute('fill') || 'none';
+      const oldFill = el.getAttribute('data-filled') || 'false';
 
-      // If already filled with same color, ignore
-      if (oldColor.toLowerCase() === currentColor.toLowerCase() && oldFilled === 'true') return;
+      if(oldCol.toLowerCase() === currentColor.toLowerCase() && oldFill==='true') return;
 
-      element.setAttribute('fill', currentColor);
-      element.setAttribute('data-filled', 'true');
-      pushUndo({ type: 'fill', element: element, oldColor: oldColor, newColor: currentColor, oldFilled: oldFilled });
+      el.setAttribute('fill', currentColor);
+      el.setAttribute('data-filled', 'true');
+
+      pushUndo({type: 'fill', element: el, oldColor: oldCol, newColor: currentColor, oldFilled: oldFill});
     });
   });
 
-  // Drag drop
-  const paletteImages = document.querySelectorAll('.palette-image');
-  paletteImages.forEach(img => {
-    img.setAttribute('draggable', true);
-    img.addEventListener('dragstart', e => {
-      e.dataTransfer.setData('text/plain', e.target.src);
-    });
-  });
-  const paletteShapes = document.querySelectorAll('.palette-shape');
-  paletteShapes.forEach(shape => {
-    shape.setAttribute('draggable', true);
-    shape.addEventListener('dragstart', e => {
-      e.dataTransfer.setData('text/plain', e.target.className.baseVal || e.target.className);
+  // Drag & drop from palette to SVG
+  const paletteItems = document.querySelectorAll('.palette-item, .palette-item.circle, .palette-item.triangle, .palette-item.square');
+  paletteItems.forEach(item => {
+    item.addEventListener('dragstart', e => {
+      if(e.target.classList.contains('palette-item')){
+        e.dataTransfer.setData('text/plain', e.target.src);
+      } else {
+        e.dataTransfer.setData('text/plain', e.target.className.baseVal || e.target.className);
+      }
     });
   });
 
@@ -370,26 +399,27 @@
   paintArea.addEventListener('drop', e => {
     e.preventDefault();
     const data = e.dataTransfer.getData('text/plain');
-    if (!data) return;
+    if(!data) return;
+
     const pt = getSVGPoint(e);
 
-    if (data.endsWith('.jpg') || data.endsWith('.png') || data.startsWith('http')) {
-      // image
-      const img = document.createElementNS(svgNS, 'image');
-      img.setAttribute('href', data);
-      img.setAttribute('x', pt.x - 50);
-      img.setAttribute('y', pt.y - 50);
-      img.setAttribute('width', 100);
-      img.setAttribute('height', 100);
-      img.style.cursor = 'grab';
-      paintArea.appendChild(img);
-      pushUndo({ type: 'image', element: img });
-      makeSVGDraggable(img);
+    if(data.startsWith('http') || data.match(/\.(png|jpg|jpeg|gif|svg)$/i)){
+      // image dragged
+      const newImg = document.createElementNS(svgNS, 'image');
+      newImg.setAttribute('href', data);
+      newImg.setAttribute('x', pt.x - 50);
+      newImg.setAttribute('y', pt.y - 50);
+      newImg.setAttribute('width', 100);
+      newImg.setAttribute('height', 100);
+      newImg.style.cursor = 'grab';
+      paintArea.appendChild(newImg);
+
+      pushUndo({type: 'image', element: newImg});
+      makeDraggable(newImg);
     } else {
-      // shape
-      const clsName = data.split(' ')[0]; // e.g. "palette-shape circle"
+      // Shape dragged
       let shapeEl;
-      if (clsName.includes('circle')) {
+      if(data.includes('circle')){
         shapeEl = document.createElementNS(svgNS, 'circle');
         shapeEl.setAttribute('cx', pt.x);
         shapeEl.setAttribute('cy', pt.y);
@@ -397,7 +427,7 @@
         shapeEl.setAttribute('fill', currentColor);
         shapeEl.setAttribute('stroke', '#264653');
         shapeEl.setAttribute('stroke-width', 3);
-      } else if (clsName.includes('square')) {
+      } else if(data.includes('square')){
         shapeEl = document.createElementNS(svgNS, 'rect');
         shapeEl.setAttribute('x', pt.x - 50);
         shapeEl.setAttribute('y', pt.y - 50);
@@ -408,81 +438,74 @@
         shapeEl.setAttribute('stroke-width', 3);
         shapeEl.setAttribute('rx', 10);
         shapeEl.setAttribute('ry', 10);
-      } else if (clsName.includes('triangle')) {
+      } else if(data.includes('triangle')){
         shapeEl = document.createElementNS(svgNS, 'polygon');
-        const points = [
-          [pt.x, pt.y - 58],
-          [pt.x - 50, pt.y + 42],
-          [pt.x + 50, pt.y + 42]
-        ];
-        shapeEl.setAttribute('points', points.map(p => p.join(',')).join(' '));
+        shapeEl.setAttribute('points',
+          `${pt.x},${pt.y - 58} ${pt.x - 50},${pt.y + 42} ${pt.x + 50},${pt.y + 42}`);
         shapeEl.setAttribute('fill', currentColor);
         shapeEl.setAttribute('stroke', '#264653');
         shapeEl.setAttribute('stroke-width', 3);
       }
-      if (shapeEl) {
+
+      if(shapeEl){
         shapeEl.style.cursor = 'grab';
         paintArea.appendChild(shapeEl);
-        pushUndo({ type: 'image', element: shapeEl });
-        makeSVGDraggable(shapeEl);
+        pushUndo({type: 'image', element: shapeEl});
+        makeDraggable(shapeEl);
       }
     }
   });
 
-  function makeSVGDraggable(element) {
+  function makeDraggable(el){
     let dragging = false;
     let offsetX, offsetY;
 
-    element.addEventListener('mousedown', e => {
+    el.addEventListener('mousedown', e => {
       e.preventDefault();
       dragging = true;
       const pt = getSVGPoint(e);
-      if (element.tagName === 'circle') {
-        offsetX = pt.x - parseFloat(element.getAttribute('cx'));
-        offsetY = pt.y - parseFloat(element.getAttribute('cy'));
+      if(el.tagName === "circle"){
+        offsetX = pt.x - parseFloat(el.getAttribute('cx'));
+        offsetY = pt.y - parseFloat(el.getAttribute('cy'));
       } else {
-        offsetX = pt.x - parseFloat(element.getAttribute('x'));
-        offsetY = pt.y - parseFloat(element.getAttribute('y'));
+        offsetX = pt.x - parseFloat(el.getAttribute('x'));
+        offsetY = pt.y - parseFloat(el.getAttribute('y'));
       }
-      element.style.cursor = 'grabbing';
+      el.style.cursor = 'grabbing';
     });
 
     paintArea.addEventListener('mousemove', e => {
-      if (!dragging) return;
-      e.preventDefault();
+      if(!dragging) return;
       const pt = getSVGPoint(e);
-      if (element.tagName === 'circle') {
-        element.setAttribute('cx', pt.x - offsetX);
-        element.setAttribute('cy', pt.y - offsetY);
+      if(el.tagName === "circle"){
+        el.setAttribute('cx', pt.x - offsetX);
+        el.setAttribute('cy', pt.y - offsetY);
       } else {
-        element.setAttribute('x', pt.x - offsetX);
-        element.setAttribute('y', pt.y - offsetY);
+        el.setAttribute('x', pt.x - offsetX);
+        el.setAttribute('y', pt.y - offsetY);
       }
     });
 
     paintArea.addEventListener('mouseup', e => {
-      if (dragging) {
+      if(dragging){
         dragging = false;
-        element.style.cursor = 'grab';
+        el.style.cursor = 'grab';
       }
     });
-
     paintArea.addEventListener('mouseleave', e => {
-      if (dragging) {
+      if(dragging){
         dragging = false;
-        element.style.cursor = 'grab';
+        el.style.cursor = 'grab';
       }
     });
   }
 
-  function getSVGPoint(event) {
+  function getSVGPoint(evt){
     const pt = paintArea.createSVGPoint();
-    pt.x = event.clientX;
-    pt.y = event.clientY;
+    pt.x = evt.clientX;
+    pt.y = evt.clientY;
     return pt.matrixTransform(paintArea.getScreenCTM().inverse());
   }
-
 </script>
-
 </body>
 </html>
