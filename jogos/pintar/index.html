@@ -1,1 +1,568 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Jogo de Pintura - Musi Kids</title>
+<style>
+  /* Estilos gerais, fontes e layout */
+  @import url('https://fonts.googleapis.com/css2?family=Baloo&display=swap');
+  html, body {
+    margin: 0; padding: 0; height: 100%;
+    background: linear-gradient(135deg, #f9ecd3 0%, #f4a261 100%);
+    font-family: 'Baloo', cursive, Arial, sans-serif;
+    user-select: none;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  header {
+    font-size: 2rem;
+    font-weight: 900;
+    text-align: center;
+    padding: 12px 0;
+    background: #e9c46a;
+    color: #6B4226;
+    user-select: none;
+  }
+  /* Botão voltar fixo no topo esquerdo */
+  #btn-back {
+    position: fixed;
+    top: 10px; left: 10px;
+    z-index: 1000;
+    background: #2A9D8F;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    padding: 10px 18px;
+    font-weight: 700;
+    box-shadow: 0 5px 15px rgba(42,157,143,0.9);
+    user-select: none;
+    transition: background-color 0.3s;
+  }
+  #btn-back:hover {
+    background: #21867A;
+  }
+  /* Barra superior fixa com botões */
+  #top-bar {
+    position: fixed;
+    top: 10px; left: 70px; right: 10px;
+    height: 56px;
+    background: rgba(38,70,83,0.9);
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 15px;
+    z-index: 999;
+  }
+  #top-bar button, #top-bar input[type=color] {
+    height: 42px;
+    font-size: 1.1rem;
+    border-radius: 12px;
+    border: none;
+    color: white;
+    background-color: #2A9D8F;
+    cursor: pointer;
+    padding: 0 14px;
+    user-select: none;
+  }
+  #top-bar button:disabled {
+    background-color: #577073;
+    cursor: not-allowed;
+  }
+  #top-bar button:hover:not(:disabled),
+  #top-bar input[type=color]:hover {
+    background-color: #21867A;
+  }
+  /* Ferramentas na lateral esquerda */
+  #toolbar {
+    position: fixed;
+    top: 70px;
+    left: 10px;
+    width: 56px;
+    background: rgba(38,70,83,0.9);
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    z-index: 999;
+  }
+  .tool-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 20px;
+    border: none;
+    background: #fff;
+    color: #264653;
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    transition: background-color 0.25s ease;
+  }
+  .tool-btn.selected {
+    background-color: #2A9D8F;
+    color: white;
+  }
+  .tool-btn:hover {
+    background-color: #d8f3dc;
+  }
+  #color-picker {
+    margin-top: 8px;
+    width: 44px;
+    height: 44px;
+    border-radius: 22px;
+    border: none;
+    cursor: pointer;
+    user-select: none;
+  }
+  /* Paletas lado direito */
+  #palette-container {
+    position: fixed;
+    top: 110px;
+    right: 10px;
+    width: 210px;
+    max-height: 70vh;
+    overflow-y: auto;
+    background: rgba(255, 230, 200, 0.85);
+    border-radius: 20px;
+    padding: 10px;
+    box-shadow: 0 5px 18px rgba(168, 84, 14, 0.7);
+    z-index: 998;
+  }
+  #palette-container h3 {
+    text-align: center;
+    margin: 0 0 10px 0;
+    font-weight: 900;
+    color: #A65100;
+    user-select: none;
+  }
+  .palette-item, .palette-shape {
+    width: 90%;
+    margin: 6px auto;
+    cursor: grab;
+    border-radius: 16px;
+    box-shadow: 0 3px 10px rgba(168, 84, 14, 0.8);
+    user-select: none;
+    display: block;
+    background-color: #fff;
+  }
+  .palette-shape {
+    height: 80px;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .palette-shape.circle {
+    border-radius: 50%;
+    border: 2px solid #000;
+  }
+  .palette-shape.square {
+    border-radius: 12px;
+    border: 2px solid #000;
+  }
+  .palette-shape.triangle {
+    width: 0;
+    height: 0;
+    border-left: 40px solid transparent;
+    border-right: 40px solid transparent;
+    border-bottom: 70px solid #fff;
+    border-bottom-color: #fff;
+    border-top: none;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    background: none;
+    position: relative;
+  }
+  .palette-shape.triangle > svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  /* Área da pintura */
+  #paint-area-container {
+    margin-left: 80px;
+    margin-top: 80px;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+  }
+  svg#paint-area {
+    border: 4px solid #264653;
+    border-radius: 20px;
+    background: #fff;
+    max-width: 90vw;
+    max-height: 85vh;
+    display: block;
+    user-select: none;
+    touch-action: none;
+  }
+  path.outline {
+    fill: none;
+    stroke: #264653;
+    stroke-width: 3;
+    pointer-events: none;
+  }
+  path.fillable {
+    fill: white;
+    stroke: #264653;
+    stroke-width: 2;
+    cursor: pointer;
+  }
+  /* Rótulo */
+  #instruction-label {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 12px;
+    height: 24px;
+    color: #a44c3e;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
 
+<button id="btn-back" aria-label="Voltar ao menu" title="Voltar ao menu">← Menu</button>
+
+<div id="top-bar" role="toolbar" aria-label="Controles" style="z-index: 1001;">
+  <button id="undo-btn" disabled aria-label="Desfazer">↩️</button>
+  <button id="redo-btn" disabled aria-label="Refazer">↪️</button>
+  <button id="clear-btn" aria-label="Apagar tudo">🧹</button>
+  <input type="color" id="color-picker" aria-label="Escolher cor" value="#000000" />
+</div>
+
+<div id="toolbar" role="toolbar" aria-label="Ferramentas de desenho" style="position: fixed; top: 100px; left: 10px; width: 60px; z-index: 900;">
+  <button id="tool-pencil" class="tool-btn selected" aria-pressed="true" aria-label="Lápis">✏️</button>
+  <button id="tool-brush" class="tool-btn" aria-pressed="false" aria-label="Pincel">🖌️</button>
+  <button id="tool-eraser" class="tool-btn" aria-pressed="false" aria-label="Borracha">🩹</button>
+  <button id="tool-bucket" class="tool-btn" aria-pressed="false" aria-label="Balde">🪣</button>
+</div>
+
+<div id="palette-container" aria-label="Paleta de imagens e formas geométricas" style="position: fixed; top: 200px; right: 10px; width: 195px; max-height: 66vh; overflow-y: auto; border-radius: 20px; background: #fff8df; padding: 10px; box-shadow: 0 8px 30px rgba(168,84,14,0.7); z-index: 899;">
+  <h3>Imagens para pintar</h3>
+  <img src="https://cdn.pixabay.com/photo/2016/10/18/21/06/dinosaur-1784536_1280.jpg" class="palette-item" draggable="true" alt="Dinossauro" />
+  <img src="https://cdn.pixabay.com/photo/2014/04/10/10/02/owl-319913_1280.jpg" class="palette-item" draggable="true" alt="Coruja" />
+  <img src="https://cdn.pixabay.com/photo/2016/01/22/15/36/dog-1151516_1280.jpg" class="palette-item" draggable="true" alt="Cachorro" />
+  <img src="https://cdn.pixabay.com/photo/2016/03/27/19/17/turtle-1280223_1280.jpg" class="palette-item" draggable="true" alt="Tartaruga" />
+  <img src="https://cdn.pixabay.com/photo/2017/06/20/23/09/girl-2421493_1280.jpg" class="palette-item" draggable="true" alt="Garota" />
+  <h3 style="margin-top:20px;">Formas Geométricas</h3>
+  <div class="palette-shape circle" draggable="true" aria-label="Arraste círculo" style="background:#fff; border:2px solid #000;"></div>
+  <div class="palette-shape square" draggable="true" aria-label="Arraste quadrado" style="background:#fff; border:2px solid #000;"></div>
+  <div class="palette-shape triangle" draggable="true" aria-label="Arraste triângulo" style=""></div>
+</div>
+
+<div id="paint-area-container" style="margin-left: 80px; margin-top: 80px; flex-grow: 1; display: flex; justify-content: center; align-items: center; overflow: auto;">
+  <svg id="paint-area" viewBox="0 0 600 400" role="img" aria-label="Área para pintar" style="border:4px solid #264653; border-radius: 20px; background: #fff; max-width: 90vw; max-height: 85vh; display: block; user-select:none;"></svg>
+</div>
+
+<script>
+  const btnBack = document.getElementById("btn-back");
+  btnBack.onclick = () => (location.href = "../index.html");
+
+  const tools = {
+    pencil: document.getElementById("tool-pencil"),
+    brush: document.getElementById("tool-brush"),
+    eraser: document.getElementById("tool-eraser"),
+    bucket: document.getElementById("tool-bucket"),
+  };
+
+  const paintArea = document.getElementById("paint-area");
+  const svgNS = "http://www.w3.org/2000/svg";
+
+  const undoBtn = document.getElementById("undo-btn");
+  const redoBtn = document.getElementById("redo-btn");
+  const clearBtn = document.getElementById("clear-btn");
+  const colorPicker = document.getElementById("color-picker");
+
+  let currentTool = "pencil";
+  let currentColor = colorPicker.value;
+  let isDrawing = false;
+  let currentPath = null;
+  let pathData = "";
+  let drawingTarget = null;
+
+  // Undo and redo stacks
+  let undoStack = [];
+  let redoStack = [];
+
+  function updateUndoRedoButtons() {
+    undoBtn.disabled = undoStack.length === 0;
+    redoBtn.disabled = redoStack.length === 0;
+  }
+
+  function pushUndo(action) {
+    undoStack.push(action);
+    if (undoStack.length > 50) undoStack.shift();
+    redoStack = [];
+    updateUndoRedoButtons();
+  }
+
+  undoBtn.onclick = function () {
+    if (undoStack.length === 0) return;
+    const action = undoStack.pop();
+    if (["draw", "erase", "image"].includes(action.type)) {
+      paintArea.removeChild(action.element);
+      redoStack.push(action);
+    } else if (action.type === "fill") {
+      action.element.setAttribute("fill", action.oldColor);
+      action.element.setAttribute("data-filled", action.oldFilled);
+      redoStack.push(action);
+    } else if (action.type === "clear") {
+      action.elements.forEach((el) => paintArea.appendChild(el));
+      redoStack.push(action);
+    }
+    updateUndoRedoButtons();
+  };
+
+  redoBtn.onclick = function () {
+    if (redoStack.length === 0) return;
+    const action = redoStack.pop();
+    if (["draw", "erase", "image"].includes(action.type)) {
+      paintArea.appendChild(action.element);
+      undoStack.push(action);
+    } else if (action.type === "fill") {
+      action.element.setAttribute("fill", action.newColor);
+      action.element.setAttribute("data-filled", "true");
+      undoStack.push(action);
+    } else if (action.type === "clear") {
+      action.elements.forEach((el) => paintArea.removeChild(el));
+      undoStack.push(action);
+    }
+    updateUndoRedoButtons();
+  };
+
+  clearBtn.onclick = function () {
+    const elementsToRemove = Array.from(paintArea.querySelectorAll("path, image")).filter(
+      (el) => !el.classList.contains("outline") && !el.classList.contains("fillable")
+    );
+    if (elementsToRemove.length === 0) return;
+    elementsToRemove.forEach((el) => paintArea.removeChild(el));
+    pushUndo({ type: "clear", elements: elementsToRemove });
+  };
+
+  function selectTool(tool) {
+    currentTool = tool;
+    Object.entries(tools).forEach(([key, btn]) => {
+      btn.classList.toggle("selected", key === tool);
+      btn.setAttribute("aria-pressed", key === tool);
+    });
+  }
+
+  Object.entries(tools).forEach(([key, btn]) => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      selectTool(key);
+      redoStack = []; // clear redo stack when tool changes
+      updateUndoRedoButtons();
+    };
+  });
+
+  selectTool("pencil");
+
+  colorPicker.oninput = (e) => {
+    currentColor = e.target.value;
+  };
+
+  // Prevent drawing when dragging shapes or images
+  let isDragging = false;
+
+  paintArea.addEventListener("mousedown", (e) => {
+    if (currentTool === "bucket") return;
+    if (
+      e.target.classList.contains("palette-item") ||
+      e.target.classList.contains("palette-shape") ||
+      e.target.tagName === "image"
+    )
+      return;
+    if (isDragging) return;
+
+    isDrawing = true;
+    const pt = getSVGPoint(e);
+    pathData = `M ${pt.x} ${pt.y}`;
+    currentPath = document.createElementNS(svgNS, "path");
+    currentPath.setAttribute("fill", "none");
+    currentPath.setAttribute("stroke", currentTool === "eraser" ? "#fff" : currentColor);
+    currentPath.setAttribute("stroke-width", currentTool === "brush" ? 8 : currentTool === "eraser" ? 12 : 2);
+    currentPath.setAttribute("stroke-linejoin", "round");
+    currentPath.setAttribute("stroke-linecap", "round");
+    currentPath.setAttribute("d", pathData);
+    paintArea.appendChild(currentPath);
+    pushUndo({ type: currentTool === "eraser" ? "erase" : "draw", element: currentPath });
+  });
+
+  paintArea.addEventListener("mousemove", (e) => {
+    if (!isDrawing || !currentPath) return;
+    const pt = getSVGPoint(e);
+    pathData += ` L ${pt.x} ${pt.y}`;
+    currentPath.setAttribute("d", pathData);
+  });
+
+  function stopDrawing() {
+    isDrawing = false;
+    currentPath = null;
+  }
+
+  paintArea.addEventListener("mouseup", stopDrawing);
+  paintArea.addEventListener("mouseleave", stopDrawing);
+
+  // Bucket fill functionality
+  paintArea.querySelectorAll("path.fillable").forEach((path) => {
+    path.addEventListener("click", (e) => {
+      if (currentTool !== "bucket") return;
+      const el = e.target;
+      const oldColor = el.getAttribute("fill") || "white";
+      const oldFilled = el.getAttribute("data-filled") || "false";
+      if (oldColor.toLowerCase() === currentColor.toLowerCase() && oldFilled === "true") return;
+      el.setAttribute("fill", currentColor);
+      el.setAttribute("data-filled", "true");
+      pushUndo({ type: "fill", element: el, oldColor: oldColor, newColor: currentColor, oldFilled: oldFilled });
+    });
+  });
+
+  // Drag and drop setup
+  const paletteItems = document.querySelectorAll(".palette-item, .palette-shape");
+  paletteItems.forEach((item) => {
+    item.setAttribute("draggable", "true");
+    item.addEventListener("dragstart", (e) => {
+      e.dataTransfer.setData("text/plain", JSON.stringify({
+        type: item.classList.contains("palette-item") ? "image" : "shape",
+        src: item.src || null,
+        shape: [...item.classList].find(c => ["circle","square","triangle"].includes(c)) || null
+      }));
+      item.classList.add("dragging");
+    });
+    item.addEventListener("dragend", () => {
+      item.classList.remove("dragging");
+    });
+  });
+
+  paintArea.addEventListener("dragover", (e) => e.preventDefault());
+  paintArea.addEventListener("drop", (e) => {
+    e.preventDefault();
+    const dataStr = e.dataTransfer.getData("text/plain");
+    if (!dataStr) return;
+    let data;
+    try {
+      data = JSON.parse(dataStr);
+    } catch {
+      return;
+    }
+    const pt = getSVGPoint(e);
+
+    if (data.type === "image" && data.src) {
+      const img = document.createElementNS(svgNS, "image");
+      img.setAttribute("href", data.src);
+      img.setAttribute("x", pt.x - 50);
+      img.setAttribute("y", pt.y - 50);
+      img.setAttribute("width", 100);
+      img.setAttribute("height", 100);
+      img.style.cursor = "grab";
+      paintArea.appendChild(img);
+      pushUndo({ type: "image", element: img });
+      makeDraggable(img);
+    } else if (data.type === "shape" && data.shape) {
+      let el;
+      if (data.shape === "circle") {
+        el = document.createElementNS(svgNS, "circle");
+        el.setAttribute("cx", pt.x);
+        el.setAttribute("cy", pt.y);
+        el.setAttribute("r", 50);
+        el.setAttribute("fill", "none");
+        el.setAttribute("stroke", "#000");
+        el.setAttribute("stroke-width", 3);
+      } else if (data.shape === "square") {
+        el = document.createElementNS(svgNS, "rect");
+        el.setAttribute("x", pt.x - 50);
+        el.setAttribute("y", pt.y - 50);
+        el.setAttribute("width", 100);
+        el.setAttribute("height", 100);
+        el.setAttribute("fill", "none");
+        el.setAttribute("stroke", "#000");
+        el.setAttribute("stroke-width", 3);
+        el.setAttribute("rx", 15);
+        el.setAttribute("ry", 15);
+      } else if (data.shape === "triangle") {
+        el = document.createElementNS(svgNS, "polygon");
+        el.setAttribute("fill", "none");
+        el.setAttribute("stroke", "#000");
+        el.setAttribute("stroke-width", 3);
+        el.setAttribute("points", `${pt.x},${pt.y - 58} ${pt.x - 50},${pt.y + 42} ${pt.x + 50},${pt.y + 42}`);
+      }
+      if (el) {
+        el.style.cursor = "grab";
+        paintArea.appendChild(el);
+        pushUndo({ type: "image", element: el });
+        makeDraggable(el);
+      }
+    }
+  });
+
+  function makeDraggable(el) {
+    let dragging = false;
+    let offsetX, offsetY;
+
+    function getXY(evt) {
+      const pt = getSVGPoint(evt);
+      return [pt.x, pt.y];
+    }
+
+    el.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      isDrawing = false; // stop drawing during drag
+      dragging = true;
+      const [x, y] = getXY(e);
+      if (el.tagName === "circle") {
+        offsetX = x - parseFloat(el.getAttribute("cx"));
+        offsetY = y - parseFloat(el.getAttribute("cy"));
+      } else {
+        offsetX = x - parseFloat(el.getAttribute("x"));
+        offsetY = y - parseFloat(el.getAttribute("y"));
+      }
+      el.style.cursor = "grabbing";
+    });
+
+    paintArea.addEventListener("mousemove", (e) => {
+      if (!dragging) return;
+      e.preventDefault();
+      const [x, y] = getXY(e);
+      if (el.tagName === "circle") {
+        el.setAttribute("cx", x - offsetX);
+        el.setAttribute("cy", y - offsetY);
+      } else {
+        el.setAttribute("x", x - offsetX);
+        el.setAttribute("y", y - offsetY);
+      }
+    });
+
+    paintArea.addEventListener("mouseup", (e) => {
+      if (dragging) {
+        dragging = false;
+        el.style.cursor = "grab";
+      }
+    });
+    paintArea.addEventListener("mouseleave", (e) => {
+      if (dragging) {
+        dragging = false;
+        el.style.cursor = "grab";
+      }
+    });
+  }
+
+  function getSVGPoint(evt) {
+    let pt = paintArea.createSVGPoint();
+    pt.x = evt.clientX;
+    pt.y = evt.clientY;
+    return pt.matrixTransform(paintArea.getScreenCTM().inverse());
+  }
+</script>
+</body>
+</html>
