@@ -2,121 +2,240 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Jogo de Pintar</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Jogo de Pintar - MusiKids Fun</title>
 <style>
-  body {
-    font-family: 'Comic Sans MS', 'Baloo', Arial, sans-serif;
-    background: #f7f9fc;
-    color: #333;
-    margin: 0; padding: 1.5rem;
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+  body, html {
+    margin: 0; padding: 0; height: 100%;
+    background: linear-gradient(135deg, #f9ecd3 0%, #f4a261 100%);
+    font-family: 'Baloo 2', cursive, Arial, sans-serif;
+    user-select: none;
+    overflow: hidden;
+  }
+  header {
+    font-size: 2rem;
+    color: #d76f51;
+    font-weight: 900;
     text-align: center;
+    padding: 0.8rem 0;
+    background: #e9c46a;
+    box-shadow: 0 3px 6px #bb8561aa;
+    user-select: none;
+    margin-bottom: 4px;
   }
-  h1 {
-    color: #6b5ee9;
-    margin-bottom: 1rem;
-    text-shadow: 1px 1px 3px #6a4bf5;
-  }
-  #canvas {
-    border: 3px solid #6b5ee9;
-    border-radius: 12px;
-    background: white;
-    touch-action: none; /* Para mobile funcionar melhor */
-  }
-  .controls {
-    margin-top: 15px;
-  }
-  button, select {
-    padding: .7rem 1.5rem;
-    margin: 0 8px .8rem 8px;
-    font-size: 1rem;
-    border-radius: 10px;
-    border: none;
-    background: #6b5ee9;
+  #btn-back {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: #2a9d8f;
     color: white;
+    padding: 12px 20px;
+    font-weight: 700;
+    border: none;
+    border-radius: 20px;
     cursor: pointer;
-    font-weight: bold;
-    transition: background 0.3s ease;
+    box-shadow: 0 6px 15px #2a9d8fcc;
+    transition: background-color 0.3s ease;
+    z-index: 1000;
   }
-  button:hover, select:hover {
-    background: #5843c8;
+  #btn-back:hover {
+    background: #21867a;
   }
-  label {
-    font-weight: bold;
-    margin-right: 8px;
+  #toolbar {
+    position: fixed;
+    top: 60px;
+    left: 15px;
+    background: #264653cc;
+    padding: 10px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 900;
+  }
+  .tool-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    border: none;
+    background: #ffffffdd;
+    cursor: pointer;
+    box-shadow: 0 4px 9px #00000033;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #264653;
+    transition: background-color 0.25s ease;
+  }
+  .tool-btn.selected {
+    background: #2a9d8f;
+    color: white;
+  }
+  .tool-btn:hover {
+    background: #d8f3dc;
+  }
+  #canvas-container {
+    margin-left: 90px;
+    margin-top: 60px;
+    height: calc(100vh - 60px);
+    overflow: auto;
+  }
+  svg#paint-area {
+    border: 3px solid #264653;
+    border-radius: 20px;
+    background: #fff9f0;
+    max-width: 95vw;
+    max-height: 85vh;
+    display: block;
+    margin: auto;
+  }
+  path.outline {
+    stroke: #264653;
+    stroke-width: 3;
+    fill: none;
+  }
+  path.fillable {
+    fill: white;
+    stroke: #264653;
+    stroke-width: 2;
+    cursor: pointer;
   }
 </style>
 </head>
 <body>
-  <h1>Jogo de Pintar 🎨</h1>
-  <canvas id="canvas" width="480" height="320" aria-label="Área para pintura com o mouse ou dedo"></canvas>
-  <div class="controls">
-    <label for="cor">Cor:</label>
-    <select id="cor" aria-label="Escolha a cor para pintar">
-      <option value="#000000" selected>Preto</option>
-      <option value="#e74c3c">Vermelho</option>
-      <option value="#27ae60">Verde</option>
-      <option value="#2980b9">Azul</option>
-      <option value="#f39c12">Amarelo</option>
-      <option value="#8e44ad">Roxo</option>
-      <option value="#d35400">Laranja</option>
-      <option value="#7f8c8d">Cinza</option>
-    </select>
-    <button id="limpar">Limpar</button>
-  </div>
 
-  <script>
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    let desenhando = false;
-    let corAtual = document.getElementById('cor').value;
+<button id="btn-back" aria-label="Voltar ao menu de jogos" title="Voltar ao menu">← Menu</button>
 
-    function iniciarPosicao(e) {
-      desenhando = true;
-      desenhar(e);
-    }
+<div id="toolbar" role="toolbar" aria-label="Ferramentas de Pintura">
+  <button class="tool-btn selected" id="tool-pencil" title="Lápis - pintar livre" aria-pressed="true" aria-label="Selecionar Lápis">✏️</button>
+  <button class="tool-btn" id="tool-brush" title="Pincel - traço grosso" aria-pressed="false" aria-label="Selecionar Pincel">🖌️</button>
+  <button class="tool-btn" id="tool-eraser" title="Borracha - apagar pintura" aria-pressed="false" aria-label="Selecionar Borracha">🩹</button>
+  <button class="tool-btn" id="tool-bucket" title="Balde de tinta - preencher" aria-pressed="false" aria-label="Selecionar Balde de Tinta">🪣</button>
+  <button class="tool-btn" id="btn-clear" title="Limpar tudo" aria-label="Limpar pintura">🧹</button>
+</div>
 
-    function finalizarPosicao() {
-      desenhando = false;
-      ctx.beginPath();
-    }
+<div id="canvas-container">
+  <svg id="paint-area" viewBox="0 0 600 400" role="img" aria-label="Área de pintura">
+    <!-- Contornos do desenho para o balde preencher -->
+    <path class="outline" d="M150 100 C 180 80, 210 80, 240 100 S 270 130, 300 110" />
+    <path class="outline" d="M400 150 Q 430 120, 460 150 T 520 160" />
+    <!-- Áreas coloridas para preencher com balde -->
+    <path class="fillable" data-fill default-fill="#ffffff" d="M100,100 L200,100 L200,200 L100,200 Z" />
+    <path class="fillable" data-fill default-fill="#ffffff" d="M350,120 L450,120 L450,220 L350,220 Z" />
+  </svg>
+</div>
 
-    function desenhar(e) {
-      if (!desenhando) return;
-      e.preventDefault();
-      let x, y;
-      if (e.touches) {
-        x = e.touches[0].clientX - canvas.getBoundingClientRect().left;
-        y = e.touches[0].clientY - canvas.getBoundingClientRect().top;
-      } else {
-        x = e.clientX - canvas.getBoundingClientRect().left;
-        y = e.clientY - canvas.getBoundingClientRect().top;
+<script>
+  const btnBack = document.getElementById('btn-back');
+  btnBack.onclick = () => {
+    location.href = '../index.html'; // volta ao menu principal
+  };
+
+  const tools = {
+    pencil: document.getElementById('tool-pencil'),
+    brush: document.getElementById('tool-brush'),
+    eraser: document.getElementById('tool-eraser'),
+    bucket: document.getElementById('tool-bucket'),
+    clear: document.getElementById('btn-clear'),
+  };
+  let currentTool = 'pencil';
+
+  const paintArea = document.getElementById('paint-area');
+  const svgNS = "http://www.w3.org/2000/svg";
+  let drawing = false;
+  let currentPath = null;
+  let pathData = '';
+
+  function selectTool(toolName) {
+    currentTool = toolName;
+    Object.keys(tools).forEach(key => {
+      if(tools[key].classList) {
+        tools[key].classList.toggle('selected', key === toolName);
+        tools[key].setAttribute('aria-pressed', key === toolName);
       }
-      ctx.lineWidth = 4;
-      ctx.lineCap = 'round';
-      ctx.strokeStyle = corAtual;
+    });
+  }
+  tools.pencil.onclick = () => selectTool('pencil');
+  tools.brush.onclick = () => selectTool('brush');
+  tools.eraser.onclick = () => selectTool('eraser');
+  tools.bucket.onclick = () => selectTool('bucket');
+  tools.clear.onclick = () => clearPainting();
 
-      ctx.lineTo(x, y);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(x, y);
+  function createNewPath() {
+    const p = document.createElementNS(svgNS, 'path');
+    p.setAttribute('fill', 'none');
+    p.setAttribute('stroke', '#000');
+    if(currentTool === 'brush') {
+      p.setAttribute('stroke-width', '8');
+      p.setAttribute('stroke-linejoin', 'round');
+      p.setAttribute('stroke-linecap', 'round');
+    } else {
+      p.setAttribute('stroke-width', '2');
+      p.setAttribute('stroke-linejoin', 'round');
+      p.setAttribute('stroke-linecap', 'round');
     }
+    paintArea.appendChild(p);
+    return p;
+  }
 
-    canvas.addEventListener('mousedown', iniciarPosicao);
-    canvas.addEventListener('mouseup', finalizarPosicao);
-    canvas.addEventListener('mousemove', desenhar);
+  paintArea.addEventListener('mousedown', e => {
+    if(currentTool === 'bucket') return; // balde usa click diferente
+    drawing = true;
+    const pt = getSVGPoint(e);
+    pathData = `M ${pt.x} ${pt.y}`;
+    currentPath = createNewPath();
+    currentPath.setAttribute('d', pathData);
+    if(currentTool === 'eraser') {
+      currentPath.setAttribute('stroke', '#fff');
+      currentPath.setAttribute('stroke-width', '12');
+    }
+  });
+  paintArea.addEventListener('mousemove', e => {
+    if(!drawing || !currentPath) return;
+    const pt = getSVGPoint(e);
+    pathData += ` L ${pt.x} ${pt.y}`;
+    currentPath.setAttribute('d', pathData);
+  });
+  paintArea.addEventListener('mouseup', e => {
+    drawing = false;
+    currentPath = null;
+  });
+  paintArea.addEventListener('mouseleave', e => {
+    drawing = false;
+    currentPath = null;
+  });
 
-    canvas.addEventListener('touchstart', iniciarPosicao);
-    canvas.addEventListener('touchend', finalizarPosicao);
-    canvas.addEventListener('touchmove', desenhar);
-
-    document.getElementById('cor').addEventListener('change', (e) => {
-      corAtual = e.target.value;
+  // Balde de tinta - preenche área clicada
+  paintArea.querySelectorAll('path.fillable').forEach(path => {
+    path.addEventListener('click', e => {
+      if(currentTool !== 'bucket') return;
+      let color = '#000000'; // cor padrão se nenhuma for selecionada
+      // pegar cor do lápis ou pincel selecionado (no exemplo, sempre preto)
+      if(currentTool === 'bucket') color = '#ff4c8b'; 
+      path.setAttribute('fill', color);
     });
+  });
 
-    document.getElementById('limpar').addEventListener('click', () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+  function clearPainting() {
+    // Remove todos paths que não sejam fillable
+    [...paintArea.querySelectorAll('path')].forEach(path => {
+      if(path.classList.contains('fillable')) {
+        path.setAttribute('fill', path.getAttribute('default-fill') || 'white');
+      } else {
+        path.remove();
+      }
     });
-  </script>
+    instructions.textContent = '';
+  }
+
+  function getSVGPoint(event) {
+    const pt = paintArea.createSVGPoint();
+    pt.x = event.clientX;
+    pt.y = event.clientY;
+    return pt.matrixTransform(paintArea.getScreenCTM().inverse());
+  }
+</script>
 </body>
 </html>
