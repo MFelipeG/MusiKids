@@ -5,241 +5,442 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Letrinhas - MusiKids Fun</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Baloo&display=swap');
-  body { margin: 0; padding: 0; font-family: 'Baloo 2', cursive, Arial, sans-serif; background: linear-gradient(135deg,#e2f1c9 0%,#fbc1ca 100%); user-select:none; color:#222; min-height:100vh; text-align:center; }
-  header { font-size:2.4rem; font-weight:900; margin:0.6rem 0 0 0; color:#e74184; text-shadow:1px 1px 4px #db4aa0; user-select:none; }
-  #btn-menu { position:fixed; top:16px; left:16px; background:#a6d781; color:#225318; border:none; padding:12px 20px; font-weight:900; font-size:1.3rem; border-radius:24px; cursor:pointer; box-shadow:0 8px 18px #a8e74a59; z-index:1000; user-select:none; transition:background-color .3s ease; }
-  #btn-menu:hover { background:#82bd3c; color:#fff; }
-  #main-container { margin-top:5rem; max-width:600px; margin-left:auto; margin-right:auto; }
-  #categoria-container { margin-bottom:0.8rem; }
-  select, input, button { font-family: 'Baloo 2', cursive, Arial, sans-serif; }
-  select { font-size:1.2rem; padding:7px 14px; border-radius:16px; border:2px solid #a5db5b; margin-right:1rem; }
-  input[type="text"] { font-size:1.1rem; padding:6px 12px; border-radius:14px; border:2px solid #a5db5b; width:180px; }
-  button#add-button { font-size:1.1rem; font-weight:bold; background:#f27ea9; color:#fff; border:none; border-radius:18px; padding:7px 14px; margin-left:0.7rem; cursor:pointer; box-shadow:0 2px 8px #f3487d22; transition:background-color 0.3s ease; }
-  button#add-button:hover { background:#db1e89; }
-  #instrucao { margin-top:10px; color:#fa1899; font-size:1.15rem; margin-bottom:20px; font-weight:600; user-select:none; }
-  #palavra-atual { font-size:2.0rem; font-weight:700; color:#288b49; background:#fffde0; border-radius:22px; padding:10px 46px; margin-bottom:16px; box-shadow:2px 6px 15px #9be58a27; user-select:none; }
-  #caixa-letras { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; min-height:54px; margin-bottom:30px; }
-  .letra-drag { background:linear-gradient(135deg,#ff85b4 0%, #afe47b 100%); font-weight:900; font-size:1.4rem; padding:8px 25px; border-radius:23px; border:3px solid #fff; color:#222; cursor:grab; box-shadow:0 5px 18px #f3498f50; user-select:none; transition:background-color 0.15s ease; }
-  .letra-drag.dragging { opacity:0.25; background-color:#ffc092; cursor:grabbing; }
-  #slots-palavra { display:flex; justify-content:center; gap:14px; margin-bottom:14px; }
-  .slot-letra { width:48px; height:48px; border-radius:22px; border:2px dashed #ff6b8c; display:flex; justify-content:center; align-items:center; font-weight:800; font-size:1.8rem; color:#32a533; user-select:none; cursor:pointer; transition:background-color 0.15s ease; }
-  .slot-letra.over { background-color:#f9fea6; border-color:#e4b22e; }
-  #next-btn, #reset-btn { font-family: 'Baloo 2', cursive, Arial, sans-serif; font-weight:900; font-size:1.3rem; border-radius:26px; padding: 11px 34px; border:none; cursor:pointer; box-shadow: 0 5px 18px #fa3f8f65; transition:background-color 0.3s ease; display:none; }
-  #next-btn { background:#ff7498; color:#fff; margin:15px 0 0 0; }
-  #next-btn:hover { background:#e81566; }
-  #reset-btn { background:#a9f095; color:#2b5e00; margin-left:12px; }
-  #reset-btn:hover { background:#71c517; }
-  #resultado { min-height:42px; font-weight:900; color:#b633a9; font-size:1.5rem; margin-top:0.8rem; }
-  #confetti { position:fixed; width:100vw; height:100vh; top:0; left:0; pointer-events:none; z-index:2000; }
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Baloo 2', cursive, Arial;
+    background: linear-gradient(135deg, #e5f7cb 0%, #ffced5 100%);
+    color: #222;
+    user-select: none;
+    text-align: center;
+    min-height: 100vh;
+  }
+  header {
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: #dc4588;
+    margin: 0.7rem 0 0.2rem 0;
+    user-select: none;
+  }
+  #btn-menu {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: #a1d578;
+    color: #35510e;
+    border-radius: 1.3rem;
+    border: none;
+    font-weight: 900;
+    font-size: 1.2rem;
+    padding: 0.6rem 1.4rem;
+    cursor: pointer;
+    box-shadow: 0 0 14px #aad87a95;
+    user-select: none;
+    z-index: 1000;
+    transition: background-color 0.25s;
+  }
+  #btn-menu:hover {
+    background: #779e37;
+    color: white;
+  }
+  #main-container {
+    max-width: 600px;
+    margin: 5rem auto 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  #categoria-container {
+    margin-bottom: 1rem;
+  }
+  select, input, button {
+    font-family: 'Baloo 2', cursive, Arial;
+  }
+  select {
+    font-size: 1.1rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 1.2rem;
+    border: 2px solid #a1d578;
+    margin-right: 0.8rem;
+  }
+  input[type=text] {
+    padding: 0.6rem 1.0rem;
+    font-size: 1.0rem;
+    border-radius: 1.2rem;
+    border: 2px solid #a1d578;
+    width: 190px;
+    margin-top: 1rem;
+  }
+  button#add-btn {
+    font-size: 1.0rem;
+    font-weight: 900;
+    border-radius: 1.4rem;
+    border: none;
+    background: #ff7998;
+    color: white;
+    cursor: pointer;
+    padding: 0.5rem 1.4rem;
+    margin-left: 0.8rem;
+    box-shadow: 0 0 12px #f74885aa;
+    user-select: none;
+    margin-top: 1rem;
+  }
+  button#add-btn:hover {
+    background: #de2c67;
+  }
+  #instrucao {
+    font-weight: 600;
+    font-size: 1.13rem;
+    margin-bottom: 1rem;
+    color: #d22f79;
+    user-select: none;
+  }
+  #palavra-atual {
+    font-size: 1.7rem;
+    font-weight: 900;
+    color: #277021;
+    background: #f2ffdc;
+    border-radius: 1rem;
+    padding: 1rem 3rem;
+    box-shadow: 0 0 10px #90d775aa;
+    margin-bottom: 1.5rem;
+    user-select: none;
+  }
+  #caixa-letras {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1.7rem;
+    min-height: 3rem;
+  }
+  .letra-drag {
+    display: inline-block;
+    cursor: grab;
+    user-select: none;
+    font-weight: 900;
+    font-size: 1.3rem;
+    background:linear-gradient(135deg,#ff8ab3 0%,#a1de79 100%);
+    border-radius: 1.3rem;
+    padding: 8px 20px;
+    color: #222;
+    border: 2px solid #fff;
+    box-shadow: 0 0 12px #ea466880;
+    transition: all 0.15s ease;
+  }
+  .letra-drag.dragging {
+    opacity: 0.25;
+    background-color: #ffc5cb;
+    cursor: grabbing;
+  }
+  #slots-palavra {
+    display:flex;
+    justify-content: center;
+    gap: 1.3rem;
+    margin-bottom: 1.8rem;
+  }
+  .slot-letra {
+    width: 3.1rem;
+    height: 3.1rem;
+    background: #ffecf7;
+    border: 2px dashed #d72e77;
+    border-radius: 1rem;
+    font-weight: 900;
+    font-size: 2rem;
+    text-transform: uppercase;
+    color: #1a872c;
+    touch-action: none;
+    user-select: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .slot-letra.over {
+    background-color: #fffdd0;
+    border-color: #fc0;
+  }
+  #next-btn, #reset-btn {
+    padding: 0.8rem 3rem;
+    font-size: 1.2rem;
+    font-weight: 900;
+    border-radius: 1.7rem;
+    border: none;
+    color: white;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+    box-shadow: 0 0 15px #e4317caa;
+  }
+  #next-btn {
+    background: linear-gradient(90deg,#f0b2c7 0%,#f64187 97%);
+    margin-bottom: 0.75rem;
+    display: none;
+  }
+  #next-btn:hover {
+    background: linear-gradient(90deg,#f14973 0%,#e9055b 97%);
+  }
+  #reset-btn {
+    background: linear-gradient(90deg,#b0da25 0%,#239e4c 97%);
+  }
+  #reset-btn:hover {
+    background: linear-gradient(90deg,#519e32 0%,#1f5c29 97%);
+  }
+  #resultado {
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: #9f2492;
+    min-height: 3.5rem;
+    user-select: none;
+  }
+  #confetti {
+    pointer-events: none;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0; left: 0;
+    z-index: 2000;
+  }
   .confetti-piece {
-    position: absolute; width: 8px; height: 8px;
-    background-color: red; border-radius: 50%;
+    position: absolute;
+    width: 8px; height: 8px;
+    background-color: red;
+    border-radius: 50%;
     will-change: transform, opacity;
   }
 </style>
 </head>
 <body>
-<header>Letrinhas - MusiKids Fun</header>
-<button id="btn-menu" onclick="window.location.href='../index.html'">MENU DE JOGOS</button>
-<div id="main-container">
-  <div id="categoria-container">
-    <select id="categoria-escolha" aria-label="Seleção de categoria de palavras">
-      <option value="animais">Animais</option>
-      <option value="objetos">Objetos</option>
-      <option value="frutas">Frutas</option>
-      <option value="nomes">Nomes</option>
-    </select>
+  <header>Letrinhas - MusiKids Fun</header>
+  <button id="btn-menu" onclick="window.location.href='../'">MENU DE JOGOS</button>
+  <div id="main-container">
+    <div id="categoria-container">
+      <select id="categoria-escolha" aria-label="Seleção de categoria">
+        <option value="animais">Animais</option>
+        <option value="objetos">Objetos</option>
+        <option value="frutas">Frutas</option>
+        <option value="nomes">Nomes</option>
+      </select>
+    </div>
+    <div id="area-add">
+      <input type="text" id="add-palavra" maxlength="15" placeholder="Digite palavra" aria-label="Adicionar palavra"/>
+      <button id="btn-add">Adicionar</button>
+    </div>
+    <div id="instrucao">Arraste as letras para formar a palavra!</div>
+    <div id="palavra-atual"></div>
+    <div id="caixa-letras"></div>
+    <div id="slots-palavra"></div>
+    <button id="next-btn">Próxima Palavra</button>
+    <button id="reset-btn">Refazer</button>
+    <div id="resultado"></div>
+    <div id="confetti"></div>
   </div>
-  <div style="margin-bottom:10px;">
-    <input id="add-palavra" type="text" maxlength="15" placeholder="Adicionar palavra (ex: nome)" aria-label="Digite palavra para adicionar" />
-    <button id="btn-adiciona" aria-label="Adicionar palavra">Adicionar</button>
-  </div>
-  <div id="instrucao">Arraste as letras para formar a palavra!</div>
-  <div id="palavra-atual"></div>
-  <div id="caixa-letras"></div>
-  <div id="slots-palavra"></div>
-  <button id="next-btn">Próxima Palavra</button>
-  <button id="reset-btn">Refazer</button>
-  <div id="resultado"></div>
-</div>
-<div id="confetti"></div>
 <script>
   const categorias = {
-    animais: ["GATO","CACHORRO","PATO","VACA","PERU","RATO","ANJO","ABELHA","ELEFANTE","RAPOSA","COELHO","PEIXE","TOURO","URSO","GORILA","LAGARTO","MACACO","GALINHA","CAVALO","POMBA","TIGRE","TARTARUGA","PAPAGAIO","GALO","ARARA","LOBO","AVESTRUZ","DROMEDARIO","DISCO","PUMA","JABUTI","PINGUIM","CAMELO","GIRAFA","CISNE","CORUJA","BURRO","HIPOPOTAMO", "FURAO","HUMANO","TUBARAO","BOTO","CACAO","PESCADA","CARANGUEJO","SAGUI","HUSKY"],
-    objetos: ["BOLA","MESA","CAIXA","CAMISA","BONECA","LAMPADA","CANETA","BICICLETA","CHINELO","TELEFONE","BOLO","JACARE","BOTAO","ARMARIO","CADEIRA","ESPADA","CARRO","JOGO","PASTA","BALAO","PORTA","ONIBUS","PAPEL","BATERIA","FONE","CHAVE","PEIXE","BARRACA","FITA","BANDAGEM"],
-    frutas: ["MANGA","LARANJA","UVA","BANANA","ABACAXI","MAÇA","GOIABA","COCO","MELANCIA","KIWI","MELAO","PITANGA","CAJU","FIGO","JACA","MARACUJA","TAMARINDO","AMEIXA","SITRUS","ABACATE","JABUTICABA","PAPAIA","TANGERINA","MAMÃO","MORANGO"],
-    nomes: ["ANA","LUIS","MARIA","PEDRO","JOAO","CARLOS","FERNANDO","AMANDA","PATRICIA","HELENA","IGOR","LUCAS","MARCIO","MARCELLE","FELIPE","RODRIGO","JULIA","JESSICA","CARLA","LEANDRO","CRISTIANE","NICOLE"]
+    animais: ["GATO","CACHORRO","PATO","VACA","PERU","RATO","ANJO","ABELHA","ELEFANTE","RAPOSA","COELHO","PEIXE","TOURO","URSO","GORILA","LAGARTO","MACACO","GALINHA","CAVALO","POMBO","TIGRE","PAPAGAIO","GALINHA","LEAO","PORCO","CAVALO","ONÇA","FURAO","URSO","TAPIR","MINHOCA","GIRAFINHA","LCEO","HIPOPOTAMO","CAVALO","TUCANO"],
+    objetos: ["BOLA","MESA","CAIXA","CAMISA","SITE","CHALE","JABUTI","MESA","PORTA","TELA","LIVRO","CANETA","FITA","SOL","TESOURA","ARMARIO","LANÇA","PENELOPE","BOLSA","CPU","BOTELHO","BICICLETA","GORO","ESTCAO","PORTICO","MARIA","CAIXA","TELEFONE"],
+    frutas: ["MANGA","LARANJA","UVA","BANANA","ABACATE","MARACUJA","GOIABA","AMORA","MORANGOS","MELAO","JAMBALAIA","JOCOTI","GUAVA","JABUTIBA","LENHA","CEARA","ELMIRAM", "AVAI", "ANEA", "RIA"],
+    nomes: ["ANA","LUIZ","MARIA","PEDRO","JOAO","CARLOS","FERNANDO","AMANDA","PATRICIA","HELENA","BRUNO","JESSE","LUCAS","FABIO","MARCIO","MONICA","IGOR","ARTHUR"]
   };
-
+  
   let categoriaAtual = 'animais';
   let palavras = [];
   let indice = 0;
   let letrasRestantes = [];
   let slots = [];
   let draggingIdx = null;
-
-  // Embaralha array
-  function embaralhaLista(arr) {
-    const array = arr.slice();
-    for(let i=array.length-1; i>0; i--){
-      const j = Math.floor(Math.random()*(i+1));
-      [array[i], array[j]] = [array[j], array[i]];
+  let palavrasAdicionadas = [];
+  
+  // Funções embaralhar palavras e letras
+  function shuffle(array) {
+    let arr = array.slice();
+    for(let i = arr.length -1; i > 0; i--){
+      let j = Math.floor(Math.random() * (i +1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
     }
-    return array;
+    return arr;
   }
-  // Embaralha letras da palavra
-  function embaralhaPalavra(palavra) {
-    return palavra.split('').sort(() => Math.random() - 0.5);
+  function shuffleWord(word) {
+    return word.split('').sort(() => Math.random() - 0.5);
   }
-  function mostraPalavra(){
-    document.getElementById('palavra-atual').innerText = palavras[indice];
-    montaSlots(palavras[indice]);
-    montaCaixa(palavras[indice]);
+  // Exibir palavra e montar slots e letras embaralhadas
+  function showWord() {
+    let palavra = palavras[indice];
+    document.getElementById('palavra-atual').innerText = palavra;
+    buildSlots(palavra);
+    buildLetters(palavra);
     document.getElementById('resultado').innerText = '';
     document.getElementById('next-btn').style.display = 'none';
-    document.getElementById('reset-btn').style.display = 'inline-block';
+    document.getElementById('reset-btn').style.display = 'inline';
   }
-  function montaSlots(palavra){
-    const container = document.getElementById('slots-palavra');
+  function buildSlots(palavra) {
+    let container = document.getElementById('slots-palavra');
     container.innerHTML = '';
     slots = [];
-    for(let i=0; i<palavra.length; i++){
-      const slot = document.createElement('div');
+    for(let i=0; i<palavra.length; i++) {
+      let slot = document.createElement('div');
       slot.className = 'slot-letra';
       slot.dataset.index = i;
-      slot.addEventListener('dragover', e => { e.preventDefault(); slot.classList.add('over'); });
-      slot.addEventListener('dragleave', e => slot.classList.remove('over'));
-      slot.addEventListener('drop', e => {
+      slot.addEventListener('dragover', e=> {
+        e.preventDefault();
+        slot.classList.add('over');
+      });
+      slot.addEventListener('dragleave', e=> {
+        slot.classList.remove('over');
+      });
+      slot.addEventListener('drop', e=> {
         e.preventDefault();
         slot.classList.remove('over');
-        const letra = letrasRestantes[draggingIdx];
-        if(!slot.innerText && letra){
+        if(slot.innerText === '') {
+          let letra = letrasRestantes[draggingIdx];
           slot.innerText = letra;
           letrasRestantes[draggingIdx] = null;
-          atualizaCaixa();
-          verificaResultado();
+          updateLetters();
+          checkResult();
         }
       });
-      // Permitir remover letra clicando no slot
-      slot.addEventListener('click', () => {
-        if(slot.innerText){
+      // Permite tirar letra do slot clicando nela
+      slot.addEventListener('click', ()=> {
+        if(slot.innerText !== '') {
           letrasRestantes.push(slot.innerText);
           slot.innerText = '';
-          atualizaCaixa();
-          verificaResultado();
+          updateLetters();
+          checkResult();
         }
       });
       slots.push(slot);
       container.appendChild(slot);
     }
   }
-
-  function montaCaixa(palavra){
-    letrasRestantes = embaralhaPalavra(palavra);
-    atualizaCaixa();
+  function buildLetters(palavra) {
+    letrasRestantes = shuffleWord(palavra);
+    updateLetters();
   }
-
-  function atualizaCaixa(){
-    const container = document.getElementById('caixa-letras');
+  function updateLetters() {
+    let container = document.getElementById('caixa-letras');
     container.innerHTML = '';
     letrasRestantes.forEach((letra, idx) => {
-      if(letra){
-        const b = document.createElement('div');
-        b.className='letra-drag';
-        b.innerText = letra;
-        b.draggable = true;
-        b.addEventListener('dragstart', () => { draggingIdx = idx; b.classList.add('dragging'); });
-        b.addEventListener('dragend', () => { b.classList.remove('dragging'); draggingIdx = null; });
-        container.appendChild(b);
+      if(letra !== null && letra !== undefined) {
+        let letterDiv = document.createElement('div');
+        letterDiv.className = 'letra-drag';
+        letterDiv.innerText = letra;
+        letterDiv.draggable = true;
+        letterDiv.addEventListener('dragstart', () => {
+          draggingIdx = idx;
+          letterDiv.classList.add('dragging');
+        });
+        letterDiv.addEventListener('dragend', () => {
+          letterDiv.classList.remove('dragging');
+          draggingIdx = null;
+        });
+        container.appendChild(letterDiv);
       }
     });
   }
-
-  function verificaResultado(){
-    if(slots.every(slot=>slot.innerText)){
-      let correta = slots.every((slot,i) => slot.innerText === palavras[indice][i]);
-      if(correta){
-        document.getElementById('resultado').innerText = "Parabéns! Você acertou!";
-        document.getElementById('next-btn').style.display = 'inline-block';
-        document.getElementById('reset-btn').style.display = 'none';
-        confettiEffect();
+  function checkResult() {
+    if(slots.every(slot=>slot.innerText !== '')) {
+      let result = true;
+      for(let i=0; i<slots.length; i++) {
+        if(slots[i].innerText !== palavras[indice][i]) {
+          result = false;
+          break;
+        }
       }
-      else {
-        document.getElementById('resultado').innerText = "Tente novamente!";
-        document.getElementById('next-btn').style.display = 'none';
-        document.getElementById('reset-btn').style.display = 'inline-block';
+      let resMsg = document.getElementById('resultado');
+      let btnNext = document.getElementById('next-btn');
+      let btnReset = document.getElementById('reset-btn');
+      if(result) {
+        resMsg.innerText = 'Parabéns! Você acertou!';
+        btnNext.style.display = 'inline-block';
+        btnReset.style.display = 'none';
+        confetti();
+      } else {
+        resMsg.innerText = 'Tente novamente!';
+        btnNext.style.display = 'none';
+        btnReset.style.display = 'inline-block';
       }
-    }
-    else {
-      document.getElementById('resultado').innerText = "";
-      document.getElementById('next-btn').style.display = 'none';
-      document.getElementById('reset-btn').style.display = 'inline-block';
+    } else {
+      let resMsg = document.getElementById('resultado');
+      let btnNext = document.getElementById('next-btn');
+      let btnReset = document.getElementById('reset-btn');
+      resMsg.innerText = '';
+      btnNext.style.display = 'none';
+      btnReset.style.display = 'inline-block';
     }
   }
-
   document.getElementById('next-btn').onclick = () => {
     indice++;
     if(indice >= palavras.length) indice = 0;
-    mostraPalavra();
+    showWord();
   };
-
   document.getElementById('reset-btn').onclick = () => {
-    montaCaixa(palavras[indice]);
+    buildLetters(palavras[indice]);
     slots.forEach(s => s.innerText = '');
     document.getElementById('resultado').innerText = '';
   };
-
-  document.getElementById('categoria-escolha').onchange = (e) => {
+  document.getElementById('categoria-escolha').onchange = function(e) {
     categoriaAtual = e.target.value;
-    palavras = embaralhaLista(categorias[categoriaAtual]);
+    palavras = shuffle(categorias[categoriaAtual]);
     indice = 0;
-    mostraPalavra();
+    showWord();
   };
-
-  document.getElementById('btn-adiciona').onclick = () => {
-    const input = document.getElementById('add-palavra');
+  document.getElementById('btn-add').onclick = function() {
+    let input = document.getElementById('add-palavra');
     let nova = input.value.trim().toUpperCase();
-    if(nova.length >= 2 && /^[A-ZÁÉÍÓÚÇ]+$/.test(nova)){
-      categorias[categoriaAtual].push(nova);
-      input.value = "";
-      palavras = embaralhaLista(categorias[categoriaAtual]);
+    if(nova.length >= 2 && /^[A-ZÇÁÉÍÓÚ]+$/.test(nova)) {
+      categorias[categoriaAtual].unshift(nova);
+      palavras = categorias[categoriaAtual].slice();
       indice = 0;
-      mostraPalavra();
+      showWord();
+      input.value = '';
+    } else {
+      input.style.animation = 'shake 0.3s';
+      setTimeout(() => input.style.animation = '', 300);
+      input.focus();
     }
   };
-
-  // Confetti animation
-  function confettiEffect() {
-    const confetti = document.getElementById('confetti');
-    confetti.innerHTML = '';
-    let colors = ['#e44a5d','#f3ba52','#8ce369','#3cc1b3','#f06694'];
-    for(let i=0; i<100; i++){
+  // Confetti function
+  function confetti() {
+    let container = document.getElementById('confetti');
+    container.innerHTML = '';
+    let colors = ['#ff3980','#ff98a2','#fff89a','#a2e87e','#7de8a1'];
+    for(let i=0; i<100; i++) {
       let conf = document.createElement('div');
       conf.className = 'confetti-piece';
-      conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-      conf.style.top = Math.random() * window.innerHeight + 'px';
-      conf.style.left = Math.random() * window.innerWidth + 'px';
+      conf.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+      conf.style.top = (window.innerHeight*Math.random()) + 'px';
+      conf.style.left = (window.innerWidth*Math.random()) + 'px';
+      conf.style.width = '7px';
+      conf.style.height = '7px';
+      conf.style.position = 'absolute';
+      conf.style.borderRadius = '50%';
+      conf.style.opacity = '1';
+      conf.style.zIndex = 9999;
       conf.style.animation = `fall 3s linear forwards`;
       conf.style.animationDelay = (i*0.03) + 's';
-      confetti.appendChild(conf);
+      container.appendChild(conf);
     }
-    setTimeout(() => {confetti.innerHTML = ''}, 3000);
+    setTimeout(() => {container.innerHTML = '';}, 3000);
   }
-
-  // adiciona keyframes dinamicamente
-  let style = document.createElement('style');
+  // Keyframes for confetti animation
+  const style = document.createElement('style');
   style.innerHTML = `
     @keyframes fall {
       0% { transform: translateY(0); opacity: 1; }
-      100% { transform: translateY(100vh); opacity: 0;}
+      100% { transform: translateY(100vh); opacity: 0; }
+    }
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(5px); }
+      50% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+      100% { transform: translateX(0); }
     }
   `;
   document.head.appendChild(style);
-
-  // Inicializa lista e palavra embaralhada ao carregar
-  palavras = embaralhaLista(categorias[categoriaAtual]);
-  mostraPalavra();
+  // Initialize with random order
+  palavras = shuffle(categorias[categoriaAtual]);
+  showWord();
 </script>
 </body>
 </html>
