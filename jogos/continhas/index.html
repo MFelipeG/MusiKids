@@ -61,7 +61,8 @@
   .answer-section {
     display: flex; gap: 10px; align-items: center; justify-content: center;
   }
-  input[type=number], input#custom-sum-input {
+  /* AJUSTE: Mudei o seletor de [type=number] para #answer-input para manter o estilo */
+  input#answer-input, input#custom-sum-input {
     font-size: 1.25rem;
     font-weight: 600;
     padding: 10px 14px;
@@ -70,7 +71,8 @@
     text-align: left;
     outline-offset: 3px;
   }
-  input[type=number] {
+  /* AJUSTE: Mudei o seletor de [type=number] para #answer-input para manter o estilo */
+  input#answer-input {
     width: 120px;
   }
   input#custom-sum-input {
@@ -179,7 +181,7 @@
 <main>
   <div id="simple-sum" aria-live="polite" aria-atomic="true" role="heading" aria-level="1" style="cursor: default;">0 + 0 = ?</div>
   <div class="answer-section">
-    <input type="number" id="answer-input" aria-label="Digite a resposta" placeholder="Resposta aqui" />
+    <input type="text" inputmode="numeric" id="answer-input" aria-label="Digite a resposta" placeholder="Resposta aqui" />
     <button id="check-answer" aria-label="Verificar resposta">Verificar</button>
     <button id="new-sum" aria-label="Nova continha">Nova Conta</button>
   </div>
@@ -266,11 +268,12 @@
   checkBtn.onclick = () => {
     if (!allowAnswer) return;
     const val = Number(answerInput.value);
-    if (isNaN(val)) {
-      feedback.textContent = "Digite um número válido!";
-      return;
+    if (isNaN(val) || answerInput.value.trim() === "") {
+        feedback.textContent = "Digite um número válido!";
+        return;
     }
-    if (val === calcAnswer(currentSum)) {
+    const expectedAnswer = currentSum.custom ? currentSum.expected : calcAnswer(currentSum);
+    if (val === expectedAnswer) {
       feedback.textContent = "Parabéns! Você acertou!";
       confetti();
       allowAnswer = false;
@@ -290,24 +293,26 @@
   };
 
   createSumBtn.onclick = () => {
-    const expr = customInput.value.trim();
+    const expr = customInput.value.trim().replace(/×/g, '*').replace(/−/g, '-');
     if (!expr) {
       feedback.textContent = "Digite a continha para calcular.";
       customInput.focus();
       return;
     }
-    if (!/^[0-9+\-*.\s]+$/.test(expr)) {
+    // Regex ajustado para permitir espaços e ponto decimal
+    if (!/^[0-9.+\-*/\s.]+$/.test(expr)) {
       feedback.textContent = "Somente números e operadores + - * são permitidos.";
       customInput.focus();
       return;
     }
     try {
       const result = new Function("return " + expr)();
-      sumDisplay.textContent = expr + " = ?";
+      sumDisplay.textContent = customInput.value + " = ?";
       currentSum = { custom: true, expr, expected: result };
       feedback.textContent = "Conta criada! Digite a resposta acima.";
       allowAnswer = true;
       answerInput.disabled = false;
+      answerInput.value = "";
       checkBtn.disabled = false;
       newSumBtn.disabled = false;
       answerInput.focus();
@@ -317,74 +322,90 @@
     }
   };
 
-  clearCustomBtn.onclick = () => {
-    customInput.value = "";
-    feedback.textContent = "";
-    customInput.focus();
-  };
+  // AJUSTE: A função do botão limpar foi movida para dentro do loop do teclado.
+  // clearCustomBtn.onclick = () => { ... }; // Removido
 
-  // Função do teclado numérico para ambos inputs
+  // --- INÍCIO DAS MUDANÇAS PRINCIPAIS NO JAVASCRIPT ---
+
+  // Variável para rastrear qual campo de texto foi focado por último
+  let lastFocusedInput = answerInput;
+
+  // Adiciona "ouvintes" de evento de foco para os dois campos de texto
+  answerInput.addEventListener('focus', () => lastFocusedInput = answerInput);
+  customInput.addEventListener('focus', () => lastFocusedInput = customInput);
+
+  // Função do teclado numérico para ambos inputs (CORRIGIDA)
   numKeyboardButtons.forEach(button => {
     button.addEventListener("click", () => {
-      const val = button.getAttribute("data-val");
-      const activeElement = document.activeElement;
-      if (button.id === "clear-custom-btn") {
-        if (activeElement && (activeElement === answerInput || activeElement === customInput)) {
-          activeElement.value = "";
-          activeElement.focus();
+        const val = button.getAttribute("data-val");
+
+        // O botão de calcular (=) tem sua própria função, então ele chama o clique e não digita nada
+        if (button.id === "create-sum-btn") {
+            createSumBtn.click();
+            return;
         }
-        return;
-      }
-      if (activeElement && (activeElement === answerInput || activeElement === customInput)) {
-        // Insere no cursor dentro do input
-        const start = activeElement.selectionStart || 0;
-        const end = activeElement.selectionEnd || 0;
-        const currentVal = activeElement.value || "";
-        activeElement.value = currentVal.slice(0, start) + val + currentVal.slice(end);
-        activeElement.selectionStart = activeElement.selectionEnd = start + val.length;
-        activeElement.focus();
-      } else {
-        // Nenhum input selecionado, insere na resposta
-        const start = answerInput.selectionStart || 0;
-        const end = answerInput.selectionEnd || 0;
-        const currentVal = answerInput.value || "";
-        answerInput.value = currentVal.slice(0, start) + val + currentVal.slice(end);
-        answerInput.selectionStart = answerInput.selectionEnd = start + val.length;
-        answerInput.focus();
-      }
+
+        // O botão Limpar (C) agora limpa o último campo focado
+        if (button.id === "clear-custom-btn") {
+            if (lastFocusedInput) {
+                lastFocusedInput.value = "";
+                lastFocusedInput.focus();
+            }
+            return;
+        }
+
+        // Garante que temos um alvo para inserir o texto
+        if (lastFocusedInput && val !== null) {
+            // Previne que operadores (+, -, *) sejam inseridos no campo de resposta numérica
+            if (lastFocusedInput === answerInput && /[+\-*/]/.test(val)) {
+                return;
+            }
+            
+            const target = lastFocusedInput;
+            const start = target.selectionStart;
+            const end = target.selectionEnd;
+            const currentVal = target.value;
+
+            // Insere o valor do botão na posição do cursor
+            target.value = currentVal.slice(0, start) + val + currentVal.slice(end);
+
+            // Move o cursor para depois do caractere inserido
+            target.selectionStart = target.selectionEnd = start + val.length;
+            target.focus(); // Mantém o foco no campo
+        }
     });
   });
 
+  // --- FIM DAS MUDANÇAS PRINCIPAIS NO JAVASCRIPT ---
+
   // Confetes
   function confetti() {
-    const confetti = document.getElementById("confetti");
-    confetti.innerHTML = "";
+    const confettiContainer = document.getElementById("confetti");
+    confettiContainer.innerHTML = "";
     const colors = ["#ff6395", "#fcee21", "#33d68f", "#7d69f9", "#fd5a50"];
     for (let i = 0; i < 100; i++) {
       const elem = document.createElement("div");
-      elem.className = "confetti-piece";
+      elem.style.position = "absolute";
+      elem.style.width = "12px";
+      elem.style.height = "12px";
+      elem.style.borderRadius = "50%";
       elem.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
       elem.style.top = Math.random() * window.innerHeight + "px";
       elem.style.left = Math.random() * window.innerWidth + "px";
-      elem.style.width = "12px";
-      elem.style.height = "12px";
-      elem.style.position = "absolute";
-      elem.style.borderRadius = "50%";
-      elem.style.animation = "fall 3s linear forwards";
-      elem.style.animationDelay = i * 0.03 + "s";
-      confetti.appendChild(elem);
+      elem.style.animation = `fall ${Math.random() * 2 + 2}s linear forwards`;
+      confettiContainer.appendChild(elem);
     }
     setTimeout(() => {
-      confetti.innerHTML = "";
-    }, 3000);
+      confettiContainer.innerHTML = "";
+    }, 4000);
   }
 
   // Keyframes para confetes animados
   const style = document.createElement("style");
   style.textContent = `
     @keyframes fall {
-      0% { transform: translateY(0); opacity: 1; }
-      100% { transform: translateY(100vh); opacity: 0; }
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
     }
   `;
   document.head.appendChild(style);
