@@ -1,198 +1,252 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Jogo das Letrinhas</title>
-  <style>
-    body {
-      font-family: 'Comic Sans MS', 'Baloo', Arial, sans-serif;
-      background: #f7f9fc;
-      margin: 0; padding: 1.5rem; text-align: center;
-      color: #333;
-    }
-    h1 {
-      color: #f5921b;
-      margin-bottom: 1rem;
-      text-shadow: 1px 1px 2px #c78b2e;
-    }
-    .jogo-letras {
-      background: #f7f6d2;
-      border-radius: 14px;
-      padding: 1rem;
-      margin: 10px auto 20px auto;
-      max-width: 500px;
-      min-height: 90px;
-      user-select: none;
-      font-weight: bold;
-      font-size: 1.6rem;
-    }
-    .letras-btn {
-      padding: .5rem 1rem;
-      margin: 0 .35rem .85rem .35rem;
-      border: none;
-      background: #5ee978;
-      color: #275031;
-      font-size: 1.4rem;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.2s, transform .15s;
-      min-width: 38px;
-      font-family: inherit;
-    }
-    .letras-btn:hover {
-      background: #07c875;
-      color: #fff;
-      transform: scale(1.15);
-    }
-    .letras-slot {
-      display: inline-block;
-      min-width: 35px;
-      min-height: 46px;
-      font-size: 1.5rem;
-      margin: 0 6px;
-      border-bottom: 3px solid #ccc;
-      letter-spacing: 0.14rem;
-    }
-    #dica-texto {
-      margin-top: 15px;
-      font-style: italic;
-      color: #4a4a4a;
-    }
-    #msg {
-      margin-top: 20px;
-      font-weight: bold;
-      font-size: 1.3rem;
-    }
-    button#novo-jogo {
-      margin-top: 25px;
-      background: #ffd23f;
-      border: none;
-      padding: 1rem 2rem;
-      font-weight: bold;
-      font-size: 1.12rem;
-      border-radius: 12px;
-      cursor: pointer;
-      transition: background 0.25s ease;
-    }
-    button#novo-jogo:hover {
-      background: #f2ae2e;
-    }
-    button#btn-dica {
-      background: #339af0;
-      border: none;
-      color: white;
-      padding: 0.8rem 1.8rem;
-      font-weight: 600;
-      margin-top: 15px;
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 1.1rem;
-      transition: background 0.25s ease;
-    }
-    button#btn-dica:hover {
-      background: #2370d9;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Letrinhas - MusiKids Fun</title>
+<style>
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Baloo 2', cursive, Arial, sans-serif;
+    background: linear-gradient(135deg, #e9f5be 0%, #ffc9de 100%);
+    user-select: none;
+    color: #222;
+    min-height: 100vh;
+    text-align: center;
+  }
+  header {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #ff81a7;
+    margin-bottom: 0.5rem;
+    text-shadow: 1px 1px 3px #f06292;
+    background: #fff9e3;
+    padding: 13px 0 11px 0;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    margin-bottom: 24px;
+  }
+  #btn-menu {
+    position: fixed;
+    top: 16px; left: 16px;
+    background: #b3dc6d;
+    color: #334c06;
+    border: none;
+    padding: 10px 18px;
+    font-weight: 800;
+    font-size: 1.14rem;
+    border-radius: 18px;
+    cursor: pointer;
+    box-shadow: 0 5px 16px #b3dc6d44;
+    z-index: 1000;
+    transition: background-color .2s;
+  }
+  #btn-menu:hover {
+    background: #8ab442;
+    color: #fff;
+  }
+  #main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  #instrucao {
+    margin-top: 10px;
+    color: #fa1899;
+    font-size: 1.15rem;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  #palavra-atual {
+    font-size: 1.7rem;
+    font-weight: 700;
+    color: #288b49;
+    background: #fffde0;
+    border-radius: 14px;
+    padding: 12px 42px;
+    margin-bottom: 14px;
+    box-shadow: 2px 6px 15px #9be58a27;
+  }
+  #caixa-letras {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 35px;
+    min-height: 48px;
+  }
+  .letra-drag {
+    background: linear-gradient(135deg,#ff82b2 40%, #d4f778 100%);
+    color: #222;
+    padding: 8px 24px;
+    font-size: 1.2rem;
+    border-radius: 14px;
+    font-weight: 700;
+    cursor: grab;
+    border: 2px solid #fff;
+    box-shadow: 0 4px 16px #f3487d22;
+    margin-bottom: 5px;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .letra-drag.dragging {
+    opacity: .4;
+    background: #fff8f4;
+  }
+  #slots-palavra {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .slot-letra {
+    width: 39px;
+    height: 39px;
+    background: #fff3fa;
+    border-radius: 11px;
+    border: 2px dashed #fa1899;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #288b49;
+    margin-bottom: 2px;
+    transition: border-color 0.15s, background 0.12s;
+  }
+  .slot-letra.over {
+    border-color: #ffd600;
+    background: #fffde0;
+  }
+  #next-btn {
+    background: #ff81a7;
+    color: #244c43;
+    border: none;
+    border-radius: 17px;
+    padding: 11px 36px;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-top: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px #f3487d33;
+    display: none;
+  }
+  #next-btn:active {
+    background: #ef568a;
+    color: #fff;
+  }
+  #resultado {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-top: 10px;
+    color: #9631e6;
+    min-height: 38px;
+  }
+</style>
 </head>
 <body>
-  <h1>Jogo das Letrinhas ✏️</h1>
-  <div class="jogo-letras" id="campo-palavra"></div>
-  <div id="botoes-letras"></div>
-  <button id="btn-dica" onclick="mostrarDica()">Mostrar Dica</button>
-  <div id="dica-texto"></div>
-  <div id="msg"></div>
-  <button id="novo-jogo" onclick="iniciarJogo()">Novo Jogo</button>
-  <script>
-    const palavras = [
-      {texto: "SOL", dica: "Brilha no céu"},
-      {texto: "BOLA", dica: "Serve para brincar e rolar"},
-      {texto: "GATO", dica: "Animal que mia"},
-      {texto: "SAPO", dica: "Verde, pula e adora lagoas"},
-      {texto: "PEIXE", dica: "Nada na água"},
-      {texto: "LUA", dica: "Aparece à noite"},
-      {texto: "URSO", dica: "Animal grande e peludo"},
-      {texto: "FLOR", dica: "Colorida, cheirosa e nasce no jardim"},
-      {texto: "FADA", dica: "Tem asas e espalha pó mágico"},
-      {texto: "RATO", dica: "Gosta de queijo"},
-      {texto: "PIPOLHO", dica: "Inseto na cabeça"},
-      {texto: "SABONETE", dica: "Usa-se para ficar limpo"},
-      {texto: "VENTO", dica: "Sente mas não vê"},
-      {texto: "LIVRO", dica: "Tem páginas, letras e conta histórias"},
-      {texto: "PIOLHO", dica: "Vida difícil, vive de cabeça em cabeça"}
-    ];
-    let palavraSelecionada = null;
-    let letrasReveladas = [];
-    let tentativas = 0;
-    let dicaRevelada = false;
+<header>Letrinhas - MusiKids Fun</header>
+<button id="btn-menu" onclick="window.location.href='../index.html'">MENU DE JOGOS</button>
+<div id="main-container">
+  <div id="instrucao">Arraste as letras para formar a palavra!</div>
+  <div id="palavra-atual"></div>
+  <div id="slots-palavra"></div>
+  <div id="caixa-letras"></div>
+  <button id="next-btn">Próxima palavra</button>
+  <div id="resultado"></div>
+</div>
+<script>
+  const palavras = [
+    "SOPA", "SAPO", "PATO", "GATO", "CORA", "TERRA",
+    "FADA", "SOL", "LAGO", "ROSA", "MESA", "BOLA"
+    // acrescente mais aqui para aumentar a lista posteriormente!
+  ];
 
-    function iniciarJogo() {
-      palavraSelecionada = palavras[Math.floor(Math.random() * palavras.length)];
-      letrasReveladas = Array(palavraSelecionada.texto.length).fill(null);
-      tentativas = 0;
-      dicaRevelada = false;
-      document.getElementById('dica-texto').textContent = '';
-      document.getElementById('msg').textContent = '';
-      montarPalavra();
-      montarBotoes();
-    }
+  let indice = 0;
+  let letrasRestantes = [];
+  let slots = [];
+  let draggingIdx = null;
 
-    function montarPalavra() {
-      const container = document.getElementById('campo-palavra');
-      container.innerHTML = palavraSelecionada.texto.split('').map((l, i) => {
-        return `<span class="letras-slot">${letrasReveladas[i] ? l.toUpperCase() : '_'}</span>`;
-      }).join('');
-    }
+  function embaralha(palavra) {
+    return palavra.split('').sort(() => Math.random() - 0.5);
+  }
 
-    function montarBotoes() {
-      const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-      const container = document.getElementById('botoes-letras');
-      container.innerHTML = '';
-      for (const letra of letras) {
-        const estaDesabilitado = letrasReveladas.includes(letra);
-        const btn = document.createElement("button");
-        btn.textContent = letra;
-        btn.disabled = estaDesabilitado;
-        btn.className = "letras-btn";
-        btn.onclick = () => tentarLetra(letra);
-        container.appendChild(btn);
-      }
-    }
+  function mostraPalavra() {
+    document.getElementById('palavra-atual').innerText = palavras[indice];
+    montaSlots(palavras[indice]);
+    montaCaixaLetras(palavras[indice]);
+    document.getElementById('resultado').innerText = "";
+    document.getElementById('next-btn').style.display = "none";
+  }
 
-    function tentarLetra(letra) {
-      if (!dicaRevelada) document.getElementById('dica-texto').textContent = '';
-      let acertou = false;
-      palavraSelecionada.texto.split('').forEach((l, i) => {
-        if (l === letra) {
-          letrasReveladas[i] = letra;
-          acertou = true;
+  function montaSlots(palavra) {
+    const container = document.getElementById('slots-palavra');
+    container.innerHTML = "";
+    slots = [];
+    for(let i=0; i<palavra.length; i++) {
+      const slot = document.createElement('div');
+      slot.className = "slot-letra";
+      slot.dataset.index = i;
+      slot.addEventListener('dragover', (e) => {
+        e.preventDefault(); slot.classList.add("over");
+      });
+      slot.addEventListener('dragleave', (e) => slot.classList.remove("over"));
+      slot.addEventListener('drop', (e) => {
+        e.preventDefault();
+        slot.classList.remove("over");
+        const letra = letrasRestantes[draggingIdx];
+        if (!slot.innerText) {
+          slot.innerText = letra;
+          letrasRestantes[draggingIdx] = null;
+          atualizaCaixaLetras();
+          verificaAcerto();
         }
       });
-      montarPalavra();
-      montarBotoes();
-      tentativas++;
-      if (!acertou && tentativas > palavraSelecionada.texto.length + 2) {
-        document.getElementById('msg').innerHTML = `💨 Acabaram as tentativas! A palavra era <strong>${palavraSelecionada.texto}</strong>.`;
-        desabilitarBotoes();
-      } else if (!letrasReveladas.includes(null)) {
-        document.getElementById('msg').innerHTML = `🎉 Parabéns, você acertou!`;
-        desabilitarBotoes();
+      slots.push(slot);
+      container.appendChild(slot);
+    }
+  }
+
+  function montaCaixaLetras(palavra) {
+    letrasRestantes = embaralha(palavra);
+    atualizaCaixaLetras();
+  }
+
+  function atualizaCaixaLetras() {
+    const container = document.getElementById('caixa-letras');
+    container.innerHTML = '';
+    letrasRestantes.forEach((letra, idx) => {
+      if (letra) {
+        const b = document.createElement('div');
+        b.className = "letra-drag";
+        b.innerText = letra;
+        b.draggable = true;
+        b.addEventListener('dragstart', () => {
+          draggingIdx = idx;
+          b.classList.add('dragging');
+        });
+        b.addEventListener('dragend', () => {
+          b.classList.remove('dragging'); draggingIdx = null;
+        });
+        container.appendChild(b);
       }
-    }
+    });
+  }
 
-    function desabilitarBotoes() {
-      const botoes = document.querySelectorAll('.letras-btn');
-      botoes.forEach(btn => btn.disabled = true);
+  function verificaAcerto() {
+    let acertos = slots.map((slot, i) => slot.innerText === palavras[indice][i]);
+    if (acertos.every(x => x) && slots.every(slot => slot.innerText)) {
+      document.getElementById('resultado').innerText = "Parabéns! Você acertou!";
+      document.getElementById('next-btn').style.display = "inline-block";
     }
+  }
 
-    function mostrarDica() {
-      if (!dicaRevelada) {
-        document.getElementById('dica-texto').textContent = `Dica: ${palavraSelecionada.dica}`;
-        dicaRevelada = true;
-      }
-    }
+  document.getElementById('next-btn').onclick = () => {
+    indice = (indice+1) % palavras.length;
+    mostraPalavra();
+  };
 
-    window.onload = iniciarJogo;
-  </script>
+  // inicialização
+  mostraPalavra();
+</script>
 </body>
 </html>
