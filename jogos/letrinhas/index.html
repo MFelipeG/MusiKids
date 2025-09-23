@@ -117,7 +117,7 @@
     border-color: #ffd600;
     background: #fffde0;
   }
-  #next-btn {
+  #next-btn, #reset-btn {
     background: #ff81a7;
     color: #244c43;
     border: none;
@@ -130,9 +130,15 @@
     box-shadow: 0 4px 12px #f3487d33;
     display: none;
   }
-  #next-btn:active {
+  #next-btn:active, #reset-btn:active {
     background: #ef568a;
     color: #fff;
+  }
+  #reset-btn {
+    margin-left: 12px;
+    background: #d4f778;
+    color: #187168;
+    box-shadow: 0 4px 12px #b6ec5e33;
   }
   #resultado {
     font-size: 1.5rem;
@@ -152,19 +158,24 @@
   <div id="slots-palavra"></div>
   <div id="caixa-letras"></div>
   <button id="next-btn">Próxima palavra</button>
+  <button id="reset-btn">Refazer</button>
   <div id="resultado"></div>
 </div>
 <script>
-  const palavras = [
+  const palavrasOriginais = [
     "SOPA", "SAPO", "PATO", "GATO", "CORA", "TERRA",
     "FADA", "SOL", "LAGO", "ROSA", "MESA", "BOLA"
-    // acrescente mais aqui para aumentar a lista posteriormente!
+    // acrescente mais aqui!
   ];
-
+  let palavras = [];
   let indice = 0;
   let letrasRestantes = [];
   let slots = [];
   let draggingIdx = null;
+
+  function embaralhaArray(arr) {
+    return arr.slice().sort(() => Math.random() - 0.5);
+  }
 
   function embaralha(palavra) {
     return palavra.split('').sort(() => Math.random() - 0.5);
@@ -176,6 +187,7 @@
     montaCaixaLetras(palavras[indice]);
     document.getElementById('resultado').innerText = "";
     document.getElementById('next-btn').style.display = "none";
+    document.getElementById('reset-btn').style.display = "inline-block";
   }
 
   function montaSlots(palavra) {
@@ -233,19 +245,21 @@
   }
 
   function verificaAcertoOuErro() {
-    // Só chama quando todos os slots estão com letra
     if (slots.every(slot => slot.innerText)) {
       let correta = slots.map((slot, i) => slot.innerText === palavras[indice][i]).every(x => x);
       if (correta) {
         document.getElementById('resultado').innerText = "Parabéns! Você acertou!";
         document.getElementById('next-btn').style.display = "inline-block";
+        document.getElementById('reset-btn').style.display = "none";
       } else {
         document.getElementById('resultado').innerText = "Tente novamente!";
         document.getElementById('next-btn').style.display = "none";
+        document.getElementById('reset-btn').style.display = "inline-block";
       }
     } else {
       document.getElementById('resultado').innerText = "";
       document.getElementById('next-btn').style.display = "none";
+      document.getElementById('reset-btn').style.display = "inline-block";
     }
   }
 
@@ -254,8 +268,18 @@
     mostraPalavra();
   };
 
-  // inicialização
-  mostraPalavra();
+  document.getElementById('reset-btn').onclick = () => {
+    mostraPalavra();
+  };
+
+  // Inicialização: sorteia ordem das palavras toda vez
+  function inicializa() {
+    palavras = embaralhaArray(palavrasOriginais);
+    indice = 0;
+    mostraPalavra();
+  }
+
+  inicializa();
 </script>
 </body>
 </html>
