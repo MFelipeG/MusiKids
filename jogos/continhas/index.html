@@ -113,21 +113,20 @@
   #new-sum:hover {
     background: linear-gradient(90deg,#249649 0%,#57db9a 98%);
   }
+  /* AJUSTE: Removido margin-left pois o botão = agora ocupa a linha toda */
   #create-sum-btn, #clear-custom-btn {
     background: linear-gradient(90deg, #1d82c9 0%, #73b1d8 98%);
     box-shadow: 0 0 15px #1d82c970;
-    margin-left: 6px;
   }
   #create-sum-btn:hover, #clear-custom-btn:hover {
     background: linear-gradient(90deg, #0e5c8c 0%, #377db1 98%);
   }
-  /* NOVO ESTILO PARA O BOTÃO DE RESPOSTA */
   #show-custom-answer-btn {
     background: linear-gradient(90deg, #ff9a4c 0%, #ffc878 98%);
     box-shadow: 0 0 15px #ff9a4c70;
-    padding: 10px 20px; /* Ajuste de padding */
+    padding: 10px 20px;
     margin-left: 10px;
-    white-space: nowrap; /* Impede que o texto quebre */
+    white-space: nowrap;
   }
   #show-custom-answer-btn:hover {
     background: linear-gradient(90deg, #e07b2a 0%, #f0a84a 98%);
@@ -143,7 +142,6 @@
     width: 100%;
     margin-top: 20px;
   }
-  /* NOVO CONTAINER PARA ALINHAR INPUT E BOTÃO */
   .custom-input-group {
     display: flex;
     align-items: center;
@@ -203,7 +201,7 @@
   <div id="custom-input-area">
     <label id="custom-label" for="custom-sum-input">Digite sua conta:</label>
     <div class="custom-input-group">
-      <input type="text" id="custom-sum-input" aria-label="Campo para digitar continha" placeholder="Ex: 2 + 3 * 4" autocomplete="off" />
+      <input type="text" id="custom-sum-input" aria-label="Campo para digitar continha" placeholder="Ex: 10 / 2" autocomplete="off" />
       <button id="show-custom-answer-btn" aria-label="Mostrar resposta da conta digitada">Ver Resposta</button>
     </div>
     <div id="num-keyboard" role="group" aria-label="Teclado numérico">
@@ -211,18 +209,23 @@
       <button class="num-btn" data-val="8">8</button>
       <button class="num-btn" data-val="9">9</button>
       <button class="num-btn" data-val="+">+</button>
+      
       <button class="num-btn" data-val="4">4</button>
       <button class="num-btn" data-val="5">5</button>
       <button class="num-btn" data-val="6">6</button>
       <button class="num-btn" data-val="-">−</button>
+      
       <button class="num-btn" data-val="1">1</button>
       <button class="num-btn" data-val="2">2</button>
       <button class="num-btn" data-val="3">3</button>
       <button class="num-btn" data-val="*">×</button>
+      
       <button class="num-btn" id="clear-custom-btn" aria-label="Limpar texto">C</button>
       <button class="num-btn" data-val="0">0</button>
       <button class="num-btn" data-val=".">.</button>
-      <button id="create-sum-btn" aria-label="Calcular conta" class="num-btn" style="background:#5b9fca; color:white;">=</button>
+      <button class="num-btn" data-val="/">÷</button>
+
+      <button id="create-sum-btn" aria-label="Calcular conta" class="num-btn" style="grid-column: span 4; background:#5b9fca; color:white;">=</button>
     </div>
   </div>
 </main>
@@ -238,7 +241,6 @@
   const feedback = document.getElementById("feedback");
   const customInput = document.getElementById("custom-sum-input");
   const createSumBtn = document.getElementById("create-sum-btn");
-  // NOVO: Selecionando o novo botão
   const showAnswerBtn = document.getElementById("show-custom-answer-btn");
   const clearCustomBtn = document.getElementById("clear-custom-btn");
   const numKeyboardButtons = document.querySelectorAll(".num-btn");
@@ -251,16 +253,26 @@
   }
 
   function generateSum() {
-    const ops = ["+", "-", "*"];
-    const op = ops[randomInt(0, 2)];
-    let num1 = randomInt(0, 20);
-    let num2 = randomInt(0, 20);
+    const ops = ["+", "-", "*", "/"]; // Adicionado "/"
+    let op = ops[randomInt(0, 3)];
+    let num1, num2;
+    // Lógica para criar contas de divisão com resultado inteiro
+    if (op === "/") {
+        num2 = randomInt(1, 10); // Divisor não pode ser zero
+        num1 = num2 * randomInt(1, 10);
+    } else {
+        num1 = randomInt(0, 20);
+        num2 = randomInt(0, 20);
+    }
+    
     if (op === "-" && num2 > num1) [num1, num2] = [num2, num1];
     return { num1, num2, op };
   }
 
   function showSum({ num1, num2, op }) {
-    sumDisplay.textContent = `${num1} ${op} ${num2} = ?`;
+    // Usa o símbolo correto para cada operação
+    const opSymbol = op === '*' ? '×' : op === '/' ? '÷' : op;
+    sumDisplay.textContent = `${num1} ${opSymbol} ${num2} = ?`;
     currentSum = { num1, num2, op };
     answerInput.value = "";
     feedback.textContent = "";
@@ -276,6 +288,7 @@
       case "+": return num1 + num2;
       case "-": return num1 - num2;
       case "*": return num1 * num2;
+      case "/": return num1 / num2; // Adicionado "/"
       default: return null;
     }
   }
@@ -307,55 +320,54 @@
     showSum(sum);
   };
 
+  // Função centralizada para calcular expressões customizadas
+  function calculateCustomExpression(exprString) {
+      // AJUSTE: Incluído replace para o símbolo de divisão
+      const expr = exprString.trim().replace(/×/g, '*').replace(/−/g, '-').replace(/÷/g, '/');
+      if (!expr) {
+          return { error: "Digite uma conta para calcular." };
+      }
+      // AJUSTE: Regex atualizado para aceitar /
+      if (!/^[0-9.+\-*/\s.]+$/.test(expr)) {
+          return { error: "A conta contém caracteres inválidos." };
+      }
+      try {
+          const result = new Function("return " + expr)();
+          // AJUSTE: Checagem para divisão por zero
+          if (!isFinite(result)) {
+              return { error: "Erro: Divisão por zero!" };
+          }
+          return { result: result };
+      } catch (e) {
+          return { error: "Não consegui calcular. Verifique a conta." };
+      }
+  }
+
   createSumBtn.onclick = () => {
-    const expr = customInput.value.trim().replace(/×/g, '*').replace(/−/g, '-');
-    if (!expr) {
-      feedback.textContent = "Digite a continha para calcular.";
-      customInput.focus();
-      return;
-    }
-    if (!/^[0-9.+\-*/\s.]+$/.test(expr)) {
-      feedback.textContent = "Somente números e operadores + - * são permitidos.";
-      customInput.focus();
-      return;
-    }
-    try {
-      const result = new Function("return " + expr)();
-      sumDisplay.textContent = customInput.value + " = ?";
-      currentSum = { custom: true, expr, expected: result };
-      feedback.textContent = "Conta criada! Digite a resposta acima.";
-      allowAnswer = true;
-      answerInput.disabled = false;
-      answerInput.value = "";
-      checkBtn.disabled = false;
-      newSumBtn.disabled = false;
-      answerInput.focus();
-    } catch (e) {
-      feedback.textContent = "Expressão inválida. Corrija e tente novamente.";
-      customInput.focus();
+    const calculation = calculateCustomExpression(customInput.value);
+    if (calculation.error) {
+        feedback.textContent = calculation.error;
+        customInput.focus();
+    } else {
+        sumDisplay.textContent = customInput.value.trim() + " = ?";
+        currentSum = { custom: true, expr: customInput.value, expected: calculation.result };
+        feedback.textContent = "Conta criada! Digite a resposta acima.";
+        allowAnswer = true;
+        answerInput.disabled = false;
+        answerInput.value = "";
+        checkBtn.disabled = false;
+        newSumBtn.disabled = false;
+        answerInput.focus();
     }
   };
 
-  // NOVO: Função para o botão "Ver Resposta"
   showAnswerBtn.onclick = () => {
-    const expr = customInput.value.trim().replace(/×/g, '*').replace(/−/g, '-');
-    if (!expr) {
-      feedback.textContent = "Digite uma conta para ver a resposta.";
-      customInput.focus();
-      return;
-    }
-    if (!/^[0-9.+\-*/\s.]+$/.test(expr)) {
-      feedback.textContent = "A conta contém caracteres inválidos.";
-      customInput.focus();
-      return;
-    }
-    try {
-      const result = new Function("return " + expr)();
-      // Mostra o resultado formatado
-      feedback.textContent = `A resposta é: ${Number(result.toFixed(4))}`;
-    } catch (e) {
-      feedback.textContent = "Não consegui calcular. Verifique a conta.";
-      customInput.focus();
+    const calculation = calculateCustomExpression(customInput.value);
+    if (calculation.error) {
+        feedback.textContent = calculation.error;
+        customInput.focus();
+    } else {
+        feedback.textContent = `A resposta é: ${Number(calculation.result.toFixed(4))}`;
     }
   };
   
@@ -385,8 +397,10 @@
             const start = target.selectionStart;
             const end = target.selectionEnd;
             const currentVal = target.value;
-            target.value = currentVal.slice(0, start) + val + currentVal.slice(end);
-            target.selectionStart = target.selectionEnd = start + val.length;
+            // Usa o símbolo visual correto ao digitar
+            const displayVal = val === '*' ? '×' : val === '/' ? '÷' : val;
+            target.value = currentVal.slice(0, start) + displayVal + currentVal.slice(end);
+            target.selectionStart = target.selectionEnd = start + displayVal.length;
             target.focus();
         }
     });
