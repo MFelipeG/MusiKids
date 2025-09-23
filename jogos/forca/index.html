@@ -7,127 +7,77 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
   body {
-    margin: 0;
-    padding: 0;
+    margin: 0; padding: 0;
     font-family: 'Baloo 2', cursive, Arial, sans-serif;
     background: linear-gradient(135deg, #fceabb 0%, #f8b500 50%, #ff7eb9 100%);
     color: #333;
     user-select: none;
     text-align: center;
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: flex; flex-direction: column; align-items: center;
   }
   #btn-menu {
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    background: #a1d578;
-    color: #214d0d;
-    border-radius: 18px;
-    padding: 14px 22px;
-    font-weight: 900;
-    font-size: 1.25rem;
-    cursor: pointer;
-    box-shadow: 0 0 15px #a1d578aa;
-    border: none;
-    user-select: none;
-    z-index: 10000;
+    position: fixed; top: 15px; left: 15px;
+    background: #a1d578; color: #214d0d;
+    border-radius: 18px; padding: 14px 22px;
+    font-weight: 900; font-size: 1.25rem;
+    cursor: pointer; box-shadow: 0 0 15px #a1d578aa;
+    border: none; user-select: none; z-index: 10000;
     transition: background-color 0.3s ease;
   }
-  #btn-menu:hover {
-    background: #68922b;
-    color: white;
-  }
+  #btn-menu:hover {background: #68922b; color: white;}
   header {
-    margin-top: 75px;
-    font-weight: 900;
-    font-size: 2.8rem;
-    color: #d63a6d;
-    user-select: none;
+    margin-top: 75px; font-weight: 900; font-size: 2.8rem;
+    color: #d63a6d; user-select: none;
   }
   main {
-    margin-top: 20px;
-    width: 90vw;
-    max-width: 600px;
-    background: white;
-    border-radius: 28px;
+    margin-top: 20px; width: 90vw; max-width: 600px;
+    background: white; border-radius: 28px;
     box-shadow: 0 4px 16px #dddde1cc;
-    padding: 24px 18px 40px 18px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    padding: 24px 18px 40px 18px; display: flex;
+    flex-direction: column; align-items: center;
   }
   #palavra {
-    font-weight: 900;
-    font-size: 2.4rem;
-    letter-spacing: 14px;
-    user-select: none;
-    margin-bottom: 24px;
-    color: #2c6b3e;
-    white-space: nowrap;
-    overflow-x: auto;
-    max-width: 100%;
+    font-weight: 900; font-size: 2.4rem;
+    letter-spacing: 14px; user-select: none;
+    margin-bottom: 24px; color: #2c6b3e;
+    white-space: nowrap; overflow-x: auto; max-width: 100%;
   }
   #dica-container {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 30px;
-    flex-wrap: wrap;
+    display: flex; justify-content: center;
+    gap: 15px; margin-bottom: 30px; flex-wrap: wrap;
   }
   .dica-btn {
-    cursor: pointer;
-    background: #ffe3e8;
-    border-radius: 12px;
-    padding: 10px 15px;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #ad2b5e;
-    box-shadow: 0 3px 12px #ffc4d2cc;
-    user-select: none;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    cursor: pointer; background: #ffe3e8;
+    border-radius: 12px; padding: 10px 15px;
+    font-size: 1rem; font-weight: 600;
+    color: #ad2b5e; box-shadow: 0 3px 12px #ffc4d2cc;
+    user-select: none; transition: background-color 0.3s ease,color 0.3s ease;
   }
   .dica-btn:hover:not(.used) {
-    background-color: #ffb1c0;
-    color: white;
+    background-color: #ffb1c0; color: white;
   }
   .dica-btn.used {
-    background-color: #ff6b84;
-    color: white;
-    cursor: default;
+    background-color: #ff6b84; color: white; cursor: default;
   }
   #letras-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 10px;
-    max-width: 450px;
+    display: flex; flex-wrap: wrap;
+    justify-content: center; gap: 10px; max-width: 450px;
   }
   .letra-btn {
-    width: 44px;
-    height: 44px;
-    border-radius: 18px;
-    background-color: #afe4d6;
-    border: none;
-    font-size: 1.4rem;
-    font-weight: 700;
-    cursor: pointer;
-    color: #2a5949;
-    box-shadow: 0 6px 12px #7ba88bcc;
-    transition: background-color 0.25s ease, color 0.25s ease;
+    width: 44px; height: 44px; border-radius: 18px;
+    background-color: #afe4d6; border: none;
+    font-size: 1.4rem; font-weight: 700; cursor: pointer;
+    color: #2a5949; box-shadow: 0 6px 12px #7ba88bcc;
+    transition: background-color 0.25s ease,color 0.25s ease;
     user-select: none;
   }
   .letra-btn:hover:not(.disabled) {
-    background-color: #5eaf90;
-    color: white;
+    background-color: #5eaf90; color: white;
   }
   .letra-btn.disabled {
-    background-color: #dcdcdc;
-    color: #909090;
-    cursor: default;
-    box-shadow: none;
+    background-color: #dcdcdc; color: #909090;
+    cursor: default; box-shadow: none;
   }
   #bonequinho-container {
     margin-top: 20px;
@@ -256,7 +206,10 @@
   }
 
   function exibirPalavra() {
-    const display = palavraAtual.palavra.split("").map((l, i) => (letrasAcertadas[i] ? l : "_")).join(" ");
+    const display = palavraAtual.palavra
+      .split("")
+      .map((l, i) => (letrasAcertadas[i] ? l : "_"))
+      .join(" ");
     palavraElem.textContent = display;
   }
 
@@ -322,18 +275,27 @@
       document.getElementById("left-leg"),
       document.getElementById("right-leg"),
       document.getElementById("left-foot"),
-      document.getElementById("right-foot")
+      document.getElementById("right-foot"),
     ];
-    partes.forEach(p => p.style.display = "none");
+    partes.forEach((p) => (p.style.display = "none"));
     if (erros >= 1) partes[0].style.display = "block";
     if (erros >= 2) partes[1].style.display = "block";
-    if (erros >= 3) { partes[2].style.display = "block"; partes[3].style.display = "block"; }
-    if (erros >= 4) { partes[4].style.display = "block"; partes[5].style.display = "block"; }
-    if (erros >= 5) { partes[6].style.display = "block"; partes[7].style.display = "block"; }
+    if (erros >= 3) {
+      partes[2].style.display = "block";
+      partes[3].style.display = "block";
+    }
+    if (erros >= 4) {
+      partes[4].style.display = "block";
+      partes[5].style.display = "block";
+    }
+    if (erros >= 5) {
+      partes[6].style.display = "block";
+      partes[7].style.display = "block";
+    }
   }
 
   function verificarFim() {
-    if (letrasAcertadas.every(x => x)) {
+    if (letrasAcertadas.every((x) => x)) {
       resultText.textContent = "Parabéns! Você acertou a palavra!";
       confetti();
       novoBtn.style.display = "inline-block";
@@ -354,7 +316,9 @@
   }
 
   function desabilitarLetras() {
-    letrasContainer.querySelectorAll(".letra-btn").forEach(btn => btn.classList.add("disabled"));
+    letrasContainer.querySelectorAll(".letra-btn").forEach((btn) =>
+      btn.classList.add("disabled")
+    );
   }
 
   novoBtn.addEventListener("click", iniciarJogo);
@@ -362,11 +326,18 @@
   function confetti() {
     const container = document.getElementById("confetti");
     container.innerHTML = "";
-    const colors = ["#ff597f", "#ff9ea1", "#fcd677", "#a9d97a", "#79d79a"];
+    const colors = [
+      "#ff597f",
+      "#ff9ea1",
+      "#fcd677",
+      "#a9d97a",
+      "#79d79a",
+    ];
     for (let i = 0; i < 100; i++) {
       const c = document.createElement("div");
       c.classList.add("confetti-piece");
-      c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      c.style.backgroundColor =
+        colors[Math.floor(Math.random() * colors.length)];
       c.style.top = Math.random() * window.innerHeight + "px";
       c.style.left = Math.random() * window.innerWidth + "px";
       c.style.width = "7px";
@@ -385,8 +356,14 @@
   const style = document.createElement("style");
   style.innerHTML = `
     @keyframes fall {
-      0% { transform: translateY(0); opacity: 1; }
-      100% { transform: translateY(100vh); opacity: 0; }
+      0% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
     }
   `;
   document.head.appendChild(style);
