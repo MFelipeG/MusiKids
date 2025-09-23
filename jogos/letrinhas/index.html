@@ -5,108 +5,206 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Letrinhas - MusiKids Fun</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Baloo&display=swap');
+
   body {
-    margin: 0; padding: 0;
-    font-family: 'Baloo 2', cursive, Arial, sans-serif;
-    background: linear-gradient(135deg, #e9f5be 0%, #ffc9de 100%);
+    margin: 0;
+    padding: 0;
+    font-family: 'Baloo', cursive, Arial, sans-serif;
+    background: linear-gradient(135deg, #e2f1c9 0%, #fbc1ca 100%);
     user-select: none;
-    color: #222;
-    min-height: 100vh;
     text-align: center;
+    color: #333;
   }
   header {
-    font-size: 2rem;
+    font-size: 2.4rem;
     font-weight: 900;
-    color: #ff81a7;
-    margin-bottom: 0.5rem;
-    text-shadow: 1px 1px 3px #f06292;
-    background: #fff9e3;
-    padding: 13px 0 11px 0;
-    border-bottom-left-radius: 20px;
-    border-bottom-right-radius: 20px;
-    margin-bottom: 24px;
+    margin-top: 0.6rem;
+    margin-bottom: 0;
+    color: #e74184;
+    text-shadow: 1px 1px 4px #db4aa0;
+    user-select: none;
   }
   #btn-menu {
-    position: fixed; top: 16px; left: 16px;
-    background: #b3dc6d;
-    color: #334c06;
-    border: none; padding: 10px 18px;
-    font-weight: 800; font-size: 1.14rem;
-    border-radius: 18px; cursor: pointer;
-    box-shadow: 0 5px 16px #b3dc6d44;
-    z-index: 1000; transition: background-color .2s;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    background: #a6d781;
+    color: #225318;
+    border: none;
+    padding: 12px 20px;
+    font-weight: 900;
+    font-size: 1.3rem;
+    border-radius: 24px;
+    cursor: pointer;
+    box-shadow: 0 8px 18px #a8e74a59;
+    z-index: 1000;
+    user-select: none;
+    transition: background-color 0.3s ease;
   }
-  #btn-menu:hover { background: #8ab442; color: #fff; }
-  #main-container { display: flex; flex-direction: column; align-items: center; }
-  #categoria-escolha {
-    margin: 8px auto 15px auto;
-    font-size: 1.1rem; background: #fffbe0; border: 2px solid #ffb6b6;
-    border-radius: 14px; padding: 7px 22px; font-weight: 700;
-    box-shadow: 0 2px 10px #eadaaa55;
+  #btn-menu:hover {
+    background-color: #82bd3c;
+    color: white;
   }
-  #area-adiciona {
-    margin: 8px auto 2px auto; display: flex; gap: 8px; justify-content: center; align-items: center;
+  #main-container {
+    margin-top: 5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
   }
-  #add-palavra-input {
-    padding: 9px 18px; font-size: 1.05rem; border-radius: 13px; border: 2px solid #bbe2b4; width: 154px;
+  #categoria-container {
+    margin-bottom: 0.9rem;
   }
-  #add-palavra-btn {
-    background: #ff81a7; color:#fff; font-weight: bold; font-size: 1.02rem; border-radius: 13px;
-    padding: 8px 19px; border: none; cursor:pointer; transition: background .25s;
-    box-shadow: 0 2px 8px #f3487d22;
+  select, input, button {
+    font-family: 'Baloo', cursive, Arial, sans-serif;
   }
-  #add-palavra-btn:hover { background: #ef568a; }
+  select {
+    font-size: 1.2rem;
+    padding: 7px 14px;
+    border-radius: 16px;
+    border: 2px solid #a5db5b;
+    margin-right: 1rem;
+  }
+  input[type="text"] {
+    font-size: 1.1rem;
+    padding: 6px 12px;
+    border-radius: 14px;
+    border: 2px solid #a5db5b;
+    width: 180px;
+  }
+  button#add-button {
+    font-size: 1.1rem;
+    font-weight: bold;
+    background-color: #f27ea9;
+    color: white;
+    border: none;
+    border-radius: 18px;
+    padding: 7px 14px;
+    margin-left: 0.8rem;
+    cursor: pointer;
+    box-shadow: 0 6px 18px #f274a4af;
+    transition: background-color 0.3s ease;
+  }
+  button#add-button:hover {
+    background-color: #db1e89;
+  }
   #instrucao {
-    margin-top: 8px;
-    color: #fa1899;
-    font-size: 1.13rem;
-    margin-bottom: 13px; font-weight: 600;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #b60f67;
+    margin-bottom: 24px;
+    user-select: none;
   }
   #palavra-atual {
-    font-size: 1.5rem;
+    font-size: 2.0rem;
     font-weight: 700;
-    color: #288b49;
-    background: #fffde0;
-    border-radius: 14px;
-    padding: 10px 42px;
-    margin-bottom: 14px;
-    box-shadow: 2px 6px 15px #9be58a27;
+    padding: 10px 46px;
+    background: #ecffe6;
+    border-radius: 22px;
+    border: 2px solid #b2f095;
+    box-shadow: 2px 3px 10px #a7e1a3cc;
+    color: #298f23;
+    user-select: none;
+    margin-bottom: 26px;
   }
   #caixa-letras {
-    display: flex; justify-content: center; gap: 10px; margin-bottom: 35px;
-    min-height: 48px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    min-height: 54px;
+    margin-bottom: 33px;
   }
   .letra-drag {
-    background: linear-gradient(135deg,#ff82b2 40%, #d4f778 100%);
-    color: #222; padding: 8px 24px;
-    font-size: 1.1rem; border-radius: 14px;
-    font-weight: 700; cursor: grab; border: 2px solid #fff;
-    box-shadow: 0 4px 16px #f3487d22; margin-bottom: 5px;
-    user-select: none; transition: background 0.15s;
+    background: linear-gradient(135deg,#ff85b4 0%, #afe47b 100%);
+    font-weight: 900;
+    font-size: 1.4rem;
+    padding: 8px 25px;
+    border-radius: 23px;
+    border: 3px solid #fff;
+    color: #222;
+    cursor: grab;
+    box-shadow: 0 5px 18px #f3498f50;
+    user-select: none;
+    transition: background-color 0.15s ease;
   }
-  .letra-drag.dragging { opacity: .4; background: #fff8f4; }
+  .letra-drag.dragging {
+    opacity: 0.25;
+    background-color: #ffc092;
+    cursor: grabbing;
+  }
   #slots-palavra {
-    display: flex; justify-content: center; gap: 10px;
-    margin-bottom: 16px;
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 14px;
   }
   .slot-letra {
-    width: 39px; height: 39px; background: #fff3fa;
-    border-radius: 11px; border: 2px dashed #fa1899; display: flex;
-    align-items: center; justify-content: center;
-    font-size: 1.5rem; font-weight: bold; color: #288b49;
-    margin-bottom: 2px; transition: border-color 0.15s, background 0.12s;
+    width: 48px;
+    height: 48px;
+    border-radius: 22px;
+    border: 2px dashed #ff6b8c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 800;
+    font-size: 1.8rem;
+    color: #32a533;
+    user-select: none;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
   }
-  .slot-letra.over { border-color: #ffd600; background: #fffde0; }
+  .slot-letra.over {
+    background-color: #f9fea6;
+    border-color: #e4b22e;
+  }
   #next-btn, #reset-btn {
-    background: #ff81a7; color: #244c43; border: none; border-radius: 17px;
-    padding: 11px 32px; font-size: 1rem; font-weight: 700;
-    margin-top: 14px; cursor: pointer; box-shadow: 0 4px 12px #f3487d33; display:none;
+    font-family: 'Baloo', cursive, Arial, sans-serif;
+    font-weight: 900;
+    font-size: 1.3rem;
+    border-radius: 26px;
+    padding: 11px 34px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 5px 18px #fa3f8f65;
+    transition: background-color 0.3s ease;
   }
-  #next-btn:active, #reset-btn:active { background: #ef568a; color: #fff; }
-  #reset-btn { margin-left: 10px; background: #d4f778; color: #187168; box-shadow: 0 4px 12px #b6ec5e33; }
+  #next-btn {
+    background-color: #ff7498;
+    color: white;
+    margin: 15px 0 0 0;
+    display: none;
+  }
+  #next-btn:hover {
+    background-color: #e81566;
+  }
+  #reset-btn {
+    background-color: #a9f095;
+    color: #2b5e00;
+    margin-left: 12px;
+    display: inline-block;
+  }
+  #reset-btn:hover {
+    background-color: #71c517;
+  }
   #resultado {
-    font-size: 1.25rem; font-weight: 700; margin-top: 12px;
-    color: #9631e6; min-height: 34px;
+    min-height: 42px;
+    font-weight: 900;
+    color: #b633a9;
+    font-size: 1.5rem;
+    margin-top: 0.8rem;
+  }
+  #confetti {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    top: 0;
+    left: 0;
+    z-index: 2000;
   }
 </style>
 </head>
@@ -114,181 +212,239 @@
 <header>Letrinhas - MusiKids Fun</header>
 <button id="btn-menu" onclick="window.location.href='../index.html'">MENU DE JOGOS</button>
 <div id="main-container">
-  <select id="categoria-escolha">
-    <option value="animais">Animais</option>
-    <option value="objetos">Objetos</option>
-    <option value="frutas">Frutas</option>
-    <option value="nomes">Nomes</option>
-  </select>
-  <div id="area-adiciona">
-    <input type="text" id="add-palavra-input" maxlength="15" placeholder="Nova palavra ou nome..." />
-    <button id="add-palavra-btn">Adicionar</button>
+  <div id="categoria-container">
+    <select id="categoria-escolha" aria-label="Seleção de categoria de palavras">
+      <option value="animais">Animais</option>
+      <option value="objetos">Objetos</option>
+      <option value="frutas">Frutas</option>
+      <option value="nomes">Nomes</option>
+    </select>
+  </div>
+  <div id="adiciona-container" style="margin:10px 0;">
+    <input id="add-palavra" type="text" maxlength="15" placeholder="Adicionar palavra (ex: nome)" aria-label="Digite palavra para adicionar"/>
+    <button id="btn-adiciona" aria-label="Adicionar palavra">Adicionar</button>
   </div>
   <div id="instrucao">Arraste as letras para formar a palavra!</div>
   <div id="palavra-atual"></div>
-  <div id="slots-palavra"></div>
   <div id="caixa-letras"></div>
-  <button id="next-btn">Próxima palavra</button>
+  <div id="slots-palavra"></div>
+  <button id="next-btn">Próxima Palavra</button>
   <button id="reset-btn">Refazer</button>
   <div id="resultado"></div>
 </div>
+
+<div id="confetti"></div>
+
 <script>
-const categorias = {
-  animais: [
-    "GATO","CACHORRO","PATO","VACA","CAVALO","PORCO","OVELHA","TARTARUGA","COELHO","RATO","RAPOSA","LEAO","MACACO","ZEBRA","TIGRE","GIRAFA","URSO","LOBO","GALETA","CANGURU",
-    "JACARE","CORUJA","SOM","GALO","ELEFANTE","BODE","TOURO","ABELHA","TUBARAO","FOCA","PINGUIM","CROCODILO","BORBOLETA","FORMIGA","MOSCA","LAGARTO","CAMELO","RINOCERONTE","GORILA","RINOCERO","CALANGO",
-    "HIPOPOTAMO","GOLFINHO","CANGURU","PEIXE","MORCEGO","TUCANO","POLVO","CARANGUEJO","TARANTULA","ALCE","PAPAGAIO","AGUIA","COBRA","BESOURO","TATU","TAMANDUA","MINHOCA","ESCORPIAO","SOL","FURAO","PERU","GANSO","MOSQUITO",
-    "CARPA","VESPAS","ARANHA","MOLE","CARRAPATO","PIRANHA","MARRECOS","POMBO","PASSARO","BURRO","CAVALOS","GERBIL","RATINHO","TUCANO","LEMURE","ORNITORRINCO","GORILA","HIPOPOTAMO","PAPAGAIO","PIAU","CALANGO","CANARIO","AVESTRUZ","PARDAL","PET","SAPO","GAVIÃO","PATINHO"
-  ],
-  objetos: [
-    "BOLA","MESA","CAIXA","CAMISA","BICICLETA","PENTE","CANETA","LIVRO","SAPATO","RELOGIO","ARMARIO","CADERNO","BIDA","CADEIRA","SOFA","LAMPIAO","FACA","COLHER","GARFO","GUARDA","TAPETE",
-    "QUADRO","FOGAO","GARRAFA","ANEL","MALA","POTE","COPO","BALDE","PIANO","CELULAR","TINTA","FITA","BARRA","TUBO","LENTE","FARO","MACA","PONTE","VELA","ESPELHO","TESOURA","CAJU","TECLADO",
-    "MOEDA","RUA","BOTA","LUVA","BONDE","TOUCA","CAMISA","GRAVATA","BONDE","TAPETE","BALAO","JANELA","PELUCIA","JOGO","PLACA","VIOLA","BENGALA","DESENHO","BOTAO","PASSARO","PINTA","BONECA","TAMBOR","DOG","FONE","GALETA","BORRACHA","CARRO","SORVETE",
-    "BENGALA","BOTE","SACO","CAFÉ","PORTA","TETO","TIJOLO","TESOURA","MANDIOCA","BANCO","CARTAO","FERRO","ESCADA","PANELA","CANECA","PISTOLA"
-  ],
-  frutas: [
-    "MANGA","LARANJA","MACA","BANANA","MELANCIA","UVA","CAJU","ABACATE","ABACAXI","LIMAO","PERA","PESSEGO","MELAO","TANGERINA","GOIABA","AMORA","MORANGO","GRAVIOLA","FIGO","COCO","CEREJA",
-    "MARACUJA","FRAMBOESA","KIWI","JACA","JAMBO","TAMARINDO","CAQUI","PITANGA","CUPUACU","MAQUI","BURITI","PORTUGAL","CARA","CASTANHA","MURICI","GUARANA","CAMBUCI","TUCUMA","ACAI","GABIROBA",
-    "PUPUNHA","CACAU","BACABA","BACURI","UMBU","PITANGA","CAJAMANGA","SERIGUELA","CABELUDINHA","ARATICUM","BIRIBA","SAPOTI","BUCAYU","ARARUTA","JAMBU","CALABURA","GRUMIXAMA","JAMELAO","AJURU","JURUBEBAS",
-    "CIRIGUELA","INGA","LONGAN","LICHIA","TAMARINDO","CATUABA","GUAVIRA","CUAJE","TAIPUCA","CAMU","KAKI","MARAMA","MARAMBIR","URUCUM","BURITIRA","TUCUNARE","JERIVATU","CURUBA","ACEROLA","BACAJU","CABAZ","CACAI","TAIPUCA","CURUBU","MACAXEIRA","GENIPAPO","PITOMBA","CANISTEL"
-  ],
-  nomes: [
-    "ANA","LUIS","MARIA","PEDRO","JULIA","JOAO","CARLA","PAULO","TATI","BRUNO","RAFA","VITOR","GIO","SANDRA","ENZO","DAVI","TIAGO","CAIO","RENAN","LARA",
-    "BRISA","CLARA","CAMILA","MARIANA","ALICE","MATEUS","HELENA","MATHEUS","FABIO","RICARDO","DANILO","BEATRIZ","CAROL","LETICIA","PEDRA","ISA","FERNANDO","BELA","VANESSA","AMANDA","ISABEL",
-    "GABRIEL","GUSTAVO","RODRIGO","GUILHERME","NICOLAS","EDUARDO","PATRICIA","DIEGO","RAFAELA","ARTHUR","LUIZA","MURILO","ROSA","JESSICA","LEILA","ROBERTO","CIBELE","PAMELA","FELIPE","IGOR",
-    "FRANCISCO","LORENA","RAYANE","LEONARDO","FRANCO","EDMILSON","MONICA","CELSO","IANE","ESTELA","TOM","SIRLEI","LUCIANO","LUCIANA","TIARA","RUBENS","ISAIAS","LENIN","IVANA","PAULO","RODRIGO",
-    "NARA","FABRICIO","KARINA","BENICIO","RAQUEL","CRIS","SILVANA","GEOVANA","FELICIDADE","SILAS","MIGUEL","JORGE"
-  ]
-};
+  const categorias = {
+    animais: [
+      "GATO","CACHORRO","PATO","VACA","PERU","RATO","ANJO","ABELHA","ELEFANTE","RAPOSA",
+      "COELHO","PEIXE","TOURO","URSO","GORILA","LAGARTO","MACACO","GALINHA","CAVALO","POMBA",
+      "TIGRE","TARTARUGA","PAPAGAIO","GALO","ARARA","LOBO","PAPAGAIO","AVESTRUZ","DROMEDARIO","DISCO",
+      "PUMA","JABUTI","PAPAGAIO","PINGUIM","CAMELO","GIRAFA","CISNE","CORUJA","BURRO","HIPOPOTAMO",
+      "FURAO","HUMANO","TUBARAO","BOTO","CACAO","PESCADA","BRUACA","CARANGUEJO","SAGUI","HUSKY"
+    ],
+    objetos: [
+      "BOLA","MESA","CAIXA","CAMISA","BONECA","LAMPADA","CANETA","BICICLETA","CHINELO","TELEFONE",
+      "BOLO","JACARE","BOTAO","ARMARIO","CADEIRA","MESA","ESPADA","CARRO","JOGO","PASTA",
+      "BALAO","PORTA","ONIBUS","PAPEL","BATERIA","FONE","CHAVE","PEIXE","BARRACA","FITA",
+      "BANDAGEM","VIOLAO","CALCADO","GARRAFA","TELA","ANALISE","TECLADO","ABACATE","MAQUINA","FOGAO"
+    ],
+    frutas: [
+      "MANGA","LARANJA","UVA","BANANA","ABACAXI","MAÇA","GOIABA","COCO","MELANCIA","KIWI",
+      "MELAO","PITANGA","PITANGA","CAJU","FIGO","JACA","MARACUJA","TAMARINDO","AMEIXA","SITRUS",
+      "ABACATE","AMEIXA","JABUTICABA","ABACATE","PAPAIA","CAJU","TANGERINA","MAMÃO","MORANGO","GROSELHA",
+      "GENGIBRE","ACAI","AMEIXA","FIGO","UVA","LARA","PEPSI","MANA","WORK","PINK"
+    ],
+    nomes: [
+      "ANA","LUIS","MARIA","PEDRO","JOAO","CARLOS","FERNANDO","AMANDA","PATRICIA","HELENA",
+      "IGOR","LUCAS","MARCIO","MARCELLE","FELIPE","RODRIGO","JULIA","JESSICA","JESSIE","ROSANA",
+      "RENATA","NATHALIA","ELISA","MARCELO","ZEFERINO","ELIANA","TIAGO","JESSICA","CARLA","LEANDRO",
+      "CRISTIANE","NICOLE","GERSON","MAYARA","EDUARDO","RAMON","HUGO","PEDRO","DIANA","IVETE"
+    ],
+  };
 
-let categoriaAtual = "animais";
-let palavras = [];
-let indice = 0;
-let letrasRestantes = [];
-let slots = [];
-let draggingIdx = null;
+  let categoriaAtual = 'animais';
+  let palavras = [];
+  let indice = 0;
+  let letrasRestantes = [];
+  let slots = [];
+  let draggingIdx = null;
 
-function embaralhaArray(arr) {
-  return arr.slice().sort(() => Math.random() - 0.5);
-}
+  function embaralhaLista(arr) {
+    const array = arr.slice();
+    for(let i = array.length -1; i > 0; i--){
+      const j = Math.floor(Math.random() * (i +1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
 
-function embaralha(palavra) {
-  return palavra.split('').sort(() => Math.random() - 0.5);
-}
+  function embaralhaPalavra(palavra) {
+    return palavra.split('').sort(() => Math.random() - 0.5);
+  }
 
-function mostraPalavra() {
-  document.getElementById('palavra-atual').innerText = palavras[indice];
-  montaSlots(palavras[indice]);
-  montaCaixaLetras(palavras[indice]);
-  document.getElementById('resultado').innerText = "";
-  document.getElementById('next-btn').style.display = "none";
-  document.getElementById('reset-btn').style.display = "inline-block";
-}
+  function mostraPalavra() {
+    document.getElementById('palavra-atual').innerText = palavras[indice];
+    montaSlots(palavras[indice]);
+    montaCaixa(palavras[indice]);
+    document.getElementById('resultado').innerText = '';
+    document.getElementById('next-btn').style.display = 'none';
+    document.getElementById('reset-btn').style.display = 'inline-block';
+  }
 
-function montaSlots(palavra) {
-  const container = document.getElementById('slots-palavra');
-  container.innerHTML = "";
-  slots = [];
-  for(let i=0; i<palavra.length; i++) {
-    const slot = document.createElement('div');
-    slot.className = "slot-letra";
-    slot.dataset.index = i;
-    slot.addEventListener('dragover', (e) => { e.preventDefault(); slot.classList.add("over"); });
-    slot.addEventListener('dragleave', (e) => slot.classList.remove("over"));
-    slot.addEventListener('drop', (e) => {
-      e.preventDefault();
-      slot.classList.remove("over");
-      const letra = letrasRestantes[draggingIdx];
-      if (!slot.innerText && letra) {
-        slot.innerText = letra;
-        letrasRestantes[draggingIdx] = null;
-        atualizaCaixaLetras();
-        verificaAcertoOuErro();
+  function montaSlots(palavra) {
+    const container = document.getElementById('slots-palavra');
+    container.innerHTML = '';
+    slots = [];
+    for(let i=0; i<palavra.length; i++) {
+      const slot = document.createElement('div');
+      slot.className = 'slot-letra';
+      slot.dataset.index = i;
+      slot.addEventListener('dragover', e => {e.preventDefault(); slot.classList.add('over');});
+      slot.addEventListener('dragleave', e => slot.classList.remove('over'));
+      slot.addEventListener('drop', e => {
+        e.preventDefault();
+        slot.classList.remove('over');
+        const letra = letrasRestantes[draggingIdx];
+        if(!slot.innerText && letra) {
+          slot.innerText = letra;
+          letrasRestantes[draggingIdx] = null;
+          atualizaCaixa();
+          verificaResultado();
+        }
+      });
+      slot.addEventListener('click', () => {
+        if(slot.innerText) {
+          letrasRestantes.push(slot.innerText);
+          slot.innerText = '';
+          atualizaCaixa();
+          verificaResultado();
+        }
+      });
+      slots.push(slot);
+      container.appendChild(slot);
+    }
+  }
+
+  function montaCaixa(palavra) {
+    letrasRestantes = embaralhaPalavra(palavra);
+    atualizaCaixa();
+  }
+
+  function atualizaCaixa() {
+    const container = document.getElementById('caixa-letras');
+    container.innerHTML = '';
+    letrasRestantes.forEach((letra, idx) => {
+      if(letra) {
+        const b = document.createElement('div');
+        b.className = 'letra-drag';
+        b.innerText = letra;
+        b.draggable = true;
+        b.addEventListener('dragstart', () => {draggingIdx=idx; b.classList.add('dragging');});
+        b.addEventListener('dragend', () => {b.classList.remove('dragging'); draggingIdx=null;});
+        container.appendChild(b);
       }
     });
-    slots.push(slot);
-    container.appendChild(slot);
   }
-}
 
-function montaCaixaLetras(palavra) {
-  letrasRestantes = embaralha(palavra);
-  atualizaCaixaLetras();
-}
-
-function atualizaCaixaLetras() {
-  const container = document.getElementById('caixa-letras');
-  container.innerHTML = '';
-  letrasRestantes.forEach((letra, idx) => {
-    if (letra) {
-      const b = document.createElement('div');
-      b.className = "letra-drag";
-      b.innerText = letra;
-      b.draggable = true;
-      b.addEventListener('dragstart', () => { draggingIdx = idx; b.classList.add('dragging'); });
-      b.addEventListener('dragend', () => { b.classList.remove('dragging'); draggingIdx = null; });
-      container.appendChild(b);
-    }
-  });
-}
-
-function verificaAcertoOuErro() {
-  if (slots.every(slot => slot.innerText)) {
-    let correta = slots.map((slot, i) => slot.innerText === palavras[indice][i]).every(x => x);
-    if (correta) {
-      document.getElementById('resultado').innerText = "Parabéns! Você acertou!";
-      document.getElementById('next-btn').style.display = "inline-block";
-      document.getElementById('reset-btn').style.display = "none";
+  function verificaResultado() {
+    if(slots.every(slot => slot.innerText)) {
+      let correta = slots.every((slot,i) => slot.innerText === palavras[indice][i]);
+      if(correta) {
+        document.getElementById('resultado').innerText = 'Parabéns! Você acertou!';
+        document.getElementById('next-btn').style.display = 'inline-block';
+        document.getElementById('reset-btn').style.display = 'none';
+        confettiEffect();
+      } else {
+        document.getElementById('resultado').innerText = 'Tente novamente!';
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('reset-btn').style.display = 'inline-block';
+      }
     } else {
-      document.getElementById('resultado').innerText = "Tente novamente!";
-      document.getElementById('next-btn').style.display = "none";
-      document.getElementById('reset-btn').style.display = "inline-block";
+      document.getElementById('resultado').innerText = '';
+      document.getElementById('next-btn').style.display = 'none';
+      document.getElementById('reset-btn').style.display = 'inline-block';
     }
-  } else {
-    document.getElementById('resultado').innerText = "";
-    document.getElementById('next-btn').style.display = "none";
-    document.getElementById('reset-btn').style.display = "inline-block";
   }
-}
 
-document.getElementById('next-btn').onclick = () => {
-  indice = (indice+1) % palavras.length;
-  mostraPalavra();
-};
+  document.getElementById('next-btn').onclick = () => {
+    indice++;
+    if(indice >= palavras.length) indice = 0;
+    mostraPalavra();
+  };
 
-document.getElementById('reset-btn').onclick = () => {
-  mostraPalavra();
-};
+  document.getElementById('reset-btn').onclick = () => {
+    montaCaixa(palavras[indice]);
+    slots.forEach(s => s.innerText = '');
+    document.getElementById('resultado').innerText = '';
+  };
 
-document.getElementById('categoria-escolha').onchange = function(e) {
-  categoriaAtual = e.target.value;
-  palavras = embaralhaArray(categorias[categoriaAtual]);
-  indice = 0;
-  mostraPalavra();
-};
-
-document.getElementById('add-palavra-btn').onclick = function() {
-  const campo = document.getElementById('add-palavra-input');
-  let nova = campo.value.trim().toUpperCase();
-  if (nova.length >= 2 && /^[A-ZÁÉÍÓÚÇ]+$/.test(nova)) {
-    palavras.unshift(nova); // adiciona no topo
-    campo.value = "";
+  document.getElementById('categoria-escolha').onchange = e => {
+    categoriaAtual = e.target.value;
+    palavras = embaralhaLista(categorias[categoriaAtual]);
     indice = 0;
     mostraPalavra();
-  } else {
-    campo.style.background = "#ffc0cb"; // destaca se inválido
-    setTimeout(()=>campo.style.background="#fff",900);
+  };
+
+  document.getElementById('btn-adiciona').onclick = () => {
+    const input = document.getElementById('add-palavra');
+    let palavra = input.value.trim().toUpperCase();
+    if(palavra.length >= 2 && /^[A-ZÁÉÍÓÚÇ]+$/.test(palavra)) {
+      categorias[categoriaAtual].push(palavra);
+      input.value = '';
+      palavras = embaralhaLista(categorias[categoriaAtual]);
+      indice = 0;
+      mostraPalavra();
+    } else {
+      input.focus();
+      input.style.animation = 'shake 0.3s';
+      setTimeout(() => input.style.animation = '', 300);
+    }
+  };
+
+  function confettiEffect() {
+    const confetti = document.getElementById('confetti');
+    confetti.innerHTML = '';
+    const colors = ['#ff597f','#ff9ea1','#fcd677','#a9d97a','#79d79a'];
+    for(let i=0;i<100;i++) {
+      const conf = document.createElement('div');
+      conf.style.position = 'absolute';
+      conf.style.width = '7px';
+      conf.style.height = '7px';
+      conf.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+      conf.style.top = Math.random() * window.innerHeight + 'px';
+      conf.style.left = Math.random() * window.innerWidth + 'px';
+      conf.style.borderRadius = '50%';
+      conf.style.animation = `fall 3s linear forwards`;
+      conf.style.animationDelay = (i * 0.03) + 's';
+      confetti.appendChild(conf);
+    }
+    setTimeout(() => { confetti.innerHTML = ''; }, 3000);
   }
-};
 
-// Inicialização ao abrir página
-function inicializa() {
-  palavras = embaralhaArray(categorias[categoriaAtual]);
-  indice = 0;
+  // Animation keyframes (inject into stylesheet)
+  const style = document.createElement('style');
+  style.innerHTML = `
+    @keyframes fall {
+      to {
+        transform: translateY(100vh);
+        opacity: 0;
+      }
+    }
+    @keyframes shake {
+      0% { transform: translateX(0px); }
+      25% { transform: translateX(6px); }
+      50% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+      100% { transform: translateX(0px); }
+    }
+  `;
+  document.head.appendChild(style);
+
+  let indice = 0;
+  palavras = embaralhaLista(categorias.animais);
   mostraPalavra();
-}
-
-inicializa();
 </script>
 </body>
 </html>
