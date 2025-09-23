@@ -3,100 +3,167 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Forca Afetiva - MusiKids (Teclado Simples)</title>
+<title>Forca Afetiva - MusiKids</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
   body {
-    margin: 0; padding: 0;
+    margin: 0;
+    padding: 0;
     font-family: 'Baloo 2', cursive, Arial, sans-serif;
     background: linear-gradient(135deg, #fceabb 0%, #f8b500 50%, #ff7eb9 100%);
     color: #333;
     user-select: none;
     text-align: center;
     min-height: 100vh;
-    display: flex; flex-direction: column; align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   #btn-menu {
-    position: fixed; top: 15px; left: 15px;
-    background: #a1d578; color: #214d0d;
-    border-radius: 18px; padding: 14px 22px;
-    font-weight: 900; font-size: 1.25rem;
-    cursor: pointer; box-shadow: 0 0 15px #a1d578aa;
-    border: none; user-select: none; z-index: 10000;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: #a1d578;
+    color: #214d0d;
+    border-radius: 18px;
+    padding: 14px 22px;
+    font-weight: 900;
+    font-size: 1.25rem;
+    cursor: pointer;
+    box-shadow: 0 0 15px #a1d578aa;
+    border: none;
+    user-select: none;
+    z-index: 10000;
     transition: background-color 0.3s ease;
   }
-  #btn-menu:hover {background: #68922b; color: white;}
+  #btn-menu:hover {
+    background: #68922b;
+    color: white;
+  }
   header {
-    margin-top: 75px; font-weight: 900; font-size: 2.8rem;
-    color: #d63a6d; user-select: none;
+    margin-top: 75px;
+    font-weight: 900;
+    font-size: 2.8rem;
+    color: #d63a6d;
+    user-select: none;
   }
   main {
-    margin-top: 20px; width: 90vw; max-width: 600px;
-    background: white; border-radius: 28px;
+    margin-top: 20px;
+    width: 90vw;
+    max-width: 600px;
+    background: white;
+    border-radius: 28px;
     box-shadow: 0 4px 16px #dddde1cc;
-    padding: 24px 18px 40px 18px; display: flex;
-    flex-direction: column; align-items: center;
+    padding: 24px 18px 40px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   #palavra {
-    font-weight: 900; font-size: 2.4rem;
-    letter-spacing: 14px; user-select: none;
-    margin-bottom: 24px; color: #2c6b3e;
-    white-space: nowrap; overflow-x: auto; max-width: 100%;
+    font-weight: 900;
+    font-size: 2.4rem;
+    letter-spacing: 14px;
+    user-select: none;
+    margin-bottom: 24px;
+    color: #2c6b3e;
+    white-space: nowrap;
+    overflow-x: auto;
+    max-width: 100%;
   }
   #dica-container {
-    display: flex; justify-content: center;
-    gap: 15px; margin-bottom: 30px; flex-wrap: wrap;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
   }
   .dica-btn {
-    cursor: pointer; background: #ffe3e8;
-    border-radius: 12px; padding: 10px 15px;
-    font-size: 1rem; font-weight: 600;
-    color: #ad2b5e; box-shadow: 0 3px 12px #ffc4d2cc;
-    user-select: none; transition: background-color 0.3s ease,color 0.3s ease;
+    cursor: pointer;
+    background: #ffe3e8;
+    border-radius: 12px;
+    padding: 10px 15px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ad2b5e;
+    box-shadow: 0 3px 12px #ffc4d2cc;
+    user-select: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
   .dica-btn:hover:not(.used) {
-    background-color: #ffb1c0; color: white;
+    background-color: #ffb1c0;
+    color: white;
   }
   .dica-btn.used {
-    background-color: #ff6b84; color: white; cursor: default;
+    background-color: #ff6b84;
+    color: white;
+    cursor: default;
   }
   #letras-container {
-    display: flex; flex-wrap: wrap;
-    justify-content: center; gap: 10px; max-width: 450px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    max-width: 450px;
   }
   .letra-btn {
-    width: 44px; height: 44px; border-radius: 18px;
-    background-color: #afe4d6; border: none;
-    font-size: 1.4rem; font-weight: 700; cursor: pointer;
-    color: #2a5949; box-shadow: 0 6px 12px #7ba88bcc;
-    transition: background-color 0.25s ease,color 0.25s ease;
+    width: 44px;
+    height: 44px;
+    border-radius: 18px;
+    background-color: #afe4d6;
+    border: none;
+    font-size: 1.4rem;
+    font-weight: 700;
+    cursor: pointer;
+    color: #2a5949;
+    box-shadow: 0 6px 12px #7ba88bcc;
+    transition: background-color 0.25s ease, color 0.25s ease;
     user-select: none;
   }
   .letra-btn:hover:not(.disabled) {
-    background-color: #5eaf90; color: white;
+    background-color: #5eaf90;
+    color: white;
   }
   .letra-btn.disabled {
-    background-color: #dcdcdc; color: #909090;
-    cursor: default; box-shadow: none;
+    background-color: #dcdcdc;
+    color: #909090;
+    cursor: default;
+    box-shadow: none;
   }
   #bonequinho-container {
-    margin-top: 20px; margin-bottom: 28px;
-    width: 160px; height: 240px;
+    margin-top: 20px;
+    margin-bottom: 28px;
+    width: 160px;
+    height: 240px;
   }
-  svg { max-width: 100%; height: auto; }
+  svg {
+    max-width: 100%;
+    height: auto;
+  }
   #result-text {
-    font-size: 1.6rem; font-weight: 800;
-    color: #a42e53; margin-bottom: 24px;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #a42e53;
+    margin-bottom: 24px;
     user-select: none;
   }
   #btn-novo {
-    background: #a6d27a; color: #124015;
-    border: none; border-radius: 20px;
-    padding: 14px 30px; font-weight: 900; font-size: 1.3rem;
-    cursor: pointer; box-shadow: 0 0 12px #8db96fcc;
-    user-select: none; transition: background-color 0.25s ease;
+    background: #a6d27a;
+    color: #124015;
+    border: none;
+    border-radius: 20px;
+    padding: 14px 30px;
+    font-weight: 900;
+    font-size: 1.3rem;
+    cursor: pointer;
+    box-shadow: 0 0 12px #8db96fcc;
+    user-select: none;
+    transition: background-color 0.25s ease;
+    display: none;
   }
-  #btn-novo:hover {background-color: #689330; color: white;}
+  #btn-novo:hover {
+    background-color: #689330;
+    color: white;
+  }
 </style>
 </head>
 <body>
@@ -122,7 +189,6 @@
   <button id="btn-novo" aria-label="Jogar nova palavra">Nova Palavra</button>
 </main>
 <script>
-  // Lista 50 palavras com até 5 dicas cada
   const bancoPalavras = [
     { palavra: "FELICIDADE", dicas: ["Estado de alegria", "Sentimento bom", "Sorriso no rosto", "Coração leve", "Momento feliz"] },
     { palavra: "BORBOLETA", dicas: ["Inseto colorido", "Voa em jardins", "Tem asas bonitas", "Transforma-se de lagarta", "Pousa nas flores"] },
@@ -144,7 +210,7 @@
     { palavra: "PEIXE", dicas: ["Vive na água", "Nadadeiras", "Respira por brânquias", "Frio, não tem pelos", "Come algas e pequenos animais"] },
     { palavra: "MUITA", dicas: ["Oposto de pouca", "Grande quantidade", "Abundância", "Em grande número", "Excesso"] },
     { palavra: "CASA", dicas: ["Lugar para morar", "Proteção e abrigo", "Tem portas e janelas", "Lugar seguro", "Lugar da família"] },
-    { palavra: "ESOLA", dicas: ["Lugar para aprender", "Tem alunos e professores","Tem carteiras e quadro","Lugar de estudo","Local para crescer"]},
+    { palavra: "ESCOLA", dicas: ["Lugar para aprender", "Tem alunos e professores","Tem carteiras e quadro","Lugar de estudo","Local para crescer"]},
     { palavra: "CARRO", dicas: ["Meio de transporte", "Tem rodas", "Anda na estrada", "Usado para viajar", "Tem motor"] }
   ];
 
@@ -163,7 +229,7 @@
 
   btnMenu.onclick = () => location.href = "../index.html";
 
-  // Normaliza a letra para base
+  // Normaliza a letra para base sem acento
   function normalizaLetra(letra) {
     const mapa = {
       Á: "A", À: "A", Â: "A", Ã: "A",
@@ -191,7 +257,10 @@
   }
 
   function exibirPalavra() {
-    const display = palavraAtual.palavra.split("").map((l, i) => letrasAcertadas[i] ? l : "_").join(" ");
+    const display = palavraAtual.palavra
+      .split("")
+      .map((l, i) => (letrasAcertadas[i] ? l : "_"))
+      .join(" ");
     palavraElem.textContent = display;
   }
 
