@@ -194,11 +194,11 @@
         e.preventDefault();
         slot.classList.remove("over");
         const letra = letrasRestantes[draggingIdx];
-        if (!slot.innerText) {
+        if (!slot.innerText && letra) {
           slot.innerText = letra;
           letrasRestantes[draggingIdx] = null;
           atualizaCaixaLetras();
-          verificaAcerto();
+          verificaAcertoOuErro();
         }
       });
       slots.push(slot);
@@ -232,11 +232,20 @@
     });
   }
 
-  function verificaAcerto() {
-    let acertos = slots.map((slot, i) => slot.innerText === palavras[indice][i]);
-    if (acertos.every(x => x) && slots.every(slot => slot.innerText)) {
-      document.getElementById('resultado').innerText = "Parabéns! Você acertou!";
-      document.getElementById('next-btn').style.display = "inline-block";
+  function verificaAcertoOuErro() {
+    // Só chama quando todos os slots estão com letra
+    if (slots.every(slot => slot.innerText)) {
+      let correta = slots.map((slot, i) => slot.innerText === palavras[indice][i]).every(x => x);
+      if (correta) {
+        document.getElementById('resultado').innerText = "Parabéns! Você acertou!";
+        document.getElementById('next-btn').style.display = "inline-block";
+      } else {
+        document.getElementById('resultado').innerText = "Tente novamente!";
+        document.getElementById('next-btn').style.display = "none";
+      }
+    } else {
+      document.getElementById('resultado').innerText = "";
+      document.getElementById('next-btn').style.display = "none";
     }
   }
 
