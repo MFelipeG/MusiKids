@@ -170,7 +170,7 @@
   const letrasContainer = document.getElementById("letras-container");
   const bonequinhoContainer = document.getElementById("bonequinho-container");
   const resultText = document.getElementById("result-text");
-  const novoBtn = document.getElementById("btn-novo");
+  const btnNovo = document.getElementById("btn-novo");
 
   let palavraAtual;
   let letrasAcertadas;
@@ -197,7 +197,7 @@
     letrasAcertadas = Array(palavraAtual.palavra.length).fill(false);
     dicasContainer.innerHTML = "";
     resultText.textContent = "";
-    novoBtn.style.display = "none";
+    btnNovo.style.display = "none";
     letrasContainer.innerHTML = "";
     criarLetras();
     criarDicas();
@@ -298,7 +298,7 @@
     if (letrasAcertadas.every((x) => x)) {
       resultText.textContent = "Parabéns! Você acertou a palavra!";
       confetti();
-      novoBtn.style.display = "inline-block";
+      btnNovo.style.display = "inline-block";
       desabilitarLetras();
     }
   }
@@ -307,7 +307,7 @@
     resultText.textContent = `Que pena! Você perdeu. A palavra era: ${palavraAtual.palavra}`;
     revelarPalavra();
     desabilitarLetras();
-    novoBtn.style.display = "inline-block";
+    btnNovo.style.display = "inline-block";
   }
 
   function revelarPalavra() {
@@ -321,7 +321,7 @@
     );
   }
 
-  novoBtn.addEventListener("click", iniciarJogo);
+  btnNovo.addEventListener("click", iniciarJogo);
 
   function confetti() {
     const container = document.getElementById("confetti");
@@ -336,8 +336,7 @@
     for (let i = 0; i < 100; i++) {
       const c = document.createElement("div");
       c.classList.add("confetti-piece");
-      c.style.backgroundColor =
-        colors[Math.floor(Math.random() * colors.length)];
+      c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
       c.style.top = Math.random() * window.innerHeight + "px";
       c.style.left = Math.random() * window.innerWidth + "px";
       c.style.width = "7px";
