@@ -7,18 +7,22 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
   body {
-    margin: 0; padding: 0;
+    margin: 0;
+    padding: 0;
     font-family: 'Baloo 2', cursive, Arial, sans-serif;
-    background: linear-gradient(135deg, #fef6f6, #f6f9ff);
+    background: linear-gradient(135deg, #fceabb 0%, #f8b500 50%, #ff7eb9 100%);
     color: #333;
     user-select: none;
     text-align: center;
     min-height: 100vh;
-    display: flex; flex-direction: column; align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
   #btn-menu {
     position: fixed;
-    top: 15px; left: 15px;
+    top: 15px;
+    left: 15px;
     background: #a1d578;
     color: #214d0d;
     border-radius: 18px;
@@ -58,16 +62,19 @@
   #palavra {
     font-weight: 900;
     font-size: 2.4rem;
-    letter-spacing: 12px;
+    letter-spacing: 14px;
     user-select: none;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     color: #2c6b3e;
+    white-space: nowrap;
+    overflow-x: auto;
+    max-width: 100%;
   }
   #dica-container {
     display: flex;
     justify-content: center;
     gap: 15px;
-    margin-bottom: 24px;
+    margin-bottom: 30px;
     flex-wrap: wrap;
   }
   .dica-btn {
@@ -96,8 +103,7 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
-    max-width: 400px;
-    margin-bottom: 20px;
+    max-width: 450px;
   }
   .letra-btn {
     width: 44px;
@@ -105,7 +111,7 @@
     border-radius: 18px;
     background-color: #afe4d6;
     border: none;
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 700;
     cursor: pointer;
     color: #2a5949;
@@ -125,7 +131,7 @@
   }
   #bonequinho-container {
     margin-top: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 28px;
     width: 160px;
     height: 240px;
   }
@@ -134,10 +140,10 @@
     height: auto;
   }
   #result-text {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 800;
     color: #a42e53;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     user-select: none;
   }
   #btn-novo {
@@ -145,9 +151,9 @@
     color: #124015;
     border: none;
     border-radius: 20px;
-    padding: 12px 28px;
+    padding: 14px 30px;
     font-weight: 900;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     cursor: pointer;
     box-shadow: 0 0 12px #8db96fcc;
     user-select: none;
@@ -203,7 +209,7 @@
     { palavra: "PEIXE", dicas: ["Vive na água", "Nadadeiras", "Respira por brânquias", "Frio, não tem pelos", "Come algas e pequenos animais"] },
     { palavra: "BORBOLETA", dicas: ["Inseto colorido", "Tem asas delicadas", "Voa em jardins", "Transformação de lagarta", "Frágil"] },
     { palavra: "MUITA", dicas: ["Oposto de pouca", "Grande quantidade", "Abundância", "Em grande número", "Excesso"] },
-    // Total 50 palavras. Se desejar, amplie similarmente.
+    // Aplique mais palavras reais para completar 50 conforme necessidade
   ];
 
   const btnMenu = document.getElementById("btn-menu");
@@ -221,12 +227,27 @@
 
   btnMenu.onclick = () => location.href = "../index.html";
 
-  function embaralharArray(arr) {
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
+  function normalizeLetra(letra) {
+    // converte letras acentuadas para base simples
+    const mapa = {
+      À: "A", Á: "A", Â: "A", Ã: "A", Ä: "A", Å: "A",
+      Ç: "C",
+      È: "E", É: "E", Ê: "E", Ë: "E",
+      Ì: "I", Í: "I", Î: "I", Ï: "I",
+      Ñ: "N",
+      Ò: "O", Ó: "O", Ô: "O", Õ: "O", Ö: "O",
+      Ù: "U", Ú: "U", Û: "U", Ü: "U",
+      Ý: "Y",
+      à: "a", á: "a", â: "a", ã: "a", ä: "a", å: "a",
+      ç: "c",
+      è: "e", é: "e", ê: "e", ë: "e",
+      ì: "i", í: "i", î: "i", ï: "i",
+      ñ: "n",
+      ò: "o", ó: "o", ô: "o", õ: "o", ö: "o",
+      ù: "u", ú: "u", û: "u", ü: "u",
+      ý: "y", ÿ: "y"
+    };
+    return mapa[letra] || letra.toUpperCase();
   }
 
   function iniciarJogo() {
@@ -252,8 +273,16 @@
   }
 
   function criarLetras() {
-    const alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZÁÉÍÓÚÇ";
-    for (let letra of alfabeto) {
+    // Inclui letras base e acentuadas
+    const letras = [
+      "A", "À", "Á", "Â", "Ã", "Ä", "Å",
+      "B", "C", "Ç", "D", "E", "È", "É", "Ê", "Ë",
+      "F", "G", "H", "I", "Ì", "Í", "Î", "Ï",
+      "J", "K", "L", "M", "N", "Ñ", "O", "Ò", "Ó", "Ô", "Õ", "Ö",
+      "P", "Q", "R", "S", "T", "U", "Ù", "Ú", "Û", "Ü",
+      "V", "W", "X", "Y", "Ý", "Z"
+    ];
+    for (let letra of letras) {
       const btn = document.createElement("button");
       btn.className = "letra-btn";
       btn.textContent = letra;
@@ -266,8 +295,9 @@
     if (btn.classList.contains("disabled")) return;
 
     let acertou = false;
+    const letraNormalizada = normalizeLetra(letra);
     for (let i = 0; i < palavraAtual.palavra.length; i++) {
-      if (palavraAtual.palavra[i] === letra) {
+      if (normalizeLetra(palavraAtual.palavra[i]) === letraNormalizada) {
         letrasAcertadas[i] = true;
         acertou = true;
       }
@@ -283,7 +313,6 @@
         return;
       }
     }
-
     exibirPalavra();
     verificarFim();
   }
@@ -291,9 +320,7 @@
   function criarDicas() {
     dicasContainer.innerHTML = "";
     const maxDicas = Math.min(5, palavraAtual.dicas.length);
-    const dicasExtras = embaralharArray(
-      palavraAtual.dicas.slice()
-    ).slice(0, maxDicas);
+    const dicasExtras = bancoPalavras.length > 1 ? [...palavraAtual.dicas].slice(0, maxDicas) : [];
     dicasExtras.forEach((dica) => {
       const botaoDica = document.createElement("button");
       botaoDica.className = "dica-btn";
@@ -367,6 +394,7 @@
 
   novoBtn.addEventListener("click", iniciarJogo);
 
+  // Confetes animados
   function confetti() {
     const container = document.getElementById("confetti");
     container.innerHTML = "";
