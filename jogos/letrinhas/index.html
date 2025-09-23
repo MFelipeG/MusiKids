@@ -27,125 +27,86 @@
     margin-bottom: 24px;
   }
   #btn-menu {
-    position: fixed;
-    top: 16px; left: 16px;
+    position: fixed; top: 16px; left: 16px;
     background: #b3dc6d;
     color: #334c06;
-    border: none;
-    padding: 10px 18px;
-    font-weight: 800;
-    font-size: 1.14rem;
-    border-radius: 18px;
-    cursor: pointer;
+    border: none; padding: 10px 18px;
+    font-weight: 800; font-size: 1.14rem;
+    border-radius: 18px; cursor: pointer;
     box-shadow: 0 5px 16px #b3dc6d44;
-    z-index: 1000;
-    transition: background-color .2s;
+    z-index: 1000; transition: background-color .2s;
   }
-  #btn-menu:hover {
-    background: #8ab442;
-    color: #fff;
+  #btn-menu:hover { background: #8ab442; color: #fff; }
+  #main-container { display: flex; flex-direction: column; align-items: center; }
+  #categoria-escolha {
+    margin: 8px auto 15px auto;
+    font-size: 1.1rem; background: #fffbe0; border: 2px solid #ffb6b6;
+    border-radius: 14px; padding: 7px 22px; font-weight: 700;
+    box-shadow: 0 2px 10px #eadaaa55;
   }
-  #main-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  #area-adiciona {
+    margin: 8px auto 2px auto; display: flex; gap: 8px; justify-content: center; align-items: center;
   }
+  #add-palavra-input {
+    padding: 9px 18px; font-size: 1.05rem; border-radius: 13px; border: 2px solid #bbe2b4; width: 154px;
+  }
+  #add-palavra-btn {
+    background: #ff81a7; color:#fff; font-weight: bold; font-size: 1.02rem; border-radius: 13px;
+    padding: 8px 19px; border: none; cursor:pointer; transition: background .25s;
+    box-shadow: 0 2px 8px #f3487d22;
+  }
+  #add-palavra-btn:hover { background: #ef568a; }
   #instrucao {
-    margin-top: 10px;
+    margin-top: 8px;
     color: #fa1899;
-    font-size: 1.15rem;
-    margin-bottom: 20px;
-    font-weight: 600;
+    font-size: 1.13rem;
+    margin-bottom: 13px; font-weight: 600;
   }
   #palavra-atual {
-    font-size: 1.7rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: #288b49;
     background: #fffde0;
     border-radius: 14px;
-    padding: 12px 42px;
+    padding: 10px 42px;
     margin-bottom: 14px;
     box-shadow: 2px 6px 15px #9be58a27;
   }
   #caixa-letras {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 35px;
+    display: flex; justify-content: center; gap: 10px; margin-bottom: 35px;
     min-height: 48px;
   }
   .letra-drag {
     background: linear-gradient(135deg,#ff82b2 40%, #d4f778 100%);
-    color: #222;
-    padding: 8px 24px;
-    font-size: 1.2rem;
-    border-radius: 14px;
-    font-weight: 700;
-    cursor: grab;
-    border: 2px solid #fff;
-    box-shadow: 0 4px 16px #f3487d22;
-    margin-bottom: 5px;
-    user-select: none;
-    transition: background 0.15s;
+    color: #222; padding: 8px 24px;
+    font-size: 1.1rem; border-radius: 14px;
+    font-weight: 700; cursor: grab; border: 2px solid #fff;
+    box-shadow: 0 4px 16px #f3487d22; margin-bottom: 5px;
+    user-select: none; transition: background 0.15s;
   }
-  .letra-drag.dragging {
-    opacity: .4;
-    background: #fff8f4;
-  }
+  .letra-drag.dragging { opacity: .4; background: #fff8f4; }
   #slots-palavra {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
+    display: flex; justify-content: center; gap: 10px;
     margin-bottom: 16px;
   }
   .slot-letra {
-    width: 39px;
-    height: 39px;
-    background: #fff3fa;
-    border-radius: 11px;
-    border: 2px dashed #fa1899;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: #288b49;
-    margin-bottom: 2px;
-    transition: border-color 0.15s, background 0.12s;
+    width: 39px; height: 39px; background: #fff3fa;
+    border-radius: 11px; border: 2px dashed #fa1899; display: flex;
+    align-items: center; justify-content: center;
+    font-size: 1.5rem; font-weight: bold; color: #288b49;
+    margin-bottom: 2px; transition: border-color 0.15s, background 0.12s;
   }
-  .slot-letra.over {
-    border-color: #ffd600;
-    background: #fffde0;
-  }
+  .slot-letra.over { border-color: #ffd600; background: #fffde0; }
   #next-btn, #reset-btn {
-    background: #ff81a7;
-    color: #244c43;
-    border: none;
-    border-radius: 17px;
-    padding: 11px 36px;
-    font-size: 1rem;
-    font-weight: 700;
-    margin-top: 16px;
-    cursor: pointer;
-    box-shadow: 0 4px 12px #f3487d33;
-    display: none;
+    background: #ff81a7; color: #244c43; border: none; border-radius: 17px;
+    padding: 11px 32px; font-size: 1rem; font-weight: 700;
+    margin-top: 14px; cursor: pointer; box-shadow: 0 4px 12px #f3487d33; display:none;
   }
-  #next-btn:active, #reset-btn:active {
-    background: #ef568a;
-    color: #fff;
-  }
-  #reset-btn {
-    margin-left: 12px;
-    background: #d4f778;
-    color: #187168;
-    box-shadow: 0 4px 12px #b6ec5e33;
-  }
+  #next-btn:active, #reset-btn:active { background: #ef568a; color: #fff; }
+  #reset-btn { margin-left: 10px; background: #d4f778; color: #187168; box-shadow: 0 4px 12px #b6ec5e33; }
   #resultado {
-    font-size: 1.5rem;
-    font-weight: 800;
-    margin-top: 10px;
-    color: #9631e6;
-    min-height: 38px;
+    font-size: 1.25rem; font-weight: 700; margin-top: 12px;
+    color: #9631e6; min-height: 34px;
   }
 </style>
 </head>
@@ -153,6 +114,16 @@
 <header>Letrinhas - MusiKids Fun</header>
 <button id="btn-menu" onclick="window.location.href='../index.html'">MENU DE JOGOS</button>
 <div id="main-container">
+  <select id="categoria-escolha">
+    <option value="animais">Animais</option>
+    <option value="objetos">Objetos</option>
+    <option value="frutas">Frutas</option>
+    <option value="nomes">Nomes</option>
+  </select>
+  <div id="area-adiciona">
+    <input type="text" id="add-palavra-input" maxlength="15" placeholder="Nova palavra ou nome..." />
+    <button id="add-palavra-btn">Adicionar</button>
+  </div>
   <div id="instrucao">Arraste as letras para formar a palavra!</div>
   <div id="palavra-atual"></div>
   <div id="slots-palavra"></div>
@@ -162,124 +133,162 @@
   <div id="resultado"></div>
 </div>
 <script>
-  const palavrasOriginais = [
-    "SOPA", "SAPO", "PATO", "GATO", "CORA", "TERRA",
-    "FADA", "SOL", "LAGO", "ROSA", "MESA", "BOLA"
-    // acrescente mais aqui!
-  ];
-  let palavras = [];
-  let indice = 0;
-  let letrasRestantes = [];
-  let slots = [];
-  let draggingIdx = null;
+const categorias = {
+  animais: [
+    "GATO","CACHORRO","PATO","VACA","CAVALO","PORCO","OVELHA","TARTARUGA","COELHO","RATO","RAPOSA","LEAO","MACACO","ZEBRA","TIGRE","GIRAFA","URSO","LOBO","GALETA","CANGURU",
+    "JACARE","CORUJA","SOM","GALO","ELEFANTE","BODE","TOURO","ABELHA","TUBARAO","FOCA","PINGUIM","CROCODILO","BORBOLETA","FORMIGA","MOSCA","LAGARTO","CAMELO","RINOCERONTE","GORILA","RINOCERO","CALANGO",
+    "HIPOPOTAMO","GOLFINHO","CANGURU","PEIXE","MORCEGO","TUCANO","POLVO","CARANGUEJO","TARANTULA","ALCE","PAPAGAIO","AGUIA","COBRA","BESOURO","TATU","TAMANDUA","MINHOCA","ESCORPIAO","SOL","FURAO","PERU","GANSO","MOSQUITO",
+    "CARPA","VESPAS","ARANHA","MOLE","CARRAPATO","PIRANHA","MARRECOS","POMBO","PASSARO","BURRO","CAVALOS","GERBIL","RATINHO","TUCANO","LEMURE","ORNITORRINCO","GORILA","HIPOPOTAMO","PAPAGAIO","PIAU","CALANGO","CANARIO","AVESTRUZ","PARDAL","PET","SAPO","GAVIÃO","PATINHO"
+  ],
+  objetos: [
+    "BOLA","MESA","CAIXA","CAMISA","BICICLETA","PENTE","CANETA","LIVRO","SAPATO","RELOGIO","ARMARIO","CADERNO","BIDA","CADEIRA","SOFA","LAMPIAO","FACA","COLHER","GARFO","GUARDA","TAPETE",
+    "QUADRO","FOGAO","GARRAFA","ANEL","MALA","POTE","COPO","BALDE","PIANO","CELULAR","TINTA","FITA","BARRA","TUBO","LENTE","FARO","MACA","PONTE","VELA","ESPELHO","TESOURA","CAJU","TECLADO",
+    "MOEDA","RUA","BOTA","LUVA","BONDE","TOUCA","CAMISA","GRAVATA","BONDE","TAPETE","BALAO","JANELA","PELUCIA","JOGO","PLACA","VIOLA","BENGALA","DESENHO","BOTAO","PASSARO","PINTA","BONECA","TAMBOR","DOG","FONE","GALETA","BORRACHA","CARRO","SORVETE",
+    "BENGALA","BOTE","SACO","CAFÉ","PORTA","TETO","TIJOLO","TESOURA","MANDIOCA","BANCO","CARTAO","FERRO","ESCADA","PANELA","CANECA","PISTOLA"
+  ],
+  frutas: [
+    "MANGA","LARANJA","MACA","BANANA","MELANCIA","UVA","CAJU","ABACATE","ABACAXI","LIMAO","PERA","PESSEGO","MELAO","TANGERINA","GOIABA","AMORA","MORANGO","GRAVIOLA","FIGO","COCO","CEREJA",
+    "MARACUJA","FRAMBOESA","KIWI","JACA","JAMBO","TAMARINDO","CAQUI","PITANGA","CUPUACU","MAQUI","BURITI","PORTUGAL","CARA","CASTANHA","MURICI","GUARANA","CAMBUCI","TUCUMA","ACAI","GABIROBA",
+    "PUPUNHA","CACAU","BACABA","BACURI","UMBU","PITANGA","CAJAMANGA","SERIGUELA","CABELUDINHA","ARATICUM","BIRIBA","SAPOTI","BUCAYU","ARARUTA","JAMBU","CALABURA","GRUMIXAMA","JAMELAO","AJURU","JURUBEBAS",
+    "CIRIGUELA","INGA","LONGAN","LICHIA","TAMARINDO","CATUABA","GUAVIRA","CUAJE","TAIPUCA","CAMU","KAKI","MARAMA","MARAMBIR","URUCUM","BURITIRA","TUCUNARE","JERIVATU","CURUBA","ACEROLA","BACAJU","CABAZ","CACAI","TAIPUCA","CURUBU","MACAXEIRA","GENIPAPO","PITOMBA","CANISTEL"
+  ],
+  nomes: [
+    "ANA","LUIS","MARIA","PEDRO","JULIA","JOAO","CARLA","PAULO","TATI","BRUNO","RAFA","VITOR","GIO","SANDRA","ENZO","DAVI","TIAGO","CAIO","RENAN","LARA",
+    "BRISA","CLARA","CAMILA","MARIANA","ALICE","MATEUS","HELENA","MATHEUS","FABIO","RICARDO","DANILO","BEATRIZ","CAROL","LETICIA","PEDRA","ISA","FERNANDO","BELA","VANESSA","AMANDA","ISABEL",
+    "GABRIEL","GUSTAVO","RODRIGO","GUILHERME","NICOLAS","EDUARDO","PATRICIA","DIEGO","RAFAELA","ARTHUR","LUIZA","MURILO","ROSA","JESSICA","LEILA","ROBERTO","CIBELE","PAMELA","FELIPE","IGOR",
+    "FRANCISCO","LORENA","RAYANE","LEONARDO","FRANCO","EDMILSON","MONICA","CELSO","IANE","ESTELA","TOM","SIRLEI","LUCIANO","LUCIANA","TIARA","RUBENS","ISAIAS","LENIN","IVANA","PAULO","RODRIGO",
+    "NARA","FABRICIO","KARINA","BENICIO","RAQUEL","CRIS","SILVANA","GEOVANA","FELICIDADE","SILAS","MIGUEL","JORGE"
+  ]
+};
 
-  function embaralhaArray(arr) {
-    return arr.slice().sort(() => Math.random() - 0.5);
+let categoriaAtual = "animais";
+let palavras = [];
+let indice = 0;
+let letrasRestantes = [];
+let slots = [];
+let draggingIdx = null;
+
+function embaralhaArray(arr) {
+  return arr.slice().sort(() => Math.random() - 0.5);
+}
+
+function embaralha(palavra) {
+  return palavra.split('').sort(() => Math.random() - 0.5);
+}
+
+function mostraPalavra() {
+  document.getElementById('palavra-atual').innerText = palavras[indice];
+  montaSlots(palavras[indice]);
+  montaCaixaLetras(palavras[indice]);
+  document.getElementById('resultado').innerText = "";
+  document.getElementById('next-btn').style.display = "none";
+  document.getElementById('reset-btn').style.display = "inline-block";
+}
+
+function montaSlots(palavra) {
+  const container = document.getElementById('slots-palavra');
+  container.innerHTML = "";
+  slots = [];
+  for(let i=0; i<palavra.length; i++) {
+    const slot = document.createElement('div');
+    slot.className = "slot-letra";
+    slot.dataset.index = i;
+    slot.addEventListener('dragover', (e) => { e.preventDefault(); slot.classList.add("over"); });
+    slot.addEventListener('dragleave', (e) => slot.classList.remove("over"));
+    slot.addEventListener('drop', (e) => {
+      e.preventDefault();
+      slot.classList.remove("over");
+      const letra = letrasRestantes[draggingIdx];
+      if (!slot.innerText && letra) {
+        slot.innerText = letra;
+        letrasRestantes[draggingIdx] = null;
+        atualizaCaixaLetras();
+        verificaAcertoOuErro();
+      }
+    });
+    slots.push(slot);
+    container.appendChild(slot);
   }
+}
 
-  function embaralha(palavra) {
-    return palavra.split('').sort(() => Math.random() - 0.5);
-  }
+function montaCaixaLetras(palavra) {
+  letrasRestantes = embaralha(palavra);
+  atualizaCaixaLetras();
+}
 
-  function mostraPalavra() {
-    document.getElementById('palavra-atual').innerText = palavras[indice];
-    montaSlots(palavras[indice]);
-    montaCaixaLetras(palavras[indice]);
+function atualizaCaixaLetras() {
+  const container = document.getElementById('caixa-letras');
+  container.innerHTML = '';
+  letrasRestantes.forEach((letra, idx) => {
+    if (letra) {
+      const b = document.createElement('div');
+      b.className = "letra-drag";
+      b.innerText = letra;
+      b.draggable = true;
+      b.addEventListener('dragstart', () => { draggingIdx = idx; b.classList.add('dragging'); });
+      b.addEventListener('dragend', () => { b.classList.remove('dragging'); draggingIdx = null; });
+      container.appendChild(b);
+    }
+  });
+}
+
+function verificaAcertoOuErro() {
+  if (slots.every(slot => slot.innerText)) {
+    let correta = slots.map((slot, i) => slot.innerText === palavras[indice][i]).every(x => x);
+    if (correta) {
+      document.getElementById('resultado').innerText = "Parabéns! Você acertou!";
+      document.getElementById('next-btn').style.display = "inline-block";
+      document.getElementById('reset-btn').style.display = "none";
+    } else {
+      document.getElementById('resultado').innerText = "Tente novamente!";
+      document.getElementById('next-btn').style.display = "none";
+      document.getElementById('reset-btn').style.display = "inline-block";
+    }
+  } else {
     document.getElementById('resultado').innerText = "";
     document.getElementById('next-btn').style.display = "none";
     document.getElementById('reset-btn').style.display = "inline-block";
   }
+}
 
-  function montaSlots(palavra) {
-    const container = document.getElementById('slots-palavra');
-    container.innerHTML = "";
-    slots = [];
-    for(let i=0; i<palavra.length; i++) {
-      const slot = document.createElement('div');
-      slot.className = "slot-letra";
-      slot.dataset.index = i;
-      slot.addEventListener('dragover', (e) => {
-        e.preventDefault(); slot.classList.add("over");
-      });
-      slot.addEventListener('dragleave', (e) => slot.classList.remove("over"));
-      slot.addEventListener('drop', (e) => {
-        e.preventDefault();
-        slot.classList.remove("over");
-        const letra = letrasRestantes[draggingIdx];
-        if (!slot.innerText && letra) {
-          slot.innerText = letra;
-          letrasRestantes[draggingIdx] = null;
-          atualizaCaixaLetras();
-          verificaAcertoOuErro();
-        }
-      });
-      slots.push(slot);
-      container.appendChild(slot);
-    }
-  }
+document.getElementById('next-btn').onclick = () => {
+  indice = (indice+1) % palavras.length;
+  mostraPalavra();
+};
 
-  function montaCaixaLetras(palavra) {
-    letrasRestantes = embaralha(palavra);
-    atualizaCaixaLetras();
-  }
+document.getElementById('reset-btn').onclick = () => {
+  mostraPalavra();
+};
 
-  function atualizaCaixaLetras() {
-    const container = document.getElementById('caixa-letras');
-    container.innerHTML = '';
-    letrasRestantes.forEach((letra, idx) => {
-      if (letra) {
-        const b = document.createElement('div');
-        b.className = "letra-drag";
-        b.innerText = letra;
-        b.draggable = true;
-        b.addEventListener('dragstart', () => {
-          draggingIdx = idx;
-          b.classList.add('dragging');
-        });
-        b.addEventListener('dragend', () => {
-          b.classList.remove('dragging'); draggingIdx = null;
-        });
-        container.appendChild(b);
-      }
-    });
-  }
+document.getElementById('categoria-escolha').onchange = function(e) {
+  categoriaAtual = e.target.value;
+  palavras = embaralhaArray(categorias[categoriaAtual]);
+  indice = 0;
+  mostraPalavra();
+};
 
-  function verificaAcertoOuErro() {
-    if (slots.every(slot => slot.innerText)) {
-      let correta = slots.map((slot, i) => slot.innerText === palavras[indice][i]).every(x => x);
-      if (correta) {
-        document.getElementById('resultado').innerText = "Parabéns! Você acertou!";
-        document.getElementById('next-btn').style.display = "inline-block";
-        document.getElementById('reset-btn').style.display = "none";
-      } else {
-        document.getElementById('resultado').innerText = "Tente novamente!";
-        document.getElementById('next-btn').style.display = "none";
-        document.getElementById('reset-btn').style.display = "inline-block";
-      }
-    } else {
-      document.getElementById('resultado').innerText = "";
-      document.getElementById('next-btn').style.display = "none";
-      document.getElementById('reset-btn').style.display = "inline-block";
-    }
-  }
-
-  document.getElementById('next-btn').onclick = () => {
-    indice = (indice+1) % palavras.length;
-    mostraPalavra();
-  };
-
-  document.getElementById('reset-btn').onclick = () => {
-    mostraPalavra();
-  };
-
-  // Inicialização: sorteia ordem das palavras toda vez
-  function inicializa() {
-    palavras = embaralhaArray(palavrasOriginais);
+document.getElementById('add-palavra-btn').onclick = function() {
+  const campo = document.getElementById('add-palavra-input');
+  let nova = campo.value.trim().toUpperCase();
+  if (nova.length >= 2 && /^[A-ZÁÉÍÓÚÇ]+$/.test(nova)) {
+    palavras.unshift(nova); // adiciona no topo
+    campo.value = "";
     indice = 0;
     mostraPalavra();
+  } else {
+    campo.style.background = "#ffc0cb"; // destaca se inválido
+    setTimeout(()=>campo.style.background="#fff",900);
   }
+};
 
-  inicializa();
+// Inicialização ao abrir página
+function inicializa() {
+  palavras = embaralhaArray(categorias[categoriaAtual]);
+  indice = 0;
+  mostraPalavra();
+}
+
+inicializa();
 </script>
 </body>
 </html>
