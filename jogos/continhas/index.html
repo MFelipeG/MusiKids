@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Continhas - Estilo Livre e Aleatório - MusiKids</title>
+<title>Continhas - Com teclado numérico - MusiKids</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
   body {
@@ -49,18 +49,23 @@
     border-radius: 25px;
     padding: 30px 20px 36px 20px;
     box-shadow: 0 3px 15px #fcdbe3;
-    display: flex; flex-direction: column; gap: 24px;
+    display: flex; flex-direction: column; gap: 20px;
     align-items: center;
   }
   #simple-sum {
     font-size: 3rem;
     font-weight: 900;
     color: #4a977d;
+    text-align: center;
   }
   .answer-section {
-    display: flex; gap: 10px; align-items: center; justify-content: center;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
   }
-  input[type="number"], input#custom-sum-input {
+  input[type=number] {
+    width: 120px;
     font-size: 1.25rem;
     font-weight: 600;
     padding: 10px 14px;
@@ -68,12 +73,6 @@
     border: 2px solid #a1d578;
     text-align: center;
     outline-offset: 3px;
-  }
-  input[type="number"] {
-    width: 120px;
-  }
-  input#custom-sum-input {
-    width: 260px;
   }
   button {
     font-family: 'Baloo 2', cursive, Arial, sans-serif;
@@ -105,14 +104,6 @@
   #new-sum:hover {
     background: linear-gradient(90deg,#249649 0%,#57db9a 98%);
   }
-  #create-sum-btn, #clear-custom-btn {
-    background: linear-gradient(90deg, #1d82c9 0%, #73b1d8 98%);
-    box-shadow: 0 0 15px #1d82c970;
-    margin-left: 6px;
-  }
-  #create-sum-btn:hover, #clear-custom-btn:hover {
-    background: linear-gradient(90deg, #0e5c8c 0%, #377db1 98%);
-  }
   #feedback {
     font-weight: 700;
     font-size: 1.35rem;
@@ -120,24 +111,62 @@
     color: #de1e7e;
     user-select: none;
   }
-  #custom-area {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
+  #custom-input-area {
+    width: 100%;
+    margin-top: 20px;
   }
-  #confetti {
-    pointer-events: none;
-    position: fixed;
-    width: 100vw; height: 100vh;
-    top: 0; left: 0; z-index: 1500;
+  #custom-label {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #665283;
+    user-select: none;
   }
-  .confetti-piece {
-    position: absolute;
-    width: 12px; height: 12px;
-    background-color: red;
-    border-radius: 50%;
-    will-change: transform, opacity;
+  #custom-sum-input {
+    border-radius: 16px;
+    border: 2px solid #a1d578;
+    font-size: 1.2rem;
+    padding: 10px 14px;
+    width: 100%;
+    box-sizing: border-box;
+    background: #f4fff3;
+    box-shadow: 0 2px 8px #a1d57877 inset;
+  }
+  #custom-sum-input:focus {
+    outline: 3px solid #a1d578;
+    background: #eaffde;
+  }
+  #num-keyboard {
+    margin-top: 12px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  .num-btn {
+    background: #7ecc7a;
+    font-family: 'Baloo 2', cursive, Arial, sans-serif;
+    font-weight: 900;
+    color: #164813;
+    font-size: 1.7rem;
+    border: none;
+    border-radius: 15px;
+    padding: 16px 0;
+    cursor: pointer;
+    box-shadow: 0 0 10px #7ecc7a77;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+  .num-btn:hover {
+    background: #52a343;
+    color: white;
+  }
+  #clear-custom-btn {
+    background: #ff968a;
+    color: #632214;
+  }
+  #clear-custom-btn:hover {
+    background: #f04104;
+    color: white;
   }
 </style>
 </head>
@@ -145,55 +174,69 @@
 <button id="btn-menu" aria-label="Voltar ao menu">MENU DE JOGOS</button>
 <header>Jogo de Continhas - MusiKids Fun</header>
 <main>
-  <div id="simple-sum" aria-live="polite" aria-atomic="true" role="heading" aria-level="1">0 + 0 = ?</div>
+  <div id="simple-sum" aria-live="polite" aria-atomic="true" role="heading" aria-level="1" style="cursor: default;">0 + 0 = ?</div>
   <div class="answer-section">
-    <input type="number" id="answer-input" aria-label="Digite a resposta" placeholder="Resposta aqui"/>
+    <input type="number" id="answer-input" aria-label="Digite a resposta" placeholder="Resposta aqui" />
     <button id="check-answer" aria-label="Verificar resposta">Verificar</button>
     <button id="new-sum" aria-label="Nova continha">Nova Conta</button>
   </div>
   <div id="feedback" aria-live="polite" aria-atomic="true"></div>
-  <hr style="width:90%; border-color:#a1d578;"/>
-  <div id="custom-area" aria-label="Criar conta personalizada">
-    <label for="custom-sum-input">Digite sua conta:</label>
-    <input type="text" id="custom-sum-input" aria-label="Campo para digitar continha como 3 + 4" placeholder="Ex: 3 + 4" />
-    <button id="create-sum-btn" aria-label="Calcular continha">Calcular</button>
-    <button id="clear-custom-btn" aria-label="Limpar campo">Limpar</button>
+  <div id="custom-input-area">
+    <label id="custom-label" for="custom-sum-input">Digite sua conta:</label>
+    <input type="text" id="custom-sum-input" aria-label="Campo para digitar continha" placeholder="Ex: 2 + 3 * 4" autocomplete="off" />
+    <div id="num-keyboard" role="group" aria-label="Teclado numérico">
+      <button class="num-btn" data-val="7">7</button>
+      <button class="num-btn" data-val="8">8</button>
+      <button class="num-btn" data-val="9">9</button>
+      <button class="num-btn" data-val="+">+</button>
+      <button class="num-btn" data-val="4">4</button>
+      <button class="num-btn" data-val="5">5</button>
+      <button class="num-btn" data-val="6">6</button>
+      <button class="num-btn" data-val="-">−</button>
+      <button class="num-btn" data-val="1">1</button>
+      <button class="num-btn" data-val="2">2</button>
+      <button class="num-btn" data-val="3">3</button>
+      <button class="num-btn" data-val="*">×</button>
+      <button class="num-btn" id="clear-custom-btn" aria-label="Limpar texto">C</button>
+      <button class="num-btn" data-val="0">0</button>
+      <button class="num-btn" data-val=".">.</button>
+      <button id="create-sum-btn" aria-label="Calcular conta" class="num-btn" style="background:#5b9fca; color:white;">=</button>
+    </div>
   </div>
 </main>
 <div id="confetti"></div>
-
 <script>
-  const btnMenu = document.getElementById('btn-menu');
-  const sumDisplay = document.getElementById('simple-sum');
-  const answerInput = document.getElementById('answer-input');
-  const checkBtn = document.getElementById('check-answer');
-  const newSumBtn = document.getElementById('new-sum');
-  const feedback = document.getElementById('feedback');
-  const customInput = document.getElementById('custom-sum-input');
-  const createSumBtn = document.getElementById('create-sum-btn');
-  const clearCustomBtn = document.getElementById('clear-custom-btn');
+  const btnMenu = document.getElementById("btn-menu");
+  const sumDisplay = document.getElementById("simple-sum");
+  const answerInput = document.getElementById("answer-input");
+  const checkBtn = document.getElementById("check-answer");
+  const newSumBtn = document.getElementById("new-sum");
+  const feedback = document.getElementById("feedback");
+  const customInput = document.getElementById("custom-sum-input");
+  const createSumBtn = document.getElementById("create-sum-btn");
+  const clearCustomBtn = document.getElementById("clear-custom-btn");
 
-  btnMenu.onclick = () => location.href = '../index.html';
+  btnMenu.onclick = () => location.href = "../index.html";
 
   let currentSum = {num1:0, num2:0, op:"+"};
   let allowAnswer = true;
 
-  function randomInt(min,max){
-    return Math.floor(Math.random()*(max-min+1))+min;
+  function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  function generateSum(){
-    const ops = ["+","-","*"];
-    const op = ops[randomInt(0,2)];
-    let num1 = randomInt(0,20);
-    let num2 = randomInt(0,20);
-    if(op === "-" && num2 > num1) [num1,num2] = [num2,num1];
-    return {num1,num2,op};
+  function generateSum() {
+    const ops = ["+", "-", "*"];
+    const op = ops[randomInt(0, 2)];
+    let num1 = randomInt(0, 20);
+    let num2 = randomInt(0, 20);
+    if (op === "-" && num2 > num1) [num1, num2] = [num2, num1];
+    return { num1, num2, op };
   }
 
-  function showSum(sum){
-    sumDisplay.textContent = `${sum.num1} ${sum.op} ${sum.num2} = ?`;
-    currentSum = sum;
+  function showSum({num1, num2, op}) {
+    sumDisplay.textContent = `${num1} ${op} ${num2} = ?`;
+    currentSum = {num1, num2, op};
     answerInput.value = "";
     feedback.textContent = "";
     allowAnswer = true;
@@ -203,23 +246,27 @@
     answerInput.focus();
   }
 
-  function calcAnswer(sum){
-    switch(sum.op){
-      case"+": return sum.num1 + sum.num2;
-      case"-": return sum.num1 - sum.num2;
-      case"*": return sum.num1 * sum.num2;
-      default: return null;
+  function calcAnswer({num1, num2, op}) {
+    switch (op) {
+      case "+":
+        return num1 + num2;
+      case "-":
+        return num1 - num2;
+      case "*":
+        return num1 * num2;
+      default:
+        return null;
     }
   }
 
   checkBtn.onclick = () => {
-    if(!allowAnswer) return;
+    if (!allowAnswer) return;
     const val = Number(answerInput.value);
-    if(isNaN(val)){
+    if (isNaN(val)) {
       feedback.textContent = "Digite um número válido!";
       return;
     }
-    if(val === calcAnswer(currentSum)){
+    if (val === calcAnswer(currentSum)) {
       feedback.textContent = "Parabéns! Você acertou!";
       confetti();
       allowAnswer = false;
@@ -240,19 +287,17 @@
 
   createSumBtn.onclick = () => {
     const expr = customInput.value.trim();
-    if(!expr){
+    if (!expr) {
       feedback.textContent = "Digite a continha para calcular.";
       customInput.focus();
       return;
     }
     try {
-      // Simples parser: aceita números e + - *
-      if(!/^[0-9+\-* ]+$/.test(expr)){
+      if (!/^[0-9+\-*.\s]+$/.test(expr)) {
         feedback.textContent = "Somente números e operadores + - * são permitidos.";
         customInput.focus();
         return;
       }
-      // Avalia expressao segura
       const result = new Function("return " + expr)();
       sumDisplay.textContent = expr + " = ?";
       currentSum = {custom: true, expr, expected: result};
@@ -262,7 +307,7 @@
       checkBtn.disabled = false;
       newSumBtn.disabled = false;
       answerInput.focus();
-    } catch(e) {
+    } catch {
       feedback.textContent = "Expressão inválida. Corrija e tente novamente.";
       customInput.focus();
     }
@@ -274,39 +319,39 @@
     customInput.focus();
   };
 
-  // Confetti effect
-  function confetti(){
-    const confetti = document.getElementById('confetti');
+  function confetti() {
+    const confetti = document.getElementById("confetti");
     confetti.innerHTML = "";
-    const colors=["#ff6395","#fcee21","#33d68f","#7d69f9","#fd5a50"];
-    for(let i=0; i<100; i++){
-      const el=document.createElement('div');
-      el.className="confetti-piece";
-      el.style.backgroundColor=colors[Math.floor(Math.random()*colors.length)];
-      el.style.top=Math.random()*window.innerHeight+"px";
-      el.style.left=Math.random()*window.innerWidth+"px";
-      el.style.width="12px";
-      el.style.height="12px";
-      el.style.position="absolute";
-      el.style.borderRadius="50%";
-      el.style.animation="fall 3s linear forwards";
-      el.style.animationDelay=(i*0.03)+"s";
-      confetti.appendChild(el);
+    const colors = ["#ff6395", "#fcee21", "#33d68f", "#7d69f9", "#fd5a50"];
+    for (let i = 0; i < 100; i++) {
+      const elem = document.createElement("div");
+      elem.className = "confetti-piece";
+      elem.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      elem.style.top = Math.random() * window.innerHeight + "px";
+      elem.style.left = Math.random() * window.innerWidth + "px";
+      elem.style.width = "12px";
+      elem.style.height = "12px";
+      elem.style.position = "absolute";
+      elem.style.borderRadius = "50%";
+      elem.style.animation = "fall 3s linear forwards";
+      elem.style.animationDelay = i * 0.03 + "s";
+      confetti.appendChild(elem);
     }
-    setTimeout(()=>{confetti.innerHTML="";},3000);
+    setTimeout(() => {
+      confetti.innerHTML = "";
+    }, 3000);
   }
 
-  // Keyframes
-  const style = document.createElement('style');
+  const style = document.createElement("style");
   style.textContent = `
     @keyframes fall {
-      0% {transform: translateY(0); opacity: 1;}
-      100% {transform: translateY(100vh); opacity: 0;}
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0; }
     }
   `;
   document.head.appendChild(style);
 
-  // Inicializa
+  // inicia com conta aleatória
   newSumBtn.disabled = true;
   newSumBtn.click();
 </script>
