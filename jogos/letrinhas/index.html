@@ -2,209 +2,40 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Letrinhas - MusiKids Fun</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Baloo&display=swap');
-
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Baloo', cursive, Arial, sans-serif;
-    background: linear-gradient(135deg, #e2f1c9 0%, #fbc1ca 100%);
-    user-select: none;
-    text-align: center;
-    color: #333;
-  }
-  header {
-    font-size: 2.4rem;
-    font-weight: 900;
-    margin-top: 0.6rem;
-    margin-bottom: 0;
-    color: #e74184;
-    text-shadow: 1px 1px 4px #db4aa0;
-    user-select: none;
-  }
-  #btn-menu {
-    position: fixed;
-    top: 16px;
-    left: 16px;
-    background: #a6d781;
-    color: #225318;
-    border: none;
-    padding: 12px 20px;
-    font-weight: 900;
-    font-size: 1.3rem;
-    border-radius: 24px;
-    cursor: pointer;
-    box-shadow: 0 8px 18px #a8e74a59;
-    z-index: 1000;
-    user-select: none;
-    transition: background-color 0.3s ease;
-  }
-  #btn-menu:hover {
-    background-color: #82bd3c;
-    color: white;
-  }
-  #main-container {
-    margin-top: 5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  #categoria-container {
-    margin-bottom: 0.9rem;
-  }
-  select, input, button {
-    font-family: 'Baloo', cursive, Arial, sans-serif;
-  }
-  select {
-    font-size: 1.2rem;
-    padding: 7px 14px;
-    border-radius: 16px;
-    border: 2px solid #a5db5b;
-    margin-right: 1rem;
-  }
-  input[type="text"] {
-    font-size: 1.1rem;
-    padding: 6px 12px;
-    border-radius: 14px;
-    border: 2px solid #a5db5b;
-    width: 180px;
-  }
-  button#add-button {
-    font-size: 1.1rem;
-    font-weight: bold;
-    background-color: #f27ea9;
-    color: white;
-    border: none;
-    border-radius: 18px;
-    padding: 7px 14px;
-    margin-left: 0.8rem;
-    cursor: pointer;
-    box-shadow: 0 6px 18px #f274a4af;
-    transition: background-color 0.3s ease;
-  }
-  button#add-button:hover {
-    background-color: #db1e89;
-  }
-  #instrucao {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #b60f67;
-    margin-bottom: 24px;
-    user-select: none;
-  }
-  #palavra-atual {
-    font-size: 2.0rem;
-    font-weight: 700;
-    padding: 10px 46px;
-    background: #ecffe6;
-    border-radius: 22px;
-    border: 2px solid #b2f095;
-    box-shadow: 2px 3px 10px #a7e1a3cc;
-    color: #298f23;
-    user-select: none;
-    margin-bottom: 26px;
-  }
-  #caixa-letras {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px;
-    min-height: 54px;
-    margin-bottom: 33px;
-  }
-  .letra-drag {
-    background: linear-gradient(135deg,#ff85b4 0%, #afe47b 100%);
-    font-weight: 900;
-    font-size: 1.4rem;
-    padding: 8px 25px;
-    border-radius: 23px;
-    border: 3px solid #fff;
-    color: #222;
-    cursor: grab;
-    box-shadow: 0 5px 18px #f3498f50;
-    user-select: none;
-    transition: background-color 0.15s ease;
-  }
-  .letra-drag.dragging {
-    opacity: 0.25;
-    background-color: #ffc092;
-    cursor: grabbing;
-  }
-  #slots-palavra {
-    display: flex;
-    justify-content: center;
-    gap: 14px;
-    margin-bottom: 14px;
-  }
-  .slot-letra {
-    width: 48px;
-    height: 48px;
-    border-radius: 22px;
-    border: 2px dashed #ff6b8c;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: 800;
-    font-size: 1.8rem;
-    color: #32a533;
-    user-select: none;
-    cursor: pointer;
-    transition: background-color 0.15s ease;
-  }
-  .slot-letra.over {
-    background-color: #f9fea6;
-    border-color: #e4b22e;
-  }
-  #next-btn, #reset-btn {
-    font-family: 'Baloo', cursive, Arial, sans-serif;
-    font-weight: 900;
-    font-size: 1.3rem;
-    border-radius: 26px;
-    padding: 11px 34px;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 5px 18px #fa3f8f65;
-    transition: background-color 0.3s ease;
-  }
-  #next-btn {
-    background-color: #ff7498;
-    color: white;
-    margin: 15px 0 0 0;
-    display: none;
-  }
-  #next-btn:hover {
-    background-color: #e81566;
-  }
-  #reset-btn {
-    background-color: #a9f095;
-    color: #2b5e00;
-    margin-left: 12px;
-    display: inline-block;
-  }
-  #reset-btn:hover {
-    background-color: #71c517;
-  }
-  #resultado {
-    min-height: 42px;
-    font-weight: 900;
-    color: #b633a9;
-    font-size: 1.5rem;
-    margin-top: 0.8rem;
-  }
-  #confetti {
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    pointer-events: none;
-    top: 0;
-    left: 0;
-    z-index: 2000;
+  body { margin: 0; padding: 0; font-family: 'Baloo 2', cursive, Arial, sans-serif; background: linear-gradient(135deg,#e2f1c9 0%,#fbc1ca 100%); user-select:none; color:#222; min-height:100vh; text-align:center; }
+  header { font-size:2.4rem; font-weight:900; margin:0.6rem 0 0 0; color:#e74184; text-shadow:1px 1px 4px #db4aa0; user-select:none; }
+  #btn-menu { position:fixed; top:16px; left:16px; background:#a6d781; color:#225318; border:none; padding:12px 20px; font-weight:900; font-size:1.3rem; border-radius:24px; cursor:pointer; box-shadow:0 8px 18px #a8e74a59; z-index:1000; user-select:none; transition:background-color .3s ease; }
+  #btn-menu:hover { background:#82bd3c; color:#fff; }
+  #main-container { margin-top:5rem; max-width:600px; margin-left:auto; margin-right:auto; }
+  #categoria-container { margin-bottom:0.8rem; }
+  select, input, button { font-family: 'Baloo 2', cursive, Arial, sans-serif; }
+  select { font-size:1.2rem; padding:7px 14px; border-radius:16px; border:2px solid #a5db5b; margin-right:1rem; }
+  input[type="text"] { font-size:1.1rem; padding:6px 12px; border-radius:14px; border:2px solid #a5db5b; width:180px; }
+  button#add-button { font-size:1.1rem; font-weight:bold; background:#f27ea9; color:#fff; border:none; border-radius:18px; padding:7px 14px; margin-left:0.7rem; cursor:pointer; box-shadow:0 2px 8px #f3487d22; transition:background-color 0.3s ease; }
+  button#add-button:hover { background:#db1e89; }
+  #instrucao { margin-top:10px; color:#fa1899; font-size:1.15rem; margin-bottom:20px; font-weight:600; user-select:none; }
+  #palavra-atual { font-size:2.0rem; font-weight:700; color:#288b49; background:#fffde0; border-radius:22px; padding:10px 46px; margin-bottom:16px; box-shadow:2px 6px 15px #9be58a27; user-select:none; }
+  #caixa-letras { display:flex; flex-wrap:wrap; justify-content:center; gap:12px; min-height:54px; margin-bottom:30px; }
+  .letra-drag { background:linear-gradient(135deg,#ff85b4 0%, #afe47b 100%); font-weight:900; font-size:1.4rem; padding:8px 25px; border-radius:23px; border:3px solid #fff; color:#222; cursor:grab; box-shadow:0 5px 18px #f3498f50; user-select:none; transition:background-color 0.15s ease; }
+  .letra-drag.dragging { opacity:0.25; background-color:#ffc092; cursor:grabbing; }
+  #slots-palavra { display:flex; justify-content:center; gap:14px; margin-bottom:14px; }
+  .slot-letra { width:48px; height:48px; border-radius:22px; border:2px dashed #ff6b8c; display:flex; justify-content:center; align-items:center; font-weight:800; font-size:1.8rem; color:#32a533; user-select:none; cursor:pointer; transition:background-color 0.15s ease; }
+  .slot-letra.over { background-color:#f9fea6; border-color:#e4b22e; }
+  #next-btn, #reset-btn { font-family: 'Baloo 2', cursive, Arial, sans-serif; font-weight:900; font-size:1.3rem; border-radius:26px; padding: 11px 34px; border:none; cursor:pointer; box-shadow: 0 5px 18px #fa3f8f65; transition:background-color 0.3s ease; display:none; }
+  #next-btn { background:#ff7498; color:#fff; margin:15px 0 0 0; }
+  #next-btn:hover { background:#e81566; }
+  #reset-btn { background:#a9f095; color:#2b5e00; margin-left:12px; }
+  #reset-btn:hover { background:#71c517; }
+  #resultado { min-height:42px; font-weight:900; color:#b633a9; font-size:1.5rem; margin-top:0.8rem; }
+  #confetti { position:fixed; width:100vw; height:100vh; top:0; left:0; pointer-events:none; z-index:2000; }
+  .confetti-piece {
+    position: absolute; width: 8px; height: 8px;
+    background-color: red; border-radius: 50%;
+    will-change: transform, opacity;
   }
 </style>
 </head>
@@ -220,8 +51,8 @@
       <option value="nomes">Nomes</option>
     </select>
   </div>
-  <div id="adiciona-container" style="margin:10px 0;">
-    <input id="add-palavra" type="text" maxlength="15" placeholder="Adicionar palavra (ex: nome)" aria-label="Digite palavra para adicionar"/>
+  <div style="margin-bottom:10px;">
+    <input id="add-palavra" type="text" maxlength="15" placeholder="Adicionar palavra (ex: nome)" aria-label="Digite palavra para adicionar" />
     <button id="btn-adiciona" aria-label="Adicionar palavra">Adicionar</button>
   </div>
   <div id="instrucao">Arraste as letras para formar a palavra!</div>
@@ -232,36 +63,13 @@
   <button id="reset-btn">Refazer</button>
   <div id="resultado"></div>
 </div>
-
 <div id="confetti"></div>
-
 <script>
   const categorias = {
-    animais: [
-      "GATO","CACHORRO","PATO","VACA","PERU","RATO","ANJO","ABELHA","ELEFANTE","RAPOSA",
-      "COELHO","PEIXE","TOURO","URSO","GORILA","LAGARTO","MACACO","GALINHA","CAVALO","POMBA",
-      "TIGRE","TARTARUGA","PAPAGAIO","GALO","ARARA","LOBO","PAPAGAIO","AVESTRUZ","DROMEDARIO","DISCO",
-      "PUMA","JABUTI","PAPAGAIO","PINGUIM","CAMELO","GIRAFA","CISNE","CORUJA","BURRO","HIPOPOTAMO",
-      "FURAO","HUMANO","TUBARAO","BOTO","CACAO","PESCADA","BRUACA","CARANGUEJO","SAGUI","HUSKY"
-    ],
-    objetos: [
-      "BOLA","MESA","CAIXA","CAMISA","BONECA","LAMPADA","CANETA","BICICLETA","CHINELO","TELEFONE",
-      "BOLO","JACARE","BOTAO","ARMARIO","CADEIRA","MESA","ESPADA","CARRO","JOGO","PASTA",
-      "BALAO","PORTA","ONIBUS","PAPEL","BATERIA","FONE","CHAVE","PEIXE","BARRACA","FITA",
-      "BANDAGEM","VIOLAO","CALCADO","GARRAFA","TELA","ANALISE","TECLADO","ABACATE","MAQUINA","FOGAO"
-    ],
-    frutas: [
-      "MANGA","LARANJA","UVA","BANANA","ABACAXI","MAÇA","GOIABA","COCO","MELANCIA","KIWI",
-      "MELAO","PITANGA","PITANGA","CAJU","FIGO","JACA","MARACUJA","TAMARINDO","AMEIXA","SITRUS",
-      "ABACATE","AMEIXA","JABUTICABA","ABACATE","PAPAIA","CAJU","TANGERINA","MAMÃO","MORANGO","GROSELHA",
-      "GENGIBRE","ACAI","AMEIXA","FIGO","UVA","LARA","PEPSI","MANA","WORK","PINK"
-    ],
-    nomes: [
-      "ANA","LUIS","MARIA","PEDRO","JOAO","CARLOS","FERNANDO","AMANDA","PATRICIA","HELENA",
-      "IGOR","LUCAS","MARCIO","MARCELLE","FELIPE","RODRIGO","JULIA","JESSICA","JESSIE","ROSANA",
-      "RENATA","NATHALIA","ELISA","MARCELO","ZEFERINO","ELIANA","TIAGO","JESSICA","CARLA","LEANDRO",
-      "CRISTIANE","NICOLE","GERSON","MAYARA","EDUARDO","RAMON","HUGO","PEDRO","DIANA","IVETE"
-    ],
+    animais: ["GATO","CACHORRO","PATO","VACA","PERU","RATO","ANJO","ABELHA","ELEFANTE","RAPOSA","COELHO","PEIXE","TOURO","URSO","GORILA","LAGARTO","MACACO","GALINHA","CAVALO","POMBA","TIGRE","TARTARUGA","PAPAGAIO","GALO","ARARA","LOBO","AVESTRUZ","DROMEDARIO","DISCO","PUMA","JABUTI","PINGUIM","CAMELO","GIRAFA","CISNE","CORUJA","BURRO","HIPOPOTAMO", "FURAO","HUMANO","TUBARAO","BOTO","CACAO","PESCADA","CARANGUEJO","SAGUI","HUSKY"],
+    objetos: ["BOLA","MESA","CAIXA","CAMISA","BONECA","LAMPADA","CANETA","BICICLETA","CHINELO","TELEFONE","BOLO","JACARE","BOTAO","ARMARIO","CADEIRA","ESPADA","CARRO","JOGO","PASTA","BALAO","PORTA","ONIBUS","PAPEL","BATERIA","FONE","CHAVE","PEIXE","BARRACA","FITA","BANDAGEM"],
+    frutas: ["MANGA","LARANJA","UVA","BANANA","ABACAXI","MAÇA","GOIABA","COCO","MELANCIA","KIWI","MELAO","PITANGA","CAJU","FIGO","JACA","MARACUJA","TAMARINDO","AMEIXA","SITRUS","ABACATE","JABUTICABA","PAPAIA","TANGERINA","MAMÃO","MORANGO"],
+    nomes: ["ANA","LUIS","MARIA","PEDRO","JOAO","CARLOS","FERNANDO","AMANDA","PATRICIA","HELENA","IGOR","LUCAS","MARCIO","MARCELLE","FELIPE","RODRIGO","JULIA","JESSICA","CARLA","LEANDRO","CRISTIANE","NICOLE"]
   };
 
   let categoriaAtual = 'animais';
@@ -271,20 +79,20 @@
   let slots = [];
   let draggingIdx = null;
 
+  // Embaralha array
   function embaralhaLista(arr) {
     const array = arr.slice();
-    for(let i = array.length -1; i > 0; i--){
-      const j = Math.floor(Math.random() * (i +1));
+    for(let i=array.length-1; i>0; i--){
+      const j = Math.floor(Math.random()*(i+1));
       [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
   }
-
+  // Embaralha letras da palavra
   function embaralhaPalavra(palavra) {
     return palavra.split('').sort(() => Math.random() - 0.5);
   }
-
-  function mostraPalavra() {
+  function mostraPalavra(){
     document.getElementById('palavra-atual').innerText = palavras[indice];
     montaSlots(palavras[indice]);
     montaCaixa(palavras[indice]);
@@ -292,30 +100,30 @@
     document.getElementById('next-btn').style.display = 'none';
     document.getElementById('reset-btn').style.display = 'inline-block';
   }
-
-  function montaSlots(palavra) {
+  function montaSlots(palavra){
     const container = document.getElementById('slots-palavra');
     container.innerHTML = '';
     slots = [];
-    for(let i=0; i<palavra.length; i++) {
+    for(let i=0; i<palavra.length; i++){
       const slot = document.createElement('div');
       slot.className = 'slot-letra';
       slot.dataset.index = i;
-      slot.addEventListener('dragover', e => {e.preventDefault(); slot.classList.add('over');});
+      slot.addEventListener('dragover', e => { e.preventDefault(); slot.classList.add('over'); });
       slot.addEventListener('dragleave', e => slot.classList.remove('over'));
       slot.addEventListener('drop', e => {
         e.preventDefault();
         slot.classList.remove('over');
         const letra = letrasRestantes[draggingIdx];
-        if(!slot.innerText && letra) {
+        if(!slot.innerText && letra){
           slot.innerText = letra;
           letrasRestantes[draggingIdx] = null;
           atualizaCaixa();
           verificaResultado();
         }
       });
+      // Permitir remover letra clicando no slot
       slot.addEventListener('click', () => {
-        if(slot.innerText) {
+        if(slot.innerText){
           letrasRestantes.push(slot.innerText);
           slot.innerText = '';
           atualizaCaixa();
@@ -327,42 +135,44 @@
     }
   }
 
-  function montaCaixa(palavra) {
+  function montaCaixa(palavra){
     letrasRestantes = embaralhaPalavra(palavra);
     atualizaCaixa();
   }
 
-  function atualizaCaixa() {
+  function atualizaCaixa(){
     const container = document.getElementById('caixa-letras');
     container.innerHTML = '';
     letrasRestantes.forEach((letra, idx) => {
-      if(letra) {
+      if(letra){
         const b = document.createElement('div');
-        b.className = 'letra-drag';
+        b.className='letra-drag';
         b.innerText = letra;
         b.draggable = true;
-        b.addEventListener('dragstart', () => {draggingIdx=idx; b.classList.add('dragging');});
-        b.addEventListener('dragend', () => {b.classList.remove('dragging'); draggingIdx=null;});
+        b.addEventListener('dragstart', () => { draggingIdx = idx; b.classList.add('dragging'); });
+        b.addEventListener('dragend', () => { b.classList.remove('dragging'); draggingIdx = null; });
         container.appendChild(b);
       }
     });
   }
 
-  function verificaResultado() {
-    if(slots.every(slot => slot.innerText)) {
+  function verificaResultado(){
+    if(slots.every(slot=>slot.innerText)){
       let correta = slots.every((slot,i) => slot.innerText === palavras[indice][i]);
-      if(correta) {
-        document.getElementById('resultado').innerText = 'Parabéns! Você acertou!';
+      if(correta){
+        document.getElementById('resultado').innerText = "Parabéns! Você acertou!";
         document.getElementById('next-btn').style.display = 'inline-block';
         document.getElementById('reset-btn').style.display = 'none';
         confettiEffect();
-      } else {
-        document.getElementById('resultado').innerText = 'Tente novamente!';
+      }
+      else {
+        document.getElementById('resultado').innerText = "Tente novamente!";
         document.getElementById('next-btn').style.display = 'none';
         document.getElementById('reset-btn').style.display = 'inline-block';
       }
-    } else {
-      document.getElementById('resultado').innerText = '';
+    }
+    else {
+      document.getElementById('resultado').innerText = "";
       document.getElementById('next-btn').style.display = 'none';
       document.getElementById('reset-btn').style.display = 'inline-block';
     }
@@ -380,7 +190,7 @@
     document.getElementById('resultado').innerText = '';
   };
 
-  document.getElementById('categoria-escolha').onchange = e => {
+  document.getElementById('categoria-escolha').onchange = (e) => {
     categoriaAtual = e.target.value;
     palavras = embaralhaLista(categorias[categoriaAtual]);
     indice = 0;
@@ -389,61 +199,46 @@
 
   document.getElementById('btn-adiciona').onclick = () => {
     const input = document.getElementById('add-palavra');
-    let palavra = input.value.trim().toUpperCase();
-    if(palavra.length >= 2 && /^[A-ZÁÉÍÓÚÇ]+$/.test(palavra)) {
-      categorias[categoriaAtual].push(palavra);
-      input.value = '';
+    let nova = input.value.trim().toUpperCase();
+    if(nova.length >= 2 && /^[A-ZÁÉÍÓÚÇ]+$/.test(nova)){
+      categorias[categoriaAtual].push(nova);
+      input.value = "";
       palavras = embaralhaLista(categorias[categoriaAtual]);
       indice = 0;
       mostraPalavra();
-    } else {
-      input.focus();
-      input.style.animation = 'shake 0.3s';
-      setTimeout(() => input.style.animation = '', 300);
     }
   };
 
+  // Confetti animation
   function confettiEffect() {
     const confetti = document.getElementById('confetti');
     confetti.innerHTML = '';
-    const colors = ['#ff597f','#ff9ea1','#fcd677','#a9d97a','#79d79a'];
-    for(let i=0;i<100;i++) {
-      const conf = document.createElement('div');
-      conf.style.position = 'absolute';
-      conf.style.width = '7px';
-      conf.style.height = '7px';
-      conf.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+    let colors = ['#e44a5d','#f3ba52','#8ce369','#3cc1b3','#f06694'];
+    for(let i=0; i<100; i++){
+      let conf = document.createElement('div');
+      conf.className = 'confetti-piece';
+      conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
       conf.style.top = Math.random() * window.innerHeight + 'px';
       conf.style.left = Math.random() * window.innerWidth + 'px';
-      conf.style.borderRadius = '50%';
       conf.style.animation = `fall 3s linear forwards`;
-      conf.style.animationDelay = (i * 0.03) + 's';
+      conf.style.animationDelay = (i*0.03) + 's';
       confetti.appendChild(conf);
     }
-    setTimeout(() => { confetti.innerHTML = ''; }, 3000);
+    setTimeout(() => {confetti.innerHTML = ''}, 3000);
   }
 
-  // Animation keyframes (inject into stylesheet)
-  const style = document.createElement('style');
+  // adiciona keyframes dinamicamente
+  let style = document.createElement('style');
   style.innerHTML = `
     @keyframes fall {
-      to {
-        transform: translateY(100vh);
-        opacity: 0;
-      }
-    }
-    @keyframes shake {
-      0% { transform: translateX(0px); }
-      25% { transform: translateX(6px); }
-      50% { transform: translateX(-6px); }
-      75% { transform: translateX(6px); }
-      100% { transform: translateX(0px); }
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0;}
     }
   `;
   document.head.appendChild(style);
 
-  let indice = 0;
-  palavras = embaralhaLista(categorias.animais);
+  // Inicializa lista e palavra embaralhada ao carregar
+  palavras = embaralhaLista(categorias[categoriaAtual]);
   mostraPalavra();
 </script>
 </body>
