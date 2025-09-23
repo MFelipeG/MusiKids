@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Continhas - Teclado Funcional - MusiKids</title>
+<title>Continhas - Teclado Funcional Corrigido - MusiKids</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
   body {
@@ -67,12 +67,21 @@
     padding: 10px 14px;
     border-radius: 18px;
     border: 2px solid #a1d578;
-    text-align: center;
+    text-align: left;
     outline-offset: 3px;
+  }
+  input[type=number] {
     width: 120px;
   }
   input#custom-sum-input {
-    width: 260px;
+    width: 100%;
+    box-sizing: border-box;
+    background: #f4fff3;
+    box-shadow: 0 2px 8px #a1d57877 inset;
+  }
+  input#custom-sum-input:focus {
+    outline: 3px solid #a1d578;
+    background: #eaffde;
   }
   button {
     font-family: 'Baloo 2', cursive, Arial, sans-serif;
@@ -129,20 +138,6 @@
     margin-bottom: 8px;
     color: #665283;
     user-select: none;
-  }
-  #custom-sum-input {
-    border-radius: 16px;
-    border: 2px solid #a1d578;
-    font-size: 1.2rem;
-    padding: 10px 14px;
-    width: 100%;
-    box-sizing: border-box;
-    background: #f4fff3;
-    box-shadow: 0 2px 8px #a1d57877 inset;
-  }
-  #custom-sum-input:focus {
-    outline: 3px solid #a1d578;
-    background: #eaffde;
   }
   #num-keyboard {
     margin-top: 12px;
@@ -328,6 +323,7 @@
     customInput.focus();
   };
 
+  // Função do teclado numérico para ambos inputs
   numKeyboardButtons.forEach(button => {
     button.addEventListener("click", () => {
       const val = button.getAttribute("data-val");
@@ -340,6 +336,7 @@
         return;
       }
       if (activeElement && (activeElement === answerInput || activeElement === customInput)) {
+        // Insere no cursor dentro do input
         const start = activeElement.selectionStart || 0;
         const end = activeElement.selectionEnd || 0;
         const currentVal = activeElement.value || "";
@@ -347,6 +344,7 @@
         activeElement.selectionStart = activeElement.selectionEnd = start + val.length;
         activeElement.focus();
       } else {
+        // Nenhum input selecionado, insere na resposta
         const start = answerInput.selectionStart || 0;
         const end = answerInput.selectionEnd || 0;
         const currentVal = answerInput.value || "";
@@ -357,6 +355,7 @@
     });
   });
 
+  // Confetes
   function confetti() {
     const confetti = document.getElementById("confetti");
     confetti.innerHTML = "";
@@ -380,6 +379,7 @@
     }, 3000);
   }
 
+  // Keyframes para confetes animados
   const style = document.createElement("style");
   style.textContent = `
     @keyframes fall {
@@ -389,6 +389,7 @@
   `;
   document.head.appendChild(style);
 
+  // Iniciar jogo com conta aleatória
   newSumBtn.disabled = true;
   newSumBtn.click();
 </script>
