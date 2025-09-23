@@ -1,373 +1,370 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Forca Afetiva - MusiKids</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
-  body {
-    margin: 0; padding: 0;
-    font-family: 'Baloo 2', cursive, Arial, sans-serif;
-    background: linear-gradient(135deg, #fceabb 0%, #f8b500 50%, #ff7eb9 100%);
-    color: #333;
-    user-select: none;
-    text-align: center;
-    min-height: 100vh;
-    display: flex; flex-direction: column; align-items: center;
-  }
-  #btn-menu {
-    position: fixed; top: 15px; left: 15px;
-    background: #a1d578; color: #214d0d;
-    border-radius: 18px; padding: 14px 22px;
-    font-weight: 900; font-size: 1.25rem;
-    cursor: pointer; box-shadow: 0 0 15px #a1d578aa;
-    border: none; user-select: none; z-index: 10000;
-    transition: background-color 0.3s ease;
-  }
-  #btn-menu:hover {background: #68922b; color: white;}
-  header {
-    margin-top: 75px; font-weight: 900; font-size: 2.8rem;
-    color: #d63a6d; user-select: none;
-  }
-  main {
-    margin-top: 20px; width: 90vw; max-width: 600px;
-    background: white; border-radius: 28px;
-    box-shadow: 0 4px 16px #dddde1cc;
-    padding: 24px 18px 40px 18px; display: flex;
-    flex-direction: column; align-items: center;
-  }
-  #palavra {
-    font-weight: 900; font-size: 2.4rem;
-    letter-spacing: 14px; user-select: none;
-    margin-bottom: 24px; color: #2c6b3e;
-    white-space: nowrap; overflow-x: auto; max-width: 100%;
-  }
-  #dica-container {
-    display: flex; justify-content: center;
-    gap: 15px; margin-bottom: 30px; flex-wrap: wrap;
-  }
-  .dica-btn {
-    cursor: pointer; background: #ffe3e8;
-    border-radius: 12px; padding: 10px 15px;
-    font-size: 1rem; font-weight: 600;
-    color: #ad2b5e; box-shadow: 0 3px 12px #ffc4d2cc;
-    user-select: none; transition: background-color 0.3s ease,color 0.3s ease;
-  }
-  .dica-btn:hover:not(.used) {
-    background-color: #ffb1c0; color: white;
-  }
-  .dica-btn.used {
-    background-color: #ff6b84; color: white; cursor: default;
-  }
-  #letras-container {
-    display: flex; flex-wrap: wrap;
-    justify-content: center; gap: 10px; max-width: 450px;
-  }
-  .letra-btn {
-    width: 44px; height: 44px; border-radius: 18px;
-    background-color: #afe4d6; border: none;
-    font-size: 1.4rem; font-weight: 700; cursor: pointer;
-    color: #2a5949; box-shadow: 0 6px 12px #7ba88bcc;
-    transition: background-color 0.25s ease,color 0.25s ease;
-    user-select: none;
-  }
-  .letra-btn:hover:not(.disabled) {
-    background-color: #5eaf90; color: white;
-  }
-  .letra-btn.disabled {
-    background-color: #dcdcdc; color: #909090;
-    cursor: default; box-shadow: none;
-  }
-  #bonequinho-container {
-    margin-top: 20px;
-    margin-bottom: 28px;
-    width: 160px;
-    height: 240px;
-  }
-  svg {
-    max-width: 100%;
-    height: auto;
-  }
-  #result-text {
-    font-size: 1.6rem;
-    font-weight: 800;
-    color: #a42e53;
-    margin-bottom: 24px;
-    user-select: none;
-  }
-  #btn-novo {
-    background: #a6d27a;
-    color: #124015;
-    border: none;
-    border-radius: 20px;
-    padding: 14px 30px;
-    font-weight: 900;
-    font-size: 1.3rem;
-    cursor: pointer;
-    box-shadow: 0 0 12px #8db96fcc;
-    user-select: none;
-    transition: background-color 0.25s ease;
-    display: none;
-  }
-  #btn-novo:hover {
-    background-color: #689330;
-    color: white;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Forca Afetiva - MusiKids</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+    body {
+      margin: 0; padding: 0;
+      font-family: 'Baloo 2', cursive, Arial, sans-serif;
+      background: linear-gradient(135deg, #fceabb 0%, #f8b500 50%, #ff7eb9 100%);
+      color: #333;
+      user-select: none;
+      text-align: center;
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    #btn-menu {
+      position: fixed; top: 15px; left: 15px;
+      background: #a1d578; color: #214d0d;
+      border-radius: 18px; padding: 14px 22px;
+      font-weight: 900; font-size: 1.25rem;
+      cursor: pointer; box-shadow: 0 0 15px #a1d578aa;
+      border: none; user-select: none; z-index: 10000;
+      transition: background-color 0.3s ease;
+    }
+    #btn-menu:hover {background: #68922b; color: white;}
+    header {
+      margin-top: 75px; font-weight: 900; font-size: 2.8rem;
+      color: #d63a6d; user-select: none;
+    }
+    main {
+      margin-top: 20px; width: 90vw; max-width: 600px;
+      background: white; border-radius: 28px;
+      box-shadow: 0 4px 16px #dddde1cc;
+      padding: 24px 18px 40px 18px; display: flex;
+      flex-direction: column; align-items: center;
+    }
+    #palavra {
+      font-weight: 900; font-size: 2.4rem;
+      letter-spacing: 14px; user-select: none;
+      margin-bottom: 24px; color: #2c6b3e;
+      white-space: nowrap; overflow-x: auto; max-width: 100%;
+    }
+    #dica-container {
+      display: flex; justify-content: center;
+      gap: 15px; margin-bottom: 30px; flex-wrap: wrap;
+    }
+    .dica-btn {
+      cursor: pointer; background: #ffe3e8;
+      border-radius: 12px; padding: 10px 15px;
+      font-size: 1rem; font-weight: 600;
+      color: #ad2b5e; box-shadow: 0 3px 12px #ffc4d2cc;
+      user-select: none; transition: background-color 0.3s ease,color 0.3s ease;
+    }
+    .dica-btn:hover:not(.used) {
+      background-color: #ffb1c0; color: white;
+    }
+    .dica-btn.used {
+      background-color: #ff6b84; color: white; cursor: default;
+    }
+    #letras-container {
+      display: flex; flex-wrap: wrap;
+      justify-content: center; gap: 10px; max-width: 450px;
+    }
+    .letra-btn {
+      width: 44px; height: 44px; border-radius: 18px;
+      background-color: #afe4d6; border: none;
+      font-size: 1.4rem; font-weight: 700; cursor: pointer;
+      color: #2a5949; box-shadow: 0 6px 12px #7ba88bcc;
+      transition: background-color 0.25s ease,color 0.25s ease;
+      user-select: none;
+    }
+    .letra-btn:hover:not(.disabled) {
+      background-color: #5eaf90; color: white;
+    }
+    .letra-btn.disabled {
+      background-color: #dcdcdc; color: #909090;
+      cursor: default; box-shadow: none;
+    }
+    #bonequinho-container {
+      margin-top: 20px;
+      margin-bottom: 28px;
+      width: 160px;
+      height: 240px;
+    }
+    svg {
+      max-width: 100%;
+      height: auto;
+    }
+    #result-text {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #a42e53;
+      margin-bottom: 24px;
+      user-select: none;
+    }
+    #btn-novo {
+      background: #a6d27a;
+      color: #124015;
+      border: none;
+      border-radius: 20px;
+      padding: 14px 30px;
+      font-weight: 900;
+      font-size: 1.3rem;
+      cursor: pointer;
+      box-shadow: 0 0 12px #8db96fcc;
+      user-select: none;
+      transition: background-color 0.25s ease;
+      display: none;
+    }
+    #btn-novo:hover {
+      background-color: #689330;
+      color: white;
+    }
+  </style>
 </head>
 <body>
-<button id="btn-menu" aria-label="Voltar ao menu">MENU DE JOGOS</button>
-<header>Forca Afetiva - MusiKids Fun</header>
-<main>
-  <div id="palavra" aria-label="Palavra oculta para jogar" aria-live="polite">_ _ _ _ _</div>
-  <div id="dica-container" aria-label="Dicas da palavra para ajudar"></div>
-  <div id="letras-container" aria-label="Letras para clicar e jogar"></div>
-  <div id="bonequinho-container" aria-label="Bonequinho que se forma com erros">
-    <svg viewBox="0 0 160 240" xmlns="http://www.w3.org/2000/svg" >
-      <circle id="head" cx="80" cy="40" r="20" fill="#f5c6cb" stroke="#b56067" stroke-width="2" style="display: none;"/>
-      <rect id="body" x="60" y="60" width="40" height="70" fill="#a9d6df" stroke="#559ba6" stroke-width="2" rx="20" ry="15" style="display: none;" />
-      <rect id="left-arm" x="40" y="60" width="20" height="50" fill="#f8bfe5" stroke="#b96ea0" stroke-width="2" rx="10" ry="10" style="display: none;" />
-      <rect id="right-arm" x="100" y="60" width="20" height="50" fill="#f8bfe5" stroke="#b96ea0" stroke-width="2" rx="10" ry="10" style="display: none;" />
-      <rect id="left-leg" x="55" y="130" width="20" height="75" fill="#d3e8a8" stroke="#7c9733" stroke-width="2" rx="10" ry="10" style="display: none;" />
-      <rect id="right-leg" x="85" y="130" width="20" height="75" fill="#d3e8a8" stroke="#7c9733" stroke-width="2" rx="10" ry="10" style="display: none;" />
-      <ellipse id="left-foot" cx="65" cy="210" rx="20" ry="10" fill="#8a9e37" stroke="#6d8225" stroke-width="1" style="display: none;" />
-      <ellipse id="right-foot" cx="110" cy="210" rx="20" ry="10" fill="#8a9e37" stroke="#6d8225" stroke-width="1" style="display: none;" />
-    </svg>
-  </div>
-  <div id="result-text" aria-live="polite"></div>
-  <button id="btn-novo" aria-label="Jogar nova palavra">Nova Palavra</button>
-</main>
-<script>
-  const bancoPalavras = [
-    { palavra: "FELICIDADE", dicas: ["Estado de alegria", "Sentimento bom", "Sorriso no rosto", "Coração leve", "Momento feliz"] },
-    { palavra: "BORBOLETA", dicas: ["Inseto colorido", "Voa em jardins", "Tem asas bonitas", "Transforma-se de lagarta", "Pousa nas flores"] },
-    { palavra: "CORAÇÃO", dicas: ["Órgão que bate", "Simboliza amor", "Fica no peito", "Pulsação vital", "Sente emoções"] },
-    { palavra: "AMIZADE", dicas: ["Ligação entre pessoas", "Confiança e carinho", "Cumplicidade", "Compartilha segredos", "Duradoura"] },
-    { palavra: "ESTRELA", dicas: ["Brilha no céu", "Luz distante", "Pontos no céu", "Guia pelo mar", "Visível à noite"] },
-    { palavra: "SORRISO", dicas: ["Expressão facial", "Dente à mostra", "Alegria visível", "Contagia os outros", "Sinal de felicidade"] },
-    { palavra: "JARDIM", dicas: ["Lugar com flores", "Plantas e árvores", "Crianças brincam", "Ar puro", "Cores variadas"] },
-    { palavra: "MUSICA", dicas: ["Arte sonora", "Notas e ritmo", "Canta ou toca", "Emoções via som", "Dança acompanhada"] },
-    { palavra: "AMOR", dicas: ["Sentimento profundo", "Cuidado e carinho", "Ligação forte", "Afeto verdadeiro", "Doação"] },
-    { palavra: "FAMILIA", dicas: ["Grupo de pessoas", "Laços de sangue", "Amor forte", "Casa e união", "Proteção"] },
-    { palavra: "SOL", dicas: ["Estrela do dia", "Calor e luz", "Nasce de manhã", "Fonte de energia", "Dá vida"] },
-    { palavra: "ARVORE", dicas: ["Planta grande", "Tem folhas", "Fornece sombra", "Lugares para pássaros", "Madeira"] },
-    { palavra: "ANIMAL", dicas: ["Ser vivente", "Movimenta-se", "Tem sentidos", "Pode ser domesticado", "Fauna"] },
-    { palavra: "COELHO", dicas: ["Orelhas grandes", "Corre rápido", "Come cenoura", "Salta no campo", "Fofo"] },
-    { palavra: "PASSARINHO", dicas: ["Pequeno voador", "Canta ao amanhecer", "Bico pequeno", "Pousa em galhos", "Asas"] },
-    { palavra: "ELEFANTE", dicas: ["Animal grande", "Tem tromba", "Vive na savana", "Pesa toneladas", "Memória boa"] },
-    { palavra: "GATO", dicas: ["Animal doméstico", "Gosta de caçar ratos", "Ronrona", "Tem bigodes", "Anda silencioso"] },
-    { palavra: "PEIXE", dicas: ["Vive na água", "Nadadeiras", "Respira por brânquias", "Frio, não tem pelos", "Come algas e pequenos animais"] },
-    { palavra: "MUITA", dicas: ["Oposto de pouca", "Grande quantidade", "Abundância", "Em grande número", "Excesso"] },
-    { palavra: "CASA", dicas: ["Lugar para morar", "Proteção e abrigo", "Tem portas e janelas", "Lugar seguro", "Lugar da família"] },
-    { palavra: "ESCOLA", dicas: ["Lugar para aprender", "Tem alunos e professores", "Tem carteiras e quadro", "Lugar de estudo", "Local para crescer"] },
-    { palavra: "CARRO", dicas: ["Meio de transporte", "Tem rodas", "Anda na estrada", "Usado para viajar", "Tem motor"] }
-  ];
+  <button id="btn-menu" aria-label="Voltar ao menu">MENU DE JOGOS</button>
+  <header>Forca Afetiva - MusiKids Fun</header>
+  <main>
+    <div id="palavra" aria-label="Palavra oculta para jogar" aria-live="polite">_ _ _ _ _</div>
+    <div id="dica-container" aria-label="Dicas da palavra para ajudar"></div>
+    <div id="letras-container" aria-label="Letras para clicar e jogar"></div>
+    <div id="bonequinho-container" aria-label="Bonequinho que se forma com erros">
+      <svg viewBox="0 0 160 240" xmlns="http://www.w3.org/2000/svg" >
+        <circle id="head" cx="80" cy="40" r="20" fill="#f5c6cb" stroke="#b56067" stroke-width="2" style="display: none;"/>
+        <rect id="body" x="60" y="60" width="40" height="70" fill="#a9d6df" stroke="#559ba6" stroke-width="2" rx="20" ry="15" style="display: none;" />
+        <rect id="left-arm" x="40" y="60" width="20" height="50" fill="#f8bfe5" stroke="#b96ea0" stroke-width="2" rx="10" ry="10" style="display: none;" />
+        <rect id="right-arm" x="100" y="60" width="20" height="50" fill="#f8bfe5" stroke="#b96ea0" stroke-width="2" rx="10" ry="10" style="display: none;" />
+        <rect id="left-leg" x="55" y="130" width="20" height="75" fill="#d3e8a8" stroke="#7c9733" stroke-width="2" rx="10" ry="10" style="display: none;" />
+        <rect id="right-leg" x="85" y="130" width="20" height="75" fill="#d3e8a8" stroke="#7c9733" stroke-width="2" rx="10" ry="10" style="display: none;" />
+        <ellipse id="left-foot" cx="65" cy="210" rx="20" ry="10" fill="#8a9e37" stroke="#6d8225" stroke-width="1" style="display: none;" />
+        <ellipse id="right-foot" cx="110" cy="210" rx="20" ry="10" fill="#8a9e37" stroke="#6d8225" stroke-width="1" style="display: none;" />
+      </svg>
+    </div>
+    <div id="result-text" aria-live="polite"></div>
+    <button id="btn-novo" aria-label="Jogar nova palavra">Nova Palavra</button>
+  </main>
+  <div id="confetti"></div>
+  <script>
+    const bancoPalavras = [
+      { palavra: "FELICIDADE", dicas: ["Estado de alegria", "Sentimento bom", "Sorriso no rosto", "Coração leve", "Momento feliz"] },
+      { palavra: "BORBOLETA", dicas: ["Inseto colorido", "Voa em jardins", "Tem asas bonitas", "Transforma-se de lagarta", "Pousa nas flores"] },
+      { palavra: "CORAÇÃO", dicas: ["Órgão que bate", "Simboliza amor", "Fica no peito", "Pulsação vital", "Sente emoções"] },
+      { palavra: "AMIZADE", dicas: ["Ligação entre pessoas", "Confiança e carinho", "Cumplicidade", "Compartilha segredos", "Duradoura"] },
+      { palavra: "ESTRELA", dicas: ["Brilha no céu", "Luz distante", "Pontos no céu", "Guia pelo mar", "Visível à noite"] },
+      { palavra: "SORRISO", dicas: ["Expressão facial", "Dente à mostra", "Alegria visível", "Contagia os outros", "Sinal de felicidade"] },
+      { palavra: "JARDIM", dicas: ["Lugar com flores", "Plantas e árvores", "Crianças brincam", "Ar puro", "Cores variadas"] },
+      { palavra: "MUSICA", dicas: ["Arte sonora", "Notas e ritmo", "Canta ou toca", "Emoções via som", "Dança acompanhada"] },
+      { palavra: "AMOR", dicas: ["Sentimento profundo", "Cuidado e carinho", "Ligação forte", "Afeto verdadeiro", "Doação"] },
+      { palavra: "FAMILIA", dicas: ["Grupo de pessoas", "Laços de sangue", "Amor forte", "Casa e união", "Proteção"] },
+      { palavra: "SOL", dicas: ["Estrela do dia", "Calor e luz", "Nasce de manhã", "Fonte de energia", "Dá vida"] },
+      { palavra: "ARVORE", dicas: ["Planta grande", "Tem folhas", "Fornece sombra", "Lugares para pássaros", "Madeira"] },
+      { palavra: "ANIMAL", dicas: ["Ser vivente", "Movimenta-se", "Tem sentidos", "Pode ser domesticado", "Fauna"] },
+      { palavra: "COELHO", dicas: ["Orelhas grandes", "Corre rápido", "Come cenoura", "Salta no campo", "Fofo"] },
+      { palavra: "PASSARINHO", dicas: ["Pequeno voador", "Canta ao amanhecer", "Bico pequeno", "Pousa em galhos", "Asas"] },
+      { palavra: "ELEFANTE", dicas: ["Animal grande", "Tem tromba", "Vive na savana", "Pesa toneladas", "Memória boa"] },
+      { palavra: "GATO", dicas: ["Animal doméstico", "Gosta de caçar ratos", "Ronrona", "Tem bigodes", "Anda silencioso"] },
+      { palavra: "PEIXE", dicas: ["Vive na água", "Nadadeiras", "Respira por brânquias", "Frio, não tem pelos", "Come algas e pequenos animais"] },
+      { palavra: "MUITA", dicas: ["Oposto de pouca", "Grande quantidade", "Abundância", "Em grande número", "Excesso"] },
+      { palavra: "CASA", dicas: ["Lugar para morar", "Proteção e abrigo", "Tem portas e janelas", "Lugar seguro", "Lugar da família"] },
+      { palavra: "ESCOLA", dicas: ["Lugar para aprender", "Tem alunos e professores", "Tem carteiras e quadro", "Lugar de estudo", "Local para crescer"] },
+      { palavra: "CARRO", dicas: ["Meio de transporte", "Tem rodas", "Anda na estrada", "Usado para viajar", "Tem motor"] }
+    ];
 
-  const btnMenu = document.getElementById("btn-menu");
-  const palavraElem = document.getElementById("palavra");
-  const dicasContainer = document.getElementById("dica-container");
-  const letrasContainer = document.getElementById("letras-container");
-  const bonequinhoContainer = document.getElementById("bonequinho-container");
-  const resultText = document.getElementById("result-text");
-  const btnNovo = document.getElementById("btn-novo");
+    const btnMenu = document.getElementById("btn-menu");
+    const palavraElem = document.getElementById("palavra");
+    const dicasContainer = document.getElementById("dica-container");
+    const letrasContainer = document.getElementById("letras-container");
+    const bonequinhoContainer = document.getElementById("bonequinho-container");
+    const resultText = document.getElementById("result-text");
+    const btnNovo = document.getElementById("btn-novo");
 
-  let palavraAtual;
-  let letrasAcertadas;
-  let erros;
-  const maxErros = 5;
+    let palavraAtual;
+    let letrasAcertadas;
+    let erros;
+    const maxErros = 5;
 
-  btnMenu.onclick = () => location.href = "../index.html";
+    btnMenu.onclick = () => location.href = "../index.html";
 
-  function normalizaLetra(letra) {
-    const mapa = {
-      Á: "A", À: "A", Â: "A", Ã: "A",
-      É: "E", È: "E", Ê: "E",
-      Í: "I", Ì: "I", Î: "I",
-      Ó: "O", Ò: "O", Ô: "O", Õ: "O",
-      Ú: "U", Ù: "U", Û: "U",
-      Ç: "C",
-    };
-    return mapa[letra.toUpperCase()] || letra.toUpperCase();
-  }
-
-  function iniciarJogo() {
-    erros = 0;
-    palavraAtual = bancoPalavras[Math.floor(Math.random() * bancoPalavras.length)];
-    letrasAcertadas = Array(palavraAtual.palavra.length).fill(false);
-    dicasContainer.innerHTML = "";
-    resultText.textContent = "";
-    btnNovo.style.display = "none";
-    letrasContainer.innerHTML = "";
-    criarLetras();
-    criarDicas();
-    atualizarBonequinho();
-    exibirPalavra();
-  }
-
-  function exibirPalavra() {
-    const display = palavraAtual.palavra
-      .split("")
-      .map((l, i) => (letrasAcertadas[i] ? l : "_"))
-      .join(" ");
-    palavraElem.textContent = display;
-  }
-
-  function criarLetras() {
-    const alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    for (const letra of alfabeto) {
-      const btn = document.createElement("button");
-      btn.className = "letra-btn";
-      btn.textContent = letra;
-      btn.addEventListener("click", () => tentarLetra(letra, btn));
-      letrasContainer.appendChild(btn);
+    function normalizaLetra(letra) {
+      const mapa = {
+        Á: "A", À: "A", Â: "A", Ã: "A",
+        É: "E", È: "E", Ê: "E",
+        Í: "I", Ì: "I", Î: "I",
+        Ó: "O", Ò: "O", Ô: "O", Õ: "O",
+        Ú: "U", Ù: "U", Û: "U",
+        Ç: "C",
+      };
+      return mapa[letra.toUpperCase()] || letra.toUpperCase();
     }
-  }
 
-  function tentarLetra(letra, btn) {
-    if (btn.classList.contains("disabled")) return;
-    const letraNorm = normalizaLetra(letra);
-    let acertou = false;
-    for (let i = 0; i < palavraAtual.palavra.length; i++) {
-      if (normalizaLetra(palavraAtual.palavra[i]) === letraNorm) {
-        letrasAcertadas[i] = true;
-        acertou = true;
-      }
-    }
-    btn.classList.add("disabled");
-    if (!acertou) {
-      erros++;
+    function iniciarJogo() {
+      erros = 0;
+      palavraAtual = bancoPalavras[Math.floor(Math.random() * bancoPalavras.length)];
+      letrasAcertadas = Array(palavraAtual.palavra.length).fill(false);
+      dicasContainer.innerHTML = "";
+      resultText.textContent = "";
+      btnNovo.style.display = "none";
+      letrasContainer.innerHTML = "";
+      criarLetras();
+      criarDicas();
       atualizarBonequinho();
-      if (erros >= maxErros) {
-        mostrarPerdeu();
-        return;
+      exibirPalavra();
+    }
+
+    function exibirPalavra() {
+      const display = palavraAtual.palavra
+        .split("")
+        .map((l, i) => (letrasAcertadas[i] ? l : "_"))
+        .join(" ");
+      palavraElem.textContent = display;
+    }
+
+    function criarLetras() {
+      const alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      for (const letra of alfabeto) {
+        const btn = document.createElement("button");
+        btn.className = "letra-btn";
+        btn.textContent = letra;
+        btn.addEventListener("click", () => tentarLetra(letra, btn));
+        letrasContainer.appendChild(btn);
       }
     }
-    exibirPalavra();
-    verificarFim();
-  }
 
-  function criarDicas() {
-    dicasContainer.innerHTML = "";
-    const maxDicas = Math.min(5, palavraAtual.dicas.length);
-    const dicasEscolhidas = palavraAtual.dicas.slice(0, maxDicas);
-    dicasEscolhidas.forEach((dica) => {
-      const btnDica = document.createElement("button");
-      btnDica.className = "dica-btn";
-      btnDica.textContent = "Mostrar dica";
-      btnDica.title = dica;
-      btnDica.addEventListener("click", () => {
-        if (!btnDica.classList.contains("used")) {
-          btnDica.textContent = dica;
-          btnDica.classList.add("used");
+    function tentarLetra(letra, btn) {
+      if (btn.classList.contains("disabled")) return;
+      const letraNorm = normalizaLetra(letra);
+      let acertou = false;
+      for (let i = 0; i < palavraAtual.palavra.length; i++) {
+        if (normalizaLetra(palavraAtual.palavra[i]) === letraNorm) {
+          letrasAcertadas[i] = true;
+          acertou = true;
         }
+      }
+      btn.classList.add("disabled");
+      if (!acertou) {
+        erros++;
+        atualizarBonequinho();
+        if (erros >= maxErros) {
+          mostrarPerdeu();
+          return;
+        }
+      }
+      exibirPalavra();
+      verificarFim();
+    }
+
+    function criarDicas() {
+      dicasContainer.innerHTML = "";
+      const maxDicas = Math.min(5, palavraAtual.dicas.length);
+      const dicasEscolhidas = palavraAtual.dicas.slice(0, maxDicas);
+      dicasEscolhidas.forEach((dica) => {
+        const btnDica = document.createElement("button");
+        btnDica.className = "dica-btn";
+        btnDica.textContent = "Mostrar dica";
+        btnDica.title = dica;
+        btnDica.addEventListener("click", () => {
+          if (!btnDica.classList.contains("used")) {
+            btnDica.textContent = dica;
+            btnDica.classList.add("used");
+          }
+        });
+        dicasContainer.appendChild(btnDica);
       });
-      dicasContainer.appendChild(btnDica);
-    });
-  }
+    }
 
-  function atualizarBonequinho() {
-    const partes = [
-      document.getElementById("head"),
-      document.getElementById("body"),
-      document.getElementById("left-arm"),
-      document.getElementById("right-arm"),
-      document.getElementById("left-leg"),
-      document.getElementById("right-leg"),
-      document.getElementById("left-foot"),
-      document.getElementById("right-foot"),
-    ];
-    partes.forEach((p) => (p.style.display = "none"));
-    if (erros >= 1) partes[0].style.display = "block";
-    if (erros >= 2) partes[1].style.display = "block";
-    if (erros >= 3) {
-      partes[2].style.display = "block";
-      partes[3].style.display = "block";
+    function atualizarBonequinho() {
+      const partes = [
+        document.getElementById("head"),
+        document.getElementById("body"),
+        document.getElementById("left-arm"),
+        document.getElementById("right-arm"),
+        document.getElementById("left-leg"),
+        document.getElementById("right-leg"),
+        document.getElementById("left-foot"),
+        document.getElementById("right-foot"),
+      ];
+      partes.forEach((p) => (p.style.display = "none"));
+      if (erros >= 1) partes[0].style.display = "block";
+      if (erros >= 2) partes[1].style.display = "block";
+      if (erros >= 3) {
+        partes[2].style.display = "block";
+        partes[3].style.display = "block";
+      }
+      if (erros >= 4) {
+        partes[4].style.display = "block";
+        partes[5].style.display = "block";
+      }
+      if (erros >= 5) {
+        partes[6].style.display = "block";
+        partes[7].style.display = "block";
+      }
     }
-    if (erros >= 4) {
-      partes[4].style.display = "block";
-      partes[5].style.display = "block";
-    }
-    if (erros >= 5) {
-      partes[6].style.display = "block";
-      partes[7].style.display = "block";
-    }
-  }
 
-  function verificarFim() {
-    if (letrasAcertadas.every((x) => x)) {
-      resultText.textContent = "Parabéns! Você acertou a palavra!";
-      confetti();
-      btnNovo.style.display = "inline-block";
+    function verificarFim() {
+      if (letrasAcertadas.every((x) => x)) {
+        resultText.textContent = "Parabéns! Você acertou a palavra!";
+        confetti();
+        btnNovo.style.display = "inline-block";
+        btnNovo.focus();
+        desabilitarLetras();
+      }
+    }
+
+    function mostrarPerdeu() {
+      resultText.textContent = `Que pena! Você perdeu. A palavra era: ${palavraAtual.palavra}`;
+      revelarPalavra();
       desabilitarLetras();
+      btnNovo.style.display = "inline-block";
+      btnNovo.focus();
     }
-  }
 
-  function mostrarPerdeu() {
-    resultText.textContent = `Que pena! Você perdeu. A palavra era: ${palavraAtual.palavra}`;
-    revelarPalavra();
-    desabilitarLetras();
-    btnNovo.style.display = "inline-block";
-  }
-
-  function revelarPalavra() {
-    letrasAcertadas = letrasAcertadas.map(() => true);
-    exibirPalavra();
-  }
-
-  function desabilitarLetras() {
-    letrasContainer.querySelectorAll(".letra-btn").forEach((btn) =>
-      btn.classList.add("disabled")
-    );
-  }
-
-  btnNovo.addEventListener("click", iniciarJogo);
-
-  function confetti() {
-    const container = document.getElementById("confetti");
-    container.innerHTML = "";
-    const colors = [
-      "#ff597f",
-      "#ff9ea1",
-      "#fcd677",
-      "#a9d97a",
-      "#79d79a",
-    ];
-    for (let i = 0; i < 100; i++) {
-      const c = document.createElement("div");
-      c.classList.add("confetti-piece");
-      c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-      c.style.top = Math.random() * window.innerHeight + "px";
-      c.style.left = Math.random() * window.innerWidth + "px";
-      c.style.width = "7px";
-      c.style.height = "7px";
-      c.style.position = "absolute";
-      c.style.borderRadius = "50%";
-      c.style.animation = "fall 3s linear forwards";
-      c.style.animationDelay = i * 0.03 + "s";
-      container.appendChild(c);
+    function revelarPalavra() {
+      letrasAcertadas = letrasAcertadas.map(() => true);
+      exibirPalavra();
     }
-    setTimeout(() => {
+
+    function desabilitarLetras() {
+      letrasContainer.querySelectorAll(".letra-btn").forEach((btn) =>
+        btn.classList.add("disabled")
+      );
+    }
+
+    btnNovo.addEventListener("click", iniciarJogo);
+
+    function confetti() {
+      const container = document.getElementById("confetti");
       container.innerHTML = "";
-    }, 3000);
-  }
-
-  const style = document.createElement("style");
-  style.innerHTML = `
-    @keyframes fall {
-      0% {
-        transform: translateY(0);
-        opacity: 1;
+      const colors = ["#ff597f", "#ff9ea1", "#fcd677", "#a9d97a", "#79d79a"];
+      for (let i = 0; i < 150; i++) {
+        const c = document.createElement("div");
+        c.classList.add("confetti-piece");
+        c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        c.style.top = Math.random() * -100 + "px";
+        c.style.left = Math.random() * window.innerWidth + "px";
+        c.style.width = Math.random() * 10 + 5 + "px";
+        c.style.height = Math.random() * 10 + 5 + "px";
+        c.style.position = "absolute";
+        c.style.borderRadius = "50%";
+        c.style.animation = `fall ${Math.random() * 2 + 2}s linear forwards`;
+        c.style.transform = `rotate(${Math.random() * 360}deg)`;
+        container.appendChild(c);
       }
-      100% {
-        transform: translateY(100vh);
-        opacity: 0;
-      }
+      setTimeout(() => {
+        container.innerHTML = "";
+      }, 4000);
     }
-  `;
-  document.head.appendChild(style);
 
-  iniciarJogo();
-</script>
+    const style = document.createElement("style");
+    style.innerHTML = `
+      @keyframes fall {
+        0% {
+          transform: translateY(0) translateX(0) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(100vh) translateX(${Math.random() * 100 - 50}px) rotate(360deg);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+
+    iniciarJogo();
+  </script>
 </body>
 </html>
