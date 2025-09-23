@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Continhas - Com teclado numérico - MusiKids</title>
+<title>Continhas - Teclado Funcional - MusiKids</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
   body {
@@ -59,13 +59,9 @@
     text-align: center;
   }
   .answer-section {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    justify-content: center;
+    display: flex; gap: 10px; align-items: center; justify-content: center;
   }
-  input[type=number] {
-    width: 120px;
+  input[type=number], input#custom-sum-input {
     font-size: 1.25rem;
     font-weight: 600;
     padding: 10px 14px;
@@ -73,6 +69,10 @@
     border: 2px solid #a1d578;
     text-align: center;
     outline-offset: 3px;
+    width: 120px;
+  }
+  input#custom-sum-input {
+    width: 260px;
   }
   button {
     font-family: 'Baloo 2', cursive, Arial, sans-serif;
@@ -103,6 +103,14 @@
   }
   #new-sum:hover {
     background: linear-gradient(90deg,#249649 0%,#57db9a 98%);
+  }
+  #create-sum-btn, #clear-custom-btn {
+    background: linear-gradient(90deg, #1d82c9 0%, #73b1d8 98%);
+    box-shadow: 0 0 15px #1d82c970;
+    margin-left: 6px;
+  }
+  #create-sum-btn:hover, #clear-custom-btn:hover {
+    background: linear-gradient(90deg, #0e5c8c 0%, #377db1 98%);
   }
   #feedback {
     font-weight: 700;
@@ -207,6 +215,8 @@
 <div id="confetti"></div>
 <script>
   const btnMenu = document.getElementById("btn-menu");
+  btnMenu.onclick = () => location.href = "../index.html";
+
   const sumDisplay = document.getElementById("simple-sum");
   const answerInput = document.getElementById("answer-input");
   const checkBtn = document.getElementById("check-answer");
@@ -215,10 +225,9 @@
   const customInput = document.getElementById("custom-sum-input");
   const createSumBtn = document.getElementById("create-sum-btn");
   const clearCustomBtn = document.getElementById("clear-custom-btn");
+  const numKeyboardButtons = document.querySelectorAll(".num-btn");
 
-  btnMenu.onclick = () => location.href = "../index.html";
-
-  let currentSum = {num1:0, num2:0, op:"+"};
+  let currentSum = { num1: 0, num2: 0, op: "+" };
   let allowAnswer = true;
 
   function randomInt(min, max) {
@@ -234,9 +243,9 @@
     return { num1, num2, op };
   }
 
-  function showSum({num1, num2, op}) {
+  function showSum({ num1, num2, op }) {
     sumDisplay.textContent = `${num1} ${op} ${num2} = ?`;
-    currentSum = {num1, num2, op};
+    currentSum = { num1, num2, op };
     answerInput.value = "";
     feedback.textContent = "";
     allowAnswer = true;
@@ -246,7 +255,7 @@
     answerInput.focus();
   }
 
-  function calcAnswer({num1, num2, op}) {
+  function calcAnswer({ num1, num2, op }) {
     switch (op) {
       case "+":
         return num1 + num2;
@@ -292,22 +301,22 @@
       customInput.focus();
       return;
     }
+    if (!/^[0-9+\-*.\s]+$/.test(expr)) {
+      feedback.textContent = "Somente números e operadores + - * são permitidos.";
+      customInput.focus();
+      return;
+    }
     try {
-      if (!/^[0-9+\-*.\s]+$/.test(expr)) {
-        feedback.textContent = "Somente números e operadores + - * são permitidos.";
-        customInput.focus();
-        return;
-      }
       const result = new Function("return " + expr)();
       sumDisplay.textContent = expr + " = ?";
-      currentSum = {custom: true, expr, expected: result};
+      currentSum = { custom: true, expr, expected: result };
       feedback.textContent = "Conta criada! Digite a resposta acima.";
       allowAnswer = true;
       answerInput.disabled = false;
       checkBtn.disabled = false;
       newSumBtn.disabled = false;
       answerInput.focus();
-    } catch {
+    } catch (e) {
       feedback.textContent = "Expressão inválida. Corrija e tente novamente.";
       customInput.focus();
     }
@@ -318,6 +327,33 @@
     feedback.textContent = "";
     customInput.focus();
   };
+
+  numKeyboardButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const val = button.getAttribute("data-val");
+      const active = document.activeElement;
+      if (
+        active === answerInput ||
+        active === customInput
+      ) {
+        // Inserir o texto no input focado na posição do cursor
+        const start = active.selectionStart;
+        const end = active.selectionEnd;
+        const text = active.value;
+        active.value = text.slice(0, start) + val + text.slice(end);
+        active.selectionStart = active.selectionEnd = start + val.length;
+        active.focus();
+      } else {
+        // Se nenhum input focado, insere na resposta padrão
+        const start = answerInput.selectionStart || 0;
+        const end = answerInput.selectionEnd || 0;
+        const text = answerInput.value;
+        answerInput.value = text.slice(0, start) + val + text.slice(end);
+        answerInput.selectionStart = answerInput.selectionEnd = start + val.length;
+        answerInput.focus();
+      }
+    });
+  });
 
   function confetti() {
     const confetti = document.getElementById("confetti");
@@ -351,7 +387,7 @@
   `;
   document.head.appendChild(style);
 
-  // inicia com conta aleatória
+  // Inicializa com conta aleatória
   newSumBtn.disabled = true;
   newSumBtn.click();
 </script>
