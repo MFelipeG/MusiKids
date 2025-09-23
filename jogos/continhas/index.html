@@ -328,27 +328,29 @@
     customInput.focus();
   };
 
-  numKeyboardButtons.forEach((button) => {
+  numKeyboardButtons.forEach(button => {
     button.addEventListener("click", () => {
       const val = button.getAttribute("data-val");
-      const active = document.activeElement;
-      if (
-        active === answerInput ||
-        active === customInput
-      ) {
-        // Inserir o texto no input focado na posição do cursor
-        const start = active.selectionStart;
-        const end = active.selectionEnd;
-        const text = active.value;
-        active.value = text.slice(0, start) + val + text.slice(end);
-        active.selectionStart = active.selectionEnd = start + val.length;
-        active.focus();
+      const activeElement = document.activeElement;
+      if (button.id === "clear-custom-btn") {
+        if (activeElement && (activeElement === answerInput || activeElement === customInput)) {
+          activeElement.value = "";
+          activeElement.focus();
+        }
+        return;
+      }
+      if (activeElement && (activeElement === answerInput || activeElement === customInput)) {
+        const start = activeElement.selectionStart || 0;
+        const end = activeElement.selectionEnd || 0;
+        const currentVal = activeElement.value || "";
+        activeElement.value = currentVal.slice(0, start) + val + currentVal.slice(end);
+        activeElement.selectionStart = activeElement.selectionEnd = start + val.length;
+        activeElement.focus();
       } else {
-        // Se nenhum input focado, insere na resposta padrão
         const start = answerInput.selectionStart || 0;
         const end = answerInput.selectionEnd || 0;
-        const text = answerInput.value;
-        answerInput.value = text.slice(0, start) + val + text.slice(end);
+        const currentVal = answerInput.value || "";
+        answerInput.value = currentVal.slice(0, start) + val + currentVal.slice(end);
         answerInput.selectionStart = answerInput.selectionEnd = start + val.length;
         answerInput.focus();
       }
@@ -387,7 +389,6 @@
   `;
   document.head.appendChild(style);
 
-  // Inicializa com conta aleatória
   newSumBtn.disabled = true;
   newSumBtn.click();
 </script>
