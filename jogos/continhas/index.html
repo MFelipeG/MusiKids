@@ -61,7 +61,6 @@
   .answer-section {
     display: flex; gap: 10px; align-items: center; justify-content: center;
   }
-  /* AJUSTE: Mudei o seletor de [type=number] para #answer-input para manter o estilo */
   input#answer-input, input#custom-sum-input {
     font-size: 1.25rem;
     font-weight: 600;
@@ -71,7 +70,6 @@
     text-align: left;
     outline-offset: 3px;
   }
-  /* AJUSTE: Mudei o seletor de [type=number] para #answer-input para manter o estilo */
   input#answer-input {
     width: 120px;
   }
@@ -123,6 +121,17 @@
   #create-sum-btn:hover, #clear-custom-btn:hover {
     background: linear-gradient(90deg, #0e5c8c 0%, #377db1 98%);
   }
+  /* NOVO ESTILO PARA O BOTÃO DE RESPOSTA */
+  #show-custom-answer-btn {
+    background: linear-gradient(90deg, #ff9a4c 0%, #ffc878 98%);
+    box-shadow: 0 0 15px #ff9a4c70;
+    padding: 10px 20px; /* Ajuste de padding */
+    margin-left: 10px;
+    white-space: nowrap; /* Impede que o texto quebre */
+  }
+  #show-custom-answer-btn:hover {
+    background: linear-gradient(90deg, #e07b2a 0%, #f0a84a 98%);
+  }
   #feedback {
     font-weight: 700;
     font-size: 1.35rem;
@@ -133,6 +142,11 @@
   #custom-input-area {
     width: 100%;
     margin-top: 20px;
+  }
+  /* NOVO CONTAINER PARA ALINHAR INPUT E BOTÃO */
+  .custom-input-group {
+    display: flex;
+    align-items: center;
   }
   #custom-label {
     font-size: 1.3rem;
@@ -188,7 +202,10 @@
   <div id="feedback" aria-live="polite" aria-atomic="true"></div>
   <div id="custom-input-area">
     <label id="custom-label" for="custom-sum-input">Digite sua conta:</label>
-    <input type="text" id="custom-sum-input" aria-label="Campo para digitar continha" placeholder="Ex: 2 + 3 * 4" autocomplete="off" />
+    <div class="custom-input-group">
+      <input type="text" id="custom-sum-input" aria-label="Campo para digitar continha" placeholder="Ex: 2 + 3 * 4" autocomplete="off" />
+      <button id="show-custom-answer-btn" aria-label="Mostrar resposta da conta digitada">Ver Resposta</button>
+    </div>
     <div id="num-keyboard" role="group" aria-label="Teclado numérico">
       <button class="num-btn" data-val="7">7</button>
       <button class="num-btn" data-val="8">8</button>
@@ -221,6 +238,8 @@
   const feedback = document.getElementById("feedback");
   const customInput = document.getElementById("custom-sum-input");
   const createSumBtn = document.getElementById("create-sum-btn");
+  // NOVO: Selecionando o novo botão
+  const showAnswerBtn = document.getElementById("show-custom-answer-btn");
   const clearCustomBtn = document.getElementById("clear-custom-btn");
   const numKeyboardButtons = document.querySelectorAll(".num-btn");
 
@@ -254,14 +273,10 @@
 
   function calcAnswer({ num1, num2, op }) {
     switch (op) {
-      case "+":
-        return num1 + num2;
-      case "-":
-        return num1 - num2;
-      case "*":
-        return num1 * num2;
-      default:
-        return null;
+      case "+": return num1 + num2;
+      case "-": return num1 - num2;
+      case "*": return num1 * num2;
+      default: return null;
     }
   }
 
@@ -299,7 +314,6 @@
       customInput.focus();
       return;
     }
-    // Regex ajustado para permitir espaços e ponto decimal
     if (!/^[0-9.+\-*/\s.]+$/.test(expr)) {
       feedback.textContent = "Somente números e operadores + - * são permitidos.";
       customInput.focus();
@@ -322,30 +336,40 @@
     }
   };
 
-  // AJUSTE: A função do botão limpar foi movida para dentro do loop do teclado.
-  // clearCustomBtn.onclick = () => { ... }; // Removido
-
-  // --- INÍCIO DAS MUDANÇAS PRINCIPAIS NO JAVASCRIPT ---
-
-  // Variável para rastrear qual campo de texto foi focado por último
+  // NOVO: Função para o botão "Ver Resposta"
+  showAnswerBtn.onclick = () => {
+    const expr = customInput.value.trim().replace(/×/g, '*').replace(/−/g, '-');
+    if (!expr) {
+      feedback.textContent = "Digite uma conta para ver a resposta.";
+      customInput.focus();
+      return;
+    }
+    if (!/^[0-9.+\-*/\s.]+$/.test(expr)) {
+      feedback.textContent = "A conta contém caracteres inválidos.";
+      customInput.focus();
+      return;
+    }
+    try {
+      const result = new Function("return " + expr)();
+      // Mostra o resultado formatado
+      feedback.textContent = `A resposta é: ${Number(result.toFixed(4))}`;
+    } catch (e) {
+      feedback.textContent = "Não consegui calcular. Verifique a conta.";
+      customInput.focus();
+    }
+  };
+  
   let lastFocusedInput = answerInput;
-
-  // Adiciona "ouvintes" de evento de foco para os dois campos de texto
   answerInput.addEventListener('focus', () => lastFocusedInput = answerInput);
   customInput.addEventListener('focus', () => lastFocusedInput = customInput);
 
-  // Função do teclado numérico para ambos inputs (CORRIGIDA)
   numKeyboardButtons.forEach(button => {
     button.addEventListener("click", () => {
         const val = button.getAttribute("data-val");
-
-        // O botão de calcular (=) tem sua própria função, então ele chama o clique e não digita nada
         if (button.id === "create-sum-btn") {
             createSumBtn.click();
             return;
         }
-
-        // O botão Limpar (C) agora limpa o último campo focado
         if (button.id === "clear-custom-btn") {
             if (lastFocusedInput) {
                 lastFocusedInput.value = "";
@@ -353,32 +377,21 @@
             }
             return;
         }
-
-        // Garante que temos um alvo para inserir o texto
         if (lastFocusedInput && val !== null) {
-            // Previne que operadores (+, -, *) sejam inseridos no campo de resposta numérica
             if (lastFocusedInput === answerInput && /[+\-*/]/.test(val)) {
                 return;
             }
-            
             const target = lastFocusedInput;
             const start = target.selectionStart;
             const end = target.selectionEnd;
             const currentVal = target.value;
-
-            // Insere o valor do botão na posição do cursor
             target.value = currentVal.slice(0, start) + val + currentVal.slice(end);
-
-            // Move o cursor para depois do caractere inserido
             target.selectionStart = target.selectionEnd = start + val.length;
-            target.focus(); // Mantém o foco no campo
+            target.focus();
         }
     });
   });
 
-  // --- FIM DAS MUDANÇAS PRINCIPAIS NO JAVASCRIPT ---
-
-  // Confetes
   function confetti() {
     const confettiContainer = document.getElementById("confetti");
     confettiContainer.innerHTML = "";
@@ -400,7 +413,6 @@
     }, 4000);
   }
 
-  // Keyframes para confetes animados
   const style = document.createElement("style");
   style.textContent = `
     @keyframes fall {
@@ -410,7 +422,6 @@
   `;
   document.head.appendChild(style);
 
-  // Iniciar jogo com conta aleatória
   newSumBtn.disabled = true;
   newSumBtn.click();
 </script>
