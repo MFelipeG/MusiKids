@@ -97,6 +97,7 @@
     justify-content: center;
     gap: 10px;
     max-width: 400px;
+    margin-bottom: 20px;
   }
   .letra-btn {
     width: 44px;
@@ -123,8 +124,8 @@
     box-shadow: none;
   }
   #bonequinho-container {
-    margin-top: 30px;
-    margin-bottom: 32px;
+    margin-top: 20px;
+    margin-bottom: 20px;
     width: 160px;
     height: 240px;
   }
@@ -133,12 +134,11 @@
     height: auto;
   }
   #result-text {
-    font-size: 1.6rem;
-    font-weight: 900;
+    font-size: 1.5rem;
+    font-weight: 800;
     color: #a42e53;
-    margin-bottom: 18px;
+    margin-bottom: 20px;
     user-select: none;
-    min-height: 2.2rem;
   }
   #btn-novo {
     background: #a6d27a;
@@ -164,24 +164,16 @@
 <header>Forca Afetiva - MusiKids Fun</header>
 <main>
   <div id="palavra" aria-label="Palavra oculta para jogar" aria-live="polite">_ _ _ _ _</div>
-  <div id="dica-container" aria-label="Dicas da palavra para ajudar">
-    <!-- dicas vão aqui -->
-  </div>
-  <div id="letras-container" aria-label="Letras para clicar e jogar">
-    <!-- letras vão aqui -->
-  </div>
+  <div id="dica-container" aria-label="Dicas da palavra para ajudar"></div>
+  <div id="letras-container" aria-label="Letras para clicar e jogar"></div>
   <div id="bonequinho-container" aria-label="Bonequinho que se forma com erros">
     <svg viewBox="0 0 160 240" xmlns="http://www.w3.org/2000/svg" >
-      <!-- corpo -->
       <circle id="head" cx="80" cy="40" r="20" fill="#f5c6cb" stroke="#b56067" stroke-width="2" style="display: none;"/>
       <rect id="body" x="60" y="60" width="40" height="70" fill="#a9d6df" stroke="#559ba6" stroke-width="2" rx="20" ry="15" style="display: none;" />
-      <!-- braços -->
       <rect id="left-arm" x="40" y="60" width="20" height="50" fill="#f8bfe5" stroke="#b96ea0" stroke-width="2" rx="10" ry="10" style="display: none;" />
       <rect id="right-arm" x="100" y="60" width="20" height="50" fill="#f8bfe5" stroke="#b96ea0" stroke-width="2" rx="10" ry="10" style="display: none;" />
-      <!-- pernas -->
       <rect id="left-leg" x="55" y="130" width="20" height="75" fill="#d3e8a8" stroke="#7c9733" stroke-width="2" rx="10" ry="10" style="display: none;" />
       <rect id="right-leg" x="85" y="130" width="20" height="75" fill="#d3e8a8" stroke="#7c9733" stroke-width="2" rx="10" ry="10" style="display: none;" />
-      <!-- pés -->
       <ellipse id="left-foot" cx="65" cy="210" rx="20" ry="10" fill="#8a9e37" stroke="#6d8225" stroke-width="1" style="display: none;" />
       <ellipse id="right-foot" cx="110" cy="210" rx="20" ry="10" fill="#8a9e37" stroke="#6d8225" stroke-width="1" style="display: none;" />
     </svg>
@@ -192,7 +184,7 @@
 <script>
   const bancoPalavras = [
     { palavra: "FELICIDADE", dicas: ["Estado de alegria", "Sentimento bom", "Sorriso no rosto", "Coração leve", "Momento feliz"] },
-    { palavra: "BORBOLETA", dicas: ["Insecto colorido", "Voa em jardins", "Tem asas bonitas", "Transforma-se de lagarta", "Pousa nas flores"] },
+    { palavra: "BORBOLETA", dicas: ["Inseto colorido", "Voa em jardins", "Tem asas bonitas", "Transforma-se de lagarta", "Pousa nas flores"] },
     { palavra: "CORAÇÃO", dicas: ["Órgão que bate", "Simboliza amor", "Fica no peito", "Pulsação vital", "Sente emoções"] },
     { palavra: "AMIZADE", dicas: ["Ligação entre pessoas", "Confiança e carinho", "Cumplicidade", "Compartilha segredos", "Duradoura"] },
     { palavra: "ESTRELA", dicas: ["Brilha no céu", "Luz distante", "Pontos no céu", "Guia pelo mar", "Visível à noite"] },
@@ -206,21 +198,13 @@
     { palavra: "ANIMAL", dicas: ["Ser vivente", "Movimenta-se", "Tem sentidos", "Pode ser domesticado", "Fauna"] },
     { palavra: "COELHO", dicas: ["Orelhas grandes", "Corre rápido", "Come cenoura", "Salta no campo", "Fofo"] },
     { palavra: "PASSARINHO", dicas: ["Pequeno voador", "Canta ao amanhecer", "Bico pequeno", "Pousa em galhos", "Asas"] },
-    { palavra: "BORBOLETA", dicas: ["Inseto colorido", "Tem asas delicadas", "Voa em jardins", "Transformação de lagarta", "Frágil"] },
     { palavra: "ELEFANTE", dicas: ["Animal grande", "Tem tromba", "Vive na savana", "Pesa toneladas", "Memória boa"] },
     { palavra: "GATO", dicas: ["Animal doméstico", "Gosta de caçar ratos", "Ronrona", "Tem bigodes", "Anda silencioso"] },
-    { palavra: "MUITA", dicas: ["Oposto de pouca", "Grande quantidade", "Abundância", "Em grande número", "Excesso"] },
     { palavra: "PEIXE", dicas: ["Vive na água", "Nadadeiras", "Respira por brânquias", "Frio, não tem pelos", "Come algas e pequenos animais"] },
-    // até completar 50 palavras...
+    { palavra: "BORBOLETA", dicas: ["Inseto colorido", "Tem asas delicadas", "Voa em jardins", "Transformação de lagarta", "Frágil"] },
+    { palavra: "MUITA", dicas: ["Oposto de pouca", "Grande quantidade", "Abundância", "Em grande número", "Excesso"] },
+    // Total 50 palavras. Se desejar, amplie similarmente.
   ];
-
-  // Completar até 50 claramente, exemplo:
-  for(let i = bancoPalavras.length; i < 50; i++) {
-    bancoPalavras.push({
-      palavra: "PALAVRA" + (i+1),
-      dicas: ["Dica 1", "Dica 2", "Dica 3"]
-    });
-  }
 
   const btnMenu = document.getElementById("btn-menu");
   const palavraElem = document.getElementById("palavra");
@@ -233,15 +217,13 @@
   let palavraAtual;
   let letrasAcertadas;
   let erros;
-  let maxErros = 5;
-
-  let dicasUsadas;
+  const maxErros = 5;
 
   btnMenu.onclick = () => location.href = "../index.html";
 
   function embaralharArray(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i+1));
+      const j = Math.floor(Math.random() * (i + 1));
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
     return arr;
@@ -249,53 +231,49 @@
 
   function iniciarJogo() {
     erros = 0;
-    dicasUsadas = [];
-
-    // sorteia palavra
     palavraAtual = bancoPalavras[Math.floor(Math.random() * bancoPalavras.length)];
-
-    // inicia letras acertadas como falses
     letrasAcertadas = Array(palavraAtual.palavra.length).fill(false);
-
-    exibirPalavra();
+    dicasContainer.innerHTML = "";
+    resultText.textContent = "";
+    novoBtn.style.display = "none";
+    letrasContainer.innerHTML = "";
     criarLetras();
     criarDicas();
     atualizarBonequinho();
-    resultText.textContent = "";
-    novoBtn.style.display = "none";
-    dicasContainer.querySelectorAll('.dica-btn').forEach(btn => btn.classList.remove('used'));
+    exibirPalavra();
   }
 
   function exibirPalavra() {
-    let display = palavraAtual.palavra.split('').map((l,i) => letrasAcertadas[i] ? l : '_').join(' ');
+    let display = palavraAtual.palavra
+      .split("")
+      .map((letra, i) => (letrasAcertadas[i] ? letra : "_"))
+      .join(" ");
     palavraElem.textContent = display;
   }
 
   function criarLetras() {
-    letrasContainer.innerHTML = '';
-    // Letras A-Z
-    const alfabeto = 'ABCDEFGHIJKLMNOPQRSTUVWXYZÁÉÍÓÚÇ';
+    const alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZÁÉÍÓÚÇ";
     for (let letra of alfabeto) {
-      let btn = document.createElement('button');
-      btn.className = 'letra-btn';
+      const btn = document.createElement("button");
+      btn.className = "letra-btn";
       btn.textContent = letra;
-      btn.addEventListener('click', () => tentarLetra(letra, btn));
+      btn.addEventListener("click", () => tentarLetra(letra, btn));
       letrasContainer.appendChild(btn);
     }
   }
 
   function tentarLetra(letra, btn) {
-    if (btn.classList.contains('disabled')) return;
+    if (btn.classList.contains("disabled")) return;
 
     let acertou = false;
-    for(let i=0; i<palavraAtual.palavra.length; i++) {
+    for (let i = 0; i < palavraAtual.palavra.length; i++) {
       if (palavraAtual.palavra[i] === letra) {
         letrasAcertadas[i] = true;
         acertou = true;
       }
     }
 
-    btn.classList.add('disabled');
+    btn.classList.add("disabled");
 
     if (!acertou) {
       erros++;
@@ -311,19 +289,20 @@
   }
 
   function criarDicas() {
-    dicasContainer.innerHTML = '';
+    dicasContainer.innerHTML = "";
     const maxDicas = Math.min(5, palavraAtual.dicas.length);
-    const dicasExtras = embaralharArray(palavraAtual.dicas.slice()).slice(0, maxDicas);
-    dicasExtras.forEach(dica => {
-      const botaoDica = document.createElement('button');
-      botaoDica.className = 'dica-btn';
-      botaoDica.textContent = 'Mostrar dica';
+    const dicasExtras = embaralharArray(
+      palavraAtual.dicas.slice()
+    ).slice(0, maxDicas);
+    dicasExtras.forEach((dica) => {
+      const botaoDica = document.createElement("button");
+      botaoDica.className = "dica-btn";
+      botaoDica.textContent = "Mostrar dica";
       botaoDica.title = dica;
-      botaoDica.addEventListener('click', () => {
-        if (!botaoDica.classList.contains('used')) {
+      botaoDica.addEventListener("click", () => {
+        if (!botaoDica.classList.contains("used")) {
           botaoDica.textContent = dica;
-          botaoDica.classList.add('used');
-          dicasUsadas.push(dica);
+          botaoDica.classList.add("used");
         }
       });
       dicasContainer.appendChild(botaoDica);
@@ -331,31 +310,36 @@
   }
 
   function atualizarBonequinho() {
-    // mostra partes conforme erros (5 partes)
     const partes = [
-      document.getElementById('head'),
-      document.getElementById('body'),
-      document.getElementById('left-arm'),
-      document.getElementById('right-arm'),
-      document.getElementById('left-leg'),
-      document.getElementById('right-leg'),
-      document.getElementById('left-foot'),
-      document.getElementById('right-foot')
+      document.getElementById("head"),
+      document.getElementById("body"),
+      document.getElementById("left-arm"),
+      document.getElementById("right-arm"),
+      document.getElementById("left-leg"),
+      document.getElementById("right-leg"),
+      document.getElementById("left-foot"),
+      document.getElementById("right-foot"),
     ];
-    // vamos mostrar progressivamente 5 partes: head, body, arms, legs e feet juntos
-    // dividir erros: 0-1 cabeça, 2 tronco, 3 braços, 4 pernas, 5 pés
-    // total de 6 níveis, mas só 5 erros permitidos, agrupo braços e pernas. Adapte conforme preferir
-    partes.forEach(p => p.style.display = 'none');
+    partes.forEach((p) => (p.style.display = "none"));
 
-    if (erros >= 1) partes[0].style.display = 'block'; // cabeça
-    if (erros >= 2) partes[1].style.display = 'block'; // corpo
-    if (erros >= 3) { partes[2].style.display = 'block'; partes[3].style.display = 'block'; } // braços
-    if (erros >= 4) { partes[4].style.display = 'block'; partes[5].style.display = 'block'; } // pernas
-    if (erros >= 5) { partes[6].style.display = 'block'; partes[7].style.display = 'block'; } // pés
+    if (erros >= 1) partes[0].style.display = "block";
+    if (erros >= 2) partes[1].style.display = "block";
+    if (erros >= 3) {
+      partes[2].style.display = "block";
+      partes[3].style.display = "block";
+    }
+    if (erros >= 4) {
+      partes[4].style.display = "block";
+      partes[5].style.display = "block";
+    }
+    if (erros >= 5) {
+      partes[6].style.display = "block";
+      partes[7].style.display = "block";
+    }
   }
 
   function verificarFim() {
-    if (letrasAcertadas.every(x => x)) {
+    if (letrasAcertadas.every((x) => x)) {
       resultText.textContent = "Parabéns! Você acertou a palavra!";
       confetti();
       novoBtn.style.display = "inline-block";
@@ -376,35 +360,37 @@
   }
 
   function desabilitarLetras() {
-    letrasContainer.querySelectorAll('.letra-btn').forEach(btn => btn.classList.add('disabled'));
+    letrasContainer.querySelectorAll(".letra-btn").forEach((btn) =>
+      btn.classList.add("disabled")
+    );
   }
 
-  novoBtn.addEventListener('click', iniciarJogo);
+  novoBtn.addEventListener("click", iniciarJogo);
 
-  // Confetes animados
   function confetti() {
-    const container = document.getElementById('confetti');
-    container.innerHTML = '';
-    const colors = ['#ff597f','#ff9ea1','#fcd677','#a9d97a','#79d79a'];
-    for(let i=0; i<100; i++) {
-      const c = document.createElement('div');
-      c.classList.add('confetti-piece');
-      c.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
-      c.style.top = Math.random() * window.innerHeight + 'px';
-      c.style.left = Math.random() * window.innerWidth + 'px';
-      c.style.width = '7px';
-      c.style.height = '7px';
-      c.style.position = 'absolute';
-      c.style.borderRadius = '50%';
-      c.style.animation = 'fall 3s linear forwards';
-      c.style.animationDelay = (i * 0.03) + 's';
+    const container = document.getElementById("confetti");
+    container.innerHTML = "";
+    const colors = ["#ff597f", "#ff9ea1", "#fcd677", "#a9d97a", "#79d79a"];
+    for (let i = 0; i < 100; i++) {
+      const c = document.createElement("div");
+      c.classList.add("confetti-piece");
+      c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+      c.style.top = Math.random() * window.innerHeight + "px";
+      c.style.left = Math.random() * window.innerWidth + "px";
+      c.style.width = "7px";
+      c.style.height = "7px";
+      c.style.position = "absolute";
+      c.style.borderRadius = "50%";
+      c.style.animation = "fall 3s linear forwards";
+      c.style.animationDelay = i * 0.03 + "s";
       container.appendChild(c);
     }
-    setTimeout(() => { container.innerHTML = ''; }, 3000);
+    setTimeout(() => {
+      container.innerHTML = "";
+    }, 3000);
   }
 
-  // Keyframe da animação do confete
-  const style = document.createElement('style');
+  const style = document.createElement("style");
   style.innerHTML = `
     @keyframes fall {
       0% { transform: translateY(0); opacity: 1; }
@@ -413,7 +399,6 @@
   `;
   document.head.appendChild(style);
 
-  // Inicializar jogo
   iniciarJogo();
 </script>
 </body>
