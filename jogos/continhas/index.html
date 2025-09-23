@@ -1,162 +1,272 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Jogo das Continhas</title>
-  <style>
-    body {
-      font-family: 'Comic Sans MS', 'Baloo', Arial, sans-serif;
-      background: #f7f9fc;
-      color: #333;
-      text-align: center;
-      margin: 0; padding: 1.5rem;
-    }
-    h1 {
-      color: #1565c0;
-      margin-bottom: 1rem;
-      text-shadow: 1px 1px 3px #5281c9;
-    }
-    #pergunta {
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-      font-weight: bold;
-      background: #f7f6d2;
-      max-width: 250px;
-      margin-left: auto;
-      margin-right: auto;
-      padding: 1rem 1.5rem;
-      border-radius: 14px;
-      user-select: none;
-    }
-    .opcoes {
-      display: flex;
-      justify-content: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-      max-width: 320px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    .opcao-btn {
-      background: #ffd23f;
-      border: none;
-      border-radius: 12px;
-      padding: 0.8rem 1.5rem;
-      font-weight: bold;
-      font-size: 1.25rem;
-      cursor: pointer;
-      min-width: 100px;
-      transition: background 0.25s ease;
-    }
-    .opcao-btn:hover {
-      background: #f2ae2e;
-      color: white;
-      transform: scale(1.05);
-    }
-    #msg {
-      margin-top: 1rem;
-      font-size: 1.3rem;
-      font-weight: bold;
-      min-height: 34px;
-    }
-    button#nova-conta {
-      margin-top: 20px;
-      background: #5ee978;
-      border: none;
-      padding: 1rem 2rem;
-      font-weight: bold;
-      font-size: 1.15rem;
-      border-radius: 14px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    button#nova-conta:hover {
-      background: #07c875;
-      color: white;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Continhas - MusiKids Fun</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Baloo 2', cursive, Arial, sans-serif;
+    background: linear-gradient(135deg, #f7f4e9, #ffe7f0);
+    color: #444;
+    user-select: none;
+    display: flex; flex-direction: column; align-items: center;
+    height: 100vh; box-sizing: border-box;
+  }
+  #btn-menu {
+    position: fixed;
+    top: 15px; left: 15px;
+    background: #a1d578;
+    color: #214d0d;
+    border: none;
+    border-radius: 20px;
+    padding: 12px 18px;
+    font-weight: 900;
+    font-size: 1.25rem;
+    cursor: pointer;
+    box-shadow: 0 3px 16px #a1d578aa;
+    transition: background-color 0.3s ease;
+    z-index: 1000;
+  }
+  #btn-menu:hover {
+    background: #789a30;
+    color: white;
+  }
+  header {
+    font-size: 2.4rem;
+    font-weight: 900;
+    margin: 1.6rem 0 0 0;
+    color: #de1e7e;
+    text-shadow: 1px 1px 4px #db4aa0;
+    user-select: none;
+  }
+  main {
+    margin-top: 70px;
+    width: 90vw;
+    max-width: 540px;
+    background: #fffaf8;
+    border-radius: 25px;
+    padding: 30px 20px 36px 20px;
+    box-shadow: 0 3px 15px #fcdbe3;
+    display: flex; flex-direction: column; gap: 20px;
+    align-items: center;
+  }
+  #simple-sum {
+    font-size: 3rem;
+    font-weight: 900;
+    color: #4a977d;
+    margin-bottom: 10px;
+  }
+  .answer-section {
+    display: flex; gap: 10px; align-items: center; justify-content: center;
+  }
+  input[type="number"] {
+    width: 110px;
+    font-size: 1.25rem;
+    font-weight: 600;
+    padding: 7px 12px;
+    border-radius: 18px;
+    border: 3px solid #a1d578;
+    text-align: center;
+    outline-offset: 3px;
+  }
+  button#check-answer, button#new-sum, button#create-sum {
+    background: linear-gradient(90deg, #de1e7e 0%, #ff7498 98%);
+    border: none;
+    border-radius: 18px;
+    color: white;
+    font-weight: 900;
+    font-size: 1.15rem;
+    padding: 10px 28px;
+    cursor: pointer;
+    box-shadow: 0 8px 16px #de197ecc;
+    transition: background-color 0.3s ease;
+  }
+  button#check-answer:hover, button#new-sum:hover, button#create-sum:hover {
+    background: linear-gradient(90deg, #ba195e 0%, #fe3c74 98%);
+  }
+  #feedback {
+    font-weight: 700;
+    font-size: 1.4rem;
+    min-height: 2rem;
+    color: #de1e7e;
+    user-select: none;
+  }
+  #create-area {
+    margin-top: 20px;
+    width: 100%;
+    text-align: left;
+  }
+  #create-area label {
+    font-weight: 700;
+    margin-right: 8px;
+    font-size: 1.05rem;
+  }
+  #create-area input[type=number] {
+    width: 70px;
+    font-size: 1.1rem;
+    margin-right: 12px;
+  }
+  #create-area select {
+    font-size: 1.1rem;
+    border-radius: 15px;
+    border: 2px solid #a1d578;
+    padding: 4px 12px;
+    margin-right: 12px;
+  }
+  #confetti {
+    pointer-events: none;
+    position: fixed;
+    width: 100vw; height: 100vh;
+    top: 0; left: 0; z-index:1500;
+  }
+  .confetti-piece {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: red;
+    border-radius: 50%;
+    will-change: transform, opacity;
+  }
+</style>
 </head>
 <body>
-  <h1>Jogo das Continhas ➕➖✖️➗</h1>
-  <div id="pergunta"></div>
-  <div class="opcoes" id="opcoes"></div>
-  <div id="msg"></div>
-  <button id="nova-conta" onclick="novaConta()">Nova Conta</button>
+  <button id="btn-menu" aria-label="Voltar ao menu">MENU DE JOGOS</button>
+  <header>Jogo de Continhas - MusiKids Fun</header>
+  <main>
+    <div id="simple-sum" aria-live="polite" aria-atomic="true">0 + 0 = ?</div>
+    <div class="answer-section">
+      <input type="number" id="answer-input" aria-label="Digite a resposta" />
+      <button id="check-answer" aria-label="Verificar resposta">Verificar</button>
+      <button id="new-sum" aria-label="Nova continha">Nova Conta</button>
+    </div>
+    <div id="feedback" aria-live="polite" aria-atomic="true"></div>
+    <hr style="width: 90%; border: 1px solid #a1d578; border-radius: 3px;" />
+    <div id="create-area" aria-label="Crie sua própria continha">
+      <label for="num1-input">Número 1:</label>
+      <input type="number" id="num1-input" value="0" />
+      <label for="operation-select">Operação:</label>
+      <select id="operation-select" aria-label="Tipo de operação">
+        <option value="+">+</option>
+        <option value="-">−</option>
+        <option value="*">×</option>
+      </select>
+      <label for="num2-input">Número 2:</label>
+      <input type="number" id="num2-input" value="0" />
+      <button id="create-sum" aria-label="Criar continha">Criar Conta</button>
+    </div>
+  </main>
+  <div id="confetti"></div>
 
-  <script>
-    let contaAtual = {};
+<script>
+  const btnMenu = document.getElementById("btn-menu");
+  btnMenu.onclick = () => { location.href = "../index.html"; };
 
-    function geraConta() {
-      const a = Math.floor(Math.random()*20) + 1;
-      const b = Math.floor(Math.random()*20) + 1;
-      const ops = ['+', '-', '*', '/'];
-      const operacao = ops[Math.floor(Math.random()*ops.length)];
-      let pergunta = '';
-      let respostaCerta = 0;
-      switch (operacao) {
-        case '+':
-          pergunta = `${a} + ${b}`;
-          respostaCerta = a + b;
-          break;
-        case '-':
-          let maior = Math.max(a,b);
-          let menor = Math.min(a,b);
-          pergunta = `${maior} - ${menor}`;
-          respostaCerta = maior - menor;
-          break;
-        case '*':
-          pergunta = `${a} x ${b}`;
-          respostaCerta = a * b;
-          break;
-        case '/':
-          respostaCerta = a;
-          const dividido = a * b;
-          pergunta = `${dividido} ÷ ${b}`;
-          break;
-      }
-      const opcoes = [respostaCerta];
-      while (opcoes.length < 4) {
-        let sugestao = respostaCerta + Math.floor(Math.random()*7) - 3;
-        if (!opcoes.includes(sugestao) && sugestao >= 0) opcoes.push(sugestao);
-      }
-      return {
-        pergunta,
-        resposta: respostaCerta,
-        opcoes: opcoes.sort(() => Math.random() - 0.5)
-      };
+  const sumDisplay = document.getElementById("simple-sum");
+  const answerInput = document.getElementById("answer-input");
+  const checkBtn = document.getElementById("check-answer");
+  const newSumBtn = document.getElementById("new-sum");
+  const feedback = document.getElementById("feedback");
+
+  const num1Input = document.getElementById("num1-input");
+  const num2Input = document.getElementById("num2-input");
+  const operationSelect = document.getElementById("operation-select");
+  const createSumBtn = document.getElementById("create-sum");
+
+  let currentSum = null;
+
+  function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function gerarContaAleatoria() {
+    const num1 = randomInt(0, 20);
+    const num2 = randomInt(0, 20);
+    const opIndex = randomInt(0, 2);
+    const ops = ["+", "-", "*"];
+    return { num1, num2, op: ops[opIndex] };
+  }
+  
+  function mostraConta(c) {
+    sumDisplay.textContent = `${c.num1} ${c.op} ${c.num2} = ?`;
+    currentSum = c;
+    answerInput.value = "";
+    feedback.textContent = "";
+  }
+
+  function calculaResposta(c) {
+    switch(c.op) {
+      case "+": return c.num1 + c.num2;
+      case "-": return c.num1 - c.num2;
+      case "*": return c.num1 * c.num2;
+      default: return null;
     }
+  }
 
-    function novaConta() {
-      document.getElementById('msg').textContent = '';
-      contaAtual = geraConta();
-      document.getElementById('pergunta').textContent = `Quanto é ${contaAtual.pergunta}?`;
-      const opcoesContainer = document.getElementById('opcoes');
-      opcoesContainer.innerHTML = '';
-      contaAtual.opcoes.forEach(opcao => {
-        const btn = document.createElement('button');
-        btn.textContent = opcao;
-        btn.className = 'opcao-btn';
-        btn.onclick = () => responderConta(opcao, btn);
-        opcoesContainer.appendChild(btn);
-      });
+  checkBtn.onclick = () => {
+    const resposta = Number(answerInput.value);
+    const correta = calculaResposta(currentSum);
+    if (resposta === correta) {
+      feedback.textContent = "Muito bem! Você acertou!";
+      confete();
+      newSumBtn.focus();
+    } else {
+      feedback.textContent = `Ops! Tente novamente.`;
     }
+  };
 
-    function responderConta(valor, botao) {
-      const botoes = document.querySelectorAll('.opcao-btn');
-      botoes.forEach(b => b.disabled = true);
-      if (valor === contaAtual.resposta) {
-        document.getElementById('msg').textContent = '🎉 Muito bem!';
-        botao.style.backgroundColor = '#32a852';
-        botao.style.color = 'white';
-      } else {
-        document.getElementById('msg').textContent = '😅 Tente outra vez!';
-        botao.style.backgroundColor = '#ea5454';
-        botao.style.color = 'white';
-      }
+  newSumBtn.onclick = () => {
+    const c = gerarContaAleatoria();
+    mostraConta(c);
+    answerInput.focus();
+  };
+
+  createSumBtn.onclick = () => {
+    const num1 = Number(num1Input.value);
+    const num2 = Number(num2Input.value);
+    const op = operationSelect.value;
+    if (isNaN(num1) || isNaN(num2)) {
+      feedback.textContent = "Digite números válidos para criar a conta.";
+      return;
     }
+    currentSum = { num1, num2, op };
+    mostraConta(currentSum);
+    feedback.textContent = "Conta criada! Tente resolver.";
+    answerInput.focus();
+  };
 
-    window.onload = novaConta;
-  </script>
+  // Função confete simples
+  function confete() {
+    const confetti = document.getElementById("confetti");
+    confetti.innerHTML = "";
+    const cores = ["#ff597f","#ff9ea1","#fcd677","#a9d97a","#79d79a"];
+    for(let i = 0; i < 100; i++) {
+      const elem = document.createElement("div");
+      elem.className = "confetti-piece";
+      elem.style.backgroundColor = cores[Math.floor(Math.random()*cores.length)];
+      elem.style.top = Math.random() * window.innerHeight + "px";
+      elem.style.left = Math.random() * window.innerWidth + "px";
+      elem.style.animation = `fall 3s linear forwards`;
+      elem.style.animationDelay = (i * 0.03) + "s";
+      confetti.appendChild(elem);
+    }
+    setTimeout(() => { confetti.innerHTML = ""; }, 3000);
+  }
+
+  // Keyframes dinamicos para confete
+  const style = document.createElement('style');
+  style.innerHTML = `
+    @keyframes fall {
+      0% {transform: translateY(0); opacity: 1;}
+      100% {transform: translateY(100vh); opacity: 0;}
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Inicializa conta aleatória ao carregar
+  newSumBtn.click();
+</script>
 </body>
 </html>
