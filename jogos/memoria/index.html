@@ -2,163 +2,307 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Jogo da Memória - MusiKids Fun</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
 
-  body {
-    margin: 0; padding: 1.5rem;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #AAFFA9 0%, #11FFBD 100%);
-    font-family: 'Baloo 2', cursive, Arial, sans-serif;
-    text-align: center;
-    user-select: none;
-  }
-  h1 {
-    color: #2d6a4f;
-    margin-bottom: 1.4rem;
-  }
-  #game-board {
-    width: 340px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(4, 70px);
-    grid-gap: 15px;
-  }
-  .card {
-    width: 70px;
-    height: 90px;
-    background: white;
-    border-radius: 12px;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    perspective: 800px;
-  }
-  .card-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.6s;
-    transform-style: preserve-3d;
-  }
-  .flipped .card-inner {
-    transform: rotateY(180deg);
-  }
-  .front, .back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 12px;
-    backface-visibility: hidden;
-  }
-  .front {
-    background: #2d6a4f;
-  }
-  .back {
-    background: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 2.5rem;
-    color: #2d6a4f;
-  }
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: 'Baloo 2', cursive, Arial, sans-serif;
+  background: linear-gradient(135deg,#f7f4e9,#f8b500,#ff7eb9 100%);
+  color: #32434a;
+  user-select: none;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+#btn-menu, #btn-novo, #btn-reset {
+  background: #a1d578;
+  color: #214d0d;
+  border-radius: 18px;
+  padding: 14px 22px;
+  font-weight: 900;
+  font-size: 1.1rem;
+  cursor: pointer;
+  box-shadow: 0 0 15px #a1d578aa;
+  border: none;
+  user-select: none;
+  margin: 10px 8px;
+  transition: background-color .3s ease;
+}
+
+#btn-menu:hover, #btn-novo:hover, #btn-reset:hover {
+  background: #68922b;
+  color: white;
+}
+
+header {
+  margin-top: 75px;
+  font-weight: 900;
+  font-size: 2.4rem;
+  color: #d63a6d;
+  user-select: none;
+  margin-bottom: 20px;
+}
+
+#game-container {
+  max-width: 980px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 28px;
+  box-shadow: 0 4px 18px #ffd3e466;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#cards-grid {
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 12px;
+  width: 100%;
+  max-width: 900px;
+  justify-items: center;
+  margin-top: 10px;
+}
+
+.card {
+  width: 70px;
+  height: 90px;
+  perspective: 800px;
+  cursor: pointer;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.5s;
+  transform-style: preserve-3d;
+  border-radius: 15px;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+}
+
+.card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  backface-visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+}
+
+.card-front {
+  background: #f7f7f7;
+  box-shadow: 0 0 10px #d63a6d80 inset;
+}
+
+.card-back {
+  background: #ff7eb9;
+  transform: rotateY(180deg);
+  box-shadow: 0 0 10px #4a004a inset;
+}
+
+.hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+#result-text {
+  font-size: 1.5rem;
+  margin-top: 15px;
+  color: #d63a6d;
+  font-weight: 700;
+}
+
+#buttons {
+  margin-top: 20px;
+}
+
+#confetti {
+  pointer-events: none;
+  position: fixed;
+  top:0; left:0; right:0; bottom:0;
+  z-index: 9999;
+  overflow: visible;
+}
+.confetti-piece {
+  pointer-events: none;
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: fall 3s linear forwards;
+  opacity: 1;
+}
+@keyframes fall {
+  0% { transform: translateY(0); opacity: 1;}
+  100% { transform: translateY(100vh); opacity: 0;}
+}
 </style>
 </head>
 <body>
-<h1>🃏 Jogo da Memória</h1>
-<div id="game-board" role="grid" aria-label="Tabuleiro do jogo da memória"></div>
+<button id="btn-menu" aria-label="Voltar ao menu">MENU DE JOGOS</button>
+<header>Jogo da Memória - MusiKids Fun</header>
+
+<div id="game-container">
+ <div id="buttons">
+   <button id="btn-novo" aria-label="Iniciar novo jogo">Iniciar Novo Jogo</button>
+   <button id="btn-reset" aria-label="Virar todas as cartas para trás">Virar Cartas</button>
+ </div>
+ <div id="cards-grid" aria-label="Grade do jogo da memória"></div>
+ <div id="result-text"></div>
+</div>
+
+<div id="confetti"></div>
+
 <script>
-  const icons = ['🐶', '🐱', '🦊', '🐰', '🐸', '🐵', '🐼', '🐨'];
-  let cards = [...icons, ...icons]; // dois pares de cada
+// Imagens Unicode para as figuras e emojis como exemplo, para incluir 50+ figuras
+// Podem ser substituídas por imagens reais base64 ou URLs no futuro.
+const FIGURAS = [
+  "🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🦄","🐮",
+  "🐷","🐸","🐵","🐔","🐧","🐦","🦉","🐴","🦄","🐝",
+  "🐞","🦋","🐌","🐢","🐍","🦎","🦂","🦀","🐠","🐳",
+  "🐬","🐋","🦈","🐊","🐅","🐆","🦓","🦍","🦧","🐘",
+  "🦛","🦏","🐪","🐫","🦙","🦒","🐃","🐂","🐄","🐎"
+];
 
-  const board = document.getElementById('game-board');
-  let firstCard = null;
-  let secondCard = null;
-  let lockBoard = false;
-  let matches = 0;
+const TAMANHO = FIGURAS.length * 2; // pares
 
-  function shuffle(array) {
-    for (let i=array.length -1; i > 0; i--) {
-      const j = Math.floor(Math.random()*(i+1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-  }
+const btnMenu = document.getElementById('btn-menu');
+const btnNovo = document.getElementById('btn-novo');
+const btnReset = document.getElementById('btn-reset');
+const cardsGrid = document.getElementById('cards-grid');
+const resultText = document.getElementById('result-text');
+const confettiContainer = document.getElementById('confetti');
 
-  function createCard(icon) {
+btnMenu.onclick = () => {
+  location.href = '../index.html';
+};
+
+let cards = [];
+let flippedCards = [];
+let matchedPairs = 0;
+let canFlip = true;
+
+function shuffle(arr) {
+  return arr.map(i => [Math.random(), i]).sort((a,b) => a[0] - b[0]).map(i => i[1]);
+}
+
+function createCards() {
+  const figurasDuplicadas = [...FIGURAS, ...FIGURAS];
+  const figurasEmbaralhadas = shuffle(figurasDuplicadas);
+  cardsGrid.innerHTML = '';
+  cards = [];
+  figurasEmbaralhadas.forEach((figura, idx) => {
     const card = document.createElement('div');
-    card.classList.add('card');
+    card.className = 'card';
+    card.dataset.figure = figura;
+    card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
-    const inner = document.createElement('div');
-    inner.classList.add('card-inner');
-
-    const front = document.createElement('div');
-    front.classList.add('front');
-
-    const back = document.createElement('div');
-    back.classList.add('back');
-    back.textContent = icon;
-
-    inner.appendChild(front);
-    inner.appendChild(back);
-    card.appendChild(inner);
-
+    card.innerHTML = `
+      <div class="card-inner">
+        <div class="card-front"></div>
+        <div class="card-back">${figura}</div>
+      </div>
+    `;
     card.addEventListener('click', () => flipCard(card));
-    card.addEventListener('keydown', (e) => {
-      if(e.key === 'Enter' || e.key === ' ') {
-        flipCard(card);
-      }
-    });
-    return card;
-  }
+    cardsGrid.appendChild(card);
+    cards.push(card);
+  });
+}
 
-  function flipCard(card) {
-    if(lockBoard || card.classList.contains('flipped') || card===firstCard) return;
-    card.classList.add('flipped');
-    if(!firstCard) {
-      firstCard = card;
-      return;
+function flipCard(card) {
+  if(!canFlip) return;
+  if(flippedCards.includes(card) || card.classList.contains('matched')) return;
+  card.classList.add('flipped');
+  flippedCards.push(card);
+  if(flippedCards.length === 2) {
+    canFlip = false;
+    setTimeout(checkMatch, 1000);
+  }
+}
+
+function checkMatch() {
+  const [card1, card2] = flippedCards;
+  if(card1.dataset.figure === card2.dataset.figure) {
+    card1.classList.add('matched');
+    card2.classList.add('matched');
+    matchedPairs++;
+    if(matchedPairs === FIGURAS.length) {
+      showVictory();
     }
-    secondCard = card;
-    checkForMatch();
+  } else {
+    card1.classList.remove('flipped');
+    card2.classList.remove('flipped');
   }
+  flippedCards = [];
+  canFlip = true;
+  updateResultText();
+}
 
-  function checkForMatch() {
-    const icon1 = firstCard.querySelector('.back').textContent;
-    const icon2 = secondCard.querySelector('.back').textContent;
-    if(icon1 === icon2) {
-      matches++;
-      resetSelection();
-      if(matches === icons.length) {
-        setTimeout(() => alert('🎉 Parabéns! Você encontrou todos os pares!'), 300);
-      }
-    } else {
-      lockBoard = true;
-      setTimeout(() => {
-        firstCard.classList.remove('flipped');
-        secondCard.classList.remove('flipped');
-        resetSelection();
-      }, 800);
-    }
+function updateResultText() {
+  resultText.textContent = `Pares encontrados: ${matchedPairs} de ${FIGURAS.length}`;
+}
+
+function showVictory() {
+  resultText.textContent = 'Parabéns! Você encontrou todos os pares!';
+  btnNovo.style.display = 'inline-block';
+  btnReset.style.display = 'none';
+  confetti();
+}
+
+function resetCards() {
+  cards.forEach(card => card.classList.remove('flipped'));
+  flippedCards = [];
+  canFlip = true;
+  updateResultText();
+}
+
+btnNovo.onclick = () => {
+  matchedPairs = 0;
+  btnNovo.style.display = 'none';
+  btnReset.style.display = 'inline-block';
+  resultText.textContent = '';
+  createCards();
+};
+
+btnReset.onclick = () => {
+  resetCards();
+};
+
+window.onload = () => {
+  btnNovo.style.display = 'none';
+  btnReset.style.display = 'inline-block';
+  createCards();
+  updateResultText();
+};
+
+function confetti() {
+  confettiContainer.innerHTML = '';
+  const colors = ['#ff597f', '#ff9ea1', '#fcd677', '#a9d97a', '#79d79a', '#ff7eb9', '#61dafb'];
+  for(let i=0; i<150; i++){
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    c.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+    c.style.top = Math.random()*window.innerHeight + 'px';
+    c.style.left = Math.random()*window.innerWidth + 'px';
+    c.style.animationDelay = (i*0.02) + 's';
+    confettiContainer.appendChild(c);
   }
-
-  function resetSelection() {
-    [firstCard, secondCard] = [null, null];
-    lockBoard = false;
-  }
-
-  function startGame() {
-    matches = 0;
-    board.innerHTML = '';
-    shuffle(cards);
-    cards.forEach(icon => {
-      const card = createCard(icon);
-      board.appendChild(card);
-    });
-  }
-
-  window.onload = startGame;
+  setTimeout(() => { confettiContainer.innerHTML = ''; }, 3500);
+}
 </script>
 </body>
 </html>
