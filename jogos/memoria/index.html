@@ -240,7 +240,7 @@ button.action-btn:hover:not(:disabled) {
 
   <div id="buttons">
     <button id="btn-novo" class="action-btn" aria-label="Iniciar novo jogo">Iniciar Novo Jogo</button>
-    <button id="btn-virar" class="action-btn" aria-label="Virar as cartas para trás" disabled>Virar Cartas</button>
+    <button id="btn-virar" class="action-btn" aria-label="Virar as cartas para trás" disabled>Virar Cartas para trás</button>
     <button id="btn-espiar" class="action-btn" aria-label="Espiar cartas" disabled>Espiar (3)</button>
   </div>
 
@@ -273,6 +273,7 @@ let cartasViradas = [];
 let paresEncontrados = 0;
 let podeVirar = false;
 let espiarContador = 3;
+let cartasViradasNoMomento = false;
 
 const btnMenu = document.getElementById('btn-menu');
 const btnNovo = document.getElementById('btn-novo');
@@ -328,7 +329,7 @@ function criaCartas() {
 
   figurasDuplicadas.forEach((figura, idx) => {
     const card = document.createElement('div');
-    card.className = 'card flipped';
+    card.className = 'card flipped'; // começa virada para frente
     card.dataset.figura = figura;
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
@@ -348,11 +349,12 @@ function criaCartas() {
   cartasViradas = [];
   espiarContador = 3;
   podeVirar = false;
+  cartasViradasNoMomento = false;
 
   btnVirar.disabled = false;
+  btnVirar.textContent = 'Virar Cartas para trás';
   btnEspiar.disabled = true;
   updateTexto();
-  btnEspiar.textContent = `Espiar (${espiarContador})`;
 }
 
 function virarCarta(card) {
@@ -389,11 +391,21 @@ btnNovo.onclick = () => {
 };
 
 btnVirar.onclick = () => {
-  // Vira todas as cartas para trás
-  cartas.forEach(carta => carta.classList.remove('flipped'));
-  podeVirar = true;
-  btnVirar.disabled = true;
-  btnEspiar.disabled = false;
+  if (!cartasViradasNoMomento) {
+    // Vira todas para trás
+    cartas.forEach(carta => carta.classList.remove('flipped'));
+    podeVirar = true;
+    btnVirar.textContent = 'Virar Cartas para frente';
+    cartasViradasNoMomento = true;
+    btnEspiar.disabled = false;
+  } else {
+    // Vira todas para frente
+    cartas.forEach(carta => carta.classList.add('flipped'));
+    podeVirar = false;
+    btnVirar.textContent = 'Virar Cartas para trás';
+    cartasViradasNoMomento = false;
+    btnEspiar.disabled = true;
+  }
 };
 
 btnEspiar.onclick = () => {
@@ -444,7 +456,6 @@ function confete() {
 // Inicializa no carregamento
 window.onload = () => {
   updateTexto();
-  // Começa com botão iniciar visível, virar e espiar desabilitados
   btnVirar.disabled = true;
   btnEspiar.disabled = true;
   cardsGrid.innerHTML = '';
