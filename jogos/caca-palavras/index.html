@@ -73,6 +73,7 @@
     user-select: none;
   }
   .grid-cell.found { color: white; font-weight: 900; }
+  .grid-cell.selected { background: #d3d3d3; color: #fff; } /* Estilo para letras selecionadas */
   #result-text {
     font-size: 1.3rem; color: #d63a6d; margin: 14px 0 0 0;
     font-weight: 700;
@@ -128,6 +129,8 @@ const btnNovo = document.getElementById("btn-novo");
 btnMenu.onclick = () => location.href = "../index.html";
 
 let palavrasAtivas = [], encontradas = [], gridData = [], corDasPalavras = {};
+let selecao = [];
+let isDragging = false;
 
 function shuffle(arr) {
   return arr.map(i=>[Math.random(),i]).sort((a,b)=>a[0]-b[0]).map(i=>i[1]);
@@ -174,10 +177,9 @@ function iniciaGrid() {
         }
       }
       tentativas++;
-      if(tentativas===20) modo = modo==='H'?'V':'H'; // alterna se não deu
+      if(tentativas===20) modo = modo==='H'?'V':'H';
     }
   });
-  // Preenche os espaços vazios com letras aleatórias
   for(let i=0;i<TAMANHO;i++)
     for(let j=0;j<TAMANHO;j++)
       if(!gridData[i][j])
@@ -194,6 +196,7 @@ function desenhaGrid() {
       cell.className = 'grid-cell';
       cell.textContent = gridData[i][j];
       cell.dataset.row = i; cell.dataset.col = j;
+      cell.addEventListener('click', handleClick);
       gridElem.appendChild(cell);
     }
   }
@@ -223,13 +226,14 @@ function reiniciaJogo() {
   desenhaPainel();
   resultText.textContent = '';
   btnNovo.style.display = 'none';
-  Array.from(document.querySelectorAll('.grid-cell')).forEach(cell=>cell.classList.remove('found'));
+  Array.from(document.querySelectorAll('.grid-cell')).forEach(cell=>cell.classList.remove('found', 'selected'));
+  selecao = [];
+  isDragging = false;
 }
 
 function verificaPalavraSelecionada(indices) {
   let texto = indices.map(([i,j])=>gridData[i][j]).join('');
   let textoInvert = indices.map(([i,j])=>gridData[i][j]).reverse().join('');
-  // verifica se a palavra está entre as do alvo
   for(let palavra of palavrasAtivas) {
     if((texto===palavra || textoInvert===palavra) && !encontradas.includes(palavra)) {
       destacando(indices, corDasPalavras[palavra]);
@@ -238,8 +242,10 @@ function verificaPalavraSelecionada(indices) {
       if(encontradas.length===palavrasAtivas.length) {
         resultText.textContent = 'Parabéns! Encontrou todas!';
         btnNovo.style.display = "inline-block";
+        btnNovo.focus();
         confetti();
       }
+      clearSelection();
       return true;
     }
   }
@@ -250,6 +256,7 @@ function destacando(indices, cor) {
   indices.forEach(([i,j])=>{
     Array.from(gridElem.children).forEach(cell=>{
       if(Number(cell.dataset.row)===i && Number(cell.dataset.col)===j) {
+        cell.classList.remove('selected');
         cell.classList.add('found');
         cell.style.background=cor;
         cell.style.color="#fff";
@@ -258,26 +265,86 @@ function destacando(indices, cor) {
   });
 }
 
-// Sistema de seleção simples: clique início + clique fim
-let selecao = [];
+function handleClick(e) {
+  if (isDragging) return; // Ignora cliques durante o arrastar
+  const cell = e.target;
+  if (!cell.classList.contains('grid-cell') || cell.classList.contains('found')) return;
+
+  const row = Number(cell.dataset.row);
+  const col = Number(cell.dataset.col);
+
+  if (selecao.length === 0) {
+    // Primeiro clique: inicia a seleção
+    selecao = [[row, col]];
+    cell.classList.add('selected');
+  } else {
+    // Cliques subsequentes: verifica se é uma continuação válida
+    const last = selecao[selecao.length - 1];
+    const isValid = isValidNextClick(last[0], last[1], row, col);
+
+    if (isValid) {
+      selecao.push([row, col]);
+      cell.classList.add('selected');
+      // Verifica se a palavra formada é válida
+      if (verificaPalavraSelecionada(selecao)) {
+        // Palavra encontrada, limpa a seleção
+        clearSelection();
+      }
+    } else {
+      // Clique inválido: reinicia a seleção
+      clearSelection();
+      selecao = [[row, col]];
+      cell.classList.add('selected');
+    }
+  }
+}
+
+function isValidNextClick(lastRow, lastCol, newRow, newCol) {
+  if (selecao.length === 1) {
+    // Permite horizontal, vertical ou diagonal
+    return Math.abs(lastRow - newRow) <= 1 && Math.abs(lastCol - newCol) <= 1 && !(lastRow === newRow && lastCol === newCol);
+  }
+
+  // Verifica se o novo clique segue a mesma direção
+  const first = selecao[0];
+  const second = selecao[1];
+  const rowDiff = second[0] - first[0];
+  const colDiff = second[1] - first[1];
+
+  // Calcula a direção esperada para o próximo clique
+  const expectedRow = lastRow + rowDiff;
+  const expectedCol = lastCol + colDiff;
+
+  return newRow === expectedRow && newCol === expectedCol;
+}
+
+function clearSelection() {
+  Array.from(document.querySelectorAll('.grid-cell')).forEach(cell => cell.classList.remove('selected'));
+  selecao = [];
+}
+
+// Sistema de arrastar (mouse)
 gridElem.addEventListener('mousedown', (e)=>{
-  if(e.target.classList.contains('grid-cell')) {
+  if(e.target.classList.contains('grid-cell') && !e.target.classList.contains('found')) {
+    isDragging = true;
+    clearSelection();
     selecao = [[Number(e.target.dataset.row), Number(e.target.dataset.col)]];
+    e.target.classList.add('selected');
     gridElem.addEventListener('mousemove', mousemove);
   }
 });
 document.addEventListener('mouseup', ()=>{
-  if(selecao.length>1) verificaPalavraSelecionada(selecao);
-  selecao = [];
+  if(isDragging && selecao.length>1) verificaPalavraSelecionada(selecao);
+  clearSelection();
   gridElem.removeEventListener('mousemove', mousemove);
+  isDragging = false;
 });
 
 function mousemove(e){
-  if(e.target.classList.contains('grid-cell') && selecao.length) {
+  if(isDragging && e.target.classList.contains('grid-cell') && !e.target.classList.contains('found')) {
     let inicio = selecao[0];
     let fim = [Number(e.target.dataset.row),Number(e.target.dataset.col)];
     selecao = [];
-    // apenas linhas ou colunas
     if(inicio[0]===fim[0]) { // horizontal
       let a = inicio[1], b = fim[1];
       let arr = []; for(let k=Math.min(a,b);k<=Math.max(a,b);k++) arr.push([inicio[0],k]);
@@ -287,6 +354,60 @@ function mousemove(e){
       let arr=[]; for(let k=Math.min(a,b);k<=Math.max(a,b);k++) arr.push([k,inicio[1]]);
       selecao = arr;
     }
+    Array.from(document.querySelectorAll('.grid-cell')).forEach(cell => cell.classList.remove('selected'));
+    selecao.forEach(([i,j])=>{
+      Array.from(gridElem.children).forEach(cell=>{
+        if(Number(cell.dataset.row)===i && Number(cell.dataset.col)===j) {
+          cell.classList.add('selected');
+        }
+      });
+    });
+  }
+}
+
+// Sistema de arrastar (toque)
+gridElem.addEventListener('touchstart', (e)=>{
+  e.preventDefault();
+  if(e.target.classList.contains('grid-cell') && !e.target.classList.contains('found')) {
+    isDragging = true;
+    clearSelection();
+    selecao = [[Number(e.target.dataset.row), Number(e.target.dataset.col)]];
+    e.target.classList.add('selected');
+    gridElem.addEventListener('touchmove', touchmove, { passive: false });
+  }
+});
+document.addEventListener('touchend', ()=>{
+  if(isDragging && selecao.length>1) verificaPalavraSelecionada(selecao);
+  clearSelection();
+  gridElem.removeEventListener('touchmove', touchmove);
+  isDragging = false;
+});
+
+function touchmove(e){
+  e.preventDefault();
+  const touch = e.touches[0];
+  const target = document.elementFromPoint(touch.clientX, touch.clientY);
+  if(isDragging && target.classList.contains('grid-cell') && !target.classList.contains('found')) {
+    let inicio = selecao[0];
+    let fim = [Number(target.dataset.row),Number(target.dataset.col)];
+    selecao = [];
+    if(inicio[0]===fim[0]) { // horizontal
+      let a = inicio[1], b = fim[1];
+      let arr = []; for(let k=Math.min(a,b);k<=Math.max(a,b);k++) arr.push([inicio[0],k]);
+      selecao = arr;
+    } else if(inicio[1]===fim[1]) { // vertical
+      let a = inicio[0], b = fim[0];
+      let arr=[]; for(let k=Math.min(a,b);k<=Math.max(a,b);k++) arr.push([k,inicio[1]]);
+      selecao = arr;
+    }
+    Array.from(document.querySelectorAll('.grid-cell')).forEach(cell => cell.classList.remove('selected'));
+    selecao.forEach(([i,j])=>{
+      Array.from(gridElem.children).forEach(cell=>{
+        if(Number(cell.dataset.row)===i && Number(cell.dataset.col)===j) {
+          cell.classList.add('selected');
+        }
+      });
+    });
   }
 }
 
@@ -298,29 +419,29 @@ function confetti() {
   const container = document.getElementById("confetti");
   container.innerHTML = "";
   const colors = ["#ff597f", "#ff9ea1", "#fcd677", "#a9d97a", "#79d79a"];
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 150; i++) {
     const c = document.createElement("div");
     c.className = "confetti-piece";
     c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-    c.style.top = Math.random() * window.innerHeight + "px";
+    c.style.top = Math.random() * -100 + "px";
     c.style.left = Math.random() * window.innerWidth + "px";
-    c.style.width = "7px";
-    c.style.height = "7px";
+    c.style.width = Math.random() * 10 + 5 + "px";
+    c.style.height = Math.random() * 10 + 5 + "px";
     c.style.position = "absolute";
     c.style.borderRadius = "50%";
-    c.style.animation = "fall 3s linear forwards";
-    c.style.animationDelay = i * 0.03 + "s";
+    c.style.animation = `fall ${Math.random() * 2 + 2}s linear forwards`;
+    c.style.transform = `rotate(${Math.random() * 360}deg)`;
     container.appendChild(c);
   }
   setTimeout(() => {
     container.innerHTML = "";
-  }, 3000);
+  }, 4000);
 }
 const style = document.createElement("style");
 style.innerHTML = `
   @keyframes fall {
-    0% { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(100vh); opacity: 0; }
+    0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) translateX(${Math.random() * 100 - 50}px) rotate(360deg); opacity: 0; }
   }
 `;
 document.head.appendChild(style);
