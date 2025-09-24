@@ -1,114 +1,9 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Caça Palavras - MusiKids Fun</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
-  body {
-    margin: 0; padding: 0; min-height: 100vh;
-    font-family: 'Baloo 2', cursive, Arial, sans-serif;
-    background: linear-gradient(135deg,#f7f4e9,#f8b500,#ff7eb9 100%);
-    color: #32434a; user-select: none; box-sizing: border-box;
-    text-align: center;
-  }
-  #btn-menu {
-    position: fixed; top: 15px; left: 15px;
-    background: #a1d578; color: #214d0d;
-    border-radius: 18px; padding: 14px 22px;
-    font-weight: 900; font-size: 1.25rem;
-    cursor: pointer; box-shadow: 0 0 15px #a1d578aa;
-    border: none; user-select: none; z-index: 10000;
-    transition: background-color .3s ease;
-  }
-  #btn-menu:hover { background: #68922b; color: white; }
-  header {
-    margin-top: 75px; font-weight: 900; font-size: 2.4rem;
-    color: #d63a6d; user-select: none; margin-bottom: 16px;
-  }
-  main {
-    max-width: 950px; margin: 0 auto;
-    background: white; border-radius: 28px;
-    box-shadow: 0 4px 18px #ffd3e466;
-    padding: 20px 8px 30px 8px;
-    display: flex; gap: 18px;
-    flex-direction: row; justify-content: center;
-    align-items: flex-start;
-  }
-  .panel {
-    width: 170px; min-width: 110px;
-    background: #fcf4ff;
-    border-radius: 23px; padding: 16px 8px 24px 8px;
-    box-shadow: 0 3px 12px #ffd1e2aa;
-    text-align: left;
-  }
-  .panel h3 { font-size: 1.07rem; color: #ff7eb9; margin-bottom: .6rem; font-weight: 800; }
-  .panel ul {
-    list-style: none; padding: 0; margin: 0;
-    font-size: 1.13rem; color: #4c6d8c; font-weight: 700;
-  }
-  .panel-found { background: #e7ffd2; }
-  #grid-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; }
-  #grid {
-    display: grid; gap: 4px;
-    background: #f6ebff; border-radius: 20px;
-    padding: 12px; box-shadow: 0 0 11px #e7abd7a3;
-    margin-bottom: 15px;
-    touch-action: none;
-  }
-  .grid-cell {
-    width: 9vw; min-width:32px; max-width:44px; height: 9vw; min-height:32px; max-height:44px;
-    background: #fff5ea; border-radius: 11px;
-    font-size: 1.28rem; font-weight: 800;
-    color: #5e219b; box-shadow: 0 0 6px #fdafb855;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: background-color .3s, color .3s;
-    user-select: none;
-  }
-  .grid-cell.found { color: white; font-weight: 900; }
-  .grid-cell.selected { border:2px solid #8dcaff; box-shadow: 0 0 8px #5dafff55; z-index:2;}
-  #result-text {
-    font-size: 1.3rem; color: #d63a6d; margin: 14px 0 0 0;
-    font-weight: 700;
-  }
-  #btn-novo {
-    background: #e4bafe; color: #6121a9;
-    border: none; border-radius: 19px; font-weight: 900;
-    font-size: 1.17rem; box-shadow: 0 3px 12px #edbbdb88;
-    padding: 12px 38px; margin-top: 18px; cursor: pointer;
-    transition: background-color .3s;
-  }
-  #btn-novo:hover {background: #912ba2; color: #fff;}
-</style>
-</head>
-<body>
-<button id="btn-menu" aria-label="Voltar ao menu">MENU DE JOGOS</button>
-<header>Caça Palavras - MusiKids Fun</header>
-<main>
-  <div class="panel">
-    <h3>Encontrar:</h3>
-    <ul id="palavras-alvo"></ul>
-  </div>
-  <div id="grid-wrap">
-    <div id="grid"></div>
-    <div id="result-text"></div>
-    <button id="btn-novo" style="display:none;">Novo Jogo</button>
-  </div>
-  <div class="panel panel-found">
-    <h3>Encontradas:</h3>
-    <ul id="palavras-achadas"></ul>
-  </div>
-</main>
-<div id="confetti"></div>
-<script>
-const PALAVRAS = [
-"ANJO","CACHORRO","GATO","JARDIM","CARRO","TIGRE","CAJU","BORBOLETA","PATO","CASA","FELICIDADE","CERTO","JANELA","SORRISO","CORAÇÃO","LARANJA","AMOR","PASSARINHO","AMIZADE","VACA","SOL","VERDE","FAMÍLIA","FLOR","ESCOLA","PEIXE","ARVORE","CEBOLA","SAPO","TERRA","AMARELO","AZUL","ROSA","NAVIO","ONÇA","LIVRO","GEMA","BANANA","FOFO","CEREJA","FITA","CAIXA","PAPAI","MAMÃE","ELEFANTE","BRINQUEDO","BOLA","TESOURA","BACIA"
-];
+```html
 
+<!DOCTYPE html> <html lang="pt-BR"> <head> <meta charset="UTF-8"/> <meta name="viewport" content="width=device-width, initial-scale=1"/> <title>Caça Palavras - MusiKids Fun</title> <style> @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap'); body { margin: 0; padding: 0; min-height: 100vh; font-family: 'Baloo 2', cursive, Arial, sans-serif; background: linear-gradient(135deg,#f7f4e9,#f8b500,#ff7eb9 100%); color: #32434a; user-select: none; box-sizing: border-box; text-align: center; } #btn-menu { position: fixed; top: 15px; left: 15px; background: #a1d578; color: #214d0d; border-radius: 18px; padding: 14px 22px; font-weight: 900; font-size: 1.25rem; cursor: pointer; box-shadow: 0 0 15px #a1d578aa; border: none; user-select: none; z-index: 10000; transition: background-color .3s ease; } #btn-menu:hover { background: #68922b; color: white; } header { margin-top: 75px; font-weight: 900; font-size: 2.4rem; color: #d63a6d; user-select: none; margin-bottom: 16px; } main { max-width: 950px; margin: 0 auto; background: white; border-radius: 28px; box-shadow: 0 4px 18px #ffd3e466; padding: 20px 8px 30px 8px; display: flex; gap: 18px; flex-direction: row; justify-content: center; align-items: flex-start; } .panel { width: 170px; min-width: 110px; background: #fcf4ff; border-radius: 23px; padding: 16px 8px 24px 8px; box-shadow: 0 3px 12px #ffd1e2aa; text-align: left; } .panel h3 { font-size: 1.07rem; color: #ff7eb9; margin-bottom: .6rem; font-weight: 800; } .panel ul { list-style: none; padding: 0; margin: 0; font-size: 1.13rem; color: #4c6d8c; font-weight: 700; } .panel-found { background: #e7ffd2; } #grid-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; } #grid { display: grid; gap: 4px; background: #f6ebff; border-radius: 20px; padding: 12px; box-shadow: 0 0 11px #e7abd7a3; margin-bottom: 15px; touch-action: manipulation; user-select: none; } .grid-cell { width: 9vw; min-width: 32px; max-width: 44px; height: 9vw; min-height: 32px; max-height: 44px; background: #fff5ea; border-radius: 11px; font-size: 1.28rem; font-weight: 800; color: #5e219b; box-shadow: 0 0 6px #fdafb855; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background-color .3s, color .3s; } .grid-cell.found { color: white; font-weight: 900; } .grid-cell.selected { border: 3px solid #8dcaff; box-shadow: 0 0 8px #5dafff55; z-index: 10; background: #d3ebff; } #result-text { font-size: 1.3rem; color: #d63a6d; margin: 14px 0 0 0; font-weight: 700; } #btn-novo { background: #e4bafe; color: #6121a9; border: none; border-radius: 19px; font-weight: 900; font-size: 1.17rem; box-shadow: 0 3px 12px #edbbdb88; padding: 12px 38px; margin-top: 18px; cursor: pointer; transition: background-color .3s; user-select: none; display: none; } #btn-novo:hover { background: #912ba2; color: #fff;} </style> </head> <body> <button id="btn-menu" aria-label="Voltar ao menu">MENU DE JOGOS</button> <header>Caça Palavras - MusiKids Fun</header> <main> <div class="panel"> <h3>Encontrar:</h3> <ul id="palavras-alvo"></ul> </div> <div id="grid-wrap"> <div id="grid" aria-label="Caça palavras" role="grid"></div> <div id="result-text"></div> <button id="btn-novo" aria-label="Novo jogo">Novo Jogo</button> </div> <div class="panel panel-found"> <h3>Encontradas:</h3> <ul id="palavras-achadas"></ul> </div> </main> <div id="confetti"></div> <script> const PALAVRAS = [ "ANJO","CACHORRO","GATO","JARDIM","CARRO","TIGRE","CAJU","BORBOLETA","PATO","CASA", "FELICIDADE","CERTO","JANELA","SORRISO","CORAÇÃO","LARANJA","AMOR","PASSARINHO","AMIZADE","VACA", "SOL","VERDE","FAMÍLIA","FLOR","ESCOLA","PEIXE","ARVORE","CEBOLA","SAPO","TERRA", "AMARELO","AZUL","ROSA","NAVIO","ONÇA","LIVRO","GEMA","BANANA","FOFO","CEREJA", "FITA","CAIXA","PAPAI","MAMÃE","ELEFANTE","BRINQUEDO","BOLA","TESOURA","BACIA","GEMA" ];
 const CORES = [
-  "#ff7eb9","#bcebff","#e7ffd2","#ffd0d3","#b8b9ff","#fdffa9","#b9faf8","#f9b9ff",
-  "#ffd9ae","#baffda","#fbb1b1","#e3cdff","#fdf07a","#f7bbe6","#7ef5be","#ccecff"
+"#ff7eb9","#bcebff","#e7ffd2","#ffd0d3","#b8b9ff","#fdffa9","#b9faf8","#f9b9ff",
+"#ffd9ae","#baffda","#fbb1b1","#e3cdff","#fdf07a","#f7bbe6","#7ef5be","#ccecff"
 ];
 
 const TAMANHO = 12;
@@ -125,266 +20,228 @@ btnMenu.onclick = () => location.href = "../index.html";
 let palavrasAtivas = [], encontradas = [], gridData = [], corDasPalavras = {};
 
 function shuffle(arr) {
-  return arr.map(i=>[Math.random(),i]).sort((a,b)=>a[0]-b[0]).map(i=>i[1]);
+return arr.map(i => [Math.random(), i]).sort((a, b) => a - b).map(i => i);
 }
 
 function sorteiaPalavras() {
-  return shuffle(PALAVRAS).slice(0,10);
+return shuffle(PALAVRAS).slice(0, 10);
 }
 
 function iniciaGrid() {
-  gridData = Array(TAMANHO).fill(0).map(()=>Array(TAMANHO).fill(''));
-  corDasPalavras = {};
+gridData = Array(TAMANHO).fill(0).map(() => Array(TAMANHO).fill(''));
+corDasPalavras = {};
 
-  palavrasAtivas.forEach((palavra, idx) => {
-    let colocada = false, tentativas = 0, modo = Math.random() > 0.5 ? 'H' : 'V';
-    const cor = CORES[idx % CORES.length];
-    corDasPalavras[palavra] = cor;
-    while(!colocada && tentativas<40) {
-      if(modo==='H') {
-        let row = Math.floor(Math.random() * TAMANHO);
-        let col = Math.floor(Math.random() * (TAMANHO-palavra.length+1));
-        let cabem = true;
-        for(let k=0;k<palavra.length;k++) {
-          const letra = gridData[row][col+k];
-          if(letra && letra!==palavra[k]) { cabem=false; break;}
-        }
-        if(cabem) {
-          for(let k=0;k<palavra.length;k++) gridData[row][col+k]=palavra[k];
-          colocada=true;
-        }
-      }
-      else { // vertical
-        let row = Math.floor(Math.random() * (TAMANHO-palavra.length+1));
-        let col = Math.floor(Math.random() * TAMANHO);
-        let cabem = true;
-        for(let k=0;k<palavra.length;k++) {
-          const letra = gridData[row+k][col];
-          if(letra && letra!==palavra[k]) {cabem=false;break;}
-        }
-        if(cabem) {
-          for(let k=0;k<palavra.length;k++) gridData[row+k][col]=palavra[k];
-          colocada=true;
-        }
-      }
-      tentativas++;
-      if(tentativas===20) modo = modo==='H'?'V':'H';
-    }
-  });
-  for(let i=0;i<TAMANHO;i++)
-    for(let j=0;j<TAMANHO;j++)
-      if(!gridData[i][j])
-        gridData[i][j] = String.fromCharCode(65+Math.floor(Math.random()*26));
+palavrasAtivas.forEach((palavra, idx) => {
+let colocada = false, tentativas = 0, modo = Math.random() > 0.5 ? 'H' : 'V';
+const cor = CORES[idx % CORES.length];
+corDasPalavras[palavra] = cor;
+while(!colocada && tentativas<40) {
+if(modo === 'H') {
+let row = Math.floor(Math.random() * TAMANHO);
+let col = Math.floor(Math.random() * (TAMANHO - palavra.length + 1));
+let cabem = true;
+for(let k = 0; k < palavra.length; k++) {
+const letra = gridData[row][col + k];
+if(letra && letra !== palavra[k]) { cabem = false; break; }
+}
+if(cabem) {
+for(let k = 0; k < palavra.length; k++) gridData[row][col + k] = palavra[k];
+colocada = true;
+}
+} else {
+let row = Math.floor(Math.random() * (TAMANHO - palavra.length + 1));
+let col = Math.floor(Math.random() * TAMANHO);
+let cabem = true;
+for(let k = 0; k < palavra.length; k++) {
+const letra = gridData[row + k][col];
+if(letra && letra !== palavra[k]) { cabem = false; break; }
+}
+if(cabem) {
+for(let k = 0; k < palavra.length; k++) gridData[row + k][col] = palavra[k];
+colocada = true;
+}
+}
+tentativas++;
+if(tentativas === 20) modo = modo === 'H' ? 'V' : 'H';
+}
+});
+
+for(let i = 0; i < TAMANHO; i++)
+for(let j = 0; j < TAMANHO; j++)
+if(!gridData[i][j])
+gridData[i][j] = String.fromCharCode(65 + Math.floor(Math.random() * 26));
 }
 
 function desenhaGrid() {
-  gridElem.innerHTML = '';
-  gridElem.style.gridTemplateColumns = `repeat(${TAMANHO}, 1fr)`;
-  gridElem.style.gridTemplateRows = `repeat(${TAMANHO}, 1fr)`;
-  for(let i=0;i<TAMANHO;i++) {
-    for(let j=0;j<TAMANHO;j++) {
-      let cell = document.createElement('div');
-      cell.className = 'grid-cell';
-      cell.textContent = gridData[i][j];
-      cell.dataset.row = i; cell.dataset.col = j;
-      cell.addEventListener('mousedown', gridCellClickStart, false);
-      cell.addEventListener('touchstart', gridCellClickStart, false);
-      cell.addEventListener('click', gridCellClickOnce, false);
-      gridElem.appendChild(cell);
-    }
-  }
+gridElem.innerHTML = '';
+gridElem.style.gridTemplateColumns = repeat(${TAMANHO}, 1fr);
+gridElem.style.gridTemplateRows = repeat(${TAMANHO}, 1fr);
+for(let i=0; i<TAMANHO; i++){
+for(let j=0; j<TAMANHO; j++){
+let cell = document.createElement('div');
+cell.className = 'grid-cell';
+cell.textContent = gridData[i][j];
+cell.dataset.row = i;
+cell.dataset.col = j;
+cell.tabIndex = 0;
+cell.setAttribute('role', 'gridcell');
+cell.addEventListener('click', onGridCellClick);
+gridElem.appendChild(cell);
+}
+}
 }
 
-function desenhaPainel() {
-  alvoElem.innerHTML = '';
-  achadasElem.innerHTML = '';
-  palavrasAtivas.forEach(p=> {
-    if(encontradas.includes(p)) return;
-    let li = document.createElement('li');
-    li.textContent = p;
-    alvoElem.appendChild(li);
-  });
-  encontradas.forEach((p,idx)=> {
-    let li = document.createElement('li');
-    li.innerHTML = `<span style="padding:3px 8px;border-radius:9px;background:${corDasPalavras[p]};color:#fff;">${p}</span>`;
-    achadasElem.appendChild(li);
-  });
+let selectedCells = [];
+let selectingByClick = false; // modo selecionar letra a letra
+
+function clearSelection(){
+selectedCells.forEach(({elem})=>{
+elem.classList.remove('selected');
+});
+selectedCells = [];
 }
 
-function reiniciaJogo() {
-  palavrasAtivas = sorteiaPalavras();
-  encontradas = [];
-  iniciaGrid();
-  desenhaGrid();
-  desenhaPainel();
-  resultText.textContent = '';
-  btnNovo.style.display = 'none';
-  Array.from(document.querySelectorAll('.grid-cell')).forEach(cell=>{ cell.classList.remove('found','selected'); cell.style.background=''; cell.style.color=''; });
-  selectionStart = selectionEnd = null;
+function onGridCellClick(e){
+let cell = e.target;
+if(!selectingByClick){
+selectingByClick = true;
+clearSelection();
+addCellToSelection(cell);
+} else {
+addCellToSelection(cell);
+if(selectedCells.length < 2) return;
+let [first, second] = selectedCells;
+if(isStraightLine(first, second)){
+selectWordBetween(first, second);
+}
+selectingByClick = false;
+clearSelection();
+}
 }
 
-function verificaPalavraSelecionada(indices) {
-  let texto = indices.map(([i,j])=>gridData[i][j]).join('');
-  let textoInvert = indices.map(([i,j])=>gridData[i][j]).reverse().join('');
-  for(let palavra of palavrasAtivas) {
-    if((texto===palavra || textoInvert===palavra) && !encontradas.includes(palavra)) {
-      destacando(indices, corDasPalavras[palavra]);
-      encontradas.push(palavra);
-      desenhaPainel();
-      if(encontradas.length===palavrasAtivas.length) {
-        resultText.textContent = 'Parabéns! Encontrou todas!';
-        btnNovo.style.display = "inline-block";
-        confetti();
-      }
-      return true;
-    }
-  }
-  return false;
+function addCellToSelection(cell){
+if(selectedCells.some(c=>c.elem===cell)) return;
+cell.classList.add('selected');
+selectedCells.push({elem: cell, row: Number(cell.dataset.row), col: Number(cell.dataset.col)});
 }
 
-function destacando(indices, cor) {
-  indices.forEach(([i,j])=>{
-    Array.from(gridElem.children).forEach(cell=>{
-      if(Number(cell.dataset.row)===i && Number(cell.dataset.col)===j) {
-        cell.classList.add('found');
-        cell.classList.remove('selected');
-        cell.style.background=cor;
-        cell.style.color="#fff";
-      }
-    });
-  });
+function isStraightLine(a, b){
+return a.row === b.row || a.col === b.col;
 }
 
-// Seleção dupla (clique/tap início e fim) ou arrasto
-let selectionStart = null, selectionEnd = null, selecting = false;
-
-function clearSelection() {
-  Array.from(gridElem.children).forEach(cell=>cell.classList.remove('selected'));
+function selectWordBetween(a,b){
+let cells = [];
+if(a.row === b.row){
+let [start, end] = a.col < b.col ? [a.col, b.col] : [b.col, a.col];
+for(let c=start; c<=end; c++){
+cells.push({row: a.row, col: c});
+}
+} else {
+let [start, end] = a.row < b.row ? [a.row, b.row] : [b.row, a.row];
+for(let r=start; r<=end; r++){
+cells.push({row: r, col: a.col});
+}
+}
+checkSelectedWord(cells);
 }
 
-function gridCellClickOnce(e) {
-  e.preventDefault();
-  let i = Number(this.dataset.row), j = Number(this.dataset.col);
-  if(selectionStart===null) {
-    selectionStart = [i,j];
-    this.classList.add('selected');
-  } else {
-    selectionEnd = [i,j];
-    clearSelection();
-    // só permite horizontais e verticais
-    if(selectionStart[0]===selectionEnd[0]) {
-      let arr=[]; let a=selectionStart[1],b=selectionEnd[1];
-      for(let k=Math.min(a,b);k<=Math.max(a,b);k++) arr.push([selectionStart[0],k]);
-      verificaPalavraSelecionada(arr);
-    } else if(selectionStart[1]===selectionEnd[1]) {
-      let arr=[]; let a=selectionStart[0],b=selectionEnd[0];
-      for(let k=Math.min(a,b);k<=Math.max(a,b);k++) arr.push([k,selectionStart[1]]);
-      verificaPalavraSelecionada(arr);
-    }
-    selectionStart=selectionEnd=null;
-  }
+let foundWords = [];
+function checkSelectedWord(cells){
+let word = cells.map(c=>gridData[c.row][c.col]).join('');
+let revWord = word.split('').reverse().join('');
+let found = false;
+for(let p of palavrasAtivas){
+if((p === word || p === revWord) && !foundWords.includes(p)){
+foundWords.push(p);
+highlightWord(cells, corDasPalavras[p]);
+updateLists();
+if(foundWords.length === palavrasAtivas.length){
+resultText.textContent = 'Parabéns! Você encontrou todas as palavras!';
+btnNovo.style.display = 'inline-block';
+confetti();
+}
+found = true;
+break;
+}
+}
+if(!found){
+// se desejar, coloque feedback de erro aqui
+}
 }
 
-// Arrasto: mouse/touch drag para selecionar (desktop e mobile)
-function gridCellClickStart(e) {
-  e.preventDefault();
-  selecting = true;
-  let cell = e.target;
-  let startRow = Number(cell.dataset.row), startCol = Number(cell.dataset.col);
-  selectionStart = [startRow, startCol]; selectionEnd = null;
-  clearSelection();
-  cell.classList.add("selected");
-  let moveHandler = function(ev) {
-    let touch = ev.touches ? ev.touches[0] : null;
-    let target = ev.target;
-    if (touch) {
-      let el = document.elementFromPoint(touch.clientX, touch.clientY);
-      if (el && el.classList.contains("grid-cell")) target = el;
-    }
-    if(!target.classList.contains("grid-cell")) return;
-    let endRow = Number(target.dataset.row), endCol = Number(target.dataset.col);
-    if((startRow===endRow)||(startCol===endCol)){
-      clearSelection();
-      let indices = [];
-      if(startRow===endRow) {
-        for(let k=Math.min(startCol,endCol);k<=Math.max(startCol,endCol);k++) {
-          indices.push([startRow,k]);
-        }
-      } else {
-        for(let k=Math.min(startRow,endRow);k<=Math.max(startRow,endRow);k++) {
-          indices.push([k,startCol]);
-        }
-      }
-      indices.forEach(([i,j])=>{
-        Array.from(gridElem.children).forEach(cell=>{
-          if(Number(cell.dataset.row)===i && Number(cell.dataset.col)===j){
-            cell.classList.add('selected');
-          }
-        });
-      });
-      selectionEnd = [endRow,endCol];
-    }
-  };
-
-  let endHandler = function(ev){
-    if(selecting && selectionStart && selectionEnd && ((selectionStart[0]===selectionEnd[0])||(selectionStart[1]===selectionEnd[1]))){
-      let arr = [];
-      if(selectionStart[0]===selectionEnd[0]){
-        for(let k=Math.min(selectionStart[1],selectionEnd[1]);k<=Math.max(selectionStart[1],selectionEnd[1]);k++) arr.push([selectionStart[0],k]);
-      }else{
-        for(let k=Math.min(selectionStart[0],selectionEnd[0]);k<=Math.max(selectionStart[0],selectionEnd[0]);k++) arr.push([k,selectionStart[1]]);
-      }
-      verificaPalavraSelecionada(arr);
-      clearSelection();
-      selectionStart=selectionEnd=null;
-    }
-    selecting=false;
-    document.removeEventListener('mousemove',moveHandler);
-    document.removeEventListener('touchmove',moveHandler);
-    document.removeEventListener('mouseup',endHandler);
-    document.removeEventListener('touchend',endHandler);
-  };
-
-  document.addEventListener('mousemove',moveHandler);
-  document.addEventListener('touchmove',moveHandler);
-  document.addEventListener('mouseup',endHandler);
-  document.addEventListener('touchend',endHandler);
+function highlightWord(cells, color){
+cells.forEach(({row,col})=>{
+[...gridElem.children].forEach(cell=>{
+if(Number(cell.dataset.row) === row && Number(cell.dataset.col) === col){
+cell.classList.add('found');
+cell.style.backgroundColor = color;
+cell.style.color = 'white';
+}
+});
+});
 }
 
-btnNovo.onclick = ()=>{reiniciaJogo();};
-
-// Confetes
-function confetti() {
-  let container = document.getElementById("confetti");
-  container.innerHTML = "";
-  const colors = ["#ff597f","#ff9ea1","#fcd677","#a9d97a","#79d79a"];
-  for(let i=0;i<100;i++) {
-    let c = document.createElement("div");
-    c.classList.add("confetti-piece");
-    c.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
-    c.style.top = Math.random() * window.innerHeight + "px";
-    c.style.left = Math.random() * window.innerWidth + "px";
-    c.style.width = "7px";
-    c.style.height = "7px";
-    c.style.position = "absolute";
-    c.style.borderRadius = "50%";
-    c.style.animation = "fall 3s linear forwards";
-    c.style.animationDelay = i * 0.03 + "s";
-    container.appendChild(c);
-  }
-  setTimeout(()=>{container.innerHTML = "";},3000);
+function updateLists(){
+alvoElem.innerHTML = '';
+achadasElem.innerHTML = '';
+palavrasAtivas.forEach(p=>{
+if(!foundWords.includes(p)){
+let li = document.createElement('li');
+li.textContent = p;
+alvoElem.appendChild(li);
+}
+});
+foundWords.forEach(p=>{
+let li = document.createElement('li');
+let span = document.createElement('span');
+span.textContent = p;
+span.style.padding = '3px 8px';
+span.style.borderRadius = '9px';
+span.style.backgroundColor = corDasPalavras[p];
+span.style.color = 'white';
+li.appendChild(span);
+achadasElem.appendChild(li);
+});
 }
 
-const style = document.createElement("style");
-style.innerHTML = `
-  @keyframes fall {
-    0% { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(100vh); opacity: 0; }
-  }
-`;
+function reiniciaJogo(){
+palavrasAtivas = sorteiaPalavras();
+foundWords = [];
+iniciaGrid();
+desenhaGrid();
+updateLists();
+resultText.textContent = '';
+btnNovo.style.display = 'none';
+}
+
+btnNovo.onclick = () => reiniciaJogo();
+
+function confetti(){
+const container = document.getElementById('confetti');
+container.innerHTML = '';
+const colors = ['#ff597f', '#ff9ea1', '#fcd677', '#a9d97a', '#79d79a'];
+for(let i=0;i<100;i++){
+const c = document.createElement('div');
+c.className = 'confetti-piece';
+c.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+c.style.top = Math.random()*window.innerHeight+'px';
+c.style.left = Math.random()window.innerWidth+'px';
+c.style.width = '7px';
+c.style.height = '7px';
+c.style.position = 'absolute';
+c.style.borderRadius = '50%';
+c.style.animation = 'fall 3s linear forwards';
+c.style.animationDelay = (i0.03)+'s';
+container.appendChild(c);
+}
+setTimeout(()=>{container.innerHTML='';},3000);
+}
+
+const style = document.createElement('style');
+style.textContent = @keyframes fall { 0% { transform: translateY(0); opacity: 1; } 100%{ transform: translateY(100vh); opacity: 0; } } .confetti-piece { pointer-events: none; position: fixed; z-index: 99999; };
 document.head.appendChild(style);
 
 reiniciaJogo();
 </script>
-</body>
-</html>
+
+</body> </html> ```
