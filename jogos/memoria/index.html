@@ -231,9 +231,10 @@ button.action-btn:hover:not(:disabled) {
     <div class="select-group">
       <label for="select-quantidade">Quantidade de cartas:</label>
       <select id="select-quantidade" aria-label="Selecionar quantidade de cartas">
+        <option value="8">8 cartas (4 pares)</option>
+        <option value="10" selected>10 cartas (5 pares)</option>
+        <option value="16">16 cartas (8 pares)</option>
         <option value="20">20 cartas (10 pares)</option>
-        <option value="40" selected>40 cartas (20 pares)</option>
-        <option value="60">60 cartas (30 pares)</option>
       </select>
     </div>
   </div>
@@ -287,15 +288,15 @@ const confettiContainer = document.getElementById('confetti');
 
 // Configura grid conforme quantidade
 function ajustaGrid(quantidade) {
-  if(quantidade <= 20) {
+  if(quantidade <= 10) {
     cardsGrid.style.gridTemplateColumns = 'repeat(5, 1fr)';
     cardsGrid.style.maxWidth = '380px';
-  } else if(quantidade <= 40) {
-    cardsGrid.style.gridTemplateColumns = 'repeat(8, 1fr)';
-    cardsGrid.style.maxWidth = '620px';
+  } else if(quantidade <= 16) {
+    cardsGrid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+    cardsGrid.style.maxWidth = '320px';
   } else {
-    cardsGrid.style.gridTemplateColumns = 'repeat(10, 1fr)';
-    cardsGrid.style.maxWidth = '780px';
+    cardsGrid.style.gridTemplateColumns = 'repeat(5, 1fr)';
+    cardsGrid.style.maxWidth = '400px';
   }
 }
 
@@ -313,8 +314,10 @@ function criaCartas() {
   const pares = quantidadeCartas / 2;
 
   let figuras = categoria === 'animais' ? figurasAnimais : figurasObjetos;
+  // Embaralha sempre para variar as seleções em jogos novos
+  figuras = shuffle(figuras);
   if(pares > figuras.length) {
-    figuras = shuffle(figuras).slice(0, pares);
+    figuras = figuras.slice(0, pares);
   } else {
     figuras = figuras.slice(0, pares);
   }
@@ -327,7 +330,7 @@ function criaCartas() {
 
   figurasDuplicadas.forEach(figura => {
     const card = document.createElement('div');
-    card.className = 'card flipped'; // cartas começam mostrando a face
+    card.className = 'card'; // Começa sem 'flipped', mostrando a face da frente (figura)
     card.dataset.figura = figura;
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
@@ -358,7 +361,7 @@ function criaCartas() {
 function virarCarta(card) {
   if(!podeVirar) return;
   if(cartasViradas.includes(card) || card.classList.contains('matched')) return;
-  card.classList.add('flipped');
+  card.classList.remove('flipped'); // Remove 'flipped' para mostrar a face da frente (figura)
   cartasViradas.push(card);
   if(cartasViradas.length === 2) {
     podeVirar = false;
@@ -376,8 +379,9 @@ function verificaPar() {
       encerraJogo();
     }
   } else {
-    carta1.classList.remove('flipped');
-    carta2.classList.remove('flipped');
+    // Vira de volta para trás (adiciona 'flipped')
+    carta1.classList.add('flipped');
+    carta2.classList.add('flipped');
   }
   cartasViradas = [];
   podeVirar = true;
@@ -390,7 +394,12 @@ btnNovo.onclick = () => {
 
 btnVirar.onclick = () => {
   if(!jogoComecou) {
-    cartas.forEach(carta => carta.classList.remove('flipped')); // vira para trás
+    // Vira todas para trás (adiciona 'flipped')
+    cartas.forEach(carta => {
+      if (!carta.classList.contains('matched')) {
+        carta.classList.add('flipped');
+      }
+    });
     podeVirar = true;
     btnVirar.disabled = true;
     btnEspiar.disabled = false;
@@ -400,19 +409,27 @@ btnVirar.onclick = () => {
 
 btnEspiar.onclick = () => {
   if(espiarContador > 0 && jogoComecou) {
-    cartas.forEach(carta => carta.classList.add('flipped'));
+    // Remove 'flipped' temporariamente para mostrar as faces da frente
+    cartas.forEach(carta => {
+      if (!carta.classList.contains('matched')) {
+        carta.classList.remove('flipped');
+      }
+    });
     btnEspiar.disabled = true;
     espiarContador--;
     updateTexto();
     btnEspiar.textContent = `Espiar (${espiarContador})`;
     setTimeout(() => {
       if(podeVirar) {
+        // Vira de volta para trás (adiciona 'flipped')
         cartas.forEach(carta => {
-          if(!carta.classList.contains('matched')) carta.classList.remove('flipped');
+          if(!carta.classList.contains('matched')) {
+            carta.classList.add('flipped');
+          }
         });
         btnEspiar.disabled = espiarContador === 0;
       }
-    }, 2000);
+    }, 7000); // Aumentado para 7 segundos
   }
 };
 
@@ -425,6 +442,11 @@ function encerraJogo() {
   confete();
   btnVirar.disabled = true;
   btnEspiar.disabled = true;
+  
+  // Inicia novo jogo automaticamente após 4 segundos
+  setTimeout(() => {
+    criaCartas();
+  }, 4000);
 }
 
 function confete() {
