@@ -312,7 +312,6 @@ function criaCartas() {
   const quantidadeCartas = Number(selectQuantidade.value);
   const pares = quantidadeCartas / 2;
 
-  // Seleciona as figuras conforme categoria
   let figuras = categoria === 'animais' ? figurasAnimais : figurasObjetos;
   if(pares > figuras.length) {
     figuras = shuffle(figuras).slice(0, pares);
@@ -320,16 +319,15 @@ function criaCartas() {
     figuras = figuras.slice(0, pares);
   }
 
-  // Duplicar e embaralhar
   let figurasDuplicadas = [...figuras, ...figuras];
   figurasDuplicadas = shuffle(figurasDuplicadas);
 
   cartas = [];
   cardsGrid.innerHTML = '';
 
-  figurasDuplicadas.forEach((figura, idx) => {
+  figurasDuplicadas.forEach(figura => {
     const card = document.createElement('div');
-    card.className = 'card flipped'; // cartas começam viradas para frente
+    card.className = 'card flipped'; // cartas começam mostrando a face
     card.dataset.figura = figura;
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
@@ -350,7 +348,6 @@ function criaCartas() {
   espiarContador = 3;
   podeVirar = false;
   jogoComecou = false;
-
   btnVirar.disabled = false;
   btnVirar.textContent = 'Virar Cartas para trás';
   btnEspiar.disabled = true;
@@ -392,11 +389,10 @@ btnNovo.onclick = () => {
 };
 
 btnVirar.onclick = () => {
-  if (!jogoComecou) {
-    // Vira todas para trás
-    cartas.forEach(carta => carta.classList.remove('flipped'));
+  if(!jogoComecou) {
+    cartas.forEach(carta => carta.classList.remove('flipped')); // vira para trás
     podeVirar = true;
-    btnVirar.disabled = true; // vira uma vez só
+    btnVirar.disabled = true;
     btnEspiar.disabled = false;
     jogoComecou = true;
   }
@@ -446,7 +442,6 @@ function confete() {
   setTimeout(() => { confettiContainer.innerHTML = ''; }, 3500);
 }
 
-// Inicializa no carregamento
 window.onload = () => {
   updateTexto();
   btnVirar.disabled = true;
