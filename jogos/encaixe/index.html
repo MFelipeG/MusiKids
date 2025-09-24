@@ -90,6 +90,7 @@ header {
   margin-top: 15px;
 }
 
+/* Formas arrastáveis */
 .shape-draggable, .drop-zone {
   width: 80px;
   height: 80px;
@@ -103,37 +104,34 @@ header {
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-.shape-draggable {
-  /* clip-paths para formas definidas pelo css classes */
-}
-
+/* Formas arrastáveis - cores e clip-paths */
 .shape-draggable.square { background: #ff6b6b; clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); }
 .shape-draggable.circle { background: #4ecdc4; clip-path: circle(50%); }
 .shape-draggable.triangle { background: #45b7d1; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
 .shape-draggable.rectangle { background: #96ceb4; clip-path: polygon(0 0, 100% 0, 100% 20%, 0 20%); width: 100px; }
 
-/* Zonas de drop transparentes com clip-paths */
-.drop-zone {
-  background: transparent;
-  border: 3px dashed #d63a6d;
-  opacity: 0.5;
-  transition: border-color 0.3s ease, opacity 0.3s ease;
-}
+/* Zonas de drop - mesmas formas com cor correspondente */
+.drop-zone.square { background: #ff6b6b; clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); }
+.drop-zone.circle { background: #4ecdc4; clip-path: circle(50%); }
+.drop-zone.triangle { background: #45b7d1; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
+.drop-zone.rectangle { background: #96ceb4; clip-path: polygon(0 0, 100% 0, 100% 20%, 0 20%); width: 100px; }
 
-.drop-zone.square { clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); }
-.drop-zone.circle { clip-path: circle(50%); }
-.drop-zone.triangle { clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
-.drop-zone.rectangle { clip-path: polygon(0 0, 100% 0, 100% 20%, 0 20%); width: 100px; }
+.drop-zone {
+  border: 3px dashed #d63a6d;
+  opacity: 0.7;
+  transition: border-color 0.3s ease, opacity 0.3s ease;
+  position: relative;
+}
 
 .drop-zone:hover {
   border-color: #ff7eb9;
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 .drop-zone.correct {
   border-color: #a1d578;
   opacity: 1;
-  background: rgba(161, 213, 120, 0.2);
+  background-color: rgba(161, 213, 120, 0.4);
 }
 
 .drop-zone.filled {
@@ -172,6 +170,16 @@ header {
   100% { transform: translateY(100vh); opacity: 0; }
 }
 
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.drop-zone.error {
+  animation: shake 0.5s;
+}
+
 /* Responsivo para mobile */
 @media (max-width: 768px) {
   #shapes-pool {
@@ -181,17 +189,6 @@ header {
     width: 60px;
     height: 60px;
   }
-}
-
-/* Animação de tremor para erro */
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
-}
-
-.drop-zone.error {
-  animation: shake 0.5s;
 }
 </style>
 </head>
@@ -221,51 +218,10 @@ const formasGeometricas = [
   { nome: 'square', label: 'Quadrado', css: 'square' },
   { nome: 'circle', label: 'Círculo', css: 'circle' },
   { nome: 'triangle', label: 'Triângulo', css: 'triangle' },
-  { nome: 'rectangle', label: 'Retângulo', css: 'rectangle' },
-  { nome: 'pentagon', label: 'Pentágono', css: 'pentagon' },
-  { nome: 'hexagon', label: 'Hexágono', css: 'hexagon' },
-  { nome: 'octagon', label: 'Octógono', css: 'octagon' },
-  { nome: 'star', label: 'Estrela', css: 'star' },
-  { nome: 'heart', label: 'Coração', css: 'heart' },
-  { nome: 'diamond', label: 'Losango', css: 'diamond' },
-  { nome: 'oval', label: 'Oval', css: 'oval' },
-  { nome: 'trapezoid', label: 'Trapézio', css: 'trapezoid' },
-  { nome: 'parallelogram', label: 'Paralelogramo', css: 'parallelogram' },
-  { nome: 'arrow', label: 'Seta', css: 'arrow' },
-  { nome: 'cross', label: 'Cruz', css: 'cross' },
-  { nome: 'moon', label: 'Lua', css: 'moon' },
-  { nome: 'sun', label: 'Sol', css: 'sun' },
-  { nome: 'wave', label: 'Onda', css: 'wave' },
-  { nome: 'house', label: 'Casa', css: 'house' },
-  { nome: 'cloud', label: 'Nuvem', css: 'cloud' },
-  { nome: 'lightning', label: 'Raio', css: 'lightning' },
-  { nome: 'bottle', label: 'Garrafa', css: 'bottle' },
-  { nome: 'flag', label: 'Bandeira', css: 'flag' },
-  { nome: 'key', label: 'Chave', css: 'key' },
-  { nome: 'lock', label: 'Cadeado', css: 'lock' },
-  { nome: 'book', label: 'Livro', css: 'book' },
-  { nome: 'flower', label: 'Flor', css: 'flower' },
-  { nome: 'leaf', label: 'Folha', css: 'leaf' },
-  { nome: 'drop', label: 'Gota', css: 'drop' },
-  { nome: 'bone', label: 'Osso', css: 'bone' },
-  { nome: 'paw', label: 'Pata', css: 'paw' },
-  { nome: 'gear', label: 'Engrenagem', css: 'gear' },
-  { nome: 'shield', label: 'Escudo', css: 'shield' },
-  { nome: 'gem', label: 'Gema', css: 'gem' },
-  { nome: 'balloon', label: 'Balão', css: 'balloon' },
-  { nome: 'hat', label: 'Chapéu', css: 'hat' },
-  { nome: 'apple', label: 'Maçã', css: 'apple' },
-  { nome: 'banana', label: 'Banana', css: 'banana' },
-  { nome: 'carrot', label: 'Cenoura', css: 'carrot' },
-  { nome: 'starfish', label: 'Estrela do Mar', css: 'starfish' },
-  { nome: 'shell', label: 'Concha', css: 'shell' },
-  { nome: 'fish', label: 'Peixe', css: 'fish' },
-  { nome: 'tree', label: 'Árvore', css: 'tree' },
-  { nome: 'mountain', label: 'Montanha', css: 'mountain' },
-  { nome: 'rainbow', label: 'Arco-íris', css: 'rainbow' }
+  { nome: 'rectangle', label: 'Retângulo', css: 'rectangle' }
 ];
 
-const coresAleatorias = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff', '#5f27cd', '#ff3838', '#00d2d3', '#ff9f43', '#48dbfb', '#0abde3', '#c44569', '#eea849', '#a55eea', '#f0932b', '#eb4d4b', '#6c5ce7', '#fd79a8', '#00b894', '#00cec9', '#55a3ff', '#a29bfe', '#e17055', '#fdcb6e', '#74b9ff', '#57606f'];
+const coresAleatorias = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4'];
 
 let formasAtuais = [];
 let formasUsadas = [];
@@ -285,12 +241,13 @@ function shuffle(arr) {
 }
 
 function getFormasUnicas() {
+  // Evita repetições consecutivas mas aqui temos só 4
   let pool = formasGeometricas.filter(f => !formasUsadas.includes(f.nome));
   if (pool.length < 4) {
-    pool = [...formasGeometricas]; // Reset pool se esgotado
+    pool = [...formasGeometricas];
     formasUsadas = [];
   }
-  const selecionadas = shuffle(pool).slice(0, 4);
+  let selecionadas = shuffle(pool).slice(0, 4);
   formasUsadas.push(...selecionadas.map(f => f.nome));
   return selecionadas;
 }
@@ -314,9 +271,10 @@ function criaJogo() {
   });
 
   // Cria 4 zonas de drop (parte inferior grid 2x2)
-  formasAtuais.forEach(forma => {
+  formasAtuais.forEach((forma, index) => {
     const zone = document.createElement('div');
     zone.className = `drop-zone ${forma.css}`;
+    zone.style.backgroundColor = coresAleatorias[index % coresAleatorias.length];
     zone.dataset.shapeType = forma.nome;
     zone.addEventListener('dragover', dragOver);
     zone.addEventListener('drop', drop);
