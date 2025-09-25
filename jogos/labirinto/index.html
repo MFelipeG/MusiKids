@@ -43,9 +43,9 @@
   }
   #maze-container {
     display: grid;
-    grid-template-columns: repeat(10, 40px);
-    grid-template-rows: repeat(10, 40px);
-    gap: 4px;
+    grid-template-columns: repeat(21, 30px);
+    grid-template-rows: repeat(21, 30px);
+    gap: 2px;
     background-color: #fff0f6;
     padding: 20px;
     border-radius: 20px;
@@ -53,9 +53,9 @@
     touch-action: manipulation;
   }
   .cell {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
     box-sizing: border-box;
   }
   .wall {
@@ -107,14 +107,15 @@
   }
   @media (max-width: 720px) {
     #maze-container {
-      grid-template-columns: repeat(10, 30px);
-      grid-template-rows: repeat(10, 30px);
-      gap: 3px;
+      grid-template-columns: repeat(21, 22px);
+      grid-template-rows: repeat(21, 22px);
+      gap: 1.5px;
       padding: 15px;
     }
     .cell {
-      width: 30px;
-      height: 30px;
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
     }
     button.control-btn {
       padding: 12px 18px;
@@ -151,51 +152,93 @@ const controls = {
 const CELL_WALL = 1;
 const CELL_PATH = 0;
 
-const mazes = generateMazes(100); // Array de 100 labirintos
+// Maze dimensions: full grid 21x21, where path cells are on odd indices only.
+// We generate a 10x10 maze where cells are spaced by walls.
+const GRID_SIZE = 21;
+
+let mazes = [];
 let currentMazeIndex = 0;
-let playerPosition = {x: 0, y: 0};
+let playerPosition = {x: 1, y: 0};
+let solvedTimeout = null;
 
-function generateMazes(count) {
-  const generated = [];
-  for(let i=0; i<count; i++) {
-    generated.push(generateMaze());
-  }
-  return generated;
-}
-
+// Generates and returns a perfect maze using DFS Recursive Backtracker algorithm
 function generateMaze() {
-  const size = 10;
-  const maze = Array(size).fill(0).map(() => Array(size).fill(CELL_WALL));
-  for(let i=1; i<size-1; i++) {
-    for(let j=1; j<size-1; j++) {
-      maze[i][j] = CELL_PATH;
+  const maze = Array(GRID_SIZE).fill(null).map(() => Array(GRID_SIZE).fill(CELL_WALL));
+
+  // Carve out initial grid of cells (odd indices)
+  for(let y=1; y<GRID_SIZE; y+=2) {
+    for(let x=1; x<GRID_SIZE; x+=2) {
+      maze[y][x] = CELL_PATH;
     }
   }
-  for(let k=0; k<20; k++) {
-    let rx = Math.floor(Math.random() * (size-2)) + 1;
-    let ry = Math.floor(Math.random() * (size-2)) + 1;
-    maze[rx][ry] = CELL_WALL;
+
+  // Stack for DFS
+  const stack = [];
+  let cx = 1, cy = 1;
+  const visited = new Set();
+  visited.add(cy+","+cx);
+  stack.push({x: cx, y: cy});
+
+  while(stack.length > 0) {
+    const current = stack[stack.length - 1];
+    const neighbors = [];
+
+    const directions = [
+      {dx: 0, dy: -2, wall: {x: current.x, y: current.y - 1}},
+      {dx: 0, dy: 2, wall: {x: current.x, y: current.y + 1}},
+      {dx: -2, dy: 0, wall: {x: current.x - 1, y: current.y}},
+      {dx: 2, dy: 0, wall: {x: current.x + 1, y: current.y}}
+    ];
+
+    for (const d of directions) {
+      const nx = current.x + d.dx;
+      const ny = current.y + d.dy;
+      if(nx > 0 && ny > 0 && nx < GRID_SIZE && ny < GRID_SIZE) {
+        if(!visited.has(ny+","+nx)) neighbors.push(d);
+      }
+    }
+
+    if(neighbors.length > 0) {
+      const chosen = neighbors[Math.floor(Math.random()*neighbors.length)];
+      maze[chosen.wall.y][chosen.wall.x] = CELL_PATH; // remove wall between
+      maze[current.y + chosen.dy][current.x + chosen.dx] = CELL_PATH; // path cell
+      visited.add((current.y + chosen.dy)+","+(current.x + chosen.dx));
+      stack.push({x: current.x + chosen.dx, y: current.y + chosen.dy});
+    } else {
+      stack.pop();
+    }
   }
-  maze[1][1] = CELL_PATH;
-  maze[size-2][size-2] = CELL_PATH;
+
+  // Open entrance and exit
+  maze[0][1] = CELL_PATH;
+  maze[GRID_SIZE-1][GRID_SIZE-2] = CELL_PATH;
+
   return maze;
+}
+
+function generateMazes(count) {
+  const arr = [];
+  for(let i=0; i<count; i++) {
+    arr.push(generateMaze());
+  }
+  return arr;
 }
 
 function renderMaze(maze) {
   mazeContainer.innerHTML = "";
-  mazeContainer.style.gridTemplateColumns = `repeat(${maze[0].length}, 40px)`;
-  mazeContainer.style.gridTemplateRows = `repeat(${maze.length}, 40px)`;
-  for (let y=0; y<maze.length; y++) {
-    for (let x=0; x<maze[y].length; x++) {
-      let cell = document.createElement('div');
+  mazeContainer.style.gridTemplateColumns = `repeat(${GRID_SIZE}, 30px)`;
+  mazeContainer.style.gridTemplateRows = `repeat(${GRID_SIZE}, 30px)`;
+  for (let y=0; y<GRID_SIZE; y++) {
+    for(let x=0; x<GRID_SIZE; x++) {
+      const cell = document.createElement('div');
       cell.classList.add('cell');
-      cell.setAttribute('data-x', x);
-      cell.setAttribute('data-y', y);
       if(maze[y][x] === CELL_WALL) {
         cell.classList.add('wall');
       } else {
         cell.classList.add('path');
       }
+      cell.setAttribute('data-x', x);
+      cell.setAttribute('data-y', y);
       mazeContainer.appendChild(cell);
     }
   }
@@ -213,9 +256,7 @@ function placePlayer(pos) {
 }
 
 function checkWin() {
-  const maze = mazes[currentMazeIndex];
-  const size = maze.length;
-  return playerPosition.x === size-2 && playerPosition.y === size-2;
+  return playerPosition.x === GRID_SIZE-2 && playerPosition.y === GRID_SIZE-1;
 }
 
 function showMessage(text) {
@@ -225,6 +266,7 @@ function showMessage(text) {
 function movePlayer(direction) {
   let newX = playerPosition.x;
   let newY = playerPosition.y;
+
   if(direction === 'up') newY--;
   else if(direction === 'down') newY++;
   else if(direction === 'left') newX--;
@@ -233,8 +275,9 @@ function movePlayer(direction) {
   if(placePlayer({x: newX, y: newY})) {
     if(checkWin()) {
       showMessage("🎉 Você venceu! Próximo labirinto em 3 segundos...");
-      setTimeout(() => {
-        currentMazeIndex = (currentMazeIndex + 1) % mazes.length;
+      if (solvedTimeout) clearTimeout(solvedTimeout);
+      solvedTimeout = setTimeout(() => {
+        currentMazeIndex = (currentMazeIndex+1) % mazes.length;
         startMaze(currentMazeIndex);
       }, 3000);
     } else {
@@ -281,11 +324,13 @@ function setupTouchControls() {
 function startMaze(index) {
   const maze = mazes[index];
   renderMaze(maze);
-  placePlayer({x: 1, y: 1});
+  placePlayer({x: 1, y: 0}); // starts just after entrance
   showMessage("");
 }
 
 window.onload = () => {
+  mazes = generateMazes(100);
+  currentMazeIndex = 0;
   startMaze(currentMazeIndex);
   window.addEventListener('keydown', handleKeyDown);
   setupTouchControls();
