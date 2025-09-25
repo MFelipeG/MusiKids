@@ -64,6 +64,8 @@
   .img-item {
     width: 130px;
     height: 130px;
+    font-size: 70px;
+    line-height: 1;
     border-radius: 18px;
     background: #ffe4f3;
     box-shadow: 0 2px 8px rgba(214, 58, 109, 0.35);
@@ -130,6 +132,7 @@
     }
     .img-item {
       width: 100px; height: 100px;
+      font-size: 50px;
     }
     .img-item img {
       max-width: 80px; max-height: 80px;
@@ -185,6 +188,8 @@ function startGame() {
   selectedRight = null;
   message.textContent = "";
   usedPairs = getRandomPairs(5);
+  // Embaralhar a ordem de pares para os dois lados para evitar alinhamento frente a frente
+  shuffle(usedPairs);
   renderItems();
 }
 // Limpar jogo da tela
@@ -213,8 +218,11 @@ function getRandomPairs(n) {
 }
 // Renderizar os pares embaralhados
 function renderItems() {
+  // Embaralhar separadamente para os dois lados para mudar posição
   const leftItemsOrder = shuffle(usedPairs);
   const rightItemsOrder = shuffle(usedPairs);
+  leftCol.innerHTML = "";
+  rightCol.innerHTML = "";
   leftItemsOrder.forEach(pair => {
     const div = document.createElement("div");
     div.classList.add("img-item");
