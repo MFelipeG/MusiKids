@@ -157,6 +157,19 @@ let currentMazeIndex = 0;
 let playerPosition = {x: 1, y: 0};
 let solvedTimeout = null;
 
+function playErrorSound() {
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const oscillator = audioCtx.createOscillator();
+  const gainNode = audioCtx.createGain();
+  oscillator.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+  oscillator.type = 'triangle';
+  oscillator.frequency.setValueAtTime(440, audioCtx.currentTime);
+  gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+  oscillator.start();
+  oscillator.stop(audioCtx.currentTime + 0.2);
+}
+
 function generateMaze() {
   const maze = Array(GRID_SIZE).fill(null).map(() => Array(GRID_SIZE).fill(CELL_WALL));
   for(let y=1; y<GRID_SIZE; y+=2) {
@@ -275,7 +288,8 @@ function movePlayer(direction) {
       showMessage("");
     }
   } else {
-    showMessage("Movimento inválido! Tente outro caminho.");
+    playErrorSound(); // reproduz som de erro
+    showMessage("🚫 Não é por aqui! Tente outro caminho.");
   }
 }
 
@@ -313,6 +327,19 @@ function setupTouchControls() {
       else if(dy < -30) movePlayer('up');
     }
   });
+}
+
+function playErrorSound() {
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const oscillator = audioCtx.createOscillator();
+  const gainNode = audioCtx.createGain();
+  oscillator.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+  oscillator.type = 'triangle';
+  oscillator.frequency.setValueAtTime(440, audioCtx.currentTime);
+  gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+  oscillator.start();
+  oscillator.stop(audioCtx.currentTime + 0.2);
 }
 
 function startMaze(index) {
