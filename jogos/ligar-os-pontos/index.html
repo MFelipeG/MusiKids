@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Jogo de Ligar Objetos - MusiKids Fun</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Baloo 2', cursive, Arial, sans-serif;
+    background: linear-gradient(135deg, #f7f7ff, #ffd3e4);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    user-select: none;
+  }
+  #btn-menu {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    padding: 14px 24px;
+    background: #a1d578;
+    color: #214d0d;
+    border-radius: 20px;
+    font-weight: 900;
+    box-shadow: 0 0 20px #a1d578aa;
+    cursor: pointer;
+    border: none;
+    transition: background .3s;
+    z-index: 1000;
+  }
+  #btn-menu:hover {
+    background: #68922b;
+    color: white;
+  }
+  header {
+    margin: 85px 0 15px 0;
+    font-weight: 900;
+    font-size: 2.8rem;
+    color: #d63a6d;
+  }
+  #game-container {
+    max-width: 900px;
+    width: 100%;
+    background: white;
+    border-radius: 30px;
+    padding: 20px 30px 30px 30px;
+    box-shadow: 0 8px 30px #f3bbcfaa;
+    display: flex;
+    justify-content: space-between;
+    user-select: none;
+    position: relative;
+    overflow: visible;
+  }
+  #left-col, #right-col {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    width: 40%;
+    align-items: center;
+  }
+  .img-item {
+    width: 90px;
+    height: 90px;
+    border-radius: 18px;
+    background: #ffe4f3;
+    box-shadow: 0 2px 8px rgba(214, 58, 109, 0.35);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+  }
+  .img-item.selected {
+    box-shadow: 0 0 18px 5px #f99bbf;
+    transform: scale(1.1);
+    z-index: 10;
+  }
+  .img-item img {
+    max-width: 70px;
+    max-height: 70px;
+    user-select: none;
+    pointer-events: none;
+  }
+  #message {
+    position: absolute;
+    bottom: -70px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-weight: 800;
+    font-size: 1.35rem;
+    color: #d63a6d;
+    user-select: none;
+  }
+  /* SVG Canvas for lines */
+  #canvas-lines {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    user-select: none;
+    overflow: visible;
+    z-index: 5;
+  }
+  .confetti-piece {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    opacity: 1;
+    animation: fall 3s linear forwards;
+  }
+  @keyframes fall {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(100vh); opacity: 0; }
+  }
+  @media (max-width: 720px) {
+    #game-container {
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+    #left-col, #right-col {
+      width: 100%;
+      flex-direction: row;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .img-item {
+      width: 70px; height: 70px;
+    }
+    .img-item img {
+      max-width: 50px; max-height: 50px;
+    }
+    #message {
+      position: static;
+      margin-top: 10px;
+      transform: none;
+    }
+  }
+</style>
+</head>
+<body>
+<button id="btn-menu" aria-label="Voltar ao menu">MENU DE JOGOS</button>
+<header>Jogo de Ligar Objetos - MusiKids Fun</header>
+<div id="game-container">
+  <div id="left-col"></div>
+  <svg id="canvas-lines"></svg>
+  <div id="right-col"></div>
+  <div id="message" aria-live="assertive" role="alert"></div>
+</div>
+<div id="confetti-container"></div>
+<script>
+// Biblioteca de pares: chave objeto à direita e correspondente à esquerda
+const allPairs = [
+  {left:"dog", leftImg: "🐶", right:"doghouse", rightImg:"🏠"},
+  {left:"mouse", leftImg:"🐭", right:"cheese", rightImg:"🧀"},
+  {left:"cat", leftImg:"🐱", right:"yarn", rightImg:"🧶"},
+  {left:"bird", leftImg:"🐦", right:"nest", rightImg:"🪹"},
+  {left:"fish", leftImg:"🐟", right:"water", rightImg:"💧"},
+  {left:"turtle", leftImg:"🐢", right:"pond", rightImg:"🏞️"},
+  {left:"frog", leftImg:"🐸", right:"lily", rightImg:"🌸"},
+  {left:"cow", leftImg:"🐄", right:"milk", rightImg:"🥛"},
+  // ... imagine 100+ pares aqui, continue conforme necessidade
+];
+// Variáveis do jogo
+let usedPairs = [];
+const leftCol = document.getElementById("left-col");
+const rightCol = document.getElementById("right-col");
+const canvas = document.getElementById("canvas-lines");
+const message = document.getElementById("message");
+const btnMenu = document.getElementById("btn-menu");
+const confettiContainer = document.getElementById("confetti-container");
+
+btnMenu.onclick = () => location.href = "../index.html";
+
+let selectedLeft = null;
+let selectedRight = null;
+let lines = [];
+let matchedCount = 0;
+
+// Função para iniciar novo jogo
+function startGame() {
+  clearGame();
+  matchedCount = 0;
+  selectedLeft = null;
+  selectedRight = null;
+  message.textContent = "";
+  usedPairs = getRandomPairs(5);
+  renderItems();
+}
+
+function clearGame() {
+  leftCol.innerHTML = "";
+  rightCol.innerHTML = "";
+  lines.forEach(line => line.remove());
+  lines = [];
+  clearCanvas();
+}
+
+function clearCanvas() {
+  while (canvas.firstChild) {
+    canvas.removeChild(canvas.firstChild);
+  }
+}
+
+// Pega N pares aleatórios da biblioteca sem repetir mesmos em sequência
+function getRandomPairs(n) {
+  const pool = allPairs.filter(p => !usedPairs.some(up => up.left === p.left));
+  let arr = shuffle(pool);
+  if (arr.length < n) {
+    // Reset se faltam pares
+    usedPairs = [];
+    arr = shuffle(allPairs);
+  }
+  return arr.slice(0, n);
+}
+
+// Renderiza objetos nas colunas
+function renderItems() {
+  // Ordem embaralhada para cada lado
+  const leftItemsOrder = shuffle(usedPairs);
+  const rightItemsOrder = shuffle(usedPairs);
+
+  leftItemsOrder.forEach(pair => {
+    const div = document.createElement("div");
+    div.classList.add("img-item");
+    div.textContent = pair.leftImg;
+    div.dataset.key = pair.left;
+    div.tabIndex = 0;
+    div.onclick = () => selectLeft(div);
+    leftCol.appendChild(div);
+  });
+
+  rightItemsOrder.forEach(pair => {
+    const div = document.createElement("div");
+    div.classList.add("img-item");
+    div.textContent = pair.rightImg;
+    div.dataset.key = pair.right;
+    div.tabIndex = 0;
+    div.onclick = () => selectRight(div);
+    rightCol.appendChild(div);
+  });
+
+  // Atualiza linhas após novo render (opção)
+  updateLines();
+}
+
+// Embaralha array
+function shuffle(array) {
+  let currentIndex = array.length, randomIndex;
+  while(currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--; [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+  }
+  return array;
+}
+
+// Selecionar elementos
+function selectLeft(elem) {
+  if(selectedLeft) {
+    selectedLeft.classList.remove("selected");
+  }
+  selectedLeft = elem;
+  elem.classList.add("selected");
+  checkMatch();
+}
+function selectRight(elem) {
+  if(selectedRight) {
+    selectedRight.classList.remove("selected");
+  }
+  selectedRight = elem;
+  elem.classList.add("selected");
+  checkMatch();
+}
+
+// Verifica se combo selecionado é match
+function checkMatch() {
+  if(selectedLeft && selectedRight) {
+    const leftKey = selectedLeft.dataset.key;
+    const rightKey = selectedRight.dataset.key;
+    if(isMatch(leftKey, rightKey)) {
+      drawLine(selectedLeft, selectedRight);
+      message.textContent = "Parabéns! Você acertou!";
+      matchedCount++;
+      // Desabilitar seleção futura e destacar corretos
+      selectedLeft.classList.add("matched");
+      selectedRight.classList.add("matched");
+      selectedLeft.onclick = null;
+      selectedRight.onclick = null;
+      clearSelection();
+      if(matchedCount === usedPairs.length) {
+        setTimeout(() => {
+          confetti();
+          message.textContent = "🎉 Parabéns! Você ligou todos os pares! 🎉";
+        }, 350);
+        setTimeout(() => { startGame(); message.textContent = ""; }, 3000);
+      }
+    } else {
+      message.textContent = "Ops! Tente novamente!";
+      // Remove seleções após 1 segundo
+      setTimeout(() => {
+        clearSelection();
+        message.textContent = "";
+      }, 1000);
+    }
+  }
+}
+
+// Limpar seleção visual
+function clearSelection() {
+  if(selectedLeft) selectedLeft.classList.remove("selected");
+  if(selectedRight) selectedRight.classList.remove("selected");
+  selectedLeft = null;
+  selectedRight = null;
+}
+
+// Desenhar linha svg entre os centros dos elementos
+function drawLine(leftEl, rightEl) {
+  const line = document.createElementNS("http://www.w3.org/2000/svg","line");
+  const rectLeft = leftEl.getBoundingClientRect();
+  const rectRight = rightEl.getBoundingClientRect();
+  const svgRect = canvas.getBoundingClientRect();
+
+  // Coordenadas ajustadas para SVG
+  let x1 = rectLeft.right - svgRect.left;
+  let y1 = rectLeft.top + rectLeft.height/2 - svgRect.top;
+  let x2 = rectRight.left - svgRect.left;
+  let y2 = rectRight.top + rectRight.height/2 - svgRect.top;
+
+  line.setAttribute("x1", x1);
+  line.setAttribute("y1", y1);
+  line.setAttribute("x2", x2);
+  line.setAttribute("y2", y2);
+  line.setAttribute("stroke", "#d63a6d");
+  line.setAttribute("stroke-width", "5");
+  line.classList.add("connection-line");
+  canvas.appendChild(line);
+  lines.push(line);
+}
+
+// Atualizar linhas ao redimensionar janela
+function updateLines() {
+  lines.forEach(line => line.remove());
+  lines = [];
+  let matchedLefts = document.querySelectorAll('.img-item.matched');
+  matchedLefts.forEach(leftEl => {
+    let key = leftEl.dataset.key;
+    let rightEl = [...document.querySelectorAll('.img-item.matched')].find(el => el.dataset.key !== key && isMatch(leftEl.dataset.key, el.dataset.key));
+    if(rightEl) drawLine(leftEl, rightEl);
+  });
+}
+
+// Função que verifica se é par correto
+function isMatch(leftKey, rightKey) {
+  return usedPairs.some(pair => (pair.left === leftKey && pair.right === rightKey));
+}
+
+function confetti() {
+  confettiContainer.innerHTML = "";
+  const colors = ['#ff597f','#ff9ea1','#fcd677','#a9d97a','#79d79a','#ff7eb9','#61dafb'];
+  for(let i=0;i<150;i++) {
+    const c = document.createElement("div");
+    c.className="confetti-piece";
+    c.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+    c.style.top = Math.random()*window.innerHeight + "px";
+    c.style.left = Math.random()*window.innerWidth + "px";
+    c.style.animationDelay = (i*0.02) + "s";
+    confettiContainer.appendChild(c);
+  }
+  setTimeout(() => { confettiContainer.innerHTML = ""; }, 3500);
+}
+
+startGame();
+</script>
+</body>
+</html>
