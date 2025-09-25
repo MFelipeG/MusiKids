@@ -188,8 +188,6 @@ function startGame() {
   selectedRight = null;
   message.textContent = "";
   usedPairs = getRandomPairs(5);
-  // Embaralhar a ordem de pares para os dois lados para evitar alinhamento frente a frente
-  shuffle(usedPairs);
   renderItems();
 }
 // Limpar jogo da tela
@@ -216,13 +214,14 @@ function getRandomPairs(n) {
   }
   return arr.slice(0, n);
 }
-// Renderizar os pares embaralhados
+// Renderizar os pares espalhados (embaralha separadamente cada lado)
 function renderItems() {
-  // Embaralhar separadamente para os dois lados para mudar posição
-  const leftItemsOrder = shuffle(usedPairs);
-  const rightItemsOrder = shuffle(usedPairs);
+  const leftItemsOrder = shuffle(usedPairs.slice());
+  const rightItemsOrder = shuffle(usedPairs.slice());
+
   leftCol.innerHTML = "";
   rightCol.innerHTML = "";
+
   leftItemsOrder.forEach(pair => {
     const div = document.createElement("div");
     div.classList.add("img-item");
@@ -232,6 +231,7 @@ function renderItems() {
     div.onclick = () => selectLeft(div);
     leftCol.appendChild(div);
   });
+
   rightItemsOrder.forEach(pair => {
     const div = document.createElement("div");
     div.classList.add("img-item");
@@ -241,6 +241,7 @@ function renderItems() {
     div.onclick = () => selectRight(div);
     rightCol.appendChild(div);
   });
+
   updateLines();
 }
 // Embaralhar array
@@ -252,7 +253,7 @@ function shuffle(array) {
   }
   return array;
 }
-// Selecionar e deselecionar
+// Selecionar e deselecionar imagens
 function selectLeft(elem) {
   if(selectedLeft) {
     selectedLeft.classList.remove("selected");
@@ -269,7 +270,7 @@ function selectRight(elem) {
   elem.classList.add("selected");
   checkMatch();
 }
-// Verifica se formam par correto
+// Verificar se é um par
 function checkMatch() {
   if(selectedLeft && selectedRight) {
     const leftKey = selectedLeft.dataset.key;
@@ -305,7 +306,7 @@ function clearSelection() {
   selectedLeft = null;
   selectedRight = null;
 }
-// Desenhar linha svg entre elementos conectados
+// Desenhar linha svg conectando os pares
 function drawLine(leftEl, rightEl) {
   const line = document.createElementNS("http://www.w3.org/2000/svg","line");
   const rectLeft = leftEl.getBoundingClientRect();
@@ -325,7 +326,7 @@ function drawLine(leftEl, rightEl) {
   canvas.appendChild(line);
   lines.push(line);
 }
-// Atualizar linhas desenhadas (quando necessário)
+// Atualizar linhas desenhadas
 function updateLines() {
   lines.forEach(line => line.remove());
   lines = [];
@@ -336,7 +337,7 @@ function updateLines() {
     if(rightEl) drawLine(leftEl, rightEl);
   });
 }
-// Verifica se os elementos formam par correto
+// Conferir se o par está correto
 function isMatch(leftKey, rightKey) {
   return usedPairs.some(pair => (pair.left === leftKey && pair.right === rightKey));
 }
