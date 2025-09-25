@@ -129,6 +129,11 @@
     transition: all 0.15s ease;
     touch-action: manipulation;
   }
+  .letra-drag.selecionada {
+    border: 2px solid #d72e77;
+    background: #fffdd0;
+    box-shadow: 0 0 16px #d72e7780;
+  }
   .letra-drag.dragging {
     opacity: 0.25;
     background-color: #ffc5cb;
@@ -227,7 +232,7 @@
       <input type="text" id="add-palavra" maxlength="15" placeholder="Digite palavra" aria-label="Adicionar palavra"/>
       <button id="btn-add">Adicionar</button>
     </div>
-    <div id="instrucao">Arraste as letras para formar a palavra!</div>
+    <div id="instrucao">Arraste ou clique nas letras para formar a palavra!</div>
     <div id="palavra-atual"></div>
     <div id="caixa-letras"></div>
     <div id="slots-palavra"></div>
@@ -250,7 +255,7 @@
   let letrasRestantes = [];
   let slots = [];
   let draggingIdx = null;
-  let palavrasAdicionadas = [];
+  let letraClicada = null;
 
   function shuffle(array) {
     let arr = array.slice();
@@ -264,6 +269,7 @@
     return word.split('').sort(() => Math.random() - 0.5);
   }
   function showWord() {
+    letraClicada = null;
     let palavra = palavras[indice];
     document.getElementById('palavra-atual').innerText = palavra;
     buildSlots(palavra);
@@ -293,46 +299,47 @@
         if(slot.innerText === '') {
           let letra = letrasRestantes[draggingIdx];
           slot.innerText = letra;
-          letrasRestantes.splice(draggingIdx,1); // CORRIGIDO!
+          letrasRestantes.splice(draggingIdx,1);
           updateLetters();
           checkResult();
         }
       });
-      slot.addEventListener('touchstart', e => {
-        e.preventDefault();
-      });
-      slot.addEventListener('touchmove', e => {
-        e.preventDefault();
-      });
-      slot.addEventListener('touchend', e => {
-        e.preventDefault();
-        const touch = e.changedTouches[0];
-        const target = document.elementFromPoint(touch.clientX, touch.clientY);
-        if (target && target.classList.contains('slot-letra') && target.innerText === '') {
-          let letra = letrasRestantes[draggingIdx];
-          target.innerText = letra;
-          letrasRestantes.splice(draggingIdx,1); // CORRIGIDO!
+      // Clique simples no slot para aceitar letra marcada
+      slot.addEventListener('click', () => {
+        if(slot.innerText === '' && letraClicada !== null) {
+          slot.innerText = letraClicada.letra;
+          letrasRestantes.splice(letraClicada.idx, 1);
+          letraClicada = null;
+          document.querySelectorAll('.letra-drag').forEach(el => el.classList.remove('selecionada'));
           updateLetters();
           checkResult();
         }
-      });
-      slot.addEventListener('click', ()=> {
-        if(slot.innerText !== '') {
+        else if(slot.innerText !== '') {
           letrasRestantes.push(slot.innerText);
           slot.innerText = '';
           updateLetters();
           checkResult();
         }
       });
+      // Mobile touch para clique simples no slot
       slot.addEventListener('touchend', (e) => {
         e.preventDefault();
-        if (e.target.innerText !== '') {
+        if(slot.innerText === '' && letraClicada !== null) {
+          slot.innerText = letraClicada.letra;
+          letrasRestantes.splice(letraClicada.idx, 1);
+          letraClicada = null;
+          document.querySelectorAll('.letra-drag').forEach(el => el.classList.remove('selecionada'));
+          updateLetters();
+          checkResult();
+        } else if(e.target.innerText !== '') {
           letrasRestantes.push(e.target.innerText);
           e.target.innerText = '';
           updateLetters();
           checkResult();
         }
       });
+      slot.addEventListener('touchstart', e => { e.preventDefault(); });
+      slot.addEventListener('touchmove', e => { e.preventDefault(); });
       slots.push(slot);
       container.appendChild(slot);
     }
@@ -353,31 +360,35 @@
         letterDiv.addEventListener('dragstart', () => {
           draggingIdx = idx;
           letterDiv.classList.add('dragging');
+          letraClicada = null;
+          document.querySelectorAll('.letra-drag').forEach(el => el.classList.remove('selecionada'));
         });
         letterDiv.addEventListener('dragend', () => {
           letterDiv.classList.remove('dragging');
           draggingIdx = null;
         });
+        // Clique na letra destaca para uso por clique no slot
+        letterDiv.addEventListener('click', () => {
+          letraClicada = { idx, letra };
+          document.querySelectorAll('.letra-drag').forEach(el => el.classList.remove('selecionada'));
+          letterDiv.classList.add('selecionada');
+        });
+        // Mobile touch seleciona
+        letterDiv.addEventListener('touchend', (e) => {
+          e.preventDefault();
+          letraClicada = { idx, letra };
+          document.querySelectorAll('.letra-drag').forEach(el => el.classList.remove('selecionada'));
+          letterDiv.classList.add('selecionada');
+        });
+        // Touch drag
         letterDiv.addEventListener('touchstart', (e) => {
           e.preventDefault();
           draggingIdx = idx;
           letterDiv.classList.add('dragging');
+          letraClicada = null;
         });
         letterDiv.addEventListener('touchmove', (e) => {
           e.preventDefault();
-        });
-        letterDiv.addEventListener('touchend', (e) => {
-          letterDiv.classList.remove('dragging');
-          const touch = e.changedTouches[0];
-          const target = document.elementFromPoint(touch.clientX, touch.clientY);
-          if (target && target.classList.contains('slot-letra') && target.innerText === '') {
-            let letra = letrasRestantes[draggingIdx];
-            target.innerText = letra;
-            letrasRestantes.splice(draggingIdx,1); // CORRIGIDO!
-            updateLetters();
-            checkResult();
-          }
-          draggingIdx = null;
         });
         container.appendChild(letterDiv);
       }
@@ -423,6 +434,8 @@
     buildLetters(palavras[indice]);
     slots.forEach(s => s.innerText = '');
     document.getElementById('resultado').innerText = '';
+    letraClicada = null;
+    document.querySelectorAll('.letra-drag').forEach(el => el.classList.remove('selecionada'));
   };
   document.getElementById('categoria-escolha').onchange = function(e) {
     categoriaAtual = e.target.value;
