@@ -104,20 +104,23 @@
   }
   @media (max-width: 720px) {
     #maze-container {
-      grid-template-columns: repeat(21, 22px);
-      grid-template-rows: repeat(21, 22px);
+      grid-template-columns: repeat(21, 20px);
+      grid-template-rows: repeat(21, 20px);
       gap: 1.5px;
-      padding: 15px;
+      padding: 12px;
     }
     .cell {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       border-radius: 4px;
-      font-size: 18px;
+      font-size: 16px;
+    }
+    .player {
+      font-size: 16px;
     }
     button.control-btn {
       padding: 12px 18px;
-      font-size: 1.0rem;
+      font-size: 1.1rem;
     }
   }
 </style>
@@ -149,7 +152,6 @@ const controls = {
 
 const CELL_WALL = 1;
 const CELL_PATH = 0;
-
 const GRID_SIZE = 21;
 
 let mazes = [];
@@ -157,6 +159,7 @@ let currentMazeIndex = 0;
 let playerPosition = {x: 1, y: 0};
 let solvedTimeout = null;
 
+// Play beep sound on error
 function playErrorSound() {
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   const oscillator = audioCtx.createOscillator();
@@ -252,7 +255,7 @@ function placePlayer(pos) {
   const newCell = mazeContainer.querySelector(`[data-x='${pos.x}'][data-y='${pos.y}']`);
   if(newCell && !newCell.classList.contains('wall')) {
     newCell.classList.add('player');
-    newCell.textContent = '🐶'; // Imagem emoji do cachorro
+    newCell.textContent = '🐶';
     playerPosition = {x: pos.x, y: pos.y};
     return true;
   }
@@ -288,14 +291,14 @@ function movePlayer(direction) {
       showMessage("");
     }
   } else {
-    playErrorSound(); // reproduz som de erro
+    playErrorSound();
     showMessage("🚫 Não é por aqui! Tente outro caminho.");
   }
 }
 
 function handleKeyDown(e) {
   if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
-    e.preventDefault();  // Impede que a página role ao usar as setas
+    e.preventDefault();
   }
   switch(e.key) {
     case "ArrowUp": movePlayer('up'); break;
@@ -329,23 +332,10 @@ function setupTouchControls() {
   });
 }
 
-function playErrorSound() {
-  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const oscillator = audioCtx.createOscillator();
-  const gainNode = audioCtx.createGain();
-  oscillator.connect(gainNode);
-  gainNode.connect(audioCtx.destination);
-  oscillator.type = 'triangle';
-  oscillator.frequency.setValueAtTime(440, audioCtx.currentTime);
-  gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
-  oscillator.start();
-  oscillator.stop(audioCtx.currentTime + 0.2);
-}
-
 function startMaze(index) {
   const maze = mazes[index];
   renderMaze(maze);
-  placePlayer({x: 1, y: 0}); // start position after entrance
+  placePlayer({x: 1, y: 0});
   showMessage("");
 }
 
