@@ -62,8 +62,8 @@
     align-items: center;
   }
   .img-item {
-    width: 90px;
-    height: 90px;
+    width: 130px;
+    height: 130px;
     border-radius: 18px;
     background: #ffe4f3;
     box-shadow: 0 2px 8px rgba(214, 58, 109, 0.35);
@@ -80,8 +80,8 @@
     z-index: 10;
   }
   .img-item img {
-    max-width: 70px;
-    max-height: 70px;
+    max-width: 115px;
+    max-height: 115px;
     user-select: none;
     pointer-events: none;
   }
@@ -100,7 +100,7 @@
     top: 0; left: 0; right: 0; bottom: 0;
     pointer-events: none;
     user-select: none;
-    z-index: 5;
+    z-index: 100;
     overflow: visible;
   }
   .confetti-piece {
@@ -129,10 +129,10 @@
       flex-wrap: wrap;
     }
     .img-item {
-      width: 70px; height: 70px;
+      width: 100px; height: 100px;
     }
     .img-item img {
-      max-width: 50px; max-height: 50px;
+      max-width: 80px; max-height: 80px;
     }
     #message {
       position: static;
@@ -177,6 +177,7 @@ let selectedLeft = null;
 let selectedRight = null;
 let lines = [];
 let matchedCount = 0;
+// Função para iniciar novo jogo
 function startGame() {
   clearGame();
   matchedCount = 0;
@@ -186,6 +187,7 @@ function startGame() {
   usedPairs = getRandomPairs(5);
   renderItems();
 }
+// Limpar jogo da tela
 function clearGame() {
   leftCol.innerHTML = "";
   rightCol.innerHTML = "";
@@ -193,11 +195,13 @@ function clearGame() {
   lines = [];
   clearCanvas();
 }
+// Limpar linhas SVG
 function clearCanvas() {
   while (canvas.firstChild) {
     canvas.removeChild(canvas.firstChild);
   }
 }
+// Pegar N pares aleatórios, sem repetir usados recentes
 function getRandomPairs(n) {
   const pool = allPairs.filter(p => !usedPairs.some(up => up.left === p.left));
   let arr = shuffle(pool);
@@ -207,6 +211,7 @@ function getRandomPairs(n) {
   }
   return arr.slice(0, n);
 }
+// Renderizar os pares embaralhados
 function renderItems() {
   const leftItemsOrder = shuffle(usedPairs);
   const rightItemsOrder = shuffle(usedPairs);
@@ -230,6 +235,7 @@ function renderItems() {
   });
   updateLines();
 }
+// Embaralhar array
 function shuffle(array) {
   let currentIndex = array.length, randomIndex;
   while(currentIndex !== 0) {
@@ -238,6 +244,7 @@ function shuffle(array) {
   }
   return array;
 }
+// Selecionar e deselecionar
 function selectLeft(elem) {
   if(selectedLeft) {
     selectedLeft.classList.remove("selected");
@@ -254,6 +261,7 @@ function selectRight(elem) {
   elem.classList.add("selected");
   checkMatch();
 }
+// Verifica se formam par correto
 function checkMatch() {
   if(selectedLeft && selectedRight) {
     const leftKey = selectedLeft.dataset.key;
@@ -289,6 +297,7 @@ function clearSelection() {
   selectedLeft = null;
   selectedRight = null;
 }
+// Desenhar linha svg entre elementos conectados
 function drawLine(leftEl, rightEl) {
   const line = document.createElementNS("http://www.w3.org/2000/svg","line");
   const rectLeft = leftEl.getBoundingClientRect();
@@ -308,6 +317,7 @@ function drawLine(leftEl, rightEl) {
   canvas.appendChild(line);
   lines.push(line);
 }
+// Atualizar linhas desenhadas (quando necessário)
 function updateLines() {
   lines.forEach(line => line.remove());
   lines = [];
@@ -318,9 +328,11 @@ function updateLines() {
     if(rightEl) drawLine(leftEl, rightEl);
   });
 }
+// Verifica se os elementos formam par correto
 function isMatch(leftKey, rightKey) {
   return usedPairs.some(pair => (pair.left === leftKey && pair.right === rightKey));
 }
+// Função confete
 function confetti() {
   confettiContainer.innerHTML = "";
   const colors = ['#ff597f','#ff9ea1','#fcd677','#a9d97a','#79d79a','#ff7eb9','#61dafb'];
