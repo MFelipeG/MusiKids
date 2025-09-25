@@ -42,25 +42,31 @@
     color: #d63a6d;
   }
   #maze-container {
+    width: 100%;
+    max-width: 660px;
+    aspect-ratio: 1 / 1;
+    margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(21, 20px);
-    grid-template-rows: repeat(21, 20px);
-    gap: 1.5px;
+    grid-template-columns: repeat(21, 1fr);
+    grid-template-rows: repeat(21, 1fr);
+    gap: 2px;
     background-color: #fff0f6;
-    padding: 12px;
+    padding: 16px;
     border-radius: 20px;
     box-shadow: 0 0 30px #f3bbcfbb;
     touch-action: manipulation;
+    box-sizing: border-box;
   }
   .cell {
-    width: 20px;
-    height: 20px;
-    border-radius: 4px;
+    width: 100%;
+    height: 0;
+    padding-bottom: 100%;
+    border-radius: 6px;
     box-sizing: border-box;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 16px;
+    font-size: 1rem;
   }
   .wall {
     background-color: #4b2e83;
@@ -69,7 +75,7 @@
     background-color: #ffc0cb;
   }
   .player {
-    font-size: 18px;
+    font-size: 1.2rem;
     user-select: none;
   }
   #message {
@@ -211,8 +217,8 @@ function generateMazes(count) {
 
 function renderMaze(maze) {
   mazeContainer.innerHTML = "";
-  mazeContainer.style.gridTemplateColumns = `repeat(${GRID_SIZE}, 20px)`;
-  mazeContainer.style.gridTemplateRows = `repeat(${GRID_SIZE}, 20px)`;
+  mazeContainer.style.gridTemplateColumns = `repeat(${GRID_SIZE}, 1fr)`;
+  mazeContainer.style.gridTemplateRows = `repeat(${GRID_SIZE}, 1fr)`;
   for (let y=0; y<GRID_SIZE; y++) {
     for(let x=0; x<GRID_SIZE; x++) {
       const cell = document.createElement('div');
@@ -309,7 +315,6 @@ function setupTouchControls() {
       else if(dy < -30) movePlayer('up');
     }
   });
-  // Correção: adicionar eventos de clique para os botões virtuais:
   controls.up.addEventListener('click', () => movePlayer('up'));
   controls.down.addEventListener('click', () => movePlayer('down'));
   controls.left.addEventListener('click', () => movePlayer('left'));
