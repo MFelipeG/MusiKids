@@ -293,11 +293,12 @@
       slot.addEventListener('drop', e=> {
         e.preventDefault();
         slot.classList.remove('over');
-        if(slot.innerText === '') {
+        if(slot.innerText === '' && draggingIdx !== null && letrasRestantes[draggingIdx]) {
           let letra = letrasRestantes[draggingIdx];
           slot.innerText = letra;
-          letrasRestantes[draggingIdx] = null;
+          letrasRestantes.splice(draggingIdx, 1); // Remove a letra do array (sem deixar null)
           updateLetters();
+          draggingIdx = null;
           checkResult();
         }
       });
@@ -312,11 +313,12 @@
         e.preventDefault();
         const touch = e.changedTouches[0];
         const target = document.elementFromPoint(touch.clientX, touch.clientY);
-        if (target && target.classList.contains('slot-letra') && target.innerText === '') {
+        if (target && target.classList.contains('slot-letra') && target.innerText === '' && draggingIdx !== null && letrasRestantes[draggingIdx]) {
           let letra = letrasRestantes[draggingIdx];
           target.innerText = letra;
-          letrasRestantes[draggingIdx] = null;
+          letrasRestantes.splice(draggingIdx, 1); // Remove a letra do array
           updateLetters();
+          draggingIdx = null;
           checkResult();
         }
       });
@@ -378,11 +380,12 @@
           letterDiv.classList.remove('dragging');
           const touch = e.changedTouches[0];
           const target = document.elementFromPoint(touch.clientX, touch.clientY);
-          if (target && target.classList.contains('slot-letra') && target.innerText === '') {
+          if (target && target.classList.contains('slot-letra') && target.innerText === '' && draggingIdx !== null && letrasRestantes[draggingIdx]) {
             let letra = letrasRestantes[draggingIdx];
             target.innerText = letra;
-            letrasRestantes[draggingIdx] = null;
+            letrasRestantes.splice(draggingIdx, 1); // Remove a letra do array
             updateLetters();
+            draggingIdx = null;
             checkResult();
           }
           draggingIdx = null;
