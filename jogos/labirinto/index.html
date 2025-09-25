@@ -57,6 +57,9 @@
     height: 30px;
     border-radius: 6px;
     box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .wall {
     background-color: #4b2e83;
@@ -65,13 +68,7 @@
     background-color: #ffc0cb;
   }
   .player {
-    background-color: #ff4f91;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: 900;
-    font-size: 1.5rem;
-    color: white;
+    font-size: 22px;
     user-select: none;
   }
   #message {
@@ -116,6 +113,7 @@
       width: 22px;
       height: 22px;
       border-radius: 4px;
+      font-size: 18px;
     }
     button.control-btn {
       padding: 12px 18px;
@@ -152,8 +150,6 @@ const controls = {
 const CELL_WALL = 1;
 const CELL_PATH = 0;
 
-// Maze dimensions: full grid 21x21, where path cells are on odd indices only.
-// We generate a 10x10 maze where cells are spaced by walls.
 const GRID_SIZE = 21;
 
 let mazes = [];
@@ -161,18 +157,14 @@ let currentMazeIndex = 0;
 let playerPosition = {x: 1, y: 0};
 let solvedTimeout = null;
 
-// Generates and returns a perfect maze using DFS Recursive Backtracker algorithm
 function generateMaze() {
   const maze = Array(GRID_SIZE).fill(null).map(() => Array(GRID_SIZE).fill(CELL_WALL));
-
-  // Carve out initial grid of cells (odd indices)
   for(let y=1; y<GRID_SIZE; y+=2) {
     for(let x=1; x<GRID_SIZE; x+=2) {
       maze[y][x] = CELL_PATH;
     }
   }
 
-  // Stack for DFS
   const stack = [];
   let cx = 1, cy = 1;
   const visited = new Set();
@@ -182,7 +174,6 @@ function generateMaze() {
   while(stack.length > 0) {
     const current = stack[stack.length - 1];
     const neighbors = [];
-
     const directions = [
       {dx: 0, dy: -2, wall: {x: current.x, y: current.y - 1}},
       {dx: 0, dy: 2, wall: {x: current.x, y: current.y + 1}},
@@ -200,8 +191,8 @@ function generateMaze() {
 
     if(neighbors.length > 0) {
       const chosen = neighbors[Math.floor(Math.random()*neighbors.length)];
-      maze[chosen.wall.y][chosen.wall.x] = CELL_PATH; // remove wall between
-      maze[current.y + chosen.dy][current.x + chosen.dx] = CELL_PATH; // path cell
+      maze[chosen.wall.y][chosen.wall.x] = CELL_PATH;
+      maze[current.y + chosen.dy][current.x + chosen.dx] = CELL_PATH;
       visited.add((current.y + chosen.dy)+","+(current.x + chosen.dx));
       stack.push({x: current.x + chosen.dx, y: current.y + chosen.dy});
     } else {
@@ -209,7 +200,6 @@ function generateMaze() {
     }
   }
 
-  // Open entrance and exit
   maze[0][1] = CELL_PATH;
   maze[GRID_SIZE-1][GRID_SIZE-2] = CELL_PATH;
 
@@ -249,6 +239,7 @@ function placePlayer(pos) {
   const newCell = mazeContainer.querySelector(`[data-x='${pos.x}'][data-y='${pos.y}']`);
   if(newCell && !newCell.classList.contains('wall')) {
     newCell.classList.add('player');
+    newCell.textContent = '🐶'; // Imagem emoji do cachorro
     playerPosition = {x: pos.x, y: pos.y};
     return true;
   }
@@ -289,6 +280,9 @@ function movePlayer(direction) {
 }
 
 function handleKeyDown(e) {
+  if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) {
+    e.preventDefault();  // Impede que a página role ao usar as setas
+  }
   switch(e.key) {
     case "ArrowUp": movePlayer('up'); break;
     case "ArrowDown": movePlayer('down'); break;
@@ -324,7 +318,7 @@ function setupTouchControls() {
 function startMaze(index) {
   const maze = mazes[index];
   renderMaze(maze);
-  placePlayer({x: 1, y: 0}); // starts just after entrance
+  placePlayer({x: 1, y: 0}); // start position after entrance
   showMessage("");
 }
 
