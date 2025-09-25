@@ -127,6 +127,7 @@
     border: 2px solid #fff;
     box-shadow: 0 0 12px #ea466880;
     transition: all 0.15s ease;
+    touch-action: manipulation; /* Melhora suporte a toque */
   }
   .letra-drag.dragging {
     opacity: 0.25;
@@ -149,7 +150,7 @@
     font-size: 2rem;
     text-transform: uppercase;
     color: #1a872c;
-    touch-action: none;
+    touch-action: none; /* Impede scroll durante drop em mobile */
     user-select: none;
     cursor: pointer;
     display: flex;
@@ -281,6 +282,7 @@
       let slot = document.createElement('div');
       slot.className = 'slot-letra';
       slot.dataset.index = i;
+      // Eventos para mouse
       slot.addEventListener('dragover', e=> {
         e.preventDefault();
         slot.classList.add('over');
@@ -299,11 +301,40 @@
           checkResult();
         }
       });
+      // Eventos para toque (touch)
+      slot.addEventListener('touchstart', e => {
+        e.preventDefault();
+      });
+      slot.addEventListener('touchmove', e => {
+        e.preventDefault();
+      });
+      slot.addEventListener('touchend', e => {
+        e.preventDefault();
+        const touch = e.changedTouches[0];
+        const target = document.elementFromPoint(touch.clientX, touch.clientY);
+        if (target && target.classList.contains('slot-letra') && target.innerText === '') {
+          let letra = letrasRestantes[draggingIdx];
+          target.innerText = letra;
+          letrasRestantes[draggingIdx] = null;
+          updateLetters();
+          checkResult();
+        }
+      });
       // Permite tirar letra do slot clicando nela
       slot.addEventListener('click', ()=> {
         if(slot.innerText !== '') {
           letrasRestantes.push(slot.innerText);
           slot.innerText = '';
+          updateLetters();
+          checkResult();
+        }
+      });
+      // Suporte a toque para click (simula clique em slot)
+      slot.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        if (e.target.innerText !== '') {
+          letrasRestantes.push(e.target.innerText);
+          e.target.innerText = '';
           updateLetters();
           checkResult();
         }
@@ -325,12 +356,35 @@
         letterDiv.className = 'letra-drag';
         letterDiv.innerText = letra;
         letterDiv.draggable = true;
+        // Eventos para mouse
         letterDiv.addEventListener('dragstart', () => {
           draggingIdx = idx;
           letterDiv.classList.add('dragging');
         });
         letterDiv.addEventListener('dragend', () => {
           letterDiv.classList.remove('dragging');
+          draggingIdx = null;
+        });
+        // Eventos para toque
+        letterDiv.addEventListener('touchstart', (e) => {
+          e.preventDefault();
+          draggingIdx = idx;
+          letterDiv.classList.add('dragging');
+        });
+        letterDiv.addEventListener('touchmove', (e) => {
+          e.preventDefault();
+        });
+        letterDiv.addEventListener('touchend', (e) => {
+          letterDiv.classList.remove('dragging');
+          const touch = e.changedTouches[0];
+          const target = document.elementFromPoint(touch.clientX, touch.clientY);
+          if (target && target.classList.contains('slot-letra') && target.innerText === '') {
+            let letra = letrasRestantes[draggingIdx];
+            target.innerText = letra;
+            letrasRestantes[draggingIdx] = null;
+            updateLetters();
+            checkResult();
+          }
           draggingIdx = null;
         });
         container.appendChild(letterDiv);
