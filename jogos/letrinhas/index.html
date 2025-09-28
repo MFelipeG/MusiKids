@@ -10,20 +10,20 @@
       text-align: center;
       margin: 0;
       padding: 0;
-      /* Fundo gradiente colorido infantil */
       background: linear-gradient(120deg, #ff71ce 0%, #fdf200 45%, #01cdfe 100%);
       min-height: 100vh;
     }
 
+    /* Remove faixa colorida do topo, só título simples */
     h1 {
       font-size: 32px;
-      margin: 30px 0 10px 0;
+      margin: 28px 0 8px 0;
       font-weight: bold;
-      color: #fff;
-      text-shadow: 2px 3px 12px #71C9FFaa;
-      background: linear-gradient(90deg, #ff71ce 40%, #fdf200 70%, #01cdfe 100%);
-      padding: 16px 0;
-      border-radius: 20px;
+      color: #ff71ce;
+      text-shadow: 2px 3px 10px #71C9FF88;
+      background: none;
+      padding: 0;
+      border-radius: 0;
       letter-spacing: 1px;
     }
 
@@ -40,6 +40,7 @@
       cursor: pointer;
       font-weight: 700;
       box-shadow: 2px 2px 8px #7c4dffaa;
+      z-index: 2;
     }
 
     .menu {
@@ -188,7 +189,6 @@
         padding: 8px 14px;
       }
     }
-    /* Confetti canvas sempre no topo e visível acima de tudo */
     #confettiCanvas {
       pointer-events: none;
       position: fixed;
@@ -201,7 +201,7 @@
 </head>
 <body>
   <button id="menuButton">Menu de Jogos</button>
-  <h1>Jogo das Letrinhas</h1>
+  <!-- Removido título/faixa -->
   <div class="menu">
     <button onclick="setCategory('animais')">Animais</button>
     <button onclick="setCategory('frutas')">Frutas</button>
@@ -224,9 +224,8 @@
       frutas: ["maçã", "banana", "uva", "laranja", "pera"],
       objetos: ["mesa", "cadeira", "computador", "bola", "livro"]
     };
-    // Botão menu redirecionando
     document.getElementById("menuButton").onclick = function() {
-      window.location.href = "../index.html"; // ajuste seu caminho!
+      window.location.href = "../index.html";
     };
     function setCategory(category) {
       const randomIndex = Math.floor(Math.random() * words[category].length);
@@ -321,7 +320,6 @@
         document.getElementById("message").style.color = "#ff4081";
       }
     }
-    // Confete animado - AGORA CRESCE DO TOPO DA TELA
     const canvas = document.getElementById("confettiCanvas");
     const ctx = canvas.getContext("2d");
     function resizeCanvas() {
