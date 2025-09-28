@@ -21,16 +21,16 @@
     position: fixed;
     top: 12px;
     left: 12px;
-    z-index: 10000;
+    z-index: 1000;
     padding: 10px 20px;
-    font-size: 1.12rem;
+    font-size: 1.1rem;
     border-radius: 9px;
     border: none;
     background: linear-gradient(135deg, #ff007f, #21a7ff 110%);
     color: #fff;
     font-family: 'Baloo 2', cursive, Arial, sans-serif;
     font-weight: bold;
-    box-shadow: 1px 3px 15px #21a7ff88;
+    box-shadow: 1px 3px 15px #21a7ff99;
     cursor: pointer;
   }
   .header-title {
@@ -196,7 +196,7 @@
     }
     #menuButton {
       font-size: 1rem;
-      padding: 9px 15px;
+      padding: 8px 12px;
       left: 10px; top: 10px;
     }
     .header-title {
@@ -249,7 +249,7 @@
   <div id="board" role="grid" aria-label="Tabuleiro do jogo da velha"></div>
   <div id="message" role="alert" aria-live="polite"></div>
   <div id="controls" style="justify-content:center; max-width:430px; margin:0 auto; gap:0;">
-    <!-- Removido botão reiniciar e menu da linha -->
+    <!-- Removido botões -->
   </div>
 </div>
 <div id="confetti"></div>
@@ -389,7 +389,7 @@
   }
 
   function scheduleAutoRestart() {
-    if (autoRestartTimeout) clearTimeout(autoRestartTimeout);
+    if(autoRestartTimeout) clearTimeout(autoRestartTimeout);
     autoRestartTimeout = setTimeout(() => {
       initGame();
     }, 3000);
@@ -403,7 +403,7 @@
   }
 
   function checkWin(player) {
-    for(let combo of winCombos) {
+    for(const combo of winCombos) {
       if(combo.every(i => board[i] === player)) {
         return combo;
       }
@@ -438,9 +438,9 @@
   }
 
   function findWinningOrBlockingMove(player) {
-    for(let combo of winCombos) {
+    for(const combo of winCombos) {
       const vals = combo.map(i => board[i]);
-      if(vals.filter(v => v===player).length === 2 && vals.includes(null)) {
+      if(vals.filter(v => v === player).length === 2 && vals.includes(null)) {
         return combo[vals.indexOf(null)];
       }
     }
@@ -478,7 +478,7 @@
     }
     if(isMaximizing) {
       let bestScore = -Infinity;
-      for(let i=0; i<9; i++) {
+      for(let i = 0; i < 9; i++) {
         if(brd[i] === null) {
           brd[i] = currentPlayer;
           let score = minimax(brd, false);
@@ -490,7 +490,7 @@
     } else {
       let opponent = currentPlayer === 'X' ? 'O' : 'X';
       let bestScore = Infinity;
-      for(let i=0; i<9; i++) {
+      for(let i = 0; i < 9; i++) {
         if(brd[i] === null) {
           brd[i] = opponent;
           let score = minimax(brd, true);
@@ -503,7 +503,7 @@
   }
 
   function checkWinner(brd) {
-    for(let combo of winCombos) {
+    for(const combo of winCombos) {
       const [a,b,c] = combo;
       if(brd[a] && brd[a] === brd[b] && brd[a] === brd[c]) {
         return combo;
