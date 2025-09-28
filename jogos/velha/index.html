@@ -19,9 +19,9 @@
   }
   #menuButton {
     position: fixed;
-    top: 14px;
-    left: 14px;
-    z-index: 100;
+    top: 12px;
+    left: 12px;
+    z-index: 10000;
     padding: 10px 20px;
     font-size: 1.12rem;
     border-radius: 9px;
@@ -30,11 +30,11 @@
     color: #fff;
     font-family: 'Baloo 2', cursive, Arial, sans-serif;
     font-weight: bold;
-    box-shadow: 1px 3px 12px #21a7ff63;
+    box-shadow: 1px 3px 15px #21a7ff88;
     cursor: pointer;
   }
   .header-title {
-    margin: 50px 0 18px 0;
+    margin: 56px 0 18px 0;
     font-size: 2.3rem;
     font-weight: 900;
     color: #ff4c8b;
@@ -195,9 +195,9 @@
       font-size: 11vw;
     }
     #menuButton {
-      font-size: 0.97rem;
-      padding: 8px 12px;
-      left: 6px; top: 6px;
+      font-size: 1rem;
+      padding: 9px 15px;
+      left: 10px; top: 10px;
     }
     .header-title {
       font-size: 1.6rem;
@@ -207,7 +207,7 @@
 </style>
 </head>
 <body>
-<button id="menuButton">← Menu de Jogos</button>
+<button id="menuButton" aria-label="Voltar para o menu de jogos">← Menu de Jogos</button>
 <div class="header-title">Jogo da Velha</div>
 <div id="config" role="region" aria-label="Configurações do jogo">
   <div class="input-group" style="margin-bottom:1rem;">
@@ -248,8 +248,8 @@
 <div id="game">
   <div id="board" role="grid" aria-label="Tabuleiro do jogo da velha"></div>
   <div id="message" role="alert" aria-live="polite"></div>
-  <div id="controls">
-    <a href="../index.html" id="btn-return" role="button" aria-label="Voltar para o menu de jogos" class="btn">← Menu de Jogos</a>
+  <div id="controls" style="justify-content:center; max-width:430px; margin:0 auto; gap:0;">
+    <!-- Removido botão reiniciar e menu da linha -->
   </div>
 </div>
 <div id="confetti"></div>
@@ -257,6 +257,7 @@
   document.getElementById('menuButton').onclick = function() {
     window.location.href = '../index.html';
   };
+
   const modeSelect = document.getElementById('mode');
   const player1NameInput = document.getElementById('player1-name');
   const player2NameInput = document.getElementById('player2-name');
@@ -308,7 +309,7 @@
       players = [p1, p2];
     } else {
       const p1 = player1NameCpuInput.value.trim() || 'Jogador';
-      players = [p1, 'Computador']; 
+      players = [p1, 'Computador'];
     }
     cpuDifficulty = cpuDifficultySelect.value;
     configDiv.style.display = 'none';
