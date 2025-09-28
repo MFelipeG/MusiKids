@@ -145,9 +145,10 @@
   }
   #controls {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     max-width: 430px;
     margin: 0 auto;
+    gap: 0;
   }
   #confetti {
     pointer-events: none;
@@ -182,6 +183,7 @@
     #controls {
       max-width: 97vw;
       gap: 5vw;
+      justify-content: center;
     }
     #board {
       grid-template-columns: repeat(3, 28vw);
@@ -247,7 +249,6 @@
   <div id="board" role="grid" aria-label="Tabuleiro do jogo da velha"></div>
   <div id="message" role="alert" aria-live="polite"></div>
   <div id="controls">
-    <button id="restartBtn" aria-label="Reiniciar jogo">Reiniciar</button>
     <a href="../index.html" id="btn-return" role="button" aria-label="Voltar para o menu de jogos" class="btn">← Menu de Jogos</a>
   </div>
 </div>
@@ -269,7 +270,6 @@
   const configDiv = document.getElementById('config');
   const boardDiv = document.getElementById('board');
   const messageDiv = document.getElementById('message');
-  const restartBtn = document.getElementById('restartBtn');
   const confettiContainer = document.getElementById('confetti');
 
   const winCombos = [
@@ -285,6 +285,7 @@
   let players = ['Jogador 1', 'Jogador 2'];
   let cpuDifficulty = 'medium';
   let winningCells = [];
+  let autoRestartTimeout = null;
 
   modeSelect.addEventListener('change', e => {
     mode = e.target.value;
@@ -313,11 +314,6 @@
     configDiv.style.display = 'none';
     gameDiv.style.display = 'block';
     messageDiv.textContent = `${players[0]} (X) começa!`;
-    initGame();
-  });
-
-  restartBtn.addEventListener('click', () => {
-    clearConfetti();
     initGame();
   });
 
@@ -378,15 +374,24 @@
       messageDiv.textContent = `${players[player === 'X' ? 0 : 1]} venceu! 🎉`;
       renderBoard();
       showConfetti();
+      scheduleAutoRestart();
     } else if(board.every(cell => cell !== null)) {
       gameActive = false;
       winningCells = [];
       messageDiv.textContent = "Empate! 🤝";
       renderBoard();
       clearConfetti();
+      scheduleAutoRestart();
     } else {
       renderBoard();
     }
+  }
+
+  function scheduleAutoRestart() {
+    if (autoRestartTimeout) clearTimeout(autoRestartTimeout);
+    autoRestartTimeout = setTimeout(() => {
+      initGame();
+    }, 3000);
   }
 
   function switchPlayer() {
