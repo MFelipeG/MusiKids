@@ -17,16 +17,16 @@
       display: flex; flex-direction: column; align-items: center;
     }
     #btn-menu {
-      position: relative; /* changed fixed to relative */
-      top: 15px; left: 15px; /* offset remains but now relative*/
+      position: relative;
+      top: 15px; left: 15px;
       background: #a1d578; color: #214d0d;
       border-radius: 18px; padding: 14px 22px;
       font-weight: 900; font-size: 1.25rem;
       cursor: pointer; box-shadow: 0 0 15px #a1d578aa;
       border: none; user-select: none; z-index: 10000;
       transition: background-color 0.3s ease;
-      margin-bottom: 15px; /* add margin below for spacing */
-      align-self: flex-start; /* align left of page content */
+      margin-bottom: 15px;
+      align-self: flex-start;
     }
     #btn-menu:hover {background: #68922b; color: white;}
     header {
@@ -145,7 +145,6 @@
   </main>
   <div id="confetti"></div>
   <script>
-    // todo resto permanece igual a seu código original...
     const bancoPalavras = [
       { palavra: "FELICIDADE", dicas: ["Estado de alegria", "Sentimento bom", "Sorriso no rosto", "Coração leve", "Momento feliz"] },
       { palavra: "BORBOLETA", dicas: ["Inseto colorido", "Voa em jardins", "Tem asas bonitas", "Transforma-se de lagarta", "Pousa nas flores"] },
@@ -331,6 +330,8 @@
     }
 
     btnNovo.addEventListener("click", iniciarJogo);
+
+    iniciarJogo(); // chama ao carregar para mostrar palavra
   </script>
 </body>
 </html>
