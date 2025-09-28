@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jogo de Letras</title>
+  <title>Jogo das Letrinhas</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -13,26 +13,26 @@
       background: #f0f8ff;
     }
 
-    header {
-      background: #4CAF50;
-      color: white;
-      padding: 10px;
-      font-size: 20px;
-      position: relative;
+    /* Título simples, sem faixa */
+    h1 {
+      font-size: 28px;
+      margin: 15px 0;
+      color: #333;
     }
 
-    /* Botão menu no canto superior esquerdo */
+    /* Botão de menu colorido */
     #menuButton {
       position: absolute;
       left: 10px;
       top: 10px;
-      padding: 8px 12px;
+      padding: 10px 15px;
       font-size: 14px;
       border: none;
       border-radius: 6px;
-      background: #333;
+      background: linear-gradient(45deg, #ff4081, #7c4dff);
       color: white;
       cursor: pointer;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
     }
 
     .menu {
@@ -45,13 +45,14 @@
       font-size: 16px;
       border: none;
       border-radius: 8px;
-      background: #4CAF50;
+      background: linear-gradient(45deg, #4CAF50, #81c784);
       color: white;
       cursor: pointer;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
     }
 
     .menu button:hover {
-      background: #45a049;
+      transform: scale(1.05);
     }
 
     .game-container {
@@ -73,7 +74,6 @@
       margin: 15px 0;
     }
 
-    /* Letras com visual mais carismático */
     .letter {
       padding: 14px 18px;
       background: linear-gradient(135deg, #ffeb3b, #ffc107);
@@ -133,10 +133,6 @@
       margin: 10px 5px;
     }
 
-    button:hover {
-      background: #45a049;
-    }
-
     #message {
       margin-top: 15px;
       font-size: 18px;
@@ -159,10 +155,8 @@
   </style>
 </head>
 <body>
-  <header>
-    Jogo de Letras
-    <button id="menuButton" onclick="showMenu()">Menu de Jogos</button>
-  </header>
+  <button id="menuButton" onclick="showMenu()">Menu de Jogos</button>
+  <h1>Jogo das Letrinhas</h1>
 
   <div class="menu">
     <button onclick="setCategory('animais')">Animais</button>
@@ -181,6 +175,8 @@
     <button onclick="checkWord()">Verificar</button>
     <p id="message"></p>
   </div>
+
+  <canvas id="confettiCanvas"></canvas>
 
   <script>
     let currentWord = "cachorro";
@@ -212,7 +208,7 @@
       for (let i = 0; i < currentWord.length; i++) {
         let slot = document.createElement("div");
         slot.className = "dropSlot";
-        slot.onclick = () => removeLetter(slot); // agora dá para remover clicando
+        slot.onclick = () => removeLetter(slot);
         slot.ondrop = drop;
         slot.ondragover = allowDrop;
         dropZone.appendChild(slot);
@@ -221,10 +217,11 @@
       const letterBank = document.getElementById("letterBank");
       letterBank.innerHTML = "";
       let shuffled = currentWord.split("").sort(() => Math.random() - 0.5);
-      shuffled.forEach(letter => {
+      shuffled.forEach((letter, index) => {
         let div = document.createElement("div");
         div.className = "letter";
         div.textContent = letter;
+        div.id = "letter-" + index;
         div.draggable = true;
         div.ondragstart = drag;
         div.onclick = () => placeLetter(div);
@@ -240,14 +237,17 @@
 
     function drag(ev) {
       ev.dataTransfer.setData("text", ev.target.textContent);
+      ev.dataTransfer.setData("id", ev.target.id);
     }
 
     function drop(ev) {
       ev.preventDefault();
       if (ev.target.classList.contains("dropSlot") && ev.target.textContent === "") {
         let letter = ev.dataTransfer.getData("text");
+        let id = ev.dataTransfer.getData("id");
         ev.target.textContent = letter;
         ev.target.classList.add("filled");
+        document.getElementById(id).remove(); // some do banco
       }
     }
 
@@ -257,14 +257,23 @@
         if (slot.textContent === "") {
           slot.textContent = div.textContent;
           slot.classList.add("filled");
+          div.remove(); // remove do banco
           break;
         }
       }
     }
 
-    // Remover letra clicando no quadrado
     function removeLetter(slot) {
       if (slot.textContent !== "") {
+        // devolve a letra para o banco
+        let div = document.createElement("div");
+        div.className = "letter";
+        div.textContent = slot.textContent;
+        div.draggable = true;
+        div.ondragstart = drag;
+        div.onclick = () => placeLetter(div);
+        document.getElementById("letterBank").appendChild(div);
+
         slot.textContent = "";
         slot.classList.remove("filled");
       }
@@ -278,6 +287,10 @@
       if (formedWord === currentWord) {
         document.getElementById("message").textContent = "Parabéns! Você acertou!";
         document.getElementById("message").style.color = "green";
+        startConfetti();
+        setTimeout(() => {
+          setCategory("animais"); // inicia automático com nova palavra
+        }, 3000);
       } else {
         document.getElementById("message").textContent = "Tente novamente!";
         document.getElementById("message").style.color = "red";
@@ -286,6 +299,49 @@
 
     function showMenu() {
       alert("Aqui vai o menu de jogos futuramente!");
+    }
+
+    // 🎉 Confetes
+    const canvas = document.getElementById("confettiCanvas");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let confetti = [];
+
+    function startConfetti() {
+      confetti = [];
+      for (let i = 0; i < 150; i++) {
+        confetti.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height - canvas.height,
+          r: Math.random() * 6 + 4,
+          d: Math.random() * 10 + 10,
+          color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+          tilt: Math.random() * 10 - 10
+        });
+      }
+      animateConfetti();
+      setTimeout(() => confetti = [], 3000);
+    }
+
+    function animateConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      confetti.forEach(c => {
+        ctx.beginPath();
+        ctx.arc(c.x, c.y, c.r, 0, 2 * Math.PI);
+        ctx.fillStyle = c.color;
+        ctx.fill();
+      });
+      updateConfetti();
+      if (confetti.length > 0) requestAnimationFrame(animateConfetti);
+    }
+
+    function updateConfetti() {
+      confetti.forEach(c => {
+        c.y += c.d * 0.1;
+        c.x += Math.sin(c.y * 0.05);
+      });
     }
 
     setupGame();
