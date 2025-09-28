@@ -3,288 +3,251 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jogo das Palavras</title>
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
+  <title>Jogo de Letras</title>
   <style>
     body {
+      font-family: Arial, sans-serif;
+      text-align: center;
       margin: 0;
       padding: 0;
-      font-family: 'Baloo 2', cursive, Arial;
-      background: linear-gradient(135deg, #e5f7cb 0%, #ffced5 100%);
-      color: #222;
-      user-select: none;
-      text-align: center;
-      min-height: 100vh;
+      background: #f0f8ff;
     }
 
     header {
-      font-size: 2rem;
-      padding: 1rem;
+      background: #4CAF50;
+      color: white;
+      padding: 10px;
+      font-size: 20px;
     }
 
-    #main-container {
-      max-width: 95vw;
-      margin: 5rem auto 0 auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 0 1rem;
+    .menu {
+      margin: 15px 0;
     }
 
-    #palavra-atual {
-      font-size: clamp(1.2rem, 4vw, 1.7rem);
-      padding: 0.8rem 2rem;
-      margin-bottom: 1rem;
-    }
-
-    #slots-palavra {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.8rem;
-      margin-bottom: 1rem;
-    }
-
-    .slot-letra {
-      width: clamp(2.3rem, 9vw, 3.1rem);
-      height: clamp(2.3rem, 9vw, 3.1rem);
-      border: 2px dashed #666;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: clamp(1.3rem, 6vw, 2rem);
-      background: #fff;
-      border-radius: 10px;
-    }
-
-    #caixa-letras {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.6rem;
-      margin-bottom: 1rem;
-    }
-
-    .letra-drag {
-      background: #ffd966;
-      border-radius: 8px;
-      padding: 0.5rem 1.2rem;
-      font-size: clamp(1rem, 4vw, 1.3rem);
-      cursor: grab;
-    }
-
-    #resultado {
-      margin: 1rem;
-      font-size: clamp(1.2rem, 4vw, 1.6rem);
-    }
-
-    #next-btn, #reset-btn, #fullscreen-btn {
-      margin: 0.5rem;
-      font-size: clamp(1rem, 4vw, 1.2rem);
-      padding: 0.6rem 2rem;
+    .menu button {
+      padding: 10px 15px;
+      margin: 5px;
+      font-size: 16px;
       border: none;
       border-radius: 8px;
-      background: #77dd77;
+      background: #4CAF50;
+      color: white;
       cursor: pointer;
     }
 
-    #fullscreen-btn {
-      background: #66a3ff;
-      color: #fff;
+    .menu button:hover {
+      background: #45a049;
     }
 
-    #confetti {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none;
-      overflow: hidden;
-      z-index: 9999;
+    .game-container {
+      padding: 15px;
     }
 
-    .confetti-piece {
-      position: absolute;
-      width: 8px; height: 8px;
-      opacity: 0.8;
+    #wordToCopy {
+      font-size: 22px;
+      margin: 15px 0;
+      font-weight: bold;
+      color: #333;
     }
 
-    @media (max-width: 480px) {
-      header {
-        font-size: 1.6rem;
+    #letterBank, #dropZone {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 15px 0;
+    }
+
+    .letter {
+      padding: 12px 16px;
+      background: #ffeb3b;
+      border: 2px solid #333;
+      border-radius: 10px;
+      font-size: 20px;
+      font-weight: bold;
+      cursor: grab;
+      user-select: none;
+      touch-action: none;
+    }
+
+    .dropSlot {
+      width: 50px;
+      height: 50px;
+      border: 2px dashed #aaa;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      background: white;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      font-size: 18px;
+      width: 80%;
+      max-width: 300px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #aaa;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: #4CAF50;
+      color: white;
+      cursor: pointer;
+      margin: 10px 5px;
+    }
+
+    button:hover {
+      background: #45a049;
+    }
+
+    #message {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    /* Melhor responsividade */
+    @media (max-width: 600px) {
+      #letterBank, #dropZone {
+        gap: 6px;
       }
-      #btn-menu {
-        font-size: 1rem;
-        padding: 0.4rem 1rem;
+      .letter {
+        font-size: 18px;
+        padding: 10px 14px;
       }
-      input[type=text] {
-        width: 70%;
+      .dropSlot {
+        width: 45px;
+        height: 45px;
       }
     }
   </style>
 </head>
 <body>
-  <header>🎯 Jogo das Palavras</header>
+  <header>Jogo de Letras</header>
 
-  <div id="main-container">
-    <div id="palavra-atual"></div>
-    <div id="slots-palavra"></div>
-    <div id="caixa-letras"></div>
-    <div id="resultado"></div>
-    <button id="next-btn">Próxima</button>
-    <button id="reset-btn">Reiniciar</button>
-    <button id="fullscreen-btn">Tela Cheia</button>
+  <div class="menu">
+    <button onclick="setCategory('animais')">Animais</button>
+    <button onclick="setCategory('frutas')">Frutas</button>
+    <button onclick="setCategory('objetos')">Objetos</button>
+    <button onclick="showMenu()">Menu de Jogos</button>
   </div>
 
-  <div id="confetti"></div>
+  <div class="game-container">
+    <p id="wordToCopy">Palavra: cachorro</p>
 
-<script>
-  let categorias = {
-    animais: ["CACHORRO","GATO","ELEFANTE","TARTARUGA","COBRA","URSO"],
-    frutas: ["BANANA","MELANCIA","LARANJA","ABACAXI","MORANGO","UVA"],
-  };
-  let categoriaAtual = "animais";
-  let palavras = shuffle(categorias[categoriaAtual]);
-  let indice = 0;
+    <input type="text" id="customWord" placeholder="Digite a palavra que deseja">
+    <button onclick="setCustomWord()">Usar Palavra</button>
 
-  function shuffle(array) {
-    let arr = array.slice();
-    for (let i=arr.length-1; i>0; i--) {
-      let j = Math.floor(Math.random()*(i+1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
+    <div id="dropZone"></div>
+    <div id="letterBank"></div>
+    <button onclick="checkWord()">Verificar</button>
+    <p id="message"></p>
+  </div>
+
+  <script>
+    let currentWord = "cachorro";
+    const words = {
+      animais: ["cachorro", "gato", "elefante", "leão", "tigre"],
+      frutas: ["maçã", "banana", "uva", "laranja", "pera"],
+      objetos: ["mesa", "cadeira", "computador", "bola", "livro"]
+    };
+
+    function setCategory(category) {
+      const randomIndex = Math.floor(Math.random() * words[category].length);
+      currentWord = words[category][randomIndex];
+      setupGame();
     }
-    return arr;
-  }
 
-  function showWord() {
-    document.getElementById("resultado").innerText = "";
-    let palavra = palavras[indice];
-    let slots = document.getElementById("slots-palavra");
-    slots.innerHTML = "";
-    for (let i=0; i<palavra.length; i++) {
-      let slot = document.createElement("div");
-      slot.className = "slot-letra";
-      slot.dataset.correct = palavra[i];
-      slot.ondrop = drop;
-      slot.ondragover = allowDrop;
-      slots.appendChild(slot);
+    function setCustomWord() {
+      const input = document.getElementById("customWord").value.trim();
+      if (input) {
+        currentWord = input.toLowerCase();
+        setupGame();
+      }
     }
-    let letras = palavra.split("");
-    letras = shuffle(letras);
-    let caixa = document.getElementById("caixa-letras");
-    caixa.innerHTML = "";
-    letras.forEach(l => {
-      let span = document.createElement("div");
-      span.className = "letra-drag";
-      span.innerText = l;
-      span.draggable = true;
-      span.ondragstart = drag;
-      caixa.appendChild(span);
-    });
-    document.getElementById("palavra-atual").innerText = "Monte a palavra:";
-  }
 
-  function drag(ev) {
-    ev.dataTransfer.setData("text", ev.target.innerText);
-    ev.target.style.opacity = "0.5";
-  }
+    function setupGame() {
+      document.getElementById("wordToCopy").textContent = "Palavra: " + currentWord;
 
-  function allowDrop(ev) {
-    ev.preventDefault();
-  }
+      const dropZone = document.getElementById("dropZone");
+      dropZone.innerHTML = "";
+      for (let i = 0; i < currentWord.length; i++) {
+        let slot = document.createElement("div");
+        slot.className = "dropSlot";
+        slot.ondrop = drop;
+        slot.ondragover = allowDrop;
+        dropZone.appendChild(slot);
+      }
 
-  function drop(ev) {
-    ev.preventDefault();
-    let letra = ev.dataTransfer.getData("text");
-    if(ev.target.innerText === "") {
-      ev.target.innerText = letra;
-      let caixa = document.getElementById("caixa-letras");
-      for(let child of caixa.children) {
-        if(child.innerText === letra && child.style.opacity==="0.5") {
-          child.remove();
+      const letterBank = document.getElementById("letterBank");
+      letterBank.innerHTML = "";
+      let shuffled = currentWord.split("").sort(() => Math.random() - 0.5);
+      shuffled.forEach(letter => {
+        let div = document.createElement("div");
+        div.className = "letter";
+        div.textContent = letter;
+        div.draggable = true;
+        div.ondragstart = drag;
+        div.onclick = () => placeLetter(div);
+        letterBank.appendChild(div);
+      });
+
+      document.getElementById("message").textContent = "";
+    }
+
+    function allowDrop(ev) {
+      ev.preventDefault();
+    }
+
+    function drag(ev) {
+      ev.dataTransfer.setData("text", ev.target.textContent);
+      ev.dataTransfer.setData("elementId", ev.target.id);
+    }
+
+    function drop(ev) {
+      ev.preventDefault();
+      if (ev.target.classList.contains("dropSlot") && ev.target.textContent === "") {
+        let letter = ev.dataTransfer.getData("text");
+        ev.target.textContent = letter;
+      }
+    }
+
+    function placeLetter(div) {
+      let slots = document.querySelectorAll(".dropSlot");
+      for (let slot of slots) {
+        if (slot.textContent === "") {
+          slot.textContent = div.textContent;
           break;
         }
       }
     }
-    checkWord();
-  }
 
-  function checkWord() {
-    let slots = document.querySelectorAll(".slot-letra");
-    let palavraFormada = "";
-    slots.forEach(s => { palavraFormada += s.innerText; });
-    if(palavraFormada.length === slots.length) {
-      let correta = palavras[indice];
-      if(palavraFormada === correta) {
-        document.getElementById("resultado").innerText = "✅ Correto!";
-        confetti();
+    function checkWord() {
+      let formedWord = "";
+      document.querySelectorAll(".dropSlot").forEach(slot => {
+        formedWord += slot.textContent;
+      });
+      if (formedWord === currentWord) {
+        document.getElementById("message").textContent = "Parabéns! Você acertou!";
+        document.getElementById("message").style.color = "green";
       } else {
-        document.getElementById("resultado").innerText = "❌ Tente novamente!";
+        document.getElementById("message").textContent = "Tente novamente!";
+        document.getElementById("message").style.color = "red";
       }
     }
-  }
 
-  document.getElementById("next-btn").onclick = () => {
-    indice++;
-    if(indice >= palavras.length) {
-      indice = 0;
-      palavras = shuffle(categorias[categoriaAtual]);
+    function showMenu() {
+      alert("Aqui vai o menu de jogos futuramente!");
     }
-    showWord();
-  };
 
-  document.getElementById("reset-btn").onclick = () => {
-    showWord();
-  };
-
-  // 🔹 Tela cheia
-  function openFullscreen() {
-    let elem = document.documentElement;
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    } else if (elem.webkitRequestFullscreen) { /* Safari */
-      elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) { /* IE11 */
-      elem.msRequestFullscreen();
-    }
-  }
-
-  document.getElementById("fullscreen-btn").onclick = () => {
-    openFullscreen();
-  };
-
-  // 🔹 Ativa fullscreen automaticamente em celular
-  if (/Mobi|Android/i.test(navigator.userAgent)) {
-    window.addEventListener("load", () => {
-      setTimeout(() => { openFullscreen(); }, 1000);
-    });
-  }
-
-  function confetti() {
-    const confettiContainer = document.getElementById('confetti');
-    confettiContainer.innerHTML = '';
-    const colors = ['#ff0','#0f0','#00f','#f0f','#0ff','#f00'];
-    for(let i=0; i<100; i++) {
-      let piece = document.createElement('div');
-      piece.className = 'confetti-piece';
-      piece.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
-      piece.style.left = Math.random()*100 + 'vw';
-      piece.style.top = '-10px';
-      confettiContainer.appendChild(piece);
-      let fall = piece.animate([
-        { transform: 'translateY(0)', opacity:1 },
-        { transform: 'translateY(100vh)', opacity:0 }
-      ], {
-        duration: Math.random()*2000+2000,
-        easing: 'linear',
-        iterations:1,
-        delay: Math.random()*1000
-      });
-      fall.onfinish = () => { piece.remove(); };
-    }
-  }
-
-  palavras = shuffle(categorias[categoriaAtual]);
-  showWord();
-</script>
+    setupGame();
+  </script>
 </body>
 </html>
