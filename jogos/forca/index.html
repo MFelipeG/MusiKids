@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Forca - MusiKids Fun </title>
+  <title>Forca Afetiva - MusiKids</title>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
     body {
@@ -163,7 +163,7 @@
   <button id="btn-menu" aria-label="Voltar ao menu">MENU DE JOGOS</button>
   <header>Forca Afetiva - MusiKids Fun</header>
   <main>
-    <div id="palavra" aria-label="Palavra oculta para jogar" aria-live="polite"></div>
+    <div id="palavra" aria-label="Palavra oculta para jogar" aria-live="polite">_ _ _ _ _</div>
     <div id="dica-container" aria-label="Dicas da palavra para ajudar"></div>
     <div id="letras-container" aria-label="Letras para clicar e jogar"></div>
     <div id="bonequinho-container" aria-label="Bonequinho que se forma com erros">
@@ -237,7 +237,6 @@
     }
 
     function iniciarJogo() {
-      clearConfetti();
       erros = 0;
       palavraAtual = bancoPalavras[Math.floor(Math.random() * bancoPalavras.length)];
       letrasAcertadas = Array(palavraAtual.palavra.length).fill(false);
@@ -380,10 +379,10 @@
 
     btnNovo.addEventListener("click", iniciarJogo);
 
-    window.onload = () => {
-      iniciarJogo();
-    };
+    // Chamada automática do jogo ao carregar:
+    window.onload = iniciarJogo;
 
+    // confetti effect function improved for continuous fall
     function confetti() {
       const container = document.getElementById("confetti");
       container.innerHTML = "";
@@ -403,6 +402,7 @@
         container.appendChild(c);
       }
     }
+
   </script>
 </body>
 </html>
