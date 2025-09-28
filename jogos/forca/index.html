@@ -46,7 +46,12 @@
       font-weight: 900; font-size: 2.4rem;
       letter-spacing: 14px; user-select: none;
       margin-bottom: 24px; color: #2c6b3e;
-      white-space: nowrap; overflow-x: auto; max-width: 100%;
+      /* Ajustes para texto grandes em telas pequenas */
+      white-space: normal !important;
+      overflow-wrap: break-word;
+      word-break: break-word;
+      max-width: 100%;
+      text-align: center;
     }
     #dica-container {
       display: flex; justify-content: center;
@@ -182,6 +187,7 @@
     let letrasAcertadas;
     let erros;
     const maxErros = 5;
+    let autoRestartTimeout = null;
 
     btnMenu.onclick = () => location.href = "../index.html";
 
@@ -307,6 +313,7 @@
         btnNovo.style.display = "inline-block";
         btnNovo.focus();
         desabilitarLetras();
+        scheduleAutoRestart();
       }
     }
 
@@ -316,6 +323,14 @@
       desabilitarLetras();
       btnNovo.style.display = "inline-block";
       btnNovo.focus();
+      scheduleAutoRestart();
+    }
+
+    function scheduleAutoRestart() {
+      if(autoRestartTimeout) clearTimeout(autoRestartTimeout);
+      autoRestartTimeout = setTimeout(() => {
+        iniciarJogo();
+      }, 3500);
     }
 
     function revelarPalavra() {
@@ -331,7 +346,7 @@
 
     btnNovo.addEventListener("click", iniciarJogo);
 
-    iniciarJogo(); // chama ao carregar para mostrar palavra
+    iniciarJogo();
   </script>
 </body>
 </html>
