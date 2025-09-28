@@ -141,7 +141,7 @@
       opacity: 0.85;
       animation-name: fall, spin;
       animation-timing-function: linear;
-      animation-iteration-count: infinite;
+      animation-iteration-count: 1;
     }
     @keyframes fall {
       0% {
@@ -212,7 +212,6 @@
     const palavraElem = document.getElementById("palavra");
     const dicasContainer = document.getElementById("dica-container");
     const letrasContainer = document.getElementById("letras-container");
-    const bonequinhoContainer = document.getElementById("bonequinho-container");
     const resultText = document.getElementById("result-text");
     const btnNovo = document.getElementById("btn-novo");
 
@@ -342,7 +341,7 @@
     function verificarFim() {
       if (letrasAcertadas.every((x) => x)) {
         resultText.textContent = "Parabéns! Você acertou a palavra!";
-        confetti();
+        confetti(); // confete só ao ganhar
         btnNovo.style.display = "inline-block";
         btnNovo.focus();
         desabilitarLetras();
@@ -351,58 +350,52 @@
     }
 
     function mostrarPerdeu() {
-      resultText.textContent = `Que pena! Você perdeu. A palavra era: ${palavraAtual.palavra}`;
-      revelarPalavra();
-      desabilitarLetras();
+      resultText.textContent = "Que pena! A palavra era: " + palavraAtual.palavra;
       btnNovo.style.display = "inline-block";
       btnNovo.focus();
+      desabilitarLetras();
       scheduleAutoRestart();
     }
 
+    function desabilitarLetras() {
+      document.querySelectorAll(".letra-btn").forEach((btn) => btn.classList.add("disabled"));
+    }
+
+    btnNovo.addEventListener("click", iniciarJogo);
+
     function scheduleAutoRestart() {
-      if(autoRestartTimeout) clearTimeout(autoRestartTimeout);
+      if (autoRestartTimeout) clearTimeout(autoRestartTimeout);
       autoRestartTimeout = setTimeout(() => {
         iniciarJogo();
       }, 3500);
     }
 
-    function revelarPalavra() {
-      letrasAcertadas = letrasAcertadas.map(() => true);
-      exibirPalavra();
-    }
-
-    function desabilitarLetras() {
-      letrasContainer.querySelectorAll(".letra-btn").forEach((btn) =>
-        btn.classList.add("disabled")
-      );
-    }
-
-    btnNovo.addEventListener("click", iniciarJogo);
-
-    // Chamada automática do jogo ao carregar:
-    window.onload = iniciarJogo;
-
-    // confetti effect function improved for continuous fall
+    // confetti effect
     function confetti() {
       const container = document.getElementById("confetti");
       container.innerHTML = "";
       const colors = ["#ff597f", "#ff9ea1", "#fcd677", "#a9d97a", "#79d79a"];
+
       for (let i = 0; i < 140; i++) {
         const c = document.createElement("div");
         c.classList.add("confetti-piece");
         c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        c.style.top = Math.random() * -100 + "px";
         c.style.left = Math.random() * window.innerWidth + "px";
-        c.style.width = Math.random() * 10 + 5 + "px";
-        c.style.height = Math.random() * 10 + 5 + "px";
-        c.style.position = "absolute";
-        c.style.borderRadius = "50%";
-        c.style.animation = `fall ${Math.random() * 2 + 2}s linear infinite`;
-        c.style.transform = `rotate(${Math.random() * 360}deg)`;
+        c.style.top = -10 + "px";
+        c.style.width = Math.random() * 8 + 4 + "px";
+        c.style.height = Math.random() * 8 + 4 + "px";
+        c.style.setProperty("--x-move", (Math.random() - 0.5) * 200);
+        c.style.animationDuration = Math.random() * 2 + 2 + "s";
         container.appendChild(c);
       }
+
+      // limpa confetes depois de 3 segundos
+      setTimeout(() => {
+        container.innerHTML = "";
+      }, 3000);
     }
 
+    iniciarJogo();
   </script>
 </body>
 </html>
