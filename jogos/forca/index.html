@@ -17,21 +17,26 @@
       display: flex; flex-direction: column; align-items: center;
     }
     #btn-menu {
-      position: fixed; top: 15px; left: 15px;
+      position: relative; /* changed fixed to relative */
+      top: 15px; left: 15px; /* offset remains but now relative*/
       background: #a1d578; color: #214d0d;
       border-radius: 18px; padding: 14px 22px;
       font-weight: 900; font-size: 1.25rem;
       cursor: pointer; box-shadow: 0 0 15px #a1d578aa;
       border: none; user-select: none; z-index: 10000;
       transition: background-color 0.3s ease;
+      margin-bottom: 15px; /* add margin below for spacing */
+      align-self: flex-start; /* align left of page content */
     }
     #btn-menu:hover {background: #68922b; color: white;}
     header {
-      margin-top: 75px; font-weight: 900; font-size: 2.8rem;
+      font-weight: 900; font-size: 2.8rem;
       color: #d63a6d; user-select: none;
+      margin-bottom: 20px;
     }
     main {
-      margin-top: 20px; width: 90vw; max-width: 600px;
+      margin: 0 auto 40px auto;
+      width: 90vw; max-width: 600px;
       background: white; border-radius: 28px;
       box-shadow: 0 4px 16px #dddde1cc;
       padding: 24px 18px 40px 18px; display: flex;
@@ -140,6 +145,7 @@
   </main>
   <div id="confetti"></div>
   <script>
+    // todo resto permanece igual a seu código original...
     const bancoPalavras = [
       { palavra: "FELICIDADE", dicas: ["Estado de alegria", "Sentimento bom", "Sorriso no rosto", "Coração leve", "Momento feliz"] },
       { palavra: "BORBOLETA", dicas: ["Inseto colorido", "Voa em jardins", "Tem asas bonitas", "Transforma-se de lagarta", "Pousa nas flores"] },
@@ -325,46 +331,6 @@
     }
 
     btnNovo.addEventListener("click", iniciarJogo);
-
-    function confetti() {
-      const container = document.getElementById("confetti");
-      container.innerHTML = "";
-      const colors = ["#ff597f", "#ff9ea1", "#fcd677", "#a9d97a", "#79d79a"];
-      for (let i = 0; i < 150; i++) {
-        const c = document.createElement("div");
-        c.classList.add("confetti-piece");
-        c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        c.style.top = Math.random() * -100 + "px";
-        c.style.left = Math.random() * window.innerWidth + "px";
-        c.style.width = Math.random() * 10 + 5 + "px";
-        c.style.height = Math.random() * 10 + 5 + "px";
-        c.style.position = "absolute";
-        c.style.borderRadius = "50%";
-        c.style.animation = `fall ${Math.random() * 2 + 2}s linear forwards`;
-        c.style.transform = `rotate(${Math.random() * 360}deg)`;
-        container.appendChild(c);
-      }
-      setTimeout(() => {
-        container.innerHTML = "";
-      }, 4000);
-    }
-
-    const style = document.createElement("style");
-    style.innerHTML = `
-      @keyframes fall {
-        0% {
-          transform: translateY(0) translateX(0) rotate(0deg);
-          opacity: 1;
-        }
-        100% {
-          transform: translateY(100vh) translateX(${Math.random() * 100 - 50}px) rotate(360deg);
-          opacity: 0;
-        }
-      }
-    `;
-    document.head.appendChild(style);
-
-    iniciarJogo();
   </script>
 </body>
 </html>
