@@ -46,7 +46,6 @@
       font-weight: 900; font-size: 2.4rem;
       letter-spacing: 14px; user-select: none;
       margin-bottom: 24px; color: #2c6b3e;
-      /* Ajustes para texto grandes em telas pequenas */
       white-space: normal !important;
       overflow-wrap: break-word;
       word-break: break-word;
@@ -124,6 +123,40 @@
       background-color: #689330;
       color: white;
     }
+    #confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 9999;
+      overflow: visible;
+    }
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      opacity: 0.85;
+      animation-name: fall, spin;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+    @keyframes fall {
+      0% {
+        transform: translateY(-20px) translateX(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) translateX(calc(var(--x-move, 0) * 1px)) rotate(360deg);
+        opacity: 0;
+      }
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -187,7 +220,7 @@
     let letrasAcertadas;
     let erros;
     const maxErros = 5;
-    let autoRestartTimeout = null;
+    let autoRestartTimeout;
 
     btnMenu.onclick = () => location.href = "../index.html";
 
@@ -346,7 +379,30 @@
 
     btnNovo.addEventListener("click", iniciarJogo);
 
-    iniciarJogo();
+    // Chamada automática do jogo ao carregar:
+    window.onload = iniciarJogo;
+
+    // confetti effect function improved for continuous fall
+    function confetti() {
+      const container = document.getElementById("confetti");
+      container.innerHTML = "";
+      const colors = ["#ff597f", "#ff9ea1", "#fcd677", "#a9d97a", "#79d79a"];
+      for (let i = 0; i < 140; i++) {
+        const c = document.createElement("div");
+        c.classList.add("confetti-piece");
+        c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        c.style.top = Math.random() * -100 + "px";
+        c.style.left = Math.random() * window.innerWidth + "px";
+        c.style.width = Math.random() * 10 + 5 + "px";
+        c.style.height = Math.random() * 10 + 5 + "px";
+        c.style.position = "absolute";
+        c.style.borderRadius = "50%";
+        c.style.animation = `fall ${Math.random() * 2 + 2}s linear infinite`;
+        c.style.transform = `rotate(${Math.random() * 360}deg)`;
+        container.appendChild(c);
+      }
+    }
+
   </script>
 </body>
 </html>
