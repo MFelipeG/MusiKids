@@ -153,6 +153,7 @@ const GRID_SIZE = 21;
 let mazes = [];
 let currentMazeIndex = 0;
 let playerPosition = {x: 1, y: 0};
+let exitPosition = null;
 let solvedTimeout = null;
 let gameCompleted = false;
 
@@ -215,12 +216,14 @@ function generateMaze() {
 
   maze[0][1] = CELL_PATH;
 
-  // Colocar saída em uma posição variável entre (GRID_SIZE-1, col) para col no intervalo [1, GRID_SIZE-2]
+  // Define a saída em uma posição válida no lado inferior que seja caminho (CELL_PATH)
   const exitCols = [];
-  for(let col=1; col<GRID_SIZE-1; col++) exitCols.push(col);
+  for(let col=1; col<GRID_SIZE-1; col++) {
+    if(maze[GRID_SIZE-1][col] === CELL_PATH) exitCols.push(col);
+  }
   const exitCol = exitCols[Math.floor(Math.random()*exitCols.length)];
   maze[GRID_SIZE-1][exitCol] = CELL_PATH;
-  window.exitPosition = {x: exitCol, y: GRID_SIZE-1}; // guarda posição saída
+  exitPosition = {x: exitCol, y: GRID_SIZE-1};
 
   return maze;
 }
@@ -248,12 +251,10 @@ function renderMaze(maze) {
       }
       cell.setAttribute('data-x', x);
       cell.setAttribute('data-y', y);
-      // Adicionar ratinho e queijo
       if(x === playerPosition.x && y === playerPosition.y) {
         cell.classList.add('player');
         cell.textContent = '🐭';
-      }
-      if(x === window.exitPosition.x && y === window.exitPosition.y) {
+      } else if(x === exitPosition.x && y === exitPosition.y) {
         cell.innerHTML = '🧀';
       }
       mazeContainer.appendChild(cell);
@@ -262,7 +263,7 @@ function renderMaze(maze) {
 }
 
 function placePlayer(pos) {
-  if(gameCompleted) return false; // bloqueia movimentos após vitória
+  if(gameCompleted) return false;
   document.querySelectorAll('.player').forEach(el => { el.textContent = ""; el.classList.remove('player'); });
   const newCell = mazeContainer.querySelector(`[data-x='${pos.x}'][data-y='${pos.y}']`);
   if(newCell && !newCell.classList.contains('wall')) {
@@ -271,11 +272,16 @@ function placePlayer(pos) {
     playerPosition = {x: pos.x, y: pos.y};
     return true;
   }
+  // Permite entrar na célula de saída mesmo que não seja caminho (por segurança)
+  if(newCell && newCell.getAttribute('data-x') == exitPosition.x && newCell.getAttribute('data-y') == exitPosition.y) {
+    playerPosition = {x: pos.x, y: pos.y};
+    return true;
+  }
   return false;
 }
 
 function checkWin() {
-  return playerPosition.x === window.exitPosition.x && playerPosition.y === window.exitPosition.y;
+  return playerPosition.x === exitPosition.x && playerPosition.y === exitPosition.y;
 }
 
 function showMessage(text) {
@@ -283,7 +289,7 @@ function showMessage(text) {
 }
 
 function movePlayer(direction) {
-  if(gameCompleted) return; // não permite movimento após finalizar
+  if(gameCompleted) return;
   let newX = playerPosition.x;
   let newY = playerPosition.y;
 
@@ -299,7 +305,7 @@ function movePlayer(direction) {
       if (solvedTimeout) clearTimeout(solvedTimeout);
       solvedTimeout = setTimeout(() => {
         gameCompleted = false;
-        currentMazeIndex = (currentMazeIndex+1) % mazes.length;
+        currentMazeIndex = (currentMazeIndex + 1) % mazes.length;
         startMaze(currentMazeIndex);
       }, 3000);
     } else {
@@ -357,11 +363,16 @@ function startMaze(index) {
   mazeContainer.style.gridTemplateColumns = `repeat(${GRID_SIZE}, 20px)`;
   mazeContainer.style.gridTemplateRows = `repeat(${GRID_SIZE}, 20px)`;
   playerPosition = {x: 1, y: 0};
-  window.exitPosition = null;
-  // gerando nova saída no fundo, coluna aleatória
+  gameCompleted = false;
+
+  // Encontrar possíveis posições para saída (que sejam caminho)
   const exitCols = [];
-  for(let col=1; col<GRID_SIZE-1; col++) exitCols.push(col);
-  window.exitPosition = {x: exitCols[Math.floor(Math.random()*exitCols.length)], y: GRID_SIZE-1};
+  for(let col=1; col<GRID_SIZE-1; col++) {
+    if(maze[GRID_SIZE-1][col] === CELL_PATH) exitCols.push(col);
+  }
+  const exitCol = exitCols[Math.floor(Math.random()*exitCols.length)];
+  exitPosition = {x: exitCol, y: GRID_SIZE-1};
+
   renderMaze(maze);
   placePlayer(playerPosition);
   showMessage("");
