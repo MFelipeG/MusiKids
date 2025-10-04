@@ -1,414 +1,157 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>Jogo do Labirinto - MusiKids Fun</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
-body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Baloo 2', cursive, Arial, sans-serif;
-  background: linear-gradient(135deg, #ffefd5, #ffc0cb);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  user-select: none;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ratinho Aventureiro</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-/* ✅ Botão fixo acompanhando a rolagem */
-#btn-menu {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  background: #a1d578;
-  color: #214d0d;
-  padding: 10px 18px;
-  border-radius: 20px;
-  font-weight: 900;
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 0 15px #a1d578cc;
-  transition: background-color 0.3s ease;
-  z-index: 9999;
-}
-#btn-menu:hover {
-  background-color: #68922b;
-  color: white;
-}
+    body {
+      background: linear-gradient(180deg, #a8e6cf, #dcedc1);
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      touch-action: none;
+    }
 
-header {
-  margin: 110px 0 15px 0;
-  font-weight: 900;
-  font-size: 2.8rem;
-  color: #d63a6d;
-  position: relative;
-  z-index: 1;
-  text-align: center;
-}
-
-/* ✅ Labirinto adaptado para caber em qualquer tela */
-#maze-container {
-  display: grid;
-  grid-template-columns: repeat(21, 1fr);
-  grid-template-rows: repeat(21, 1fr);
-  gap: 1.5px;
-  background-color: #fff0f6;
-  padding: 10px;
-  border-radius: 20px;
-  box-shadow: 0 0 30px #f3bbcfbb;
-  touch-action: manipulation;
-  width: 90vw;
-  height: 90vw;
-  max-width: 420px;
-  max-height: 420px;
-  box-sizing: border-box;
-}
-
-.cell {
-  border-radius: 4px;
-  box-sizing: border-box;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 16px;
-}
-
-.wall {
-  background-color: #4b2e83;
-}
-.path {
-  background-color: #ffc0cb;
-}
-.player {
-  font-size: 18px;
-  user-select: none;
-}
-
-#message {
-  margin-top: 25px;
-  font-weight: 800;
-  font-size: 1.3rem;
-  color: #d63a6d;
-  min-height: 24px;
-  user-select: none;
-}
-
-#control-instruction {
-  margin: 26px 0 0 0;
-  color: #4b2e83;
-  background: #ffecfa;
-  border-radius: 14px;
-  font-size: 1.15rem;
-  padding: 10px;
-  font-weight: 700;
-  box-shadow: 0 1px 8px #ffd2fa33;
-  max-width: 380px;
-  display: inline-block;
-  text-align: center;
-}
-
-#controls {
-  margin: 13px 0 40px 0;
-  display: flex;
-  gap: 15px;
-  justify-content: center;
-  align-items: center;
-}
-
-button.control-btn {
-  background: #ffb6c1;
-  border: none;
-  padding: 12px 18px;
-  border-radius: 14px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #4b2e83;
-  cursor: pointer;
-  box-shadow: 0 0 15px #ffb6c1cc;
-  user-select: none;
-  transition: background-color 0.3s ease;
-}
-button.control-btn:active {
-  background-color: #d36487;
-  color: white;
-}
-
-@media (max-width: 480px) {
-  header {
-    margin: 140px 0 15px 0;
-    font-size: 2rem;
-  }
-  #btn-menu {
-    padding: 8px 14px;
-    font-size: 1rem;
-    top: 6px;
-    left: 6px;
-  }
-  #maze-container {
-    width: 90vw !important;
-    height: 90vw !important;
-    grid-template-columns: repeat(21, 1fr);
-    grid-template-rows: repeat(21, 1fr);
-  }
-}
-</style>
+    canvas {
+      background-color: #fff;
+      border: 3px solid #555;
+      border-radius: 20px;
+    }
+  </style>
 </head>
 <body>
-<button id="btn-menu" aria-label="Voltar ao menu">MENU DE JOGOS</button>
-<header>Jogo do Labirinto - MusiKids Fun</header>
-<div id="maze-container" aria-label="Labirinto"></div>
-<div id="message" aria-live="assertive"></div>
-<div id="control-instruction">
-Use as setas do teclado <span style="font-size:1.2em;">⬆️ ⬇️ ⬅️ ➡️</span> ou os botões abaixo para jogar!
-</div>
-<div id="controls" aria-label="Controles do jogo">
-  <button class="control-btn" id="btn-up" aria-label="Mover para cima">⬆️</button>
-  <button class="control-btn" id="btn-left" aria-label="Mover para esquerda">⬅️</button>
-  <button class="control-btn" id="btn-down" aria-label="Mover para baixo">⬇️</button>
-  <button class="control-btn" id="btn-right" aria-label="Mover para direita">➡️</button>
-</div>
+  <canvas id="gameCanvas"></canvas>
 
-<script>
-const btnMenu = document.getElementById('btn-menu');
-btnMenu.onclick = () => location.href = '../index.html';
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
 
-const mazeContainer = document.getElementById('maze-container');
-const message = document.getElementById('message');
-const controls = {
-  up: document.getElementById('btn-up'),
-  left: document.getElementById('btn-left'),
-  down: document.getElementById('btn-down'),
-  right: document.getElementById('btn-right')
-};
-
-const CELL_WALL = 1;
-const CELL_PATH = 0;
-const GRID_SIZE = 21;
-
-let mazes = [];
-let currentMazeIndex = 0;
-let playerPosition = {x: 1, y: 0};
-let exitPosition = null;
-let solvedTimeout = null;
-let gameCompleted = false;
-
-function playErrorSound() {
-  if (gameCompleted) return;
-  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const oscillator = audioCtx.createOscillator();
-  const gainNode = audioCtx.createGain();
-  oscillator.connect(gainNode);
-  gainNode.connect(audioCtx.destination);
-  oscillator.type = 'triangle';
-  oscillator.frequency.setValueAtTime(440, audioCtx.currentTime);
-  gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
-  oscillator.start();
-  oscillator.stop(audioCtx.currentTime + 0.2);
-}
-
-function generateMaze() {
-  const maze = Array(GRID_SIZE).fill(null).map(() => Array(GRID_SIZE).fill(CELL_WALL));
-  for (let y = 1; y < GRID_SIZE; y += 2) {
-    for (let x = 1; x < GRID_SIZE; x += 2) {
-      maze[y][x] = CELL_PATH;
+    // Ajuste de tamanho para celular
+    function ajustarCanvas() {
+      canvas.width = window.innerWidth * 0.9;
+      canvas.height = window.innerHeight * 0.7;
     }
-  }
+    ajustarCanvas();
+    window.addEventListener("resize", ajustarCanvas);
 
-  const stack = [];
-  let cx = 1, cy = 1;
-  const visited = new Set();
-  visited.add(cy + "," + cx);
-  stack.push({x: cx, y: cy});
+    // Ratinho
+    const ratinho = {
+      x: 100,
+      y: 100,
+      tamanho: 40,
+      velocidade: 5,
+      dx: 0,
+      dy: 0
+    };
 
-  while (stack.length > 0) {
-    const current = stack[stack.length - 1];
-    const neighbors = [];
-    const directions = [
-      {dx: 0, dy: -2, wall: {x: current.x, y: current.y - 1}},
-      {dx: 0, dy: 2, wall: {x: current.x, y: current.y + 1}},
-      {dx: -2, dy: 0, wall: {x: current.x - 1, y: current.y}},
-      {dx: 2, dy: 0, wall: {x: current.x + 1, y: current.y}}
-    ];
+    // Função de desenho
+    function desenharRatinho() {
+      ctx.beginPath();
+      ctx.fillStyle = "#555";
+      ctx.arc(ratinho.x, ratinho.y, ratinho.tamanho / 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.closePath();
 
-    for (const d of directions) {
-      const nx = current.x + d.dx;
-      const ny = current.y + d.dy;
-      if (nx > 0 && ny > 0 && nx < GRID_SIZE && ny < GRID_SIZE) {
-        if (!visited.has(ny + "," + nx)) neighbors.push(d);
+      // Orelhas
+      ctx.beginPath();
+      ctx.fillStyle = "#777";
+      ctx.arc(ratinho.x - 12, ratinho.y - 15, 8, 0, Math.PI * 2);
+      ctx.arc(ratinho.x + 12, ratinho.y - 15, 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.closePath();
+
+      // Olhos
+      ctx.beginPath();
+      ctx.fillStyle = "#fff";
+      ctx.arc(ratinho.x - 5, ratinho.y - 3, 3, 0, Math.PI * 2);
+      ctx.arc(ratinho.x + 5, ratinho.y - 3, 3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.closePath();
+
+      // Focinho
+      ctx.beginPath();
+      ctx.fillStyle = "#f66";
+      ctx.arc(ratinho.x, ratinho.y + 10, 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.closePath();
+    }
+
+    // Movimento
+    function moverRatinho() {
+      ratinho.x += ratinho.dx;
+      ratinho.y += ratinho.dy;
+
+      // Limites da tela
+      if (ratinho.x - ratinho.tamanho / 2 < 0) ratinho.x = ratinho.tamanho / 2;
+      if (ratinho.y - ratinho.tamanho / 2 < 0) ratinho.y = ratinho.tamanho / 2;
+      if (ratinho.x + ratinho.tamanho / 2 > canvas.width) ratinho.x = canvas.width - ratinho.tamanho / 2;
+      if (ratinho.y + ratinho.tamanho / 2 > canvas.height) ratinho.y = canvas.height - ratinho.tamanho / 2;
+    }
+
+    // Atualizar
+    function atualizar() {
+      // Corrigido: limpa o canvas a cada frame, impedindo o "rastro"
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      moverRatinho();
+      desenharRatinho();
+
+      requestAnimationFrame(atualizar);
+    }
+
+    atualizar();
+
+    // Controles
+    window.addEventListener("keydown", (e) => {
+      switch (e.key) {
+        case "ArrowUp": ratinho.dy = -ratinho.velocidade; break;
+        case "ArrowDown": ratinho.dy = ratinho.velocidade; break;
+        case "ArrowLeft": ratinho.dx = -ratinho.velocidade; break;
+        case "ArrowRight": ratinho.dx = ratinho.velocidade; break;
       }
-    }
+    });
 
-    if (neighbors.length > 0) {
-      const chosen = neighbors[Math.floor(Math.random() * neighbors.length)];
-      maze[chosen.wall.y][chosen.wall.x] = CELL_PATH;
-      maze[current.y + chosen.dy][current.x + chosen.dx] = CELL_PATH;
-      visited.add((current.y + chosen.dy) + "," + (current.x + chosen.dx));
-      stack.push({x: current.x + chosen.dx, y: current.y + chosen.dy});
-    } else {
-      stack.pop();
-    }
-  }
-
-  maze[0][1] = CELL_PATH;
-
-  const exitCols = [];
-  for (let col = 1; col < GRID_SIZE - 1; col++) {
-    if (maze[GRID_SIZE - 1][col] === CELL_PATH) exitCols.push(col);
-  }
-  const exitCol = exitCols.length > 0 ? exitCols[Math.floor(Math.random() * exitCols.length)] : GRID_SIZE - 2;
-  maze[GRID_SIZE - 1][exitCol] = CELL_PATH;
-  exitPosition = {x: exitCol, y: GRID_SIZE - 1};
-
-  return maze;
-}
-
-function generateMazes(count) {
-  const arr = [];
-  for (let i = 0; i < count; i++) arr.push(generateMaze());
-  return arr;
-}
-
-function renderMaze(maze) {
-  mazeContainer.innerHTML = "";
-  for (let y = 0; y < GRID_SIZE; y++) {
-    for (let x = 0; x < GRID_SIZE; x++) {
-      const cell = document.createElement('div');
-      cell.classList.add('cell');
-      if (maze[y][x] === CELL_WALL) cell.classList.add('wall');
-      else cell.classList.add('path');
-      cell.setAttribute('data-x', x);
-      cell.setAttribute('data-y', y);
-      if (x === playerPosition.x && y === playerPosition.y) {
-        cell.classList.add('player');
-        cell.textContent = '🐭';
-      } else if (x === exitPosition.x && y === exitPosition.y) {
-        cell.innerHTML = '🧀';
+    window.addEventListener("keyup", (e) => {
+      switch (e.key) {
+        case "ArrowUp":
+        case "ArrowDown": ratinho.dy = 0; break;
+        case "ArrowLeft":
+        case "ArrowRight": ratinho.dx = 0; break;
       }
-      mazeContainer.appendChild(cell);
-    }
-  }
-}
+    });
 
-function placePlayer(pos) {
-  if (gameCompleted) return false;
-  document.querySelectorAll('.player').forEach(el => { el.textContent = ""; el.classList.remove('player'); });
-  const newCell = mazeContainer.querySelector(`[data-x='${pos.x}'][data-y='${pos.y}']`);
-  if (newCell && !newCell.classList.contains('wall')) {
-    newCell.classList.add('player');
-    newCell.textContent = '🐭';
-    playerPosition = {x: pos.x, y: pos.y};
-    return true;
-  }
-  if (newCell && Number(newCell.getAttribute('data-x')) === exitPosition.x && Number(newCell.getAttribute('data-y')) === exitPosition.y) {
-    playerPosition = {x: pos.x, y: pos.y};
-    return true;
-  }
-  return false;
-}
+    // Toques na tela (para celular)
+    let toqueInicial = null;
 
-function checkWin() {
-  return playerPosition.x === exitPosition.x && playerPosition.y === exitPosition.y;
-}
+    canvas.addEventListener("touchstart", (e) => {
+      toqueInicial = e.touches[0];
+    });
 
-function showMessage(text) {
-  message.textContent = text;
-}
+    canvas.addEventListener("touchmove", (e) => {
+      if (!toqueInicial) return;
 
-function movePlayer(direction) {
-  if (gameCompleted) return;
-  let newX = playerPosition.x;
-  let newY = playerPosition.y;
+      let toqueAtual = e.touches[0];
+      let diffX = toqueAtual.clientX - toqueInicial.clientX;
+      let diffY = toqueAtual.clientY - toqueInicial.clientY;
 
-  if (direction === 'up') newY--;
-  else if (direction === 'down') newY++;
-  else if (direction === 'left') newX--;
-  else if (direction === 'right') newX++;
+      ratinho.dx = diffX > 20 ? ratinho.velocidade : diffX < -20 ? -ratinho.velocidade : 0;
+      ratinho.dy = diffY > 20 ? ratinho.velocidade : diffY < -20 ? -ratinho.velocidade : 0;
+    });
 
-  if (placePlayer({x: newX, y: newY})) {
-    if (checkWin()) {
-      gameCompleted = true;
-      showMessage("🎉 Você venceu! Próximo labirinto em 3 segundos...");
-      if (solvedTimeout) clearTimeout(solvedTimeout);
-      solvedTimeout = setTimeout(() => {
-        gameCompleted = false;
-        currentMazeIndex = (currentMazeIndex + 1) % mazes.length;
-        startMaze(currentMazeIndex);
-      }, 3000);
-    } else {
-      showMessage("");
-    }
-  } else {
-    playErrorSound();
-    showMessage("🚫 Não é por aqui! Tente outro caminho.");
-  }
-}
-
-function handleKeyDown(e) {
-  if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) e.preventDefault();
-  switch (e.key) {
-    case "ArrowUp": movePlayer('up'); break;
-    case "ArrowDown": movePlayer('down'); break;
-    case "ArrowLeft": movePlayer('left'); break;
-    case "ArrowRight": movePlayer('right'); break;
-  }
-}
-
-function setupTouchControls() {
-  const area = mazeContainer;
-  let startX, startY, endX, endY;
-  area.addEventListener('touchstart', e => {
-    const touch = e.touches[0];
-    startX = touch.clientX;
-    startY = touch.clientY;
-  });
-  area.addEventListener('touchend', e => {
-    const touch = e.changedTouches[0];
-    endX = touch.clientX;
-    endY = touch.clientY;
-    const dx = endX - startX;
-    const dy = endY - startY;
-    if (Math.abs(dx) > Math.abs(dy)) {
-      if (dx > 30) movePlayer('right');
-      else if (dx < -30) movePlayer('left');
-    } else {
-      if (dy > 30) movePlayer('down');
-      else if (dy < -30) movePlayer('up');
-    }
-  });
-  controls.up.addEventListener('click', () => movePlayer('up'));
-  controls.down.addEventListener('click', () => movePlayer('down'));
-  controls.left.addEventListener('click', () => movePlayer('left'));
-  controls.right.addEventListener('click', () => movePlayer('right'));
-}
-
-function startMaze(index) {
-  const maze = mazes[index];
-  mazeContainer.innerHTML = "";
-  playerPosition = {x: 1, y: 0};
-  gameCompleted = false;
-  const exitCols = [];
-  for (let col = 1; col < GRID_SIZE - 1; col++) {
-    if (maze[GRID_SIZE - 1][col] === CELL_PATH) exitCols.push(col);
-  }
-  const exitCol = exitCols.length > 0 ? exitCols[Math.floor(Math.random() * exitCols.length)] : GRID_SIZE - 2;
-  maze[GRID_SIZE - 1][exitCol] = CELL_PATH;
-  exitPosition = {x: exitCol, y: GRID_SIZE - 1};
-  renderMaze(maze);
-  placePlayer(playerPosition);
-  showMessage("");
-}
-
-window.onload = () => {
-  mazes = generateMazes(100);
-  currentMazeIndex = 0;
-  startMaze(currentMazeIndex);
-  window.addEventListener('keydown', handleKeyDown);
-  setupTouchControls();
-};
-</script>
+    canvas.addEventListener("touchend", () => {
+      toqueInicial = null;
+      ratinho.dx = 0;
+      ratinho.dy = 0;
+    });
+  </script>
 </body>
 </html>
