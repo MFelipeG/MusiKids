@@ -80,11 +80,24 @@
     min-height: 24px;
     user-select: none;
   }
+  #control-instruction {
+    margin: 26px 0 0 0;
+    color: #4b2e83;
+    background: #ffecfa;
+    border-radius: 14px;
+    font-size: 1.15rem;
+    padding: 10px;
+    font-weight: 700;
+    box-shadow: 0 1px 8px #ffd2fa33;
+    max-width: 380px;
+    display: inline-block;
+  }
   #controls {
-    margin-top: 20px;
+    margin: 13px 0 0 0;
     display: flex;
     gap: 15px;
     justify-content: center;
+    align-items: center;
   }
   button.control-btn {
     background: #ffb6c1;
@@ -110,6 +123,9 @@
 <header>Jogo do Labirinto - MusiKids Fun</header>
 <div id="maze-container" aria-label="Labirinto"></div>
 <div id="message" aria-live="assertive"></div>
+<div id="control-instruction">
+  Use as setas do teclado <span style="font-size:1.2em;">⬆️ ⬇️ ⬅️ ➡️</span> ou os botões abaixo para jogar!
+</div>
 <div id="controls" aria-label="Controles do jogo">
   <button class="control-btn" id="btn-up" aria-label="Mover para cima">⬆️</button>
   <button class="control-btn" id="btn-left" aria-label="Mover para esquerda">⬅️</button>
@@ -138,8 +154,10 @@ let mazes = [];
 let currentMazeIndex = 0;
 let playerPosition = {x: 1, y: 0};
 let solvedTimeout = null;
+let gameCompleted = false;
 
 function playErrorSound() {
+  if(gameCompleted) return;
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   const oscillator = audioCtx.createOscillator();
   const gainNode = audioCtx.createGain();
@@ -196,7 +214,13 @@ function generateMaze() {
   }
 
   maze[0][1] = CELL_PATH;
-  maze[GRID_SIZE-1][GRID_SIZE-2] = CELL_PATH;
+
+  // Colocar saída em uma posição variável entre (GRID_SIZE-1, col) para col no intervalo [1, GRID_SIZE-2]
+  const exitCols = [];
+  for(let col=1; col<GRID_SIZE-1; col++) exitCols.push(col);
+  const exitCol = exitCols[Math.floor(Math.random()*exitCols.length)];
+  maze[GRID_SIZE-1][exitCol] = CELL_PATH;
+  window.exitPosition = {x: exitCol, y: GRID_SIZE-1}; // guarda posição saída
 
   return maze;
 }
@@ -224,17 +248,26 @@ function renderMaze(maze) {
       }
       cell.setAttribute('data-x', x);
       cell.setAttribute('data-y', y);
+      // Adicionar ratinho e queijo
+      if(x === playerPosition.x && y === playerPosition.y) {
+        cell.classList.add('player');
+        cell.textContent = '🐭';
+      }
+      if(x === window.exitPosition.x && y === window.exitPosition.y) {
+        cell.innerHTML = '🧀';
+      }
       mazeContainer.appendChild(cell);
     }
   }
 }
 
 function placePlayer(pos) {
-  document.querySelectorAll('.player').forEach(el => el.classList.remove('player'));
+  if(gameCompleted) return false; // bloqueia movimentos após vitória
+  document.querySelectorAll('.player').forEach(el => { el.textContent = ""; el.classList.remove('player'); });
   const newCell = mazeContainer.querySelector(`[data-x='${pos.x}'][data-y='${pos.y}']`);
   if(newCell && !newCell.classList.contains('wall')) {
     newCell.classList.add('player');
-    newCell.textContent = '🐶';
+    newCell.textContent = '🐭';
     playerPosition = {x: pos.x, y: pos.y};
     return true;
   }
@@ -242,7 +275,7 @@ function placePlayer(pos) {
 }
 
 function checkWin() {
-  return playerPosition.x === GRID_SIZE-2 && playerPosition.y === GRID_SIZE-1;
+  return playerPosition.x === window.exitPosition.x && playerPosition.y === window.exitPosition.y;
 }
 
 function showMessage(text) {
@@ -250,6 +283,7 @@ function showMessage(text) {
 }
 
 function movePlayer(direction) {
+  if(gameCompleted) return; // não permite movimento após finalizar
   let newX = playerPosition.x;
   let newY = playerPosition.y;
 
@@ -260,9 +294,11 @@ function movePlayer(direction) {
 
   if(placePlayer({x: newX, y: newY})) {
     if(checkWin()) {
+      gameCompleted = true;
       showMessage("🎉 Você venceu! Próximo labirinto em 3 segundos...");
       if (solvedTimeout) clearTimeout(solvedTimeout);
       solvedTimeout = setTimeout(() => {
+        gameCompleted = false;
         currentMazeIndex = (currentMazeIndex+1) % mazes.length;
         startMaze(currentMazeIndex);
       }, 3000);
@@ -309,7 +345,6 @@ function setupTouchControls() {
       else if(dy < -30) movePlayer('up');
     }
   });
-  // Correção: adicionar eventos de clique para os botões virtuais:
   controls.up.addEventListener('click', () => movePlayer('up'));
   controls.down.addEventListener('click', () => movePlayer('down'));
   controls.left.addEventListener('click', () => movePlayer('left'));
@@ -318,8 +353,17 @@ function setupTouchControls() {
 
 function startMaze(index) {
   const maze = mazes[index];
+  mazeContainer.innerHTML = "";
+  mazeContainer.style.gridTemplateColumns = `repeat(${GRID_SIZE}, 20px)`;
+  mazeContainer.style.gridTemplateRows = `repeat(${GRID_SIZE}, 20px)`;
+  playerPosition = {x: 1, y: 0};
+  window.exitPosition = null;
+  // gerando nova saída no fundo, coluna aleatória
+  const exitCols = [];
+  for(let col=1; col<GRID_SIZE-1; col++) exitCols.push(col);
+  window.exitPosition = {x: exitCols[Math.floor(Math.random()*exitCols.length)], y: GRID_SIZE-1};
   renderMaze(maze);
-  placePlayer({x: 1, y: 0});
+  placePlayer(playerPosition);
   showMessage("");
 }
 
