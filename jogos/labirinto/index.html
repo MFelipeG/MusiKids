@@ -47,25 +47,35 @@ header {
   text-align:center;
 }
 
-/* Labirinto responsivo com células de tamanho fixo (evita "crescimento" das linhas) */
+/* CORREÇÃO: calcula o tamanho da célula descontando gaps e padding */
 #maze-container{
-  --cells: 21; /* número de células (GRID_SIZE) */
-  --size-limit: min(420px, 90vw);
-  --cell-size: calc(var(--size-limit) / var(--cells));
+  --cells: 21; /* GRID_SIZE */
+  --size-limit: min(420px, 90vw); /* área desejada total */
+  --gap: 1.5px;   /* gap entre células */
+  --pad: 12px;    /* padding do container */
+  /* cell-size = (size-limit - total-gaps - total-padding) / cells */
+  --cell-size: calc(
+    (var(--size-limit)
+     - (var(--gap) * (var(--cells) - 1))
+     - (var(--pad) * 2)
+    ) / var(--cells)
+  );
+
   display: grid;
   grid-template-columns: repeat(var(--cells), var(--cell-size));
   grid-template-rows: repeat(var(--cells), var(--cell-size));
-  gap: 1.5px;
+  gap: var(--gap);
   background-color: #fff0f6;
-  padding: 12px;
+  padding: var(--pad);
   border-radius: 20px;
   box-shadow: 0 0 30px #f3bbcfbb;
   touch-action: manipulation;
-  width: calc(var(--size-limit));
-  height: calc(var(--size-limit));
+  width: var(--size-limit);
+  height: var(--size-limit);
+  box-sizing: border-box;
 }
 
-/* Cada célula deve manter tamanho fixo e esconder excesso de conteúdo */
+/* Cada célula com tamanho fixo e conteúdo controlado */
 .cell {
   width: var(--cell-size);
   height: var(--cell-size);
@@ -74,24 +84,24 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;     /* IMPORTANTE: evita que conteúdo aumente a célula */
-  font-size: 0;         /* zera fonte direta; usamos .content para controlar */
+  overflow: hidden;     /* evita que emoji aumente a célula */
+  font-size: 0;         /* zera fonte direta; usamos .content */
   line-height: 1;
 }
 
-/* conteúdo interno (emoji) com tamanho relativo à célula */
 .cell .content{
   display: inline-block;
-  font-size: calc(var(--cell-size) * 0.65); /* ajusta automaticamente */
+  font-size: calc(var(--cell-size) * 0.65);
   line-height: 1;
-  transform: translateY(-2%); /* pequeno ajuste visual vertical */
+  transform: translateY(-2%);
   user-select: none;
 }
 
 /* cores */
 .wall { background-color: #4b2e83; }
 .path { background-color: #ffc0cb; }
-.player { /* opcional se quiser um estilo extra */ }
+.player { /* opcional */ }
+
 #message {
   margin-top: 25px;
   font-weight: 800;
@@ -138,7 +148,6 @@ button.control-btn:active { background-color:#d36487; color:white; }
 @media (max-width:480px){
   header { margin:140px 0 15px 0; font-size:2rem; }
   #btn-menu { padding:8px 14px; font-size:1rem; top:6px; left:6px; }
-  /* para telas muito pequenas, a variável --size-limit usa min(420px,90vw) */
 }
 </style>
 </head>
@@ -271,7 +280,6 @@ function renderMaze(maze) {
       cell.setAttribute('data-x', x);
       cell.setAttribute('data-y', y);
 
-      // conteúdo controlado dentro de span.content (evita que cresça a célula)
       const content = document.createElement('span');
       content.className = 'content';
 
@@ -290,7 +298,6 @@ function renderMaze(maze) {
 
 function placePlayer(pos) {
   if (gameCompleted) return false;
-  // limpar visual do jogador anterior
   document.querySelectorAll('.player').forEach(el => {
     el.classList.remove('player');
     const sp = el.querySelector('.content');
@@ -305,7 +312,6 @@ function placePlayer(pos) {
     playerPosition = {x: pos.x, y: pos.y};
     return true;
   }
-  // permitir entrar no exit (caso seja tratado diferente)
   if (newCell && Number(newCell.getAttribute('data-x')) === exitPosition.x && Number(newCell.getAttribute('data-y')) === exitPosition.y) {
     playerPosition = {x: pos.x, y: pos.y};
     return true;
