@@ -73,7 +73,7 @@
     user-select: none;
   }
   .grid-cell.found { color: white; font-weight: 900; }
-  .grid-cell.selected { background: #d3d3d3; color: #fff; } /* Estilo para letras selecionadas */
+  .grid-cell.selected { background: #d3d3d3; color: #fff; }
   #result-text {
     font-size: 1.3rem; color: #d63a6d; margin: 14px 0 0 0;
     font-weight: 700;
@@ -117,7 +117,7 @@ const CORES = [
   "#ffd9ae","#baffda","#fbb1b1","#e3cdff","#fdf07a","#f7bbe6","#7ef5be","#ccecff"
 ];
 
-const TAMANHO = 12; // grid mínimo para 10 palavras
+const TAMANHO = 12;
 
 const btnMenu = document.getElementById("btn-menu");
 const gridElem = document.getElementById("grid");
@@ -143,7 +143,6 @@ function sorteiaPalavras() {
 function iniciaGrid() {
   gridData = Array(TAMANHO).fill(0).map(()=>Array(TAMANHO).fill(''));
   corDasPalavras = {};
-  let usadas = {};
 
   palavrasAtivas.forEach((palavra, idx) => {
     let colocada = false, tentativas = 0, modo = Math.random() > 0.5 ? 'H' : 'V';
@@ -163,7 +162,7 @@ function iniciaGrid() {
           colocada=true;
         }
       }
-      else { // vertical
+      else {
         let row = Math.floor(Math.random() * (TAMANHO-palavra.length+1));
         let col = Math.floor(Math.random() * TAMANHO);
         let cabem = true;
@@ -266,32 +265,27 @@ function destacando(indices, cor) {
 }
 
 function handleClick(e) {
-  if (isDragging) return; // Ignora cliques durante o arrastar
+  if (isDragging) return;
   const cell = e.target;
-  if (!cell.classList.contains('grid-cell') || cell.classList.contains('found')) return;
+  if (!cell.classList.contains('grid-cell')) return; // permite selecionar mesmo que já encontrou
 
   const row = Number(cell.dataset.row);
   const col = Number(cell.dataset.col);
 
   if (selecao.length === 0) {
-    // Primeiro clique: inicia a seleção
     selecao = [[row, col]];
     cell.classList.add('selected');
   } else {
-    // Cliques subsequentes: verifica se é uma continuação válida
     const last = selecao[selecao.length - 1];
     const isValid = isValidNextClick(last[0], last[1], row, col);
 
     if (isValid) {
       selecao.push([row, col]);
       cell.classList.add('selected');
-      // Verifica se a palavra formada é válida
       if (verificaPalavraSelecionada(selecao)) {
-        // Palavra encontrada, limpa a seleção
         clearSelection();
       }
     } else {
-      // Clique inválido: reinicia a seleção
       clearSelection();
       selecao = [[row, col]];
       cell.classList.add('selected');
@@ -301,17 +295,13 @@ function handleClick(e) {
 
 function isValidNextClick(lastRow, lastCol, newRow, newCol) {
   if (selecao.length === 1) {
-    // Permite horizontal, vertical ou diagonal
     return Math.abs(lastRow - newRow) <= 1 && Math.abs(lastCol - newCol) <= 1 && !(lastRow === newRow && lastCol === newCol);
   }
-
-  // Verifica se o novo clique segue a mesma direção
   const first = selecao[0];
   const second = selecao[1];
   const rowDiff = second[0] - first[0];
   const colDiff = second[1] - first[1];
 
-  // Calcula a direção esperada para o próximo clique
   const expectedRow = lastRow + rowDiff;
   const expectedCol = lastCol + colDiff;
 
@@ -323,9 +313,8 @@ function clearSelection() {
   selecao = [];
 }
 
-// Sistema de arrastar (mouse)
 gridElem.addEventListener('mousedown', (e)=>{
-  if(e.target.classList.contains('grid-cell') && !e.target.classList.contains('found')) {
+  if(e.target.classList.contains('grid-cell')) {
     isDragging = true;
     clearSelection();
     selecao = [[Number(e.target.dataset.row), Number(e.target.dataset.col)]];
@@ -341,15 +330,15 @@ document.addEventListener('mouseup', ()=>{
 });
 
 function mousemove(e){
-  if(isDragging && e.target.classList.contains('grid-cell') && !e.target.classList.contains('found')) {
+  if(isDragging && e.target.classList.contains('grid-cell')) {
     let inicio = selecao[0];
     let fim = [Number(e.target.dataset.row),Number(e.target.dataset.col)];
     selecao = [];
-    if(inicio[0]===fim[0]) { // horizontal
+    if(inicio[0]===fim[0]) {
       let a = inicio[1], b = fim[1];
       let arr = []; for(let k=Math.min(a,b);k<=Math.max(a,b);k++) arr.push([inicio[0],k]);
       selecao = arr;
-    } else if(inicio[1]===fim[1]) { // vertical
+    } else if(inicio[1]===fim[1]) {
       let a = inicio[0], b = fim[0];
       let arr=[]; for(let k=Math.min(a,b);k<=Math.max(a,b);k++) arr.push([k,inicio[1]]);
       selecao = arr;
@@ -365,10 +354,9 @@ function mousemove(e){
   }
 }
 
-// Sistema de arrastar (toque)
 gridElem.addEventListener('touchstart', (e)=>{
   e.preventDefault();
-  if(e.target.classList.contains('grid-cell') && !e.target.classList.contains('found')) {
+  if(e.target.classList.contains('grid-cell')) {
     isDragging = true;
     clearSelection();
     selecao = [[Number(e.target.dataset.row), Number(e.target.dataset.col)]];
@@ -387,15 +375,15 @@ function touchmove(e){
   e.preventDefault();
   const touch = e.touches[0];
   const target = document.elementFromPoint(touch.clientX, touch.clientY);
-  if(isDragging && target.classList.contains('grid-cell') && !target.classList.contains('found')) {
+  if(isDragging && target.classList.contains('grid-cell')) {
     let inicio = selecao[0];
     let fim = [Number(target.dataset.row),Number(target.dataset.col)];
     selecao = [];
-    if(inicio[0]===fim[0]) { // horizontal
+    if(inicio[0]===fim[0]) {
       let a = inicio[1], b = fim[1];
       let arr = []; for(let k=Math.min(a,b);k<=Math.max(a,b);k++) arr.push([inicio[0],k]);
       selecao = arr;
-    } else if(inicio[1]===fim[1]) { // vertical
+    } else if(inicio[1]===fim[1]) {
       let a = inicio[0], b = fim[0];
       let arr=[]; for(let k=Math.min(a,b);k<=Math.max(a,b);k++) arr.push([k,inicio[1]]);
       selecao = arr;
@@ -411,10 +399,8 @@ function touchmove(e){
   }
 }
 
-// Botão novo jogo
 btnNovo.onclick = ()=>{reiniciaJogo()};
 
-// Confetes
 function confetti() {
   const container = document.getElementById("confetti");
   container.innerHTML = "";
