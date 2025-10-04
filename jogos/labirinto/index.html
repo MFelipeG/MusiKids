@@ -14,24 +14,20 @@
       min-height: 100vh;
     }
 
-    /* Remove faixa colorida do topo, só título simples */
     h1 {
       font-size: 32px;
       margin: 28px 0 8px 0;
       font-weight: bold;
       color: #ff71ce;
       text-shadow: 2px 3px 10px #71C9FF88;
-      background: none;
-      padding: 0;
-      border-radius: 0;
       letter-spacing: 1px;
     }
 
-    /* ---------- BOTÃO MENU (AJUSTADO) ---------- */
+    /* ---------- BOTÃO MENU (FIXO E AJUSTADO PARA CELULAR) ---------- */
     #menuButton {
-      position: fixed;          /* fixo na viewport */
-      left: 10px;
+      position: fixed;
       top: 10px;
+      left: 10px;
       padding: 11px 18px;
       font-size: 18px;
       border: none;
@@ -41,15 +37,17 @@
       cursor: pointer;
       font-weight: 700;
       box-shadow: 2px 2px 8px #7c4dffaa;
-      z-index: 1000;           /* acima dos demais elementos (confetti etc) */
+      z-index: 1000;
     }
 
     .menu {
-      margin: 15px 0 30px 0;
+      margin: 70px 0 30px 0; /* <-- empurra o menu para baixo do botão */
       display: flex;
       justify-content: center;
       gap: 18px;
+      flex-wrap: wrap;
     }
+
     .menu button {
       padding: 13px 27px;
       font-size: 17px;
@@ -63,10 +61,12 @@
       letter-spacing: 1px;
       transition: transform 0.2s;
     }
+
     .menu button:hover {
       transform: scale(1.09) rotate(-3deg);
       background: linear-gradient(120deg, #81c784 70%, #4CAF50 100%);
     }
+
     .game-container {
       padding: 20px;
       border-radius: 22px;
@@ -82,6 +82,7 @@
       font-weight: 900;
       color: #333;
     }
+
     #letterBank, #dropZone {
       display: flex;
       flex-wrap: wrap;
@@ -89,6 +90,7 @@
       gap: 11px;
       margin: 14px 0 18px 0;
     }
+
     .letter {
       padding: 15px 19px;
       background: linear-gradient(135deg,#ffe082 10%,#ffeb3b 90%);
@@ -102,12 +104,14 @@
       box-shadow: 2px 4px 10px #fdf20055;
       transition: transform 0.22s, background 0.32s;
     }
+
     .letter:hover {
       transform: scale(1.13);
       background: linear-gradient(135deg,#fdf200 20%,#ff71ce 100%);
       border-color: #01cdfe;
       color: #7c4dff;
     }
+
     .dropSlot {
       width: 50px;
       height: 50px;
@@ -121,11 +125,13 @@
       cursor: pointer;
       transition: background 0.33s;
     }
+
     .dropSlot.filled {
       border: 3px solid #4CAF50;
       background: #e8f5e9;
       color: #4caf50;
     }
+
     input[type="text"] {
       padding: 13px;
       font-size: 20px;
@@ -138,6 +144,7 @@
       color: #333;
       box-shadow: 0 2px 8px #01cdfe22;
     }
+
     button {
       padding: 11px 22px;
       font-size: 17px;
@@ -150,6 +157,7 @@
       font-weight: 700;
       box-shadow: 0 2px 8px #ff71ce22;
     }
+
     #message {
       margin-top: 17px;
       font-size: 22px;
@@ -157,52 +165,30 @@
       color: #ff4081;
     }
 
+    /* ---------- AJUSTE ESPECÍFICO PARA CELULAR ---------- */
     @media (max-width: 600px) {
-      body {
-        min-height: calc(100vh + 80px);
+      #menuButton {
+        font-size: 16px;
+        padding: 9px 14px;
       }
+
+      .menu {
+        margin-top: 90px; /* 🔹 Aumenta ainda mais o espaço no mobile */
+      }
+
       .game-container {
-        max-width: 97vw;
-        margin: 2vw;
-        padding: 7vw 3vw;
+        max-width: 95vw;
       }
-      h1 {
-        font-size: 24px;
-        padding: 10px 0;
-      }
-      #wordToCopy {
-        font-size: 19px;
-      }
+
       .letter {
         font-size: 18px;
         padding: 10px 12px;
       }
+
       .dropSlot {
         width: 40px;
         height: 40px;
         font-size: 17px;
-      }
-      input[type="text"] {
-        font-size: 16px;
-        padding: 8px;
-      }
-      button {
-        font-size: 15px;
-        padding: 8px 14px;
-      }
-
-      /* Ajustes mobile específicos para evitar sobreposição do botão */
-      /* mantemos botão no canto esquerdo superior (fixed), reduzimos um pouco e damos espaçamento ao menu */
-      #menuButton {
-        top: calc(8px + env(safe-area-inset-top));
-        left: calc(8px + env(safe-area-inset-left));
-        font-size: 16px;
-        padding: 9px 14px;
-      }
-      .menu {
-        margin-top: 72px; /* empurra os botões para baixo, evitando sobreposição */
-        flex-wrap: wrap;
-        gap: 12px;
       }
     }
 
@@ -218,12 +204,13 @@
 </head>
 <body>
   <button id="menuButton">Menu de Jogos</button>
-  <!-- Removido título/faixa -->
+
   <div class="menu">
     <button onclick="setCategory('animais')">Animais</button>
     <button onclick="setCategory('frutas')">Frutas</button>
     <button onclick="setCategory('objetos')">Objetos</button>
   </div>
+
   <div class="game-container">
     <p id="wordToCopy">Palavra: cachorro</p>
     <input type="text" id="customWord" placeholder="Digite a palavra que deseja">
@@ -233,7 +220,9 @@
     <button onclick="checkWord()">Verificar</button>
     <p id="message"></p>
   </div>
+
   <canvas id="confettiCanvas"></canvas>
+
   <script>
     let currentWord = "cachorro";
     const words = {
@@ -241,14 +230,17 @@
       frutas: ["maçã", "banana", "uva", "laranja", "pera"],
       objetos: ["mesa", "cadeira", "computador", "bola", "livro"]
     };
+
     document.getElementById("menuButton").onclick = function() {
       window.location.href = "../index.html";
     };
+
     function setCategory(category) {
       const randomIndex = Math.floor(Math.random() * words[category].length);
       currentWord = words[category][randomIndex];
       setupGame();
     }
+
     function setCustomWord() {
       const input = document.getElementById("customWord").value.trim();
       if (input) {
@@ -256,6 +248,7 @@
         setupGame();
       }
     }
+
     function setupGame() {
       document.getElementById("wordToCopy").textContent = "Palavra: " + currentWord;
       const dropZone = document.getElementById("dropZone");
@@ -268,6 +261,7 @@
         slot.ondragover = allowDrop;
         dropZone.appendChild(slot);
       }
+
       const letterBank = document.getElementById("letterBank");
       letterBank.innerHTML = "";
       let shuffled = currentWord.split("").sort(() => Math.random() - 0.5);
@@ -281,8 +275,10 @@
         div.onclick = () => placeLetter(div);
         letterBank.appendChild(div);
       });
+
       document.getElementById("message").textContent = "";
     }
+
     function allowDrop(ev) { ev.preventDefault(); }
     function drag(ev) {
       ev.dataTransfer.setData("text", ev.target.textContent);
@@ -337,14 +333,18 @@
         document.getElementById("message").style.color = "#ff4081";
       }
     }
+
     const canvas = document.getElementById("confettiCanvas");
     const ctx = canvas.getContext("2d");
+
     function resizeCanvas() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     }
+
     window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
+
     let confetti = [];
     function startConfetti() {
       confetti = [];
@@ -361,6 +361,7 @@
       animateConfetti();
       setTimeout(() => confetti = [], 2800);
     }
+
     function animateConfetti() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       confetti.forEach(c => {
@@ -377,12 +378,14 @@
       updateConfetti();
       if (confetti.length > 0) requestAnimationFrame(animateConfetti);
     }
+
     function updateConfetti() {
       confetti.forEach(c => {
         c.y += c.d * 0.11 + Math.sin(c.tilt*0.77);
         c.x += Math.sin(c.d * 0.12 + c.y * 0.04);
       });
     }
+
     setupGame();
   </script>
 </body>
