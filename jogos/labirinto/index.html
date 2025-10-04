@@ -17,19 +17,19 @@
     min-height: 100vh;
   }
   #btn-menu {
-    position: fixed;
-    top: 15px;
-    left: 15px;
+    position: fixed; /* fixo e rola com scroll */
+    top: 8px;
+    left: 8px;
     background: #a1d578;
     color: #214d0d;
-    padding: 12px 22px;
+    padding: 10px 18px;
     border-radius: 20px;
     font-weight: 900;
     border: none;
     cursor: pointer;
     box-shadow: 0 0 15px #a1d578cc;
     transition: background-color 0.3s ease;
-    z-index: 10;
+    z-index: 9999;
   }
   #btn-menu:hover {
     background-color: #68922b;
@@ -40,6 +40,8 @@
     font-weight: 900;
     font-size: 2.8rem;
     color: #d63a6d;
+    position: relative;
+    z-index: 1;
   }
   #maze-container {
     display: grid;
@@ -51,6 +53,8 @@
     border-radius: 20px;
     box-shadow: 0 0 30px #f3bbcfbb;
     touch-action: manipulation;
+    max-width: 420px;
+    max-height: 420px;
   }
   .cell {
     width: 20px;
@@ -115,6 +119,27 @@
   button.control-btn:active {
     background-color: #d36487;
     color: white;
+  }
+
+  /* Ajuste responsivo para celular */
+  @media (max-width: 480px) {
+    #maze-container {
+      max-width: 90vw !important;
+      max-height: 90vw !important;
+      grid-template-columns: repeat(21, calc(90vw / 21));
+      grid-template-rows: repeat(21, calc(90vw / 21));
+    }
+
+    #btn-menu {
+      top: 4px;
+      left: 4px;
+      padding: 8px 14px;
+      font-size: 1rem;
+    }
+
+    header {
+      margin-top: 90px; /* mais espaço para o botão */
+    }
   }
 </style>
 </head>
@@ -216,13 +241,13 @@ function generateMaze() {
 
   maze[0][1] = CELL_PATH;
 
-  // Gerar saída na base, garantir que a parede esteja aberta
+  // Gerar saída na base, garantindo que a célula da saída é caminho (aberta)
   const exitCols = [];
   for(let col=1; col<GRID_SIZE-1; col++) {
-    if(maze[GRID_SIZE-2][col] === CELL_PATH) exitCols.push(col);
+    if(maze[GRID_SIZE-1][col] === CELL_PATH) exitCols.push(col);
   }
-  const exitCol = exitCols[Math.floor(Math.random()*exitCols.length)];
-  maze[GRID_SIZE-1][exitCol] = CELL_PATH;  // Aqui abrindo a saída no muro
+  const exitCol = exitCols.length ? exitCols[Math.floor(Math.random()*exitCols.length)] : GRID_SIZE-2;
+  maze[GRID_SIZE-1][exitCol] = CELL_PATH; // abrir a saída
   exitPosition = {x: exitCol, y: GRID_SIZE-1};
 
   return maze;
@@ -272,7 +297,6 @@ function placePlayer(pos) {
     playerPosition = {x: pos.x, y: pos.y};
     return true;
   }
-  // Permite entrar na célula de saída mesmo que não seja caminho
   if(newCell && Number(newCell.getAttribute('data-x')) === exitPosition.x && Number(newCell.getAttribute('data-y')) === exitPosition.y) {
     playerPosition = {x: pos.x, y: pos.y};
     return true;
@@ -365,13 +389,15 @@ function startMaze(index) {
   playerPosition = {x: 1, y: 0};
   gameCompleted = false;
 
-  // Gerar nova saída surpresa pronta no fundo em uma posição com caminho
   const exitCols = [];
   for(let col=1; col<GRID_SIZE-1; col++) {
     if(maze[GRID_SIZE-1][col] === CELL_PATH) exitCols.push(col);
   }
-  const exitCol = exitCols.length ? exitCols[Math.floor(Math.random()*exitCols.length)] : GRID_SIZE-2;
-  maze[GRID_SIZE-1][exitCol] = CELL_PATH; // forçar uma saída removendo parede
+
+  // Se nenhum caminho no final, força saída na penúltima coluna
+  const exitCol = exitCols.length > 0 ? exitCols[Math.floor(Math.random()*exitCols.length)] : GRID_SIZE - 2;
+
+  maze[GRID_SIZE-1][exitCol] = CELL_PATH;
   exitPosition = {x: exitCol, y: GRID_SIZE-1};
 
   renderMaze(maze);
