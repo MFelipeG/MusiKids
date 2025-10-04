@@ -216,13 +216,13 @@ function generateMaze() {
 
   maze[0][1] = CELL_PATH;
 
-  // Define a saída em uma posição válida no lado inferior que seja caminho (CELL_PATH)
+  // Gerar saída na base, garantir que a parede esteja aberta
   const exitCols = [];
   for(let col=1; col<GRID_SIZE-1; col++) {
-    if(maze[GRID_SIZE-1][col] === CELL_PATH) exitCols.push(col);
+    if(maze[GRID_SIZE-2][col] === CELL_PATH) exitCols.push(col);
   }
   const exitCol = exitCols[Math.floor(Math.random()*exitCols.length)];
-  maze[GRID_SIZE-1][exitCol] = CELL_PATH;
+  maze[GRID_SIZE-1][exitCol] = CELL_PATH;  // Aqui abrindo a saída no muro
   exitPosition = {x: exitCol, y: GRID_SIZE-1};
 
   return maze;
@@ -272,8 +272,8 @@ function placePlayer(pos) {
     playerPosition = {x: pos.x, y: pos.y};
     return true;
   }
-  // Permite entrar na célula de saída mesmo que não seja caminho (por segurança)
-  if(newCell && newCell.getAttribute('data-x') == exitPosition.x && newCell.getAttribute('data-y') == exitPosition.y) {
+  // Permite entrar na célula de saída mesmo que não seja caminho
+  if(newCell && Number(newCell.getAttribute('data-x')) === exitPosition.x && Number(newCell.getAttribute('data-y')) === exitPosition.y) {
     playerPosition = {x: pos.x, y: pos.y};
     return true;
   }
@@ -305,7 +305,7 @@ function movePlayer(direction) {
       if (solvedTimeout) clearTimeout(solvedTimeout);
       solvedTimeout = setTimeout(() => {
         gameCompleted = false;
-        currentMazeIndex = (currentMazeIndex + 1) % mazes.length;
+        currentMazeIndex = (currentMazeIndex+1) % mazes.length;
         startMaze(currentMazeIndex);
       }, 3000);
     } else {
@@ -365,12 +365,13 @@ function startMaze(index) {
   playerPosition = {x: 1, y: 0};
   gameCompleted = false;
 
-  // Encontrar possíveis posições para saída (que sejam caminho)
+  // Gerar nova saída surpresa pronta no fundo em uma posição com caminho
   const exitCols = [];
   for(let col=1; col<GRID_SIZE-1; col++) {
     if(maze[GRID_SIZE-1][col] === CELL_PATH) exitCols.push(col);
   }
-  const exitCol = exitCols[Math.floor(Math.random()*exitCols.length)];
+  const exitCol = exitCols.length ? exitCols[Math.floor(Math.random()*exitCols.length)] : GRID_SIZE-2;
+  maze[GRID_SIZE-1][exitCol] = CELL_PATH; // forçar uma saída removendo parede
   exitPosition = {x: exitCol, y: GRID_SIZE-1};
 
   renderMaze(maze);
@@ -385,6 +386,7 @@ window.onload = () => {
   window.addEventListener('keydown', handleKeyDown);
   setupTouchControls();
 };
+
 </script>
 </body>
 </html>
