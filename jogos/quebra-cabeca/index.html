@@ -246,7 +246,14 @@
     determineGrid(totalPieces);
     imageUrl = imageSelect.value;
     instructions.textContent = "Carregando imagem...";
+    
     const img = new Image();
+    
+    // ======================================================
+    // AQUI ESTÁ A CORREÇÃO (para o erro de "carregar imagem")
+    img.crossOrigin = "anonymous";
+    // ======================================================
+
     img.onload = () => {
       puzzleContainer.style.display = 'block';
       instructions.textContent = `Monte o quebra-cabeça de ${totalPieces} peças!`;
