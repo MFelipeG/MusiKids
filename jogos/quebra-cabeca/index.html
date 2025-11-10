@@ -6,6 +6,7 @@
 <title>Quebra-Cabeça - MusiKids Fun</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+  
   body {
     margin: 0;
     padding: 1.5rem;
@@ -19,6 +20,19 @@
     align-items: center;
     text-align: center;
   }
+  
+  /* Botão de Voltar ao Menu - NOVO ESTILO (movido para cima) */
+  #voltar-menu-btn {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    padding: 0.5rem 1rem; /* Menor que o botão de iniciar */
+    font-size: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px #ffadc3b0;
+    z-index: 10; /* Garante que fique por cima */
+  }
+
   header {
     font-weight: 900;
     font-size: 2.1rem;
@@ -26,6 +40,7 @@
     color: #ff4c8b;
     text-shadow: 0 2px 8px #ffe1ee;
   }
+  
   #config {
     width: 320px;
     background: #fff1f9;
@@ -34,6 +49,7 @@
     box-shadow: 0 6px 30px #ffcce1a0;
     margin-bottom: 2rem;
   }
+  
   label {
     font-weight: 700;
     display: block;
@@ -41,6 +57,7 @@
     color: #d23065;
     user-select: none;
   }
+  
   select {
     width: 100%;
     padding: 0.4rem 0.6rem;
@@ -52,13 +69,15 @@
     user-select: none;
     margin-bottom: 12px;
   }
+  
+  /* Alterado para 'display: block' pois só tem 1 botão agora */
   #btns-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
+    display: block;
   }
+  
+  /* Estilo base para os botões */
   button, a.btn {
-    flex: 1;
+    /* 'flex: 1' removido daqui para permitir o posicionamento do botão de voltar */
     padding: 1rem 0;
     font-weight: 700;
     border-radius: 20px;
@@ -73,10 +92,18 @@
     display: inline-block;
     user-select: none;
   }
+  
+  /* Estilo específico para o botão Iniciar (para ocupar a largura) */
+  button#start-btn {
+    width: 100%;
+    margin-top: 1rem; /* Adiciona espaço acima do botão */
+  }
+
   button:hover, a.btn:hover {
     background-color: #e93c73;
     transform: scale(1.04);
   }
+  
   #puzzle-container {
     display: none;
     margin-bottom: 2rem;
@@ -87,6 +114,7 @@
     box-shadow: 0 8px 38px #ffa4c5cc;
     user-select: none;
   }
+  
   #puzzle {
     display: grid;
     gap: 2px;
@@ -96,6 +124,7 @@
     overflow: hidden;
     user-select: none;
   }
+  
   .piece {
     cursor: grab;
     user-select: none;
@@ -105,10 +134,12 @@
     background-repeat: no-repeat;
     background-size: 100% 100%;
   }
+  
   .piece.dragging {
     cursor: grabbing;
     box-shadow: 0 14px 28px #ff377bee;
   }
+  
   #instructions {
     font-weight: 700;
     margin: 0.8rem 0 12px 0;
@@ -116,6 +147,7 @@
     user-select: none;
     min-height: 2.3em;
   }
+  
   @media (max-width: 600px) {
     .piece {
       border-radius: 8px;
@@ -123,38 +155,52 @@
     }
     #config { width: 98vw; }
     #puzzle-container { width: 99vw; max-width: 99vw; }
+    
+    /* Ajusta o botão de voltar em telas pequenas */
+    #voltar-menu-btn {
+        top: 1rem;
+        left: 1rem;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    header {
+        margin-top: 2.5rem; /* Adiciona espaço para não sobrepor o botão */
+    }
   }
 </style>
 </head>
 <body>
+
+<a href="../index.html" role="button" class="btn" id="voltar-menu-btn" aria-label="Voltar ao Menu de Jogos">← Menu</a>
+
 <header>Quebra-Cabeça - MusiKids Fun</header>
 
 <div id="config" aria-label="Configurações do quebra-cabeça">
-  <label for="pieces-select">Selecione a quantidade de peças:</label>
+
+  <label for="pieces-select">Nível (peças):</label>
   <select id="pieces-select" aria-describedby="pieces-desc" aria-required="true">
-    <option value="9" selected>9 peças (3x3)</option>
-    <option value="15">15 peças (5x3)</option>
-    <option value="20">20 peças (5x4)</option>
+    <option value="4" selected>Muito Fácil (2x2)</option>
+    <option value="6">Fácil (3x2)</option>
+    <option value="9">Médio (3x3)</option>
+    <option value="15">Difícil (5x3)</option>
   </select>
 
   <label for="image-select">Selecione a imagem:</label>
   <select id="image-select" aria-describedby="image-desc" aria-required="true">
-    <option value="https://cdn.pixabay.com/photo/2017/02/18/18/10/elephant-2070963_1280.jpg" selected>Elefante</option>
-    <option value="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg">Árvore</option>
-    <option value="https://cdn.pixabay.com/photo/2016/01/22/15/36/dog-1151516_1280.jpg">Cachorro</option>
-    <option value="https://cdn.pixabay.com/photo/2017/01/20/00/30/mountains-1993642_1280.jpg">Montanhas</option>
-    <option value="https://cdn.pixabay.com/photo/2016/10/18/21/06/dinosaur-1784536_1280.jpg">Dinossauro</option>
-    <option value="https://cdn.pixabay.com/photo/2014/04/10/10/02/owl-319913_1280.jpg">Coruja</option>
-    <option value="https://cdn.pixabay.com/photo/2020/02/18/00/00/cat-4858831_1280.jpg">Gatinho</option>
-    <option value="https://cdn.pixabay.com/photo/2016/03/27/19/17/turtle-1280223_1280.jpg">Tartaruga</option>
-    <option value="https://cdn.pixabay.com/photo/2018/02/20/18/03/children-3165159_1280.jpg">Crianças</option>
-    <option value="https://cdn.pixabay.com/photo/2019/11/28/18/19/cats-4653248_1280.jpg">Gatinhos</option>
+    <option value="https://cdn.pixabay.com/photo/2020/03/24/08/33/lion-4962779_1280.png" selected>Leãozinho 🦁</option>
+    <option value="https://cdn.pixabay.com/photo/2016/09/16/10/16/teddy-bear-1673550_1280.png">Ursinho 🧸</option>
+    <option value="https://cdn.pixabay.com/photo/2013/07/12/17/45/rubber-duck-152335_1280.png">Patinho 🦆</option>
+    <option value="https://cdn.pixabay.com/photo/2017/01/31/23/52/bunny-2027986_1280.png">Coelhinho 🐰</option>
+    <option value="https://cdn.pixabay.com/photo/2016/04/01/10/48/animal-1299942_1280.png">Macaquinho 🐵</option>
+    <option value="https://cdn.pixabay.com/photo/2013/07/13/13/27/fish-161099_1280.png">Peixinho 🐠</option>
+    <option value="https://cdn.pixabay.com/photo/2020/05/11/15/38/cat-5158888_1280.png">Gatinho 🐱</option>
+    <option value="https://cdn.pixabay.com/photo/2016/03/31/20/35/dog-1295794_1280.png">Cachorrinho 🐶</option>
   </select>
 
   <div id="btns-row">
     <button id="start-btn" aria-label="Iniciar Quebra-Cabeça">Iniciar Quebra-Cabeça</button>
-    <a href="../index.html" role="button" class="btn" aria-label="Voltar ao Menu de Jogos">← Voltar ao Menu</a>
-  </div>
+    </div>
 </div>
 
 <p id="instructions" aria-live="polite"></p>
@@ -178,11 +224,14 @@
   let originalPositions = [];
   let imageUrl;
 
+  // FUNÇÃO ATUALIZADA para incluir os novos níveis
   function determineGrid(total) {
-    if(total === 9){ rows = 3; cols = 3; }
-    else if(total === 15){ rows = 3; cols =5;}
-    else if(total === 20){ rows = 4; cols =5;}
-    else { rows =3; cols =3;}
+    if(total === 4){ rows = 2; cols = 2; }
+    else if(total === 6){ rows = 2; cols = 3; }
+    else if(total === 9){ rows = 3; cols = 3; }
+    else if(total === 15){ rows = 3; cols = 5;}
+    else if(total === 20){ rows = 4; cols = 5;} // Mantido por segurança
+    else { rows = 2; cols = 2;} // Padrão é o mais fácil
   }
 
   function shuffle(array){
@@ -227,7 +276,12 @@
         piece.classList.add("piece");
         piece.style.backgroundImage = `url(${imageUrl})`;
         piece.style.backgroundSize = `${cols*100}% ${rows*100}%`;
-        piece.style.backgroundPosition = `${(c*100)/(cols-1)}% ${(r*100)/(rows-1)}%`;
+        
+        // Ajuste no cálculo da posição para funcionar com 2 ou mais colunas/linhas
+        const xPos = (cols > 1) ? (c * 100) / (cols - 1) : 0;
+        const yPos = (rows > 1) ? (r * 100) / (rows - 1) : 0;
+        piece.style.backgroundPosition = `${xPos}% ${yPos}%`;
+        
         piece.draggable = true;
         piece.dataset.index = idx;
 
@@ -254,55 +308,137 @@
       piece.addEventListener("dragenter", dragEnter);
       piece.addEventListener("dragleave", dragLeave);
       piece.addEventListener("dragend", dragEnd);
+      
+      // Listeners para Touch (celular)
+      piece.addEventListener("touchstart", dragStart, { passive: false });
+      piece.addEventListener("touchmove", dragOver, { passive: false });
+      piece.addEventListener("touchend", drop, { passive: false });
     });
   }
 
   let draggedPiece = null;
+  let touchIdentifier = null; // Para mobile
+
+  function getTouch(e) {
+      if (e.changedTouches) {
+          return e.changedTouches[0];
+      }
+      return e;
+  }
 
   function dragStart(e){
+    // Previne comportamento padrão (como scroll)
+    if (e.type === 'touchstart') {
+        if(e.touches.length > 1) return; // Ignora multi-touch
+        e.preventDefault();
+        touchIdentifier = e.changedTouches[0].identifier;
+    }
+    
     draggedPiece = e.target;
-    e.dataTransfer.effectAllowed = "move";
-    setTimeout(() => draggedPiece.classList.add("dragging"), 0);
+    
+    if (e.dataTransfer) {
+        e.dataTransfer.effectAllowed = "move";
+    }
+    
+    // Usamos setTimeout para o 'dragging' funcionar bem no mobile
+    setTimeout(() => {
+        if (draggedPiece) draggedPiece.classList.add("dragging");
+    }, 0);
   }
+  
   function dragOver(e){
-    e.preventDefault();
-    e.dataTransfer.dropEffect = "move";
-    if(e.target !== draggedPiece) e.target.classList.add("drag-over");
+    e.preventDefault(); // Necessário para o 'drop' funcionar
+    
+    if (e.dataTransfer) {
+        e.dataTransfer.dropEffect = "move";
+    }
+    
+    let target = getTargetFromTouch(e);
+    if(target && target !== draggedPiece && target.classList.contains('piece')) {
+        // Remove 'drag-over' de outros elementos
+        Array.from(puzzle.children).forEach(p => p.classList.remove("drag-over"));
+        target.classList.add("drag-over");
+    }
   }
+
+  function getTargetFromTouch(e) {
+      if (e.type === 'touchmove' || e.type === 'touchend') {
+          if (touchIdentifier === null) return null;
+          let touch = Array.from(e.changedTouches).find(t => t.identifier === touchIdentifier);
+          if (!touch) return null;
+          
+          // Encontra o elemento sob o toque
+          return document.elementFromPoint(touch.clientX, touch.clientY);
+      }
+      // Para mouse events
+      return e.target;
+  }
+  
   function dragEnter(e){
-    if(e.target !== draggedPiece) e.target.classList.add("drag-over");
+    let target = e.target;
+    if(target && target !== draggedPiece && target.classList.contains('piece')) {
+        target.classList.add("drag-over");
+    }
   }
+  
   function dragLeave(e){
-    e.target.classList.remove("drag-over");
+    let target = e.target;
+    if(target && target.classList.contains('piece')) {
+        target.classList.remove("drag-over");
+    }
   }
+  
   function drop(e){
     e.preventDefault();
-    if(e.target !== draggedPiece) swapPieces(draggedPiece, e.target);
-    e.target.classList.remove("drag-over");
+    let target = getTargetFromTouch(e);
+    
+    if(target && target !== draggedPiece && target.classList.contains('piece')) {
+        swapPieces(draggedPiece, target);
+        target.classList.remove("drag-over");
+    }
+    
+    // Limpa o 'draggedPiece' no final do drag (dragEnd)
+    // Se for touch, limpamos aqui e também chamamos dragEnd
+    if (e.type === 'touchend') {
+        dragEnd();
+    }
   }
+  
   function dragEnd(){
-    if(draggedPiece) draggedPiece.classList.remove("dragging");
+    if(draggedPiece) {
+        draggedPiece.classList.remove("dragging");
+    }
     Array.from(puzzle.children).forEach(p => p.classList.remove("drag-over"));
+    
+    // Reseta o estado
+    draggedPiece = null;
+    touchIdentifier = null;
+    
     checkComplete();
   }
+  
   function swapPieces(p1, p2){
+    if (!p1 || !p2) return; // Checagem de segurança
+    
     let parent = p1.parentNode;
     let idx1 = Array.from(parent.children).indexOf(p1);
     let idx2 = Array.from(parent.children).indexOf(p2);
 
-    if(idx1 < idx2){
-      parent.insertBefore(p2, p1);
-      parent.insertBefore(p1, parent.children[idx2]);
-    }
-    else{
-      parent.insertBefore(p1, p2);
-      parent.insertBefore(p2, parent.children[idx1]);
+    // Lógica de troca mais robusta
+    if (idx1 < idx2) {
+        parent.insertBefore(p2, p1); // Move p2 antes de p1
+        parent.insertBefore(p1, parent.children[idx2]); // Move p1 para a posição original de p2
+    } else {
+        parent.insertBefore(p1, p2); // Move p1 antes de p2
+        parent.insertBefore(p2, parent.children[idx1]); // Move p2 para a posição original de p1
     }
   }
+  
   function checkComplete(){
     let order = Array.from(puzzle.children).map(p => Number(p.dataset.index));
     if(order.every((val,i) => val === i)){
       instructions.textContent = "Parabéns! Você completou o quebra-cabeça!";
+      // Adicionar algum efeito de confete ou celebração aqui seria legal
     }
     else{
       instructions.textContent = `Monte o quebra-cabeça de ${totalPieces} peças!`;
