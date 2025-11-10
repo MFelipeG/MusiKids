@@ -7,26 +7,27 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
   body {
-    margin: 0; padding: 0; min-height: 100vh;
-    font-family: 'Baloo 2', cursive, Arial, sans-serif;
+    margin: 0; padding: 1.5rem;
     background: linear-gradient(135deg,#f7f4e9,#f8b500,#ff7eb9 100%);
+    font-family: 'Baloo 2', cursive, Arial, sans-serif;
     color: #32434a; user-select: none;
     box-sizing: border-box; text-align: center;
+    min-height: 100vh;
   }
   #btn-menu {
-    position: fixed; top: 15px; left: 15px;
+    position: fixed; top: 1rem; left: 1rem;
     background: #a1d578; color: #214d0d;
-    border-radius: 18px; padding: 14px 22px;
-    font-weight: 900; font-size: 1.25rem;
+    border-radius: 18px; padding: 12px 20px;
+    font-weight: 900; font-size: 1.1rem;
     cursor: pointer; box-shadow: 0 0 15px #a1d578aa;
     border: none; user-select: none; z-index: 10000;
     transition: background-color .3s ease;
   }
   #btn-menu:hover { background: #68922b; color: white; }
   header {
-    margin-top: 75px; font-weight: 900; font-size: 2.4rem;
+    margin-top: 4rem; font-weight: 900; font-size: 2.4rem;
     color: #d63a6d; user-select: none;
-    margin-bottom: 16px;
+    margin-bottom: 1rem;
   }
   main {
     max-width: 950px;
@@ -111,39 +112,30 @@
 const PALAVRAS = [
 "ANJO","CACHORRO","GATO","JARDIM","CARRO","TIGRE","CAJU","BORBOLETA","PATO","CASA","FELICIDADE","CERTO","JANELA","SORRISO","CORAÇÃO","LARANJA","AMOR","PASSARINHO","AMIZADE","VACA","SOL","VERDE","FAMÍLIA","FLOR","ESCOLA","PEIXE","ARVORE","CEBOLA","SAPO","TERRA","AMARELO","AZUL","ROSA","NAVIO","ONÇA","LIVRO","GEMA","BANANA","FOFO","CEREJA","FITA","CAIXA","PAPAI","MAMÃE","ELEFANTE","BRINQUEDO","BOLA","TESOURA","BACIA"
 ];
-
 const CORES = [
   "#ff7eb9","#bcebff","#e7ffd2","#ffd0d3","#b8b9ff","#fdffa9","#b9faf8","#f9b9ff",
   "#ffd9ae","#baffda","#fbb1b1","#e3cdff","#fdf07a","#f7bbe6","#7ef5be","#ccecff"
 ];
-
 const TAMANHO = 12;
-
 const btnMenu = document.getElementById("btn-menu");
 const gridElem = document.getElementById("grid");
 const alvoElem = document.getElementById("palavras-alvo");
 const achadasElem = document.getElementById("palavras-achadas");
 const resultText = document.getElementById("result-text");
 const btnNovo = document.getElementById("btn-novo");
-
 btnMenu.onclick = () => location.href = "../index.html";
-
 let palavrasAtivas = [], encontradas = [], gridData = [], corDasPalavras = {};
 let selecao = [];
 let isDragging = false;
-
 function shuffle(arr) {
   return arr.map(i=>[Math.random(),i]).sort((a,b)=>a[0]-b[0]).map(i=>i[1]);
 }
-
 function sorteiaPalavras() {
   return shuffle(PALAVRAS).slice(0,10);
 }
-
 function iniciaGrid() {
   gridData = Array(TAMANHO).fill(0).map(()=>Array(TAMANHO).fill(''));
   corDasPalavras = {};
-
   palavrasAtivas.forEach((palavra, idx) => {
     let colocada = false, tentativas = 0, modo = Math.random() > 0.5 ? 'H' : 'V';
     const cor = CORES[idx % CORES.length];
@@ -184,7 +176,6 @@ function iniciaGrid() {
       if(!gridData[i][j])
         gridData[i][j] = String.fromCharCode(65+Math.floor(Math.random()*26));
 }
-
 function desenhaGrid() {
   gridElem.innerHTML = '';
   gridElem.style.gridTemplateColumns = `repeat(${TAMANHO}, 1fr)`;
@@ -200,7 +191,6 @@ function desenhaGrid() {
     }
   }
 }
-
 function desenhaPainel() {
   alvoElem.innerHTML = '';
   achadasElem.innerHTML = '';
@@ -216,7 +206,6 @@ function desenhaPainel() {
     achadasElem.appendChild(li);
   });
 }
-
 function reiniciaJogo() {
   palavrasAtivas = sorteiaPalavras();
   encontradas = [];
@@ -229,7 +218,6 @@ function reiniciaJogo() {
   selecao = [];
   isDragging = false;
 }
-
 function verificaPalavraSelecionada(indices) {
   let texto = indices.map(([i,j])=>gridData[i][j]).join('');
   let textoInvert = indices.map(([i,j])=>gridData[i][j]).reverse().join('');
@@ -250,7 +238,6 @@ function verificaPalavraSelecionada(indices) {
   }
   return false;
 }
-
 function destacando(indices, cor) {
   indices.forEach(([i,j])=>{
     Array.from(gridElem.children).forEach(cell=>{
@@ -263,22 +250,18 @@ function destacando(indices, cor) {
     });
   });
 }
-
 function handleClick(e) {
   if (isDragging) return;
   const cell = e.target;
   if (!cell.classList.contains('grid-cell')) return; // permite selecionar mesmo que já encontrou
-
   const row = Number(cell.dataset.row);
   const col = Number(cell.dataset.col);
-
   if (selecao.length === 0) {
     selecao = [[row, col]];
     cell.classList.add('selected');
   } else {
     const last = selecao[selecao.length - 1];
     const isValid = isValidNextClick(last[0], last[1], row, col);
-
     if (isValid) {
       selecao.push([row, col]);
       cell.classList.add('selected');
@@ -292,7 +275,6 @@ function handleClick(e) {
     }
   }
 }
-
 function isValidNextClick(lastRow, lastCol, newRow, newCol) {
   if (selecao.length === 1) {
     return Math.abs(lastRow - newRow) <= 1 && Math.abs(lastCol - newCol) <= 1 && !(lastRow === newRow && lastCol === newCol);
@@ -301,18 +283,14 @@ function isValidNextClick(lastRow, lastCol, newRow, newCol) {
   const second = selecao[1];
   const rowDiff = second[0] - first[0];
   const colDiff = second[1] - first[1];
-
   const expectedRow = lastRow + rowDiff;
   const expectedCol = lastCol + colDiff;
-
   return newRow === expectedRow && newCol === expectedCol;
 }
-
 function clearSelection() {
   Array.from(document.querySelectorAll('.grid-cell')).forEach(cell => cell.classList.remove('selected'));
   selecao = [];
 }
-
 gridElem.addEventListener('mousedown', (e)=>{
   if(e.target.classList.contains('grid-cell')) {
     isDragging = true;
@@ -328,7 +306,6 @@ document.addEventListener('mouseup', ()=>{
   gridElem.removeEventListener('mousemove', mousemove);
   isDragging = false;
 });
-
 function mousemove(e){
   if(isDragging && e.target.classList.contains('grid-cell')) {
     let inicio = selecao[0];
@@ -353,7 +330,6 @@ function mousemove(e){
     });
   }
 }
-
 gridElem.addEventListener('touchstart', (e)=>{
   e.preventDefault();
   if(e.target.classList.contains('grid-cell')) {
@@ -370,7 +346,6 @@ document.addEventListener('touchend', ()=>{
   gridElem.removeEventListener('touchmove', touchmove);
   isDragging = false;
 });
-
 function touchmove(e){
   e.preventDefault();
   const touch = e.touches[0];
@@ -398,9 +373,7 @@ function touchmove(e){
     });
   }
 }
-
 btnNovo.onclick = ()=>{reiniciaJogo()};
-
 function confetti() {
   const container = document.getElementById("confetti");
   container.innerHTML = "";
@@ -431,8 +404,59 @@ style.innerHTML = `
   }
 `;
 document.head.appendChild(style);
-
 reiniciaJogo();
 </script>
+<style>
+  /* Media queries para responsividade */
+  @media (max-width: 768px) {
+    body { padding: 1rem; }
+    #btn-menu {
+      top: 0.75rem; left: 0.75rem;
+      padding: 10px 16px; font-size: 1rem;
+    }
+    header {
+      margin-top: 3rem; font-size: 2rem;
+      margin-bottom: 0.75rem;
+    }
+    main {
+      flex-direction: column;
+      gap: 16px; padding: 16px 12px 24px 12px;
+      max-width: 100%;
+    }
+    .panel {
+      width: 100%; min-width: auto;
+      padding: 12px 16px 16px 16px;
+    }
+    .panel h3 { font-size: 1.1rem; }
+    .panel ul { font-size: 1.1rem; }
+    #grid {
+      padding: 12px; gap: 2px;
+      margin-bottom: 16px;
+    }
+    .grid-cell {
+      width: 28px; height: 28px;
+      font-size: 1.2rem; border-radius: 8px;
+    }
+    #result-text { font-size: 1.2rem; }
+    #btn-novo {
+      font-size: 1.1rem; padding: 10px 32px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    body { padding: 0.75rem; }
+    header { font-size: 1.8rem; margin-top: 2.5rem; }
+    main { padding: 12px 8px 20px 8px; gap: 12px; }
+    .panel { padding: 10px 12px 12px 12px; }
+    .panel ul { font-size: 1rem; }
+    #grid { padding: 8px; }
+    .grid-cell {
+      width: 24px; height: 24px;
+      font-size: 1.1rem;
+    }
+    #result-text { font-size: 1.1rem; }
+    #btn-novo { padding: 8px 24px; font-size: 1rem; }
+  }
+</style>
 </body>
 </html>
