@@ -165,8 +165,56 @@
 </div>
 <div id="confetti-container"></div>
 <script>
-// Biblioteca de pares do jogo
-const allPairs = [ ... ]; // ---mantém igual---
+// Biblioteca de pares do jogo (100% restaurado! NUNCA use ... no array!)
+const allPairs = [
+  {left:"dog", leftImg: "🐶", right:"doghouse", rightImg:"🏠"},
+  {left:"mouse", leftImg:"🐭", right:"cheese", rightImg:"🧀"},
+  {left:"cat", leftImg:"🐱", right:"yarn", rightImg:"🧶"},
+  {left:"bird", leftImg:"🐦", right:"nest", rightImg:"🪹"},
+  {left:"fish", leftImg:"🐟", right:"water", rightImg:"💧"},
+  {left:"turtle", leftImg:"🐢", right:"pond", rightImg:"🏞️"},
+  {left:"frog", leftImg:"🐸", right:"lily", rightImg:"🌸"},
+  {left:"cow", leftImg:"🐄", right:"milk", rightImg:"🥛"},
+  {left:"horse", leftImg:"🐴", right:"stable", rightImg:"🏇"},
+  {left:"bee", leftImg:"🐝", right:"hive", rightImg:"🍯"},
+  {left:"pig", leftImg:"🐷", right:"mud", rightImg:"🟤"},
+  {left:"rabbit", leftImg:"🐰", right:"carrot", rightImg:"🥕"},
+  {left:"owl", leftImg:"🦉", right:"tree", rightImg:"🌳"},
+  {left:"duck", leftImg:"🦆", right:"pond", rightImg:"🌊"},
+  {left:"lion", leftImg:"🦁", right:"jungle", rightImg:"🌴"},
+  {left:"elephant", leftImg:"🐘", right:"waterhole", rightImg:"🏜️"},
+  {left:"bear", leftImg:"🐻", right:"forest", rightImg:"🌲"},
+  {left:"snake", leftImg:"🐍", right:"rock", rightImg:"🪨"},
+  {left:"monkey", leftImg:"🐒", right:"banana", rightImg:"🍌"},
+  {left:"crown", leftImg:"👑", right:"king", rightImg:"🤴"},
+  {left:"cat-face", leftImg:"😺", right:"box", rightImg:"📦"},
+  {left:"dog-face", leftImg:"🐕", right:"ball", rightImg:"⚽"},
+  {left:"mouse-face", leftImg:"🐀", right:"hole", rightImg:"🕳️"},
+  {left:"sheep", leftImg:"🐑", right:"wool", rightImg:"🧶"},
+  {left:"baby-chick", leftImg:"🐤", right:"egg", rightImg:"🥚"},
+  {left:"car", leftImg:"🚗", right:"garage", rightImg:"🏠"},
+  {left:"plane", leftImg:"✈️", right:"airport", rightImg:"🛫"},
+  {left:"bicycle", leftImg:"🚲", right:"helmet", rightImg:"⛑️"},
+  {left:"fire", leftImg:"🔥", right:"firefighter", rightImg:"🚒"},
+  {left:"book", leftImg:"📖", right:"library", rightImg:"🏛️"},
+  {left:"phone", leftImg:"📱", right:"charger", rightImg:"🔌"},
+  {left:"clock", leftImg:"⏰", right:"alarm", rightImg:"📢"},
+  {left:"camera", leftImg:"📸", right:"photo", rightImg:"🖼️"},
+  {left:"hat", leftImg:"🎩", right:"man", rightImg:"👨"},
+  {left:"poodle", leftImg:"🐩", right:"groomer", rightImg:"✂️"},
+  {left:"cat", leftImg:"🐈", right:"scratching post", rightImg:"🪵"},
+  {left:"fox", leftImg:"🦊", right:"den", rightImg:"🏚️"},
+  {left:"snowman", leftImg:"☃️", right:"snow", rightImg:"❄️"},
+  {left:"sun", leftImg:"☀️", right:"beach", rightImg:"🏖️"},
+  {left:"cloud", leftImg:"☁️", right:"rain", rightImg:"🌧️"},
+  {left:"airplane", leftImg:"🛩️", right:"pilot", rightImg:"👨‍✈️"},
+  {left:"rocket", leftImg:"🚀", right:"space", rightImg:"🌌"},
+  {left:"flower", leftImg:"🌷", right:"garden", rightImg:"🌻"},
+  {left:"tree", leftImg:"🌳", right:"forest", rightImg:"🌲"},
+  {left:"heart-eyes", leftImg:"😍", right:"love", rightImg:"❤️"},
+  {left:"guide-dog", leftImg:"🐕‍🦺", right:"leash", rightImg:"🦮"},
+  {left:"bull", leftImg:"🐂", right:"barn", rightImg:"🏚️"}
+];
 // Variáveis do jogo
 let usedPairs = [];
 const leftCol = document.getElementById("left-col");
@@ -316,11 +364,7 @@ function drawLine(leftEl, rightEl) {
   let y1 = rectLeft.top + rectLeft.height/2 - svgRect.top;
   let x2 = rectRight.left - svgRect.left;
   let y2 = rectRight.top + rectRight.height/2 - svgRect.top;
-  // Corrige elevação para mobile: aumentar Y caso width < 720px (mobile)
-  if(window.innerWidth <= 720){
-    y1 += 18; y2 += 18;
-    x1 += 2; x2 -= 2;
-  }
+  if(window.innerWidth <= 720){ y1 += 18; y2 += 18; x1 += 2; x2 -= 2; }
   line.setAttribute("x1", x1);
   line.setAttribute("y1", y1);
   line.setAttribute("x2", x2);
@@ -346,7 +390,6 @@ function updateLines() {
 function isMatch(leftKey, rightKey) {
   return usedPairs.some(pair => (pair.left === leftKey && pair.right === rightKey));
 }
-// Função confete
 function confetti() {
   confettiContainer.innerHTML = "";
   const colors = ['#ff597f','#ff9ea1','#fcd677','#a9d97a','#79d79a','#ff7eb9','#61dafb'];
