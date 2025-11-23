@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Arraste as Formas - MusiKids Fun</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
-
 body {
   margin: 0;
   padding: 0;
@@ -18,7 +17,6 @@ body {
   box-sizing: border-box;
   text-align: center;
 }
-
 #btn-menu {
   position: fixed;
   top: 15px;
@@ -36,12 +34,10 @@ body {
   z-index: 10000;
   transition: background-color .3s ease;
 }
-
 #btn-menu:hover {
   background: #68922b;
   color: white;
 }
-
 header {
   margin-top: 75px;
   font-weight: 900;
@@ -50,7 +46,6 @@ header {
   user-select: none;
   margin-bottom: 20px;
 }
-
 #game-container {
   max-width: 980px;
   margin: 0 auto;
@@ -62,7 +57,6 @@ header {
   flex-direction: column;
   align-items: center;
 }
-
 #game-area {
   display: flex;
   flex-direction: column;
@@ -70,75 +64,65 @@ header {
   gap: 30px;
   margin-top: 20px;
 }
-
 #shapes-pool {
   display: flex;
   flex-direction: row;
   gap: 20px;
   justify-content: center;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   margin-bottom: 15px;
 }
-
 #drop-zones {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  display: flex;
+  gap: 25px;
   justify-content: center;
+  flex-wrap: wrap;
   width: 100%;
-  max-width: 200px;
   margin-top: 15px;
 }
-
-/* Formas arrastáveis */
 .shape-draggable, .drop-zone {
   width: 80px;
   height: 80px;
   cursor: pointer;
   transition: transform 0.3s ease, opacity 0.3s ease;
-  border-radius: 10px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   user-select: none;
   box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  background: transparent;
 }
-
-/* Formas arrastáveis - cores e clip-paths */
-.shape-draggable.square { background: #ff6b6b; clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); }
-.shape-draggable.circle { background: #4ecdc4; clip-path: circle(50%); }
-.shape-draggable.triangle { background: #45b7d1; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
-.shape-draggable.rectangle { background: #96ceb4; clip-path: polygon(0 0, 100% 0, 100% 20%, 0 20%); width: 100px; }
-
-/* Zonas de drop - mesmas formas com cor correspondente */
-.drop-zone.square { background: #ff6b6b; clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%); }
-.drop-zone.circle { background: #4ecdc4; clip-path: circle(50%); }
-.drop-zone.triangle { background: #45b7d1; clip-path: polygon(50% 0%, 0% 100%, 100% 100%); }
-.drop-zone.rectangle { background: #96ceb4; clip-path: polygon(0 0, 100% 0, 100% 20%, 0 20%); width: 100px; }
-
+/* Formas geométricas SVG para não cortar visualmente */
+.shape-svg {
+  width: 74px;
+  height: 74px;
+  display: block;
+}
+.drop-zone svg {
+  pointer-events: none;
+}
+/* Estados visuais das zonas de drop */
 .drop-zone {
   border: 3px dashed #d63a6d;
   opacity: 0.7;
   transition: border-color 0.3s ease, opacity 0.3s ease;
   position: relative;
 }
-
 .drop-zone:hover {
   border-color: #ff7eb9;
   opacity: 0.9;
 }
-
 .drop-zone.correct {
   border-color: #a1d578;
   opacity: 1;
-  background-color: rgba(161, 213, 120, 0.4);
+  background-color: rgba(161, 213, 120, 0.15);
 }
-
 .drop-zone.filled {
   border: none;
   opacity: 1;
+  background: transparent;
 }
-
 #result-text {
   margin-top: 20px;
   font-weight: 700;
@@ -146,7 +130,6 @@ header {
   color: #d63a6d;
   min-height: 36px;
 }
-
 #confetti {
   pointer-events: none;
   position: fixed;
@@ -154,7 +137,6 @@ header {
   z-index: 9999;
   overflow: visible;
 }
-
 .confetti-piece {
   pointer-events: none;
   position: fixed;
@@ -164,22 +146,23 @@ header {
   animation: fall 3s linear forwards;
   opacity: 1;
 }
-
 @keyframes fall {
   0% { transform: translateY(0); opacity: 1; }
   100% { transform: translateY(100vh); opacity: 0; }
 }
-
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-5px); }
   75% { transform: translateX(5px); }
 }
-
 .drop-zone.error {
   animation: shake 0.5s;
 }
-
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-10px); }
+  60% { transform: translateY(-5px); }
+}
 /* Responsivo para mobile */
 @media (max-width: 768px) {
   #shapes-pool {
@@ -188,6 +171,10 @@ header {
   .shape-draggable, .drop-zone {
     width: 60px;
     height: 60px;
+  }
+  .shape-svg {
+    width: 54px;
+    height: 54px;
   }
 }
 </style>
@@ -201,11 +188,11 @@ header {
   <div id="game-area">
     <div id="shapes-pool" aria-label="Formas arrastáveis">
       <h3 style="color: #5e219b; margin-bottom: 10px;">Arraste as formas:</h3>
-      <!-- 4 formas arrastáveis serão geradas aqui -->
+      <!-- Formas arrastáveis SVG -->
     </div>
     <div id="drop-zones" aria-label="Zonas para soltar as formas">
-      <h3 style="color: #5e219b; margin-bottom: 10px; grid-column: span 2;">Solte aqui:</h3>
-      <!-- 4 zonas de drop serão geradas aqui -->
+      <h3 style="color: #5e219b; margin-bottom: 10px; width:100%;">Solte aqui:</h3>
+      <!-- Zonas de drop SVG -->
     </div>
   </div>
   <div id="result-text" aria-live="polite"></div>
@@ -215,138 +202,99 @@ header {
 
 <script>
 const formasGeometricas = [
-  { nome: 'square', label: 'Quadrado', css: 'square' },
-  { nome: 'circle', label: 'Círculo', css: 'circle' },
-  { nome: 'triangle', label: 'Triângulo', css: 'triangle' },
-  { nome: 'rectangle', label: 'Retângulo', css: 'rectangle' }
+  { nome: 'square', label: 'Quadrado', cor: '#ff6b6b', svg: '<rect x="6" y="6" width="62" height="62" rx="14" />' },
+  { nome: 'circle', label: 'Círculo', cor: '#4ecdc4', svg: '<circle cx="37" cy="37" r="30" />' },
+  { nome: 'triangle', label: 'Triângulo', cor: '#45b7d1', svg: '<polygon points="37,11 13,63 61,63" />' },
+  { nome: 'rectangle', label: 'Retângulo', cor: '#96ceb4', svg: '<rect x="9" y="23" width="56" height="29" rx="10" />' }
 ];
-
-const coresAleatorias = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4'];
-
 let formasAtuais = [];
 let formasUsadas = [];
-
 const btnMenu = document.getElementById('btn-menu');
 const shapesPool = document.getElementById('shapes-pool');
 const dropZones = document.getElementById('drop-zones');
 const resultText = document.getElementById('result-text');
 const confettiContainer = document.getElementById('confetti');
-
-btnMenu.onclick = () => {
-  location.href = '../index.html';
-};
-
-function shuffle(arr) {
-  return [...arr].sort(() => Math.random() - 0.5);
-}
-
+btnMenu.onclick = () => { location.href = '../index.html'; };
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
 function getFormasUnicas() {
-  // Evita repetições consecutivas mas aqui temos só 4
   let pool = formasGeometricas.filter(f => !formasUsadas.includes(f.nome));
-  if (pool.length < 4) {
-    pool = [...formasGeometricas];
-    formasUsadas = [];
-  }
+  if (pool.length < 4) { pool = [...formasGeometricas]; formasUsadas = []; }
   let selecionadas = shuffle(pool).slice(0, 4);
   formasUsadas.push(...selecionadas.map(f => f.nome));
   return selecionadas;
 }
-
 function criaJogo() {
   formasAtuais = getFormasUnicas();
-
-  // Limpa os contêineres
   shapesPool.innerHTML = '<h3 style="color: #5e219b; margin-bottom: 10px;">Arraste as formas:</h3>';
-  dropZones.innerHTML = '<h3 style="color: #5e219b; margin-bottom: 10px; grid-column: span 2;">Solte aqui:</h3>';
-
-  // Cria 4 formas arrastáveis (topo)
-  formasAtuais.forEach((forma, index) => {
-    const shape = document.createElement('div');
-    shape.className = `shape-draggable ${forma.css}`;
-    shape.style.backgroundColor = coresAleatorias[index % coresAleatorias.length];
-    shape.draggable = true;
-    shape.dataset.shapeType = forma.nome;
-    shape.addEventListener('dragstart', dragStart);
-    shapesPool.appendChild(shape);
+  dropZones.innerHTML = '<h3 style="color: #5e219b; margin-bottom: 10px; width:100%;">Solte aqui:</h3>';
+  formasAtuais.forEach((forma) => {
+    const shapeDiv = document.createElement('div');
+    shapeDiv.className = `shape-draggable`;
+    shapeDiv.draggable = true;
+    shapeDiv.dataset.shapeType = forma.nome;
+    shapeDiv.innerHTML = `<svg class='shape-svg' viewBox='0 0 74 74' fill='${forma.cor}' xmlns='http://www.w3.org/2000/svg'>${forma.svg}</svg>`;
+    shapeDiv.addEventListener('dragstart', dragStart);
+    shapesPool.appendChild(shapeDiv);
   });
-
-  // Cria 4 zonas de drop (parte inferior grid 2x2)
-  formasAtuais.forEach((forma, index) => {
-    const zone = document.createElement('div');
-    zone.className = `drop-zone ${forma.css}`;
-    zone.style.backgroundColor = coresAleatorias[index % coresAleatorias.length];
-    zone.dataset.shapeType = forma.nome;
-    zone.addEventListener('dragover', dragOver);
-    zone.addEventListener('drop', drop);
-    dropZones.appendChild(zone);
+  formasAtuais.forEach((forma) => {
+    const zoneDiv = document.createElement('div');
+    zoneDiv.className = `drop-zone`;
+    zoneDiv.dataset.shapeType = forma.nome;
+    zoneDiv.innerHTML = `<svg class='shape-svg' viewBox='0 0 74 74' fill='${forma.cor}' opacity='0.4' xmlns='http://www.w3.org/2000/svg'>${forma.svg}</svg>`;
+    zoneDiv.addEventListener('dragover', dragOver);
+    zoneDiv.addEventListener('drop', drop);
+    dropZones.appendChild(zoneDiv);
   });
-
   resultText.textContent = 'Arraste 0 de 4 formas corretas!';
 }
-
 function dragStart(e) {
-  e.dataTransfer.setData('text/plain', e.target.dataset.shapeType);
-  e.target.style.opacity = '0.5';
-  e.target.style.transform = 'scale(1.1)';
+  e.dataTransfer.setData('text/plain', e.target.closest('.shape-draggable').dataset.shapeType);
+  e.target.closest('.shape-draggable').style.opacity = '0.5';
+  e.target.closest('.shape-draggable').style.transform = 'scale(1.1)';
 }
-
 function dragOver(e) {
-  e.preventDefault();
-  e.target.style.opacity = '0.8';
+  e.preventDefault(); e.target.closest('.drop-zone').style.opacity = '0.8';
 }
-
 function drop(e) {
   e.preventDefault();
   const shapeType = e.dataTransfer.getData('text/plain');
-  if (shapeType === e.target.dataset.shapeType) {
-    const draggedShape = document.querySelector(`[data-shape-type="${shapeType}"]`);
-    if (draggedShape && !e.target.classList.contains('filled')) {
-      e.target.appendChild(draggedShape);
+  const dropTarget = e.target.closest('.drop-zone');
+  if (shapeType === dropTarget.dataset.shapeType) {
+    const draggedShape = document.querySelector(`.shape-draggable[data-shape-type="${shapeType}"]`);
+    if (draggedShape && !dropTarget.classList.contains('filled')) {
+      dropTarget.appendChild(draggedShape);
       draggedShape.style.position = 'relative';
       draggedShape.style.margin = '0';
-      e.target.classList.add('correct', 'filled');
+      dropTarget.classList.add('correct', 'filled');
       draggedShape.style.opacity = '1';
       draggedShape.style.transform = 'scale(1)';
       draggedShape.draggable = false;
-      e.target.style.animation = 'bounce 0.6s';
+      dropTarget.style.animation = 'bounce 0.6s';
       checkCompletion();
     }
   } else {
-    e.target.classList.add('error');
-    setTimeout(() => e.target.classList.remove('error'), 500);
+    dropTarget.classList.add('error');
+    setTimeout(() => dropTarget.classList.remove('error'), 500);
   }
-  e.target.style.opacity = '1';
+  dropTarget.style.opacity = '1';
 }
-
 function checkCompletion() {
   const filledZones = document.querySelectorAll('.drop-zone.filled');
   if (filledZones.length === 4) {
     resultText.textContent = 'Parabéns! Todas as formas corretas!';
     confetti();
-    setTimeout(criaJogo, 4000);
+    setTimeout(criaJogo, 3800);
   } else {
     resultText.textContent = `Arraste ${filledZones.length} de 4 formas corretas!`;
   }
 }
-
 const style = document.createElement('style');
 style.innerHTML = `
-  @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
-  }
-  .drop-zone.error {
-    animation: shake 0.5s;
-  }
-  @keyframes bounce {
-    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-    40% { transform: translateY(-10px); }
-    60% { transform: translateY(-5px); }
-  }
+  @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); }}
+  .drop-zone.error { animation: shake 0.5s; }
+  @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } 60% { transform: translateY(-5px); } }
 `;
 document.head.appendChild(style);
-
 function confetti() {
   confettiContainer.innerHTML = '';
   const colors = ['#ff597f', '#ff9ea1', '#fcd677', '#a9d97a', '#79d79a', '#ff7eb9', '#61dafb'];
@@ -361,10 +309,7 @@ function confetti() {
   }
   setTimeout(() => { confettiContainer.innerHTML = ''; }, 3500);
 }
-
-window.onload = () => {
-  criaJogo();
-};
+window.onload = () => { criaJogo(); };
 </script>
 
 </body>
