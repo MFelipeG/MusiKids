@@ -165,7 +165,7 @@
 </div>
 <div id="confetti-container"></div>
 <script>
-// Biblioteca de pares do jogo (100% restaurado! NUNCA use ... no array!)
+// Biblioteca de pares do jogo (completo!)
 const allPairs = [
   {left:"dog", leftImg: "🐶", right:"doghouse", rightImg:"🏠"},
   {left:"mouse", leftImg:"🐭", right:"cheese", rightImg:"🧀"},
@@ -354,17 +354,15 @@ function clearSelection() {
   selectedLeft = null;
   selectedRight = null;
 }
-// Desenhar linha svg conectando os pares
 function drawLine(leftEl, rightEl) {
   const line = document.createElementNS("http://www.w3.org/2000/svg","line");
   const rectLeft = leftEl.getBoundingClientRect();
   const rectRight = rightEl.getBoundingClientRect();
   const svgRect = canvas.getBoundingClientRect();
-  let x1 = rectLeft.right - svgRect.left;
+  let x1 = rectLeft.left + rectLeft.width/2 - svgRect.left; // centro da figura esquerda
   let y1 = rectLeft.top + rectLeft.height/2 - svgRect.top;
-  let x2 = rectRight.left - svgRect.left;
+  let x2 = rectRight.left + rectRight.width/2 - svgRect.left; // centro da figura direita
   let y2 = rectRight.top + rectRight.height/2 - svgRect.top;
-  if(window.innerWidth <= 720){ y1 += 18; y2 += 18; x1 += 2; x2 -= 2; }
   line.setAttribute("x1", x1);
   line.setAttribute("y1", y1);
   line.setAttribute("x2", x2);
@@ -375,7 +373,6 @@ function drawLine(leftEl, rightEl) {
   canvas.appendChild(line);
   lines.push(line);
 }
-// Atualizar linhas desenhadas
 function updateLines() {
   lines.forEach(line => line.remove());
   lines = [];
@@ -386,7 +383,6 @@ function updateLines() {
     if(rightEl) drawLine(leftEl, rightEl);
   });
 }
-// Conferir se o par está correto
 function isMatch(leftKey, rightKey) {
   return usedPairs.some(pair => (pair.left === leftKey && pair.right === rightKey));
 }
