@@ -3,390 +3,425 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jogo das Letrinhas</title>
+  <title>Jogo do Labirinto - MusiKids Fun</title>
   <style>
-    body {
-      font-family: 'Baloo 2', Arial, cursive, sans-serif;
-      text-align: center;
+    * {
       margin: 0;
       padding: 0;
-      background: linear-gradient(120deg, #ff71ce 0%, #fdf200 45%, #01cdfe 100%);
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Baloo 2', Arial, cursive, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
     }
 
-    h1 {
-      font-size: 32px;
-      margin: 28px 0 8px 0;
-      font-weight: bold;
-      color: #ff71ce;
-      text-shadow: 2px 3px 10px #71C9FF88;
-      letter-spacing: 1px;
-    }
-
-    /* ---------- BOTÃO MENU (FIXO E AJUSTADO PARA CELULAR) ---------- */
+    /* Botão Menu fixo */
     #menuButton {
       position: fixed;
       top: 10px;
       left: 10px;
-      padding: 11px 18px;
-      font-size: 18px;
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: 700;
       border: none;
       border-radius: 10px;
-      background: linear-gradient(115deg, #7c4dff 60%, #ff4081 120%);
-      color: #fff;
-      cursor: pointer;
-      font-weight: 700;
-      box-shadow: 2px 2px 8px #7c4dffaa;
-      z-index: 1000;
-    }
-
-    .menu {
-      margin: 70px 0 30px 0; /* <-- empurra o menu para baixo do botão */
-      display: flex;
-      justify-content: center;
-      gap: 18px;
-      flex-wrap: wrap;
-    }
-
-    .menu button {
-      padding: 13px 27px;
-      font-size: 17px;
-      border: none;
-      border-radius: 20px;
-      font-weight: bold;
-      background: linear-gradient(120deg, #4CAF50 50%, #81c784 100%);
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
       color: white;
       cursor: pointer;
-      box-shadow: 2px 2px 8px #4caf5077;
-      letter-spacing: 1px;
+      box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
+      z-index: 1000;
       transition: transform 0.2s;
     }
 
-    .menu button:hover {
-      transform: scale(1.09) rotate(-3deg);
-      background: linear-gradient(120deg, #81c784 70%, #4CAF50 100%);
+    #menuButton:hover {
+      transform: scale(1.05);
     }
 
-    .game-container {
+    #menuButton:active {
+      transform: scale(0.98);
+    }
+
+    /* Container do jogo */
+    .game-wrapper {
+      text-align: center;
       padding: 20px;
-      border-radius: 22px;
-      margin: 0 auto;
-      max-width: 370px;
-      background: rgba(248,248,255,0.94);
-      box-shadow: 0 8px 32px #71C9FF55;
+      max-width: 95vw;
     }
 
-    #wordToCopy {
-      font-size: 24px;
-      margin: 14px 0 18px 0;
-      font-weight: 900;
-      color: #333;
-    }
-
-    #letterBank, #dropZone {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 11px;
-      margin: 14px 0 18px 0;
-    }
-
-    .letter {
-      padding: 15px 19px;
-      background: linear-gradient(135deg,#ffe082 10%,#ffeb3b 90%);
-      border: 3px solid #ff71ce;
-      border-radius: 50%;
-      font-size: 22px;
-      font-weight: bold;
-      cursor: grab;
-      user-select: none;
-      touch-action: none;
-      box-shadow: 2px 4px 10px #fdf20055;
-      transition: transform 0.22s, background 0.32s;
-    }
-
-    .letter:hover {
-      transform: scale(1.13);
-      background: linear-gradient(135deg,#fdf200 20%,#ff71ce 100%);
-      border-color: #01cdfe;
-      color: #7c4dff;
-    }
-
-    .dropSlot {
-      width: 50px;
-      height: 50px;
-      border: 3px dashed #01cdfe;
-      border-radius: 16px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      background: #fff;
-      cursor: pointer;
-      transition: background 0.33s;
-    }
-
-    .dropSlot.filled {
-      border: 3px solid #4CAF50;
-      background: #e8f5e9;
-      color: #4caf50;
-    }
-
-    input[type="text"] {
-      padding: 13px;
-      font-size: 20px;
-      width: 90%;
-      max-width: 340px;
-      margin: 14px 0;
-      border-radius: 12px;
-      border: 2px solid #7c4dff;
-      background: #fdf20011;
-      color: #333;
-      box-shadow: 0 2px 8px #01cdfe22;
-    }
-
-    button {
-      padding: 11px 22px;
-      font-size: 17px;
-      border: none;
-      border-radius: 10px;
-      background: linear-gradient(90deg, #4CAF50 65%, #81c784 100%);
+    h1 {
       color: white;
-      cursor: pointer;
-      margin: 10px 5px;
-      font-weight: 700;
-      box-shadow: 0 2px 8px #ff71ce22;
+      font-size: 28px;
+      margin-bottom: 15px;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+    }
+
+    #instructions {
+      color: rgba(255,255,255,0.95);
+      font-size: 14px;
+      margin-bottom: 15px;
+      background: rgba(0,0,0,0.2);
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    #gameCanvas {
+      display: block;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      max-width: 100%;
+      touch-action: none;
     }
 
     #message {
-      margin-top: 17px;
-      font-size: 22px;
+      margin-top: 15px;
+      font-size: 20px;
       font-weight: bold;
-      color: #ff4081;
+      color: #fff;
+      min-height: 30px;
     }
 
-    /* ---------- AJUSTE ESPECÍFICO PARA CELULAR ---------- */
-    @media (max-width: 600px) {
-      #menuButton {
-        font-size: 16px;
-        padding: 9px 14px;
-      }
-
-      .menu {
-        margin-top: 90px; /* 🔹 Aumenta ainda mais o espaço no mobile */
-      }
-
-      .game-container {
-        max-width: 95vw;
-      }
-
-      .letter {
-        font-size: 18px;
-        padding: 10px 12px;
-      }
-
-      .dropSlot {
-        width: 40px;
-        height: 40px;
-        font-size: 17px;
-      }
+    .controls {
+      margin-top: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
     }
 
+    .control-row {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .control-btn {
+      width: 60px;
+      height: 60px;
+      font-size: 24px;
+      border: none;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      font-weight: bold;
+      transition: all 0.2s;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .control-btn:active {
+      transform: scale(0.95);
+      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.6);
+    }
+
+    #restartBtn {
+      margin-top: 10px;
+      padding: 12px 24px;
+      font-size: 16px;
+      font-weight: 700;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(250, 112, 154, 0.4);
+      transition: transform 0.2s;
+    }
+
+    #restartBtn:hover {
+      transform: scale(1.05);
+    }
+
+    #restartBtn:active {
+      transform: scale(0.98);
+    }
+
+    /* Canvas para confetes */
     #confettiCanvas {
       pointer-events: none;
       position: fixed;
-      top: 0; left: 0; right: 0;
+      top: 0;
+      left: 0;
       width: 100vw;
       height: 100vh;
       z-index: 999;
+    }
+
+    /* Responsividade */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 22px;
+        margin-top: 50px;
+      }
+
+      #instructions {
+        font-size: 12px;
+      }
+
+      .control-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+      }
+
+      #menuButton {
+        font-size: 14px;
+        padding: 10px 16px;
+      }
     }
   </style>
 </head>
 <body>
   <button id="menuButton">Menu de Jogos</button>
 
-  <div class="menu">
-    <button onclick="setCategory('animais')">Animais</button>
-    <button onclick="setCategory('frutas')">Frutas</button>
-    <button onclick="setCategory('objetos')">Objetos</button>
-  </div>
-
-  <div class="game-container">
-    <p id="wordToCopy">Palavra: cachorro</p>
-    <input type="text" id="customWord" placeholder="Digite a palavra que deseja">
-    <button onclick="setCustomWord()">Usar Palavra</button>
-    <div id="dropZone"></div>
-    <div id="letterBank"></div>
-    <button onclick="checkWord()">Verificar</button>
+  <div class="game-wrapper">
+    <h1>🐭 Jogo do Labirinto 🧀</h1>
+    <p id="instructions">Use as setas do teclado ou os botões abaixo para mover o rato até o queijo!</p>
+    
+    <canvas id="gameCanvas"></canvas>
+    
     <p id="message"></p>
+    
+    <!-- Controles para mobile -->
+    <div class="controls">
+      <div class="control-row">
+        <button class="control-btn" id="upBtn">↑</button>
+      </div>
+      <div class="control-row">
+        <button class="control-btn" id="leftBtn">←</button>
+        <button class="control-btn" id="downBtn">↓</button>
+        <button class="control-btn" id="rightBtn">→</button>
+      </div>
+      <button id="restartBtn">🔄 Recomeçar</button>
+    </div>
   </div>
 
   <canvas id="confettiCanvas"></canvas>
 
   <script>
-    let currentWord = "cachorro";
-    const words = {
-      animais: ["cachorro", "gato", "elefante", "leão", "tigre"],
-      frutas: ["maçã", "banana", "uva", "laranja", "pera"],
-      objetos: ["mesa", "cadeira", "computador", "bola", "livro"]
+    // Configuração do canvas
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Tamanho responsivo
+    const isMobile = window.innerWidth <= 600;
+    const cellSize = isMobile ? 30 : 40;
+    const mazeWidth = isMobile ? 9 : 11;
+    const mazeHeight = isMobile ? 11 : 13;
+    
+    canvas.width = mazeWidth * cellSize;
+    canvas.height = mazeHeight * cellSize;
+
+    // Navegação de volta ao menu
+    document.getElementById('menuButton').onclick = function() {
+      window.location.href = '../index.html';
     };
 
-    document.getElementById("menuButton").onclick = function() {
-      window.location.href = "../index.html";
-    };
+    // Estrutura do labirinto (0 = caminho, 1 = parede)
+    let maze = [
+      [1,1,1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,1,0,0,0,0,0,1],
+      [1,0,1,0,1,0,1,1,1,0,1],
+      [1,0,1,0,0,0,0,0,1,0,1],
+      [1,0,1,1,1,1,1,0,1,0,1],
+      [1,0,0,0,0,0,1,0,0,0,1],
+      [1,1,1,0,1,0,1,1,1,0,1],
+      [1,0,0,0,1,0,0,0,1,0,1],
+      [1,0,1,1,1,1,1,0,1,0,1],
+      [1,0,0,0,0,0,0,0,0,0,1],
+      [1,1,1,1,1,1,1,1,1,1,1]
+    ];
 
-    function setCategory(category) {
-      const randomIndex = Math.floor(Math.random() * words[category].length);
-      currentWord = words[category][randomIndex];
-      setupGame();
+    // Labirinto para mobile (menor)
+    let mazeMobile = [
+      [1,1,1,1,1,1,1,1,1],
+      [1,0,0,0,1,0,0,0,1],
+      [1,0,1,0,1,0,1,0,1],
+      [1,0,1,0,0,0,1,0,1],
+      [1,0,1,1,1,0,1,0,1],
+      [1,0,0,0,1,0,0,0,1],
+      [1,1,1,0,1,1,1,0,1],
+      [1,0,0,0,0,0,0,0,1],
+      [1,0,1,1,1,1,1,0,1],
+      [1,0,0,0,0,0,0,0,1],
+      [1,1,1,1,1,1,1,1,1]
+    ];
+
+    if (isMobile) {
+      maze = mazeMobile;
     }
 
-    function setCustomWord() {
-      const input = document.getElementById("customWord").value.trim();
-      if (input) {
-        currentWord = input.toLowerCase();
-        setupGame();
-      }
-    }
+    // Posições iniciais
+    let player = { x: 1, y: 1 };
+    let cheese = { x: mazeWidth - 2, y: mazeHeight - 2 };
+    let gameWon = false;
 
-    function setupGame() {
-      document.getElementById("wordToCopy").textContent = "Palavra: " + currentWord;
-      const dropZone = document.getElementById("dropZone");
-      dropZone.innerHTML = "";
-      for (let i = 0; i < currentWord.length; i++) {
-        let slot = document.createElement("div");
-        slot.className = "dropSlot";
-        slot.onclick = () => removeLetter(slot);
-        slot.ondrop = drop;
-        slot.ondragover = allowDrop;
-        dropZone.appendChild(slot);
-      }
-
-      const letterBank = document.getElementById("letterBank");
-      letterBank.innerHTML = "";
-      let shuffled = currentWord.split("").sort(() => Math.random() - 0.5);
-      shuffled.forEach((letter, index) => {
-        let div = document.createElement("div");
-        div.className = "letter";
-        div.textContent = letter;
-        div.id = "letter-" + index;
-        div.draggable = true;
-        div.ondragstart = drag;
-        div.onclick = () => placeLetter(div);
-        letterBank.appendChild(div);
-      });
-
-      document.getElementById("message").textContent = "";
-    }
-
-    function allowDrop(ev) { ev.preventDefault(); }
-    function drag(ev) {
-      ev.dataTransfer.setData("text", ev.target.textContent);
-      ev.dataTransfer.setData("id", ev.target.id);
-    }
-    function drop(ev) {
-      ev.preventDefault();
-      if (ev.target.classList.contains("dropSlot") && ev.target.textContent === "") {
-        let letter = ev.dataTransfer.getData("text");
-        let id = ev.dataTransfer.getData("id");
-        ev.target.textContent = letter;
-        ev.target.classList.add("filled");
-        document.getElementById(id).remove();
-      }
-    }
-    function placeLetter(div) {
-      let slots = document.querySelectorAll(".dropSlot");
-      for (let slot of slots) {
-        if (slot.textContent === "") {
-          slot.textContent = div.textContent;
-          slot.classList.add("filled");
-          div.remove();
-          break;
+    // Desenhar o labirinto
+    function drawMaze() {
+      for (let y = 0; y < maze.length; y++) {
+        for (let x = 0; x < maze[y].length; x++) {
+          if (maze[y][x] === 1) {
+            // Parede
+            ctx.fillStyle = '#4a5568';
+            ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+            ctx.strokeStyle = '#2d3748';
+            ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
+          } else {
+            // Caminho
+            ctx.fillStyle = '#f7fafc';
+            ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+          }
         }
       }
     }
-    function removeLetter(slot) {
-      if (slot.textContent !== "") {
-        let div = document.createElement("div");
-        div.className = "letter";
-        div.textContent = slot.textContent;
-        div.draggable = true;
-        div.ondragstart = drag;
-        div.onclick = () => placeLetter(div);
-        document.getElementById("letterBank").appendChild(div);
-        slot.textContent = "";
-        slot.classList.remove("filled");
+
+    // Desenhar o rato (emoji)
+    function drawPlayer() {
+      ctx.font = `${cellSize - 8}px Arial`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('🐭', player.x * cellSize + cellSize / 2, player.y * cellSize + cellSize / 2);
+    }
+
+    // Desenhar o queijo (emoji)
+    function drawCheese() {
+      ctx.font = `${cellSize - 8}px Arial`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('🧀', cheese.x * cellSize + cellSize / 2, cheese.y * cellSize + cellSize / 2);
+    }
+
+    // Renderizar tudo
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawMaze();
+      drawCheese();
+      drawPlayer();
+    }
+
+    // Mover o jogador
+    function movePlayer(dx, dy) {
+      if (gameWon) return;
+
+      const newX = player.x + dx;
+      const newY = player.y + dy;
+
+      // Verificar colisão com paredes
+      if (maze[newY] && maze[newY][newX] === 0) {
+        player.x = newX;
+        player.y = newY;
+        
+        // Verificar vitória
+        if (player.x === cheese.x && player.y === cheese.y) {
+          gameWon = true;
+          document.getElementById('message').textContent = '🎉 Parabéns! Você ganhou! 🎉';
+          document.getElementById('message').style.color = '#48bb78';
+          startConfetti();
+        }
+        
+        render();
       }
     }
-    function checkWord() {
-      let formedWord = "";
-      document.querySelectorAll(".dropSlot").forEach(slot => {
-        formedWord += slot.textContent;
-      });
-      if (formedWord === currentWord) {
-        document.getElementById("message").textContent = "Parabéns! Você acertou!";
-        document.getElementById("message").style.color = "#21d578";
-        startConfetti();
-        setTimeout(() => { setCategory("animais"); }, 3000);
-      } else {
-        document.getElementById("message").textContent = "Tente novamente!";
-        document.getElementById("message").style.color = "#ff4081";
+
+    // Controles de teclado
+    document.addEventListener('keydown', (e) => {
+      switch(e.key) {
+        case 'ArrowUp': movePlayer(0, -1); break;
+        case 'ArrowDown': movePlayer(0, 1); break;
+        case 'ArrowLeft': movePlayer(-1, 0); break;
+        case 'ArrowRight': movePlayer(1, 0); break;
       }
+    });
+
+    // Controles de botão
+    document.getElementById('upBtn').addEventListener('click', () => movePlayer(0, -1));
+    document.getElementById('downBtn').addEventListener('click', () => movePlayer(0, 1));
+    document.getElementById('leftBtn').addEventListener('click', () => movePlayer(-1, 0));
+    document.getElementById('rightBtn').addEventListener('click', () => movePlayer(1, 0));
+
+    // Botão de reiniciar
+    document.getElementById('restartBtn').addEventListener('click', () => {
+      player = { x: 1, y: 1 };
+      gameWon = false;
+      document.getElementById('message').textContent = '';
+      render();
+    });
+
+    // Sistema de confetes
+    const confettiCanvas = document.getElementById('confettiCanvas');
+    const confettiCtx = confettiCanvas.getContext('2d');
+
+    function resizeConfettiCanvas() {
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
     }
 
-    const canvas = document.getElementById("confettiCanvas");
-    const ctx = canvas.getContext("2d");
-
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-
-    window.addEventListener("resize", resizeCanvas);
-    resizeCanvas();
+    window.addEventListener('resize', resizeConfettiCanvas);
+    resizeConfettiCanvas();
 
     let confetti = [];
+
     function startConfetti() {
       confetti = [];
-      for (let i = 0; i < 140; i++) {
+      for (let i = 0; i < 150; i++) {
         confetti.push({
-          x: Math.random() * canvas.width,
-          y: -Math.random() * 80 - 30,
-          r: Math.random() * 6 + 4,
-          d: Math.random() * 12 + 18,
-          color: `hsl(${Math.random() * 360}, 97%, 53%)`,
-          tilt: Math.random() * 14 - 7
+          x: Math.random() * confettiCanvas.width,
+          y: -Math.random() * 100 - 50,
+          r: Math.random() * 6 + 3,
+          d: Math.random() * 10 + 15,
+          color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+          tilt: Math.random() * 10 - 5,
+          tiltAngle: Math.random() * Math.PI
         });
       }
       animateConfetti();
-      setTimeout(() => confetti = [], 2800);
+      setTimeout(() => confetti = [], 4000);
     }
 
     function animateConfetti() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      
       confetti.forEach(c => {
-        ctx.save();
-        ctx.translate(c.x, c.y);
-        ctx.rotate(c.tilt * 0.1);
-        ctx.beginPath();
-        ctx.arc(0, 0, c.r, 0, 2 * Math.PI);
-        ctx.fillStyle = c.color;
-        ctx.globalAlpha = .98;
-        ctx.fill();
-        ctx.restore();
+        confettiCtx.save();
+        confettiCtx.translate(c.x, c.y);
+        confettiCtx.rotate(c.tiltAngle);
+        confettiCtx.beginPath();
+        confettiCtx.arc(0, 0, c.r, 0, 2 * Math.PI);
+        confettiCtx.fillStyle = c.color;
+        confettiCtx.fill();
+        confettiCtx.restore();
       });
+      
       updateConfetti();
-      if (confetti.length > 0) requestAnimationFrame(animateConfetti);
+      
+      if (confetti.length > 0) {
+        requestAnimationFrame(animateConfetti);
+      }
     }
 
     function updateConfetti() {
       confetti.forEach(c => {
-        c.y += c.d * 0.11 + Math.sin(c.tilt*0.77);
-        c.x += Math.sin(c.d * 0.12 + c.y * 0.04);
+        c.tiltAngle += 0.1;
+        c.y += c.d * 0.5;
+        c.x += Math.sin(c.tiltAngle) * 2;
       });
+      
+      confetti = confetti.filter(c => c.y < confettiCanvas.height);
     }
 
-    setupGame();
+    // Iniciar o jogo
+    render();
   </script>
 </body>
 </html>
