@@ -82,56 +82,59 @@ body {
   gap: 32px;
   margin-top: 14px;
 }
-#shapes-pool {
+#shapes-row {
   display: flex;
   flex-direction: row;
-  gap: 26px;
+  align-items: flex-end;
+  gap: 36px;
   justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
-  margin-top: 2px;
+  margin-bottom: 8px;
 }
-#drop-zones {
+#drop-row {
   display: flex;
-  gap: 32px;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 36px;
   justify-content: center;
-  flex-wrap: wrap;
-  width: 100%;
-  margin-top: 13px;
+  margin-top: 18px;
 }
 .shape-draggable, .drop-zone {
-  width: 88px;
-  height: 88px;
-  cursor: pointer;
+  width: 90px; height: 90px;
   border-radius: 19px;
   display: flex;
   align-items: center;
   justify-content: center;
   user-select: none;
   background: transparent;
-  transition: box-shadow 0.26s;
+  cursor: pointer;
+  transition: box-shadow 0.27s, border 0.22s;
 }
 .shape-draggable.selected {
   box-shadow: 0 0 0 5px #ff71ce88;
   z-index: 1400;
 }
 .shape-draggable:active {
-  box-shadow: 0 0 0 6px #d63a6d55;
+  box-shadow: 0 0 0 7px #d63a6d55;
 }
 .shape-svg {
-  width: 82px;
-  height: 82px;
+  width: 86px;
+  height: 86px;
   display: block;
   pointer-events: none;
 }
-.drop-zone svg {
-  pointer-events: none;
+.shape-label {
+  font-family: 'Baloo 2', cursive, Arial, sans-serif;
+  font-size: 15px;
+  color: #2b2240;
+  margin-top: -7px;
+  letter-spacing:0.08em;
+  font-weight:700;
 }
 .drop-zone {
   border: 3px dashed #d63a6d;
   opacity: 0.73;
   position: relative;
-  min-width: 88px; min-height: 88px;
+  min-width: 90px; min-height: 90px;
 }
 .drop-zone:hover, .drop-zone.active {
   border-color: #ff7eb9;
@@ -150,7 +153,7 @@ body {
 #result-text {
   margin-top: 16px;
   font-weight: 700;
-  font-size: 1.38rem;
+  font-size: 1.33rem;
   color: #d63a6d;
   min-height: 36px;
   font-family: 'Baloo 2', cursive, Arial, sans-serif;
@@ -189,10 +192,11 @@ body {
   .header-area { margin-top: 63px; }
   .site-title { font-size: 1.32rem; }
   #btn-menu { left: 8px; top: 10px; padding: 12px 17px; font-size: 1.02rem;}
-  #game-container { padding: 14px 6px 8px 6px; }
-  #shapes-pool, #drop-zones { gap: 12px; }
-  .shape-draggable, .drop-zone { width: 64px; height: 64px; border-radius: 10px;}
-  .shape-svg { width: 60px; height: 60px; }
+  #game-container { padding: 8px 1vw 3px 1vw; }
+  #shapes-row, #drop-row { gap: 12px; }
+  .shape-draggable, .drop-zone { width: 56px; height: 56px; border-radius: 9px;}
+  .shape-svg { width: 48px; height: 48px; }
+  .shape-label { font-size: 11px; }
 }
 </style>
 </head>
@@ -204,10 +208,8 @@ body {
 </div>
 <div id="game-container">
   <div id="game-area">
-    <div id="shapes-pool" aria-label="Formas arrastáveis">
-    </div>
-    <div id="drop-zones" aria-label="Zonas para soltar as formas">
-    </div>
+    <div id="shapes-row" aria-label="Formas arrastáveis horizontais"></div>
+    <div id="drop-row" aria-label="Zonas para soltar as formas (horizontal)"></div>
   </div>
   <div id="result-text" aria-live="polite"></div>
 </div>
@@ -222,11 +224,10 @@ const formasGeometricas = [
 let formasAtuais = [];
 let formasUsadas = [];
 const btnMenu = document.getElementById('btn-menu');
-const shapesPool = document.getElementById('shapes-pool');
-const dropZones = document.getElementById('drop-zones');
+const shapesRow = document.getElementById('shapes-row');
+const dropRow = document.getElementById('drop-row');
 const resultText = document.getElementById('result-text');
 const confettiContainer = document.getElementById('confetti');
-// O botão menu nunca cobre o texto:
 function ajustarTopoContatoMenu() {
   const headerElem = document.querySelector('.header-area');
   const btnMenuRect = btnMenu.getBoundingClientRect();
@@ -238,7 +239,6 @@ function ajustarTopoContatoMenu() {
 adjustarTopoContatoMenu();
 window.addEventListener('resize', ajustarTopoContatoMenu);
 btnMenu.onclick = function(){ location.href = '../index.html'; };
-// --- Funções de shuffle e lógica ---
 function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
 function getFormasUnicas() {
   let pool = formasGeometricas.filter(f => !formasUsadas.includes(f.nome));
@@ -251,14 +251,14 @@ let formaSelecionada = null;
 function criaJogo() {
   formasAtuais = getFormasUnicas();
   formaSelecionada = null;
-  shapesPool.innerHTML = '';
-  dropZones.innerHTML = '';
+  shapesRow.innerHTML = '';
+  dropRow.innerHTML = '';
   formasAtuais.forEach((forma) => {
     const shapeDiv = document.createElement('div');
     shapeDiv.className = `shape-draggable`;
     shapeDiv.draggable = true;
     shapeDiv.dataset.shapeType = forma.nome;
-    shapeDiv.innerHTML = `<svg class='shape-svg' viewBox='0 0 74 74' fill='${forma.cor}' xmlns='http://www.w3.org/2000/svg'>${forma.svg}</svg><div style='font-size:12px;color:#2b2240;margin-top:2px;font-family:Baloo 2, cursive;letter-spacing:0.2px;'>${forma.label}</div>`;
+    shapeDiv.innerHTML = `<div><svg class='shape-svg' viewBox='0 0 74 74' fill='${forma.cor}' xmlns='http://www.w3.org/2000/svg'>${forma.svg}</svg><div class='shape-label'>${forma.label}</div></div>`;
     // drag & drop tradicional
     shapeDiv.addEventListener('dragstart', dragStart);
     // clique/tap para selecionar
@@ -267,7 +267,7 @@ function criaJogo() {
       formaSelecionada = shapeDiv;
       shapeDiv.classList.add('selected');
     });
-    shapesPool.appendChild(shapeDiv);
+    shapesRow.appendChild(shapeDiv);
   });
   formasAtuais.forEach((forma) => {
     const zoneDiv = document.createElement('div');
@@ -287,9 +287,9 @@ function criaJogo() {
         }
       }
     });
-    dropZones.appendChild(zoneDiv);
+    dropRow.appendChild(zoneDiv);
   });
-  resultText.textContent = 'Arraste ou toque/click em 0 de 4 formas corretas!';
+  resultText.textContent = 'Arraste ou toque/click para encaixar as formas!';
 }
 function dragStart(e) {
   e.dataTransfer.setData('text/plain', e.target.closest('.shape-draggable').dataset.shapeType);
