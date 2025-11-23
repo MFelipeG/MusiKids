@@ -49,6 +49,22 @@
       transform: scale(0.98);
     }
 
+    /* Contador de vitórias */
+    #scoreBoard {
+      position: fixed;
+      top: 10px;
+      right: 10px;
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+
     /* Container do jogo */
     .game-wrapper {
       text-align: center;
@@ -59,8 +75,15 @@
     h1 {
       color: white;
       font-size: 28px;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
       text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+    }
+
+    #levelInfo {
+      color: rgba(255,255,255,0.95);
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 10px;
     }
 
     #instructions {
@@ -165,6 +188,10 @@
         margin-top: 50px;
       }
 
+      #levelInfo {
+        font-size: 14px;
+      }
+
       #instructions {
         font-size: 12px;
       }
@@ -175,7 +202,7 @@
         font-size: 20px;
       }
 
-      #menuButton {
+      #menuButton, #scoreBoard {
         font-size: 14px;
         padding: 10px 16px;
       }
@@ -184,9 +211,11 @@
 </head>
 <body>
   <button id="menuButton">Menu de Jogos</button>
+  <div id="scoreBoard">🏆 Vitórias: <span id="winsCount">0</span></div>
 
   <div class="game-wrapper">
     <h1>🐭 Jogo do Labirinto 🧀</h1>
+    <p id="levelInfo">Nível: <span id="currentLevel">1</span></p>
     <p id="instructions">Use as setas do teclado ou os botões abaixo para mover o rato até o queijo!</p>
     
     <canvas id="gameCanvas"></canvas>
@@ -223,57 +252,182 @@
     canvas.width = mazeWidth * cellSize;
     canvas.height = mazeHeight * cellSize;
 
+    // Variáveis de jogo
+    let player = { x: 1, y: 1 };
+    let cheese = { x: mazeWidth - 2, y: mazeHeight - 2 };
+    let gameWon = false;
+    let wins = 0;
+    let currentLevel = 1;
+    let currentMaze = null;
+
     // Navegação de volta ao menu
     document.getElementById('menuButton').onclick = function() {
       window.location.href = '../index.html';
     };
 
-    // Estrutura do labirinto (0 = caminho, 1 = parede)
-    let maze = [
-      [1,1,1,1,1,1,1,1,1,1,1],
-      [1,0,0,0,1,0,0,0,0,0,1],
-      [1,0,1,0,1,0,1,1,1,0,1],
-      [1,0,1,0,0,0,0,0,1,0,1],
-      [1,0,1,1,1,1,1,0,1,0,1],
-      [1,0,0,0,0,0,1,0,0,0,1],
-      [1,1,1,0,1,0,1,1,1,0,1],
-      [1,0,0,0,1,0,0,0,1,0,1],
-      [1,0,1,1,1,1,1,0,1,0,1],
-      [1,0,0,0,0,0,0,0,0,0,1],
-      [1,1,1,1,1,1,1,1,1,1,1]
+    // Coleção de labirintos diferentes (PC - 11x13)
+    const mazes = [
+      // Labirinto 1 - Fácil
+      [
+        [1,1,1,1,1,1,1,1,1,1,1],
+        [1,0,0,0,1,0,0,0,0,0,1],
+        [1,0,1,0,1,0,1,1,1,0,1],
+        [1,0,1,0,0,0,0,0,1,0,1],
+        [1,0,1,1,1,1,1,0,1,0,1],
+        [1,0,0,0,0,0,1,0,0,0,1],
+        [1,1,1,0,1,0,1,1,1,0,1],
+        [1,0,0,0,1,0,0,0,1,0,1],
+        [1,0,1,1,1,1,1,0,1,0,1],
+        [1,0,0,0,0,0,0,0,0,0,1],
+        [1,1,1,1,1,1,1,1,1,1,1]
+      ],
+      // Labirinto 2 - Médio
+      [
+        [1,1,1,1,1,1,1,1,1,1,1],
+        [1,0,0,0,0,0,0,0,1,0,1],
+        [1,0,1,1,1,1,1,0,1,0,1],
+        [1,0,1,0,0,0,0,0,0,0,1],
+        [1,0,1,0,1,1,1,1,1,0,1],
+        [1,0,0,0,1,0,0,0,1,0,1],
+        [1,1,1,0,1,0,1,0,1,0,1],
+        [1,0,0,0,0,0,1,0,0,0,1],
+        [1,0,1,1,1,1,1,1,1,1,1],
+        [1,0,0,0,0,0,0,0,0,0,1],
+        [1,1,1,1,1,1,1,1,1,1,1]
+      ],
+      // Labirinto 3 - Difícil
+      [
+        [1,1,1,1,1,1,1,1,1,1,1],
+        [1,0,0,0,1,0,1,0,0,0,1],
+        [1,1,1,0,1,0,1,0,1,0,1],
+        [1,0,0,0,0,0,0,0,1,0,1],
+        [1,0,1,1,1,1,1,1,1,0,1],
+        [1,0,0,0,0,0,0,0,0,0,1],
+        [1,1,1,1,1,0,1,1,1,1,1],
+        [1,0,0,0,1,0,1,0,0,0,1],
+        [1,0,1,0,1,0,1,0,1,0,1],
+        [1,0,1,0,0,0,0,0,1,0,1],
+        [1,1,1,1,1,1,1,1,1,1,1]
+      ],
+      // Labirinto 4 - Espiral
+      [
+        [1,1,1,1,1,1,1,1,1,1,1],
+        [1,0,0,0,0,0,0,0,0,0,1],
+        [1,0,1,1,1,1,1,1,1,0,1],
+        [1,0,1,0,0,0,0,0,1,0,1],
+        [1,0,1,0,1,1,1,0,1,0,1],
+        [1,0,1,0,1,0,0,0,1,0,1],
+        [1,0,1,0,1,1,1,1,1,0,1],
+        [1,0,1,0,0,0,0,0,0,0,1],
+        [1,0,1,1,1,1,1,1,1,1,1],
+        [1,0,0,0,0,0,0,0,0,0,1],
+        [1,1,1,1,1,1,1,1,1,1,1]
+      ],
+      // Labirinto 5 - Desafio
+      [
+        [1,1,1,1,1,1,1,1,1,1,1],
+        [1,0,0,0,1,0,0,0,0,0,1],
+        [1,0,1,0,1,1,1,0,1,1,1],
+        [1,0,1,0,0,0,1,0,0,0,1],
+        [1,0,1,1,1,0,1,1,1,0,1],
+        [1,0,0,0,1,0,0,0,1,0,1],
+        [1,1,1,0,1,1,1,0,1,0,1],
+        [1,0,1,0,0,0,0,0,1,0,1],
+        [1,0,1,0,1,1,1,1,1,0,1],
+        [1,0,0,0,1,0,0,0,0,0,1],
+        [1,1,1,1,1,1,1,1,1,1,1]
+      ]
     ];
 
-    // Labirinto para mobile (menor)
-    let mazeMobile = [
-      [1,1,1,1,1,1,1,1,1],
-      [1,0,0,0,1,0,0,0,1],
-      [1,0,1,0,1,0,1,0,1],
-      [1,0,1,0,0,0,1,0,1],
-      [1,0,1,1,1,0,1,0,1],
-      [1,0,0,0,1,0,0,0,1],
-      [1,1,1,0,1,1,1,0,1],
-      [1,0,0,0,0,0,0,0,1],
-      [1,0,1,1,1,1,1,0,1],
-      [1,0,0,0,0,0,0,0,1],
-      [1,1,1,1,1,1,1,1,1]
+    // Coleção de labirintos para mobile (9x11)
+    const mazesMobile = [
+      // Labirinto 1 - Fácil
+      [
+        [1,1,1,1,1,1,1,1,1],
+        [1,0,0,0,1,0,0,0,1],
+        [1,0,1,0,1,0,1,0,1],
+        [1,0,1,0,0,0,1,0,1],
+        [1,0,1,1,1,0,1,0,1],
+        [1,0,0,0,1,0,0,0,1],
+        [1,1,1,0,1,1,1,0,1],
+        [1,0,0,0,0,0,0,0,1],
+        [1,0,1,1,1,1,1,0,1],
+        [1,0,0,0,0,0,0,0,1],
+        [1,1,1,1,1,1,1,1,1]
+      ],
+      // Labirinto 2 - Médio
+      [
+        [1,1,1,1,1,1,1,1,1],
+        [1,0,0,0,0,0,1,0,1],
+        [1,0,1,1,1,0,1,0,1],
+        [1,0,0,0,1,0,0,0,1],
+        [1,1,1,0,1,1,1,0,1],
+        [1,0,0,0,0,0,1,0,1],
+        [1,0,1,1,1,0,1,0,1],
+        [1,0,1,0,0,0,0,0,1],
+        [1,0,1,0,1,1,1,1,1],
+        [1,0,0,0,0,0,0,0,1],
+        [1,1,1,1,1,1,1,1,1]
+      ],
+      // Labirinto 3 - Difícil
+      [
+        [1,1,1,1,1,1,1,1,1],
+        [1,0,0,0,1,0,0,0,1],
+        [1,1,1,0,1,0,1,0,1],
+        [1,0,0,0,0,0,1,0,1],
+        [1,0,1,1,1,1,1,0,1],
+        [1,0,0,0,0,0,0,0,1],
+        [1,1,1,0,1,1,1,1,1],
+        [1,0,0,0,1,0,0,0,1],
+        [1,0,1,0,1,0,1,0,1],
+        [1,0,1,0,0,0,1,0,1],
+        [1,1,1,1,1,1,1,1,1]
+      ],
+      // Labirinto 4 - Espiral
+      [
+        [1,1,1,1,1,1,1,1,1],
+        [1,0,0,0,0,0,0,0,1],
+        [1,0,1,1,1,1,1,0,1],
+        [1,0,1,0,0,0,1,0,1],
+        [1,0,1,0,1,0,1,0,1],
+        [1,0,1,0,1,0,1,0,1],
+        [1,0,1,0,1,1,1,0,1],
+        [1,0,1,0,0,0,0,0,1],
+        [1,0,1,1,1,1,1,1,1],
+        [1,0,0,0,0,0,0,0,1],
+        [1,1,1,1,1,1,1,1,1]
+      ],
+      // Labirinto 5 - Desafio
+      [
+        [1,1,1,1,1,1,1,1,1],
+        [1,0,0,0,1,0,0,0,1],
+        [1,0,1,0,1,1,1,0,1],
+        [1,0,1,0,0,0,1,0,1],
+        [1,0,1,1,1,0,1,0,1],
+        [1,0,0,0,1,0,0,0,1],
+        [1,1,1,0,1,0,1,1,1],
+        [1,0,0,0,0,0,1,0,1],
+        [1,0,1,1,1,1,1,0,1],
+        [1,0,0,0,0,0,0,0,1],
+        [1,1,1,1,1,1,1,1,1]
+      ]
     ];
 
-    if (isMobile) {
-      maze = mazeMobile;
+    // Selecionar labirinto aleatório
+    function getRandomMaze() {
+      const mazeCollection = isMobile ? mazesMobile : mazes;
+      const randomIndex = Math.floor(Math.random() * mazeCollection.length);
+      return mazeCollection[randomIndex];
     }
-
-    // Posições iniciais
-    let player = { x: 1, y: 1 };
-    let cheese = { x: mazeWidth - 2, y: mazeHeight - 2 };
-    let gameWon = false;
 
     // Desenhar o labirinto
     function drawMaze() {
-      for (let y = 0; y < maze.length; y++) {
-        for (let x = 0; x < maze[y].length; x++) {
-          if (maze[y][x] === 1) {
-            // Parede
-            ctx.fillStyle = '#4a5568';
+      for (let y = 0; y < currentMaze.length; y++) {
+        for (let x = 0; x < currentMaze[y].length; x++) {
+          if (currentMaze[y][x] === 1) {
+            // Parede - cores diferentes por nível
+            const wallColors = ['#4a5568', '#2c5282', '#744210', '#553c9a', '#9f1239'];
+            ctx.fillStyle = wallColors[(currentLevel - 1) % wallColors.length];
             ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
             ctx.strokeStyle = '#2d3748';
             ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
@@ -318,29 +472,60 @@
       const newY = player.y + dy;
 
       // Verificar colisão com paredes
-      if (maze[newY] && maze[newY][newX] === 0) {
+      if (currentMaze[newY] && currentMaze[newY][newX] === 0) {
         player.x = newX;
         player.y = newY;
         
         // Verificar vitória
         if (player.x === cheese.x && player.y === cheese.y) {
           gameWon = true;
+          wins++;
+          document.getElementById('winsCount').textContent = wins;
           document.getElementById('message').textContent = '🎉 Parabéns! Você ganhou! 🎉';
           document.getElementById('message').style.color = '#48bb78';
           startConfetti();
+          
+          // Iniciar novo jogo automático após 2 segundos
+          setTimeout(() => {
+            startNewGame();
+          }, 2000);
         }
         
         render();
       }
     }
 
+    // Iniciar novo jogo
+    function startNewGame() {
+      currentMaze = getRandomMaze();
+      player = { x: 1, y: 1 };
+      cheese = { x: mazeWidth - 2, y: mazeHeight - 2 };
+      gameWon = false;
+      currentLevel++;
+      document.getElementById('currentLevel').textContent = currentLevel;
+      document.getElementById('message').textContent = '';
+      render();
+    }
+
     // Controles de teclado
     document.addEventListener('keydown', (e) => {
       switch(e.key) {
-        case 'ArrowUp': movePlayer(0, -1); break;
-        case 'ArrowDown': movePlayer(0, 1); break;
-        case 'ArrowLeft': movePlayer(-1, 0); break;
-        case 'ArrowRight': movePlayer(1, 0); break;
+        case 'ArrowUp': 
+          e.preventDefault();
+          movePlayer(0, -1); 
+          break;
+        case 'ArrowDown': 
+          e.preventDefault();
+          movePlayer(0, 1); 
+          break;
+        case 'ArrowLeft': 
+          e.preventDefault();
+          movePlayer(-1, 0); 
+          break;
+        case 'ArrowRight': 
+          e.preventDefault();
+          movePlayer(1, 0); 
+          break;
       }
     });
 
@@ -420,7 +605,8 @@
       confetti = confetti.filter(c => c.y < confettiCanvas.height);
     }
 
-    // Iniciar o jogo
+    // Iniciar o primeiro jogo
+    currentMaze = getRandomMaze();
     render();
   </script>
 </body>
