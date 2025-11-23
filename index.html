@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>MusiKids Fun</title>
+    <link rel="manifest" href="manifest.json">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
   body {
@@ -203,5 +204,19 @@
             </a>
             <p class="footer-love">Feito com ❤️ para crianças felizes</p>
         </div>  </footer>
+    <script>
+    // Registrar Service Worker para PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/MusiKids/service-worker.js')
+          .then(registration => {
+            console.log('Service Worker registrado com sucesso!');
+          })
+          .catch(error => {
+            console.log('Erro ao registrar Service Worker:', error);
+          });
+      });
+    }
+  </script>
 </body>
 </html>
