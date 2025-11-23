@@ -14,7 +14,6 @@
       min-height: 100vh;
     }
 
-    /* Remove faixa colorida do topo, só título simples */
     h1 {
       font-size: 32px;
       margin: 28px 0 8px 0;
@@ -28,7 +27,7 @@
     }
 
     #menuButton {
-      position: absolute;
+      position: fixed;
       left: 10px;
       top: 10px;
       padding: 11px 18px;
@@ -40,11 +39,11 @@
       cursor: pointer;
       font-weight: 700;
       box-shadow: 2px 2px 8px #7c4dffaa;
-      z-index: 2;
+      z-index: 1000;
     }
 
     .menu {
-      margin: 15px 0 30px 0;
+      margin: 70px 0 30px 0;
       display: flex;
       justify-content: center;
       gap: 18px;
@@ -74,7 +73,6 @@
       background: rgba(248,248,255,0.94);
       box-shadow: 0 8px 32px #71C9FF55;
     }
-
     #wordToCopy {
       font-size: 24px;
       margin: 14px 0 18px 0;
@@ -188,6 +186,15 @@
         font-size: 15px;
         padding: 8px 14px;
       }
+      #menuButton {
+        position: fixed;
+        top: 10px;
+        left: 10px;
+        z-index: 1000;
+      }
+      .menu {
+        margin-top: 80px;
+      }
     }
     #confettiCanvas {
       pointer-events: none;
@@ -201,7 +208,6 @@
 </head>
 <body>
   <button id="menuButton">Menu de Jogos</button>
-  <!-- Removido título/faixa -->
   <div class="menu">
     <button onclick="setCategory('animais')">Animais</button>
     <button onclick="setCategory('frutas')">Frutas</button>
