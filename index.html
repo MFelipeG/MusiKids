@@ -91,7 +91,88 @@
       width: 90%;
       max-width: 340px;
     }
-  }
+  
+  
+    /* Estilos do rodapé YouTube */
+    .youtube-cta {
+        background: linear-gradient(135deg, #FF0000 0%, #CC0000 100%);
+        padding: 3rem 2rem;
+        text-align: center;
+        color: white;
+        margin-top: 3rem;
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(255, 0, 0, 0.3);
+        animation: pulse 2s infinite;
+    }
+
+    .youtube-cta h3 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        animation: bounce 1s ease-in-out infinite;
+    }
+
+    .youtube-cta p {
+        font-size: 1.2rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .youtube-button {
+        display: inline-block;
+        background: white;
+        color: #FF0000;
+        padding: 1rem 2.5rem;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        margin: 1rem 0;
+    }
+
+    .youtube-button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 8px 30px rgba(255, 255, 255, 0.5);
+        background: #FFF59D;
+    }
+
+    .footer-love {
+        margin-top: 1.5rem;
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+
+    @keyframes pulse {
+        0%, 100% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.02);
+        }
+    }
+
+    @keyframes bounce {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    @media (max-width: 680px) {
+        .youtube-cta h3 {
+            font-size: 1.5rem;
+        }
+        .youtube-cta p {
+            font-size: 1rem;
+        }
+        .youtube-button {
+            font-size: 1rem;
+            padding: 0.8rem 2rem;
+        }
+    }}
 </style>
 </head>
 <body>
@@ -114,7 +195,13 @@
     </a>
   </main>
   <footer>
-    Me surpreenda com as melhores coisas ✨
-  </footer>
+        <div class="youtube-cta">
+            <h3>🎵 Quer se Divertir, Cantar e Dançar? 🎶</h3>
+            <p>Venha para o <strong>MELHOR CANAL</strong> de músicas infantis do YouTube!</p>
+            <a href="https://youtube.com/@musikidschannel?si=PYsGBYdr7iBY-stx" target="_blank" class="youtube-button">
+                ▶️ Visite Nosso Canal do YouTube!
+            </a>
+            <p class="footer-love">Feito com ❤️ para crianças felizes</p>
+        </div>  </footer>
 </body>
 </html>
