@@ -1,0 +1,8 @@
+# robots.txt para MusiKids Fun
+# Permite que todos os motores de busca indexem o site
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://mfelipeg.github.io/MusiKids/sitemap.xml
