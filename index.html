@@ -280,4 +280,97 @@
     }
   </script>
 </body>
+    
+    <!-- Pop-up de Instalação PWA -->
+    <div id="pwa-install-prompt" style="display:none; position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#FF6B9D; color:white; padding:20px 30px; border-radius:15px; box-shadow:0 4px 20px rgba(0,0,0,0.3); z-index:9999; max-width:90%; text-align:center; animation:slideUp 0.5s ease;">
+        <p style="margin:0 0 15px 0; font-size:16px; font-weight:bold;">🎉 Instale o MusiKids Fun!</p>
+        <p style="margin:0 0 15px 0; font-size:14px;">Adicione à tela inicial e acesse offline! 📱</p>
+        <div>
+            <button id="pwa-install-btn" style="background:white; color:#FF6B9D; border:none; padding:10px 25px; border-radius:25px; font-weight:bold; margin-right:10px; cursor:pointer; font-size:14px;">✨ Instalar</button>
+            <button id="pwa-dismiss-btn" style="background:transparent; color:white; border:2px solid white; padding:10px 25px; border-radius:25px; font-weight:bold; cursor:pointer; font-size:14px;">Agora não</button>
+        </div>
+    </div>
+
+    <!-- Botão Flutuante de Compartilhar -->
+    <button id="share-btn" style="position:fixed; bottom:20px; right:20px; background:linear-gradient(135deg, #FF6B9D, #C44569); color:white; border:none; width:60px; height:60px; border-radius:50%; font-size:24px; cursor:pointer; box-shadow:0 4px 15px rgba(255,107,157,0.4); z-index:9998; transition:transform 0.3s ease;" title="Compartilhar MusiKids Fun">
+        💝
+    </button>
+
+    <style>
+        @keyframes slideUp {
+            from { bottom:-100px; opacity:0; }
+            to { bottom:20px; opacity:1; }
+        }
+        #share-btn:hover {
+            transform:scale(1.1) rotate(5deg);
+        }
+        #pwa-install-btn:hover {
+            transform:scale(1.05);
+        }
+        #pwa-dismiss-btn:hover {
+            background:rgba(255,255,255,0.2);
+        }
+    </style>
+
+    <script>
+        // Pop-up PWA
+        let deferredPrompt;
+        const installPrompt = document.getElementById('pwa-install-prompt');
+        const installBtn = document.getElementById('pwa-install-btn');
+        const dismissBtn = document.getElementById('pwa-dismiss-btn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Mostrar após 3 segundos se não foi dispensado antes
+            if (!localStorage.getItem('pwa-dismissed')) {
+                setTimeout(() => {
+                    installPrompt.style.display = 'block';
+                }, 3000);
+            }
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log('Escolha do usuário:', outcome);
+                deferredPrompt = null;
+            }
+            installPrompt.style.display = 'none';
+        });
+
+        dismissBtn.addEventListener('click', () => {
+            installPrompt.style.display = 'none';
+            localStorage.setItem('pwa-dismissed', Date.now());
+            // Mostrar novamente após 7 dias
+            setTimeout(() => {
+                localStorage.removeItem('pwa-dismissed');
+            }, 7 * 24 * 60 * 60 * 1000);
+        });
+
+        // Botão de Compartilhar
+        document.getElementById('share-btn').addEventListener('click', async () => {
+            const shareData = {
+                title: 'MusiKids Fun - Aprender Brincando',
+                text: 'Jogos educativos, músicas infantis e histórias ilustradas! 🎮🎶📚',
+                url: window.location.href
+            };
+
+            if (navigator.share) {
+                try {
+                    await navigator.share(shareData);
+                    console.log('Compartilhado com sucesso!');
+                } catch (err) {
+                    console.log('Erro ao compartilhar:', err);
+                }
+            } else {
+                // Fallback para copiar link
+                navigator.clipboard.writeText(window.location.href);
+                alert('💝 Link copiado! Cole e compartilhe: ' + window.location.href);
+            }
+        });
+    </script>
+
 </html>
