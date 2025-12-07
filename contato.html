@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Entre em contato com o MusiKids Fun! Estamos aqui para ajudar você e seu filho com jogos educativos, músicas infantis e histórias ilustradas.">
+    <title>Contato - MusiKids Fun</title>
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #2c3e50;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 3rem;
+        }
+
+        h1 {
+            color: white;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            color: #fff;
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+            opacity: 0.95;
+        }
+
+        /* Menu Button */
+        .menu-button {
+            background: white;
+            color: #ff6b9d;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            margin-top: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .menu-button:hover {
+            transform: scale(1.05);
+        }
+
+        /* Main Content */
+        .container {
+            flex: 1;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            width: 100%;
+        }
+
+        .content-box {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            color: #ff6b9d;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-icon {
+            font-size: 2rem;
+        }
+
+        .contact-info {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 1rem 0;
+            font-size: 1.1rem;
+        }
+
+        .contact-icon {
+            font-size: 1.5rem;
+        }
+
+        .contact-link {
+            color: #2c3e50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .contact-link:hover {
+            color: #ff6b9d;
+        }
+
+        .description {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
+        }
+
+        .social-link:hover {
+            transform: scale(1.1);
+        }
+
+        .footer-links {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+        }
+
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .content-box {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <span class="logo">🎵</span>
+            <div>
+                <h1>Fale com a Gente!</h1>
+                <p class="subtitle">Estamos aqui para ajudar você 💕</p>
+            </div>
+        </div>
+        <button class="menu-button" onclick="window.location.href='index.html'">
+            <span>🏠</span> Menu Principal
+        </button>
+    </div>
+
+    <div class="container">
+        <div class="content-box">
+            <h2 class="section-title">
+                <span class="section-icon">✉️</span>
+                Como Entrar em Contato
+            </h2>
+
+            <p class="description">
+                Adoramos receber mensagens de pais, responsáveis e pequenos aprendizes! Se você tem dúvidas, sugestões ou quer compartilhar como seu filho está aprendendo com o MusiKids Fun, nós queremos ouvir você!
+            </p>
+
+            <div class="contact-info">
+                <div class="contact-item">
+                    <span class="contact-icon">📧</span>
+                    <div>
+                        <strong>Email:</strong>
+                        <a href="mailto:muskidstube@gmail.com" class="contact-link">muskidstube@gmail.com</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <p><strong>🚀 Tempo de Resposta:</strong> Faremos o nosso melhor para responder em até 48 horas!</p>
+            </div>
+        </div>
+
+        <div class="content-box">
+            <h2 class="section-title">
+                <span class="section-icon">💬</span>
+                Nos Siga nas Redes Sociais
+            </h2>
+
+            <p class="description">
+                Acompanhe nossas novidades, dicas educativas e conteúdo exclusivo para crianças!
+            </p>
+
+            <div class="social-links" style="margin-top: 1.5rem;">
+                <a href="https://youtube.com/@MusiKidsFun" class="social-link" target="_blank">
+                    <span>📺</span> YouTube
+                </a>
+                <a href="https://instagram.com/musikidschannel" class="social-link" target="_blank">
+                    <span>📸</span> Instagram
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p><strong>MusiKids Fun</strong> - Aprender Brincando 🎉</p>
+        <p>Feito com ❤️ para crianças felizes</p>
+        <div class="social-links">
+            <a href="https://youtube.com/@MusiKidsFun" class="social-link" target="_blank">
+                <span>📺</span> YouTube
+            </a>
+            <a href="https://instagram.com/musikidschannel" class="social-link" target="_blank">
+                <span>📸</span> Instagram
+            </a>
+            <a href="mailto:muskidstube@gmail.com" class="social-link">
+                <span>✉️</span> Contato
+            </a>
+        </div>
+        <div class="footer-links">
+            <a href="sobre.html" class="footer-link">Sobre</a> |
+            <a href="contato.html" class="footer-link">Contato</a> |
+            <a href="termos.html" class="footer-link">Termos de Uso</a> |
+            <a href="privacidade.html" class="footer-link">Política de Privacidade</a>
+        </div>
+    </div>
+</body>
+</html>
