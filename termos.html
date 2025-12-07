@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Termos de Uso do MusiKids Fun. Conheça as regras e políticas do nosso site educativo infantil.">
+    <title>Termos de Uso - MusiKids Fun</title>
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', 'Chalkboard SE', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: #2c3e50;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b9d 0%, #c06c84 100%);
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 3rem;
+        }
+
+        h1 {
+            color: white;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .subtitle {
+            color: #fff;
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+            opacity: 0.95;
+        }
+
+        .menu-button {
+            background: white;
+            color: #ff6b9d;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+            margin-top: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .menu-button:hover {
+            transform: scale(1.05);
+        }
+
+        .container {
+            flex: 1;
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            width: 100%;
+        }
+
+        .content-box {
+            background: white;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            color: #ff6b9d;
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title:first-child {
+            margin-top: 0;
+        }
+
+        .intro-text {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .terms-list {
+            margin: 1rem 0 1.5rem 1.5rem;
+        }
+
+        .terms-list li {
+            margin: 0.8rem 0;
+            line-height: 1.7;
+            color: #555;
+        }
+
+        .highlight {
+            color: #ff6b9d;
+            font-weight: bold;
+        }
+
+        p {
+            line-height: 1.8;
+            color: #555;
+            margin: 1rem 0;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
+        }
+
+        .social-link:hover {
+            transform: scale(1.1);
+        }
+
+        .footer-links {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+        }
+
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .content-box {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <span class="logo">📜</span>
+            <div>
+                <h1>Termos de Uso</h1>
+                <p class="subtitle">Regras simples para um ambiente seguro 🔒</p>
+            </div>
+        </div>
+        <button class="menu-button" onclick="window.location.href='index.html'">
+            <span>🏠</span> Menu Principal
+        </button>
+    </div>
+
+    <div class="container">
+        <div class="content-box">
+            <div class="intro-text">
+                <strong>🎉 Bem-vindo ao MusiKids Fun!</strong><br>
+                Estes Termos de Uso explicam como você pode usar nosso site. Ao acessar o MusiKids Fun, você concorda com estas regras.
+            </div>
+
+            <h2 class="section-title">🎮 1. Uso do Site</h2>
+            <p>O MusiKids Fun é um site educativo gratuito destinado a crianças de 3 a 10 anos. Você pode:</p>
+            <ul class="terms-list">
+                <li>Jogar todos os nossos jogos educativos</li>
+                <li>Ouvir músicas infantis</li>
+                <li>Ler histórias ilustradas</li>
+                <li>Compartilhar o site com amigos e familiares</li>
+            </ul>
+
+            <h2 class="section-title">⚖️ 2. Responsabilidades</h2>
+            <p>Ao usar o MusiKids Fun, você concorda em:</p>
+            <ul class="terms-list">
+                <li>Usar o site de forma adequada e respeitosa</li>
+                <li>Não tentar acessar áreas restritas do site</li>
+                <li>Não copiar ou distribuir nosso conteúdo sem autorização</li>
+                <li>Supervisionar crianças durante o uso do site</li>
+            </ul>
+
+            <h2 class="section-title">💻 3. Propriedade Intelectual</h2>
+            <p>Todo o conteúdo do MusiKids Fun (jogos, músicas, ilustrações, textos) é protegido por direitos autorais. Você pode usar nosso conteúdo apenas para <span class="highlight">fins educativos pessoais</span>.</p>
+
+            <h2 class="section-title">🔒 4. Privacidade</h2>
+            <p>Respeitamos sua privacidade! Não coletamos informações pessoais de crianças. Para saber mais, leia nossa <a href="privacidade.html" style="color: #ff6b9d; font-weight: bold;">Política de Privacidade</a>.</p>
+
+            <h2 class="section-title">⚠️ 5. Isenção de Responsabilidade</h2>
+            <p>O MusiKids Fun é fornecido "como está". Fazemos o máximo para garantir que todo o conteúdo seja seguro e apropriado, mas não podemos garantir que o site estará sempre disponível ou livre de erros.</p>
+
+            <h2 class="section-title">🔄 6. Mudanças nos Termos</h2>
+            <p>Podemos atualizar estes Termos de Uso ocasionalmente. Quando isso acontecer, publicaremos a nova versão nesta página. Recomendamos revisar periodicamente.</p>
+
+            <h2 class="section-title">✉️ 7. Contato</h2>
+            <p>Se você tiver dúvidas sobre estes Termos de Uso, entre em contato conosco:</p>
+            <p style="background: #f8f9fa; padding: 1rem; border-radius: 10px; margin-top: 1rem;">
+                <strong>Email:</strong> <a href="mailto:muskidstube@gmail.com" style="color: #ff6b9d; font-weight: bold;">muskidstube@gmail.com</a>
+            </p>
+
+            <p style="margin-top: 2rem; text-align: center; color: #999; font-size: 0.9rem;">
+                <strong>Última atualização:</strong> Janeiro de 2025
+            </p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p><strong>MusiKids Fun</strong> - Aprender Brincando 🎉</p>
+        <p>Feito com ❤️ para crianças felizes</p>
+        <div class="social-links">
+            <a href="https://youtube.com/@MusiKidsFun" class="social-link" target="_blank">
+                <span>📺</span> YouTube
+            </a>
+            <a href="https://instagram.com/musikidschannel" class="social-link" target="_blank">
+                <span>📸</span> Instagram
+            </a>
+            <a href="mailto:muskidstube@gmail.com" class="social-link">
+                <span>✉️</span> Contato
+            </a>
+        </div>
+        <div class="footer-links">
+            <a href="sobre.html" class="footer-link">Sobre</a> |
+            <a href="contato.html" class="footer-link">Contato</a> |
+            <a href="termos.html" class="footer-link">Termos de Uso</a> |
+            <a href="privacidade.html" class="footer-link">Política de Privacidade</a>
+        </div>
+    </div>
+</body>
+</html>
