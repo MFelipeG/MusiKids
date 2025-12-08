@@ -62,10 +62,17 @@
     flex: 1;
     padding: 2rem 1rem 4rem 1rem;
     display: flex;
-    justify-content: center;
-    gap: 2rem;
-    flex-wrap: wrap;
+          flex-direction: column;
+              align-items: center;
+              gap: 1rem;
   }
+
+        .cards-container {
+                    display: flex;
+                    justify-content: center;
+                    gap: 2rem;
+                    flex-wrap: wrap;
+                }
   .card {
     background: white;
     border-radius: 20px;
@@ -352,7 +359,8 @@
         <p style="font-size: 1.2rem; color: #7b4573; line-height: 1.6; margin-bottom: 1.5rem;">Bem-vindo ao <strong>MusiKids Fun</strong>! A plataforma completa de jogos educativos, músicas infantis e histórias ilustradas para crianças. Aprender brincando nunca foi tão divertido!</p>
     </section>
 
-          <!-- Schema.org Structured Data (JSON-LD) -->
+          384
+      Structured Data (JSON-LD) -->
           <script type="application/ld+json">
                   {
                     "@context": "https://schema.org",
@@ -381,6 +389,8 @@
                     ]
                   }
                   </script>
+          <!-- Container para os cards -->
+          <div class="cards-container">
     <a href="jogos/index.html" class="card card-link" aria-label="Jogos - Venha se divertir e aprender com nossos jogos">
       <div class="card-icon">🎮</div>
       <h2>Jogos</h2>
@@ -396,6 +406,7 @@
       <h2>Livros</h2>
       <p>Venha ler histórias incríveis nesses ebooks maravilhosos.</p>
     </a>
+                  </div>
   </main>
 
             <!-- Secção de Redes Sociais -->
