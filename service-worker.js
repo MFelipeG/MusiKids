@@ -1,4 +1,4 @@
-const CACHE_NAME = 'musikids-v1';
+const CACHE_NAME = 'musikids-v2';
 const urlsToCache = [
   '/MusiKids/',
   '/MusiKids/index.html',
