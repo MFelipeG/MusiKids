@@ -498,7 +498,7 @@
             e.preventDefault();
             deferredPrompt = e;
             
-            // Mostrar após 3 segundos se não foi dispensado antes
+            // Mostrar após 2 segundos se não foi dispensado antes
             if (!localStorage.getItem('pwa-dismissed')) {
                 setTimeout(() => {
                     installPrompt.style.display = 'block';
@@ -519,7 +519,7 @@
         dismissBtn.addEventListener('click', () => {
             installPrompt.style.display = 'none';
             localStorage.setItem('pwa-dismissed', Date.now());
-            // Mostrar novamente após 7 dias
+            // Mostrar novamente após 1 dias
             setTimeout(() => {
                 localStorage.removeItem('pwa-dismissed');
             }, 7 * 24 * 60 * 60 * 1000);
