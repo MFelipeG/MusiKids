@@ -1,9 +1,10 @@
 {
+  "id": "com.musikids.fun",
   "name": "MusiKids Fun - Aprender Brincando",
   "short_name": "MusiKids",
-  "description": "Jogos interativos, músicas infantis e histórias ilustradas para crianças",
-  "start_url": "/MusiKids/",
-  "scope": "/MusiKids/",
+  "description": "Jogos educativos, músicas infantis e histórias ilustradas para crianças",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#FF6B9D",
   "theme_color": "#FF6B9D",
@@ -22,7 +23,6 @@
       "purpose": "any maskable"
     }
   ],
-  
   "categories": ["education", "entertainment", "kids"],
   "lang": "pt-BR"
 }
