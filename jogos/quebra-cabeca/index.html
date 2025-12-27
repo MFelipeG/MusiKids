@@ -267,6 +267,7 @@
   const piecesSelect = document.getElementById("pieces-select");
   const imageSelect = document.getElementById("image-select");
   const startBtn = document.getElementById("start-btn");
+  document.addEventListener('DOMContentLoaded', () => {
   const instructions = document.getElementById("instructions");
   const puzzleContainer = document.getElementById("puzzle-container");
   const confettiContainer = document.getElementById("confetti");
@@ -529,6 +530,8 @@
       instructions.textContent = `Monte o quebra-cabeça de ${totalPieces} peças!`;
     }
   }
-</script>
+});
+                            </script>
+
 </body>
 </html>
