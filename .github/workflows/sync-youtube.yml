@@ -1,0 +1,31 @@
+name: Sync YouTube Videos
+
+on:
+  schedule:
+    - cron: '0 22 * * *'  # Executa diariamente às 22h (horário UTC)
+  workflow_dispatch:  # Permite execução manual
+
+jobs:
+  sync-videos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      
+      - name: Install dependencies
+        run: pip install feedparser
+      
+      - name: Fetch and Update Videos
+        run: python scripts/update_videos.py
+      
+      - name: Commit changes
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git add musicas/index.html
+          git diff --quiet && git diff --staged --quiet || git commit -m "🎵 Auto-update: Novos vídeos do YouTube"
+          git push
