@@ -6,7 +6,8 @@ import re
 from datetime import datetime
 
 # Canal do YouTube
-YOUTUBE_CHANNEL = "UCmQwQ11GwCzs5qlv4klEX-Q"FEED_URL = f"https://www.youtube.com/feeds/videos.xml?channel_id={YOUTUBE_CHANNEL}"
+YOUTUBE_CHANNEL = "UCmQwQ11GwCzs5qlv4klEX-Q"
+FEED_URL = f"https://www.youtube.com/feeds/videos.xml?channel_id={YOUTUBE_CHANNEL}"
 
 # Caminho do arquivo HTML
 HTML_FILE = "musicas/index.html"
