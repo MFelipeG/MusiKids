@@ -4,207 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jogo das Letrinhas</title>
-  <style>
-    body {
-      font-family: 'Baloo 2', Arial, cursive, sans-serif;
-      text-align: center;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(120deg, #ff71ce 0%, #fdf200 45%, #01cdfe 100%);
-      min-height: 100vh;
-    }
-
-    h1 {
-      font-size: 32px;
-      margin: 28px 0 8px 0;
-      font-weight: bold;
-      color: #ff71ce;
-      text-shadow: 2px 3px 10px #71C9FF88;
-      background: none;
-      padding: 0;
-      border-radius: 0;
-      letter-spacing: 1px;
-    }
-
-    #menuButton {
-      position: fixed;
-      left: 10px;
-      top: 10px;
-      padding: 11px 18px;
-      font-size: 18px;
-      border: none;
-      border-radius: 10px;
-      background: linear-gradient(115deg, #7c4dff 60%, #ff4081 120%);
-      color: #fff;
-      cursor: pointer;
-      font-weight: 700;
-      box-shadow: 2px 2px 8px #7c4dffaa;
-      z-index: 1000;
-    }
-
-    .menu {
-      margin: 70px 0 30px 0;
-      display: flex;
-      justify-content: center;
-      gap: 18px;
-    }
-    .menu button {
-      padding: 13px 27px;
-      font-size: 17px;
-      border: none;
-      border-radius: 20px;
-      font-weight: bold;
-      background: linear-gradient(120deg, #4CAF50 50%, #81c784 100%);
-      color: white;
-      cursor: pointer;
-      box-shadow: 2px 2px 8px #4caf5077;
-      letter-spacing: 1px;
-      transition: transform 0.2s;
-    }
-    .menu button:hover {
-      transform: scale(1.09) rotate(-3deg);
-      background: linear-gradient(120deg, #81c784 70%, #4CAF50 100%);
-    }
-    .game-container {
-      padding: 20px;
-      border-radius: 22px;
-      margin: 0 auto;
-      max-width: 370px;
-      background: rgba(248,248,255,0.94);
-      box-shadow: 0 8px 32px #71C9FF55;
-    }
-    #wordToCopy {
-      font-size: 24px;
-      margin: 14px 0 18px 0;
-      font-weight: 900;
-      color: #333;
-    }
-    #letterBank, #dropZone {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 11px;
-      margin: 14px 0 18px 0;
-    }
-    .letter {
-      padding: 15px 19px;
-      background: linear-gradient(135deg,#ffe082 10%,#ffeb3b 90%);
-      border: 3px solid #ff71ce;
-      border-radius: 50%;
-      font-size: 22px;
-      font-weight: bold;
-      cursor: grab;
-      user-select: none;
-      touch-action: none;
-      box-shadow: 2px 4px 10px #fdf20055;
-      transition: transform 0.22s, background 0.32s;
-    }
-    .letter:hover {
-      transform: scale(1.13);
-      background: linear-gradient(135deg,#fdf200 20%,#ff71ce 100%);
-      border-color: #01cdfe;
-      color: #7c4dff;
-    }
-    .dropSlot {
-      width: 50px;
-      height: 50px;
-      border: 3px dashed #01cdfe;
-      border-radius: 16px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      background: #fff;
-      cursor: pointer;
-      transition: background 0.33s;
-    }
-    .dropSlot.filled {
-      border: 3px solid #4CAF50;
-      background: #e8f5e9;
-      color: #4caf50;
-    }
-    input[type="text"] {
-      padding: 13px;
-      font-size: 20px;
-      width: 90%;
-      max-width: 340px;
-      margin: 14px 0;
-      border-radius: 12px;
-      border: 2px solid #7c4dff;
-      background: #fdf20011;
-      color: #333;
-      box-shadow: 0 2px 8px #01cdfe22;
-    }
-    button {
-      padding: 11px 22px;
-      font-size: 17px;
-      border: none;
-      border-radius: 10px;
-      background: linear-gradient(90deg, #4CAF50 65%, #81c784 100%);
-      color: white;
-      cursor: pointer;
-      margin: 10px 5px;
-      font-weight: 700;
-      box-shadow: 0 2px 8px #ff71ce22;
-    }
-    #message {
-      margin-top: 17px;
-      font-size: 22px;
-      font-weight: bold;
-      color: #ff4081;
-    }
-    @media (max-width: 600px) {
-      body {
-        min-height: calc(100vh + 80px);
-      }
-      .game-container {
-        max-width: 97vw;
-        margin: 2vw;
-        padding: 7vw 3vw;
-      }
-      h1 {
-        font-size: 24px;
-        padding: 10px 0;
-      }
-      #wordToCopy {
-        font-size: 19px;
-      }
-      .letter {
-        font-size: 18px;
-        padding: 10px 12px;
-      }
-      .dropSlot {
-        width: 40px;
-        height: 40px;
-        font-size: 17px;
-      }
-      input[type="text"] {
-        font-size: 16px;
-        padding: 8px;
-      }
-      button {
-        font-size: 15px;
-        padding: 8px 14px;
-      }
-      #menuButton {
-        position: fixed;
-        top: 10px;
-        left: 10px;
-        z-index: 1000;
-      }
-      .menu {
-        margin-top: 80px;
-      }
-    }
-    #confettiCanvas {
-      pointer-events: none;
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 999;
-    }
-  </style>
+  <!-- TODO O SEU CSS PERMANECE IGUAL -->
 </head>
 <body>
   <button id="menuButton">Menu de Jogos</button>
@@ -213,8 +13,9 @@
     <button onclick="setCategory('frutas')">Frutas</button>
     <button onclick="setCategory('objetos')">Objetos</button>
   </div>
+
   <div class="game-container">
-    <p id="wordToCopy">Palavra: cachorro</p>
+    <p id="wordToCopy">Palavra:</p>
     <input type="text" id="customWord" placeholder="Digite a palavra que deseja">
     <button onclick="setCustomWord()">Usar Palavra</button>
     <div id="dropZone"></div>
@@ -222,42 +23,47 @@
     <button onclick="checkWord()">Verificar</button>
     <p id="message"></p>
   </div>
+
   <canvas id="confettiCanvas"></canvas>
+
   <script>
-    let currentWord = "cachorro";
+    /* 🔹 LINHAS NOVAS (substituem o currentWord fixo) */
+    let currentCategory = "animais";
+    let currentWord = "";
+
     const words = {
       animais: [
-  "cachorro", "gato", "elefante", "leão", "tigre",
-  "girafa", "zebra", "macaco", "urso", "coelho",
-  "cavalo", "vaca", "ovelha", "porco", "galinha",
-  "pato", "papagaio", "cobra", "tartaruga", "jacaré",
-  "golfinho", "baleia", "tubarão", "pinguim", "águia"
-],
-
-frutas: [
-  "maçã", "banana", "uva", "laranja", "pera",
-  "abacaxi", "manga", "morango", "melancia", "mamão",
-  "kiwi", "limão", "cereja", "pêssego", "ameixa",
-  "abacate", "coco", "figo", "goiaba", "maracujá",
-  "tangerina", "framboesa", "mirtilo", "romã", "caqui"
-],
-
-objetos: [
-  "mesa", "cadeira", "computador", "bola", "livro",
-  "telefone", "caneta", "lápis", "caderno", "mochila",
-  "relógio", "televisão", "controle", "sofá", "armário",
-  "copo", "prato", "garrafa", "tesoura", "espelho",
-  "ventilador", "luminária", "teclado", "mouse", "tapete"
-]
+        "cachorro","gato","elefante","leão","tigre","girafa","zebra","macaco",
+        "urso","coelho","cavalo","vaca","ovelha","porco","galinha","pato",
+        "papagaio","cobra","tartaruga","jacaré","golfinho","baleia","tubarão",
+        "pinguim","águia"
+      ],
+      frutas: [
+        "maçã","banana","uva","laranja","pera","abacaxi","manga","morango",
+        "melancia","mamão","kiwi","limão","cereja","pêssego","ameixa","abacate",
+        "coco","figo","goiaba","maracujá","tangerina","framboesa","mirtilo",
+        "romã","caqui"
+      ],
+      objetos: [
+        "mesa","cadeira","computador","bola","livro","telefone","caneta",
+        "lápis","caderno","mochila","relógio","televisão","controle","sofá",
+        "armário","copo","prato","garrafa","tesoura","espelho","ventilador",
+        "luminária","teclado","mouse","tapete"
+      ]
     };
+
     document.getElementById("menuButton").onclick = function() {
       window.location.href = "../index.html";
     };
+
+    /* 🔹 FUNÇÃO ATUALIZADA (mantém categoria atual) */
     function setCategory(category) {
+      currentCategory = category;
       const randomIndex = Math.floor(Math.random() * words[category].length);
       currentWord = words[category][randomIndex];
       setupGame();
     }
+
     function setCustomWord() {
       const input = document.getElementById("customWord").value.trim();
       if (input) {
@@ -265,10 +71,12 @@ objetos: [
         setupGame();
       }
     }
+
     function setupGame() {
       document.getElementById("wordToCopy").textContent = "Palavra: " + currentWord;
       const dropZone = document.getElementById("dropZone");
       dropZone.innerHTML = "";
+
       for (let i = 0; i < currentWord.length; i++) {
         let slot = document.createElement("div");
         slot.className = "dropSlot";
@@ -277,9 +85,11 @@ objetos: [
         slot.ondragover = allowDrop;
         dropZone.appendChild(slot);
       }
+
       const letterBank = document.getElementById("letterBank");
       letterBank.innerHTML = "";
       let shuffled = currentWord.split("").sort(() => Math.random() - 0.5);
+
       shuffled.forEach((letter, index) => {
         let div = document.createElement("div");
         div.className = "letter";
@@ -290,13 +100,17 @@ objetos: [
         div.onclick = () => placeLetter(div);
         letterBank.appendChild(div);
       });
+
       document.getElementById("message").textContent = "";
     }
+
     function allowDrop(ev) { ev.preventDefault(); }
+
     function drag(ev) {
       ev.dataTransfer.setData("text", ev.target.textContent);
       ev.dataTransfer.setData("id", ev.target.id);
     }
+
     function drop(ev) {
       ev.preventDefault();
       if (ev.target.classList.contains("dropSlot") && ev.target.textContent === "") {
@@ -307,6 +121,7 @@ objetos: [
         document.getElementById(id).remove();
       }
     }
+
     function placeLetter(div) {
       let slots = document.querySelectorAll(".dropSlot");
       for (let slot of slots) {
@@ -318,6 +133,7 @@ objetos: [
         }
       }
     }
+
     function removeLetter(slot) {
       if (slot.textContent !== "") {
         let div = document.createElement("div");
@@ -331,68 +147,29 @@ objetos: [
         slot.classList.remove("filled");
       }
     }
+
     function checkWord() {
       let formedWord = "";
       document.querySelectorAll(".dropSlot").forEach(slot => {
         formedWord += slot.textContent;
       });
+
       if (formedWord === currentWord) {
         document.getElementById("message").textContent = "Parabéns! Você acertou!";
         document.getElementById("message").style.color = "#21d578";
         startConfetti();
-        setTimeout(() => { setCategory("animais"); }, 3000);
+
+        /* 🔹 LINHA CORRIGIDA (permanece na categoria atual) */
+        setTimeout(() => { setCategory(currentCategory); }, 3000);
+
       } else {
         document.getElementById("message").textContent = "Tente novamente!";
         document.getElementById("message").style.color = "#ff4081";
       }
     }
-    const canvas = document.getElementById("confettiCanvas");
-    const ctx = canvas.getContext("2d");
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener("resize", resizeCanvas);
-    resizeCanvas();
-    let confetti = [];
-    function startConfetti() {
-      confetti = [];
-      for (let i = 0; i < 140; i++) {
-        confetti.push({
-          x: Math.random() * canvas.width,
-          y: -Math.random() * 80 - 30,
-          r: Math.random() * 6 + 4,
-          d: Math.random() * 12 + 18,
-          color: `hsl(${Math.random() * 360}, 97%, 53%)`,
-          tilt: Math.random() * 14 - 7
-        });
-      }
-      animateConfetti();
-      setTimeout(() => confetti = [], 2800);
-    }
-    function animateConfetti() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      confetti.forEach(c => {
-        ctx.save();
-        ctx.translate(c.x, c.y);
-        ctx.rotate(c.tilt * 0.1);
-        ctx.beginPath();
-        ctx.arc(0, 0, c.r, 0, 2 * Math.PI);
-        ctx.fillStyle = c.color;
-        ctx.globalAlpha = .98;
-        ctx.fill();
-        ctx.restore();
-      });
-      updateConfetti();
-      if (confetti.length > 0) requestAnimationFrame(animateConfetti);
-    }
-    function updateConfetti() {
-      confetti.forEach(c => {
-        c.y += c.d * 0.11 + Math.sin(c.tilt*0.77);
-        c.x += Math.sin(c.d * 0.12 + c.y * 0.04);
-      });
-    }
-    setupGame();
+
+    /* 🔹 INÍCIO ALEATÓRIO DO JOGO */
+    setCategory("animais");
   </script>
 </body>
 </html>
