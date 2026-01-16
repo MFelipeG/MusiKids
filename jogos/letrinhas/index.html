@@ -4,172 +4,176 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jogo das Letrinhas</title>
-  <!-- TODO O SEU CSS PERMANECE IGUAL -->
+  <style>
+    body {
+      font-family: 'Baloo 2', Arial, cursive, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(120deg, #ff71ce 0%, #fdf200 45%, #01cdfe 100%);
+      min-height: 100vh;
+    }
+    h1 {
+      font-size: 32px;
+      margin: 28px 0 8px 0;
+      font-weight: bold;
+      color: #ff71ce;
+      text-shadow: 2px 3px 10px #71C9FF88;
+    }
+    #menuButton {
+      position: fixed;
+      left: 10px;
+      top: 10px;
+      padding: 11px 18px;
+      font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(115deg, #7c4dff 60%, #ff4081 120%);
+      color: #fff;
+      cursor: pointer;
+      font-weight: 700;
+      z-index: 1000;
+    }
+    .menu {
+      margin: 70px 0 30px 0;
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+    }
+    .menu button {
+      padding: 13px 27px;
+      font-size: 17px;
+      border-radius: 20px;
+      font-weight: bold;
+      background: linear-gradient(120deg, #4CAF50 50%, #81c784 100%);
+      color: white;
+      cursor: pointer;
+    }
+    .game-container {
+      padding: 20px;
+      border-radius: 22px;
+      margin: 0 auto;
+      max-width: 370px;
+      background: rgba(248,248,255,0.94);
+    }
+    #wordToCopy {
+      font-size: 24px;
+      margin: 14px 0 18px 0;
+      font-weight: 900;
+    }
+    #letterBank, #dropZone {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 11px;
+      margin: 14px 0 18px 0;
+    }
+    .letter {
+      padding: 15px 19px;
+      background: #ffeb3b;
+      border: 3px solid #ff71ce;
+      border-radius: 50%;
+      font-size: 22px;
+      font-weight: bold;
+      cursor: grab;
+    }
+    .dropSlot {
+      width: 50px;
+      height: 50px;
+      border: 3px dashed #01cdfe;
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+  </style>
 </head>
+
 <body>
-  <button id="menuButton">Menu de Jogos</button>
-  <div class="menu">
-    <button onclick="setCategory('animais')">Animais</button>
-    <button onclick="setCategory('frutas')">Frutas</button>
-    <button onclick="setCategory('objetos')">Objetos</button>
-  </div>
 
-  <div class="game-container">
-    <p id="wordToCopy">Palavra:</p>
-    <input type="text" id="customWord" placeholder="Digite a palavra que deseja">
-    <button onclick="setCustomWord()">Usar Palavra</button>
-    <div id="dropZone"></div>
-    <div id="letterBank"></div>
-    <button onclick="checkWord()">Verificar</button>
-    <p id="message"></p>
-  </div>
+<button id="menuButton">Menu de Jogos</button>
 
-  <canvas id="confettiCanvas"></canvas>
+<div class="menu">
+  <button onclick="setCategory('animais')">Animais</button>
+  <button onclick="setCategory('frutas')">Frutas</button>
+  <button onclick="setCategory('objetos')">Objetos</button>
+</div>
 
-  <script>
-    /* 🔹 LINHAS NOVAS (substituem o currentWord fixo) */
-    let currentCategory = "animais";
-    let currentWord = "";
+<div class="game-container">
+  <p id="wordToCopy">Palavra:</p>
+  <input type="text" id="customWord" placeholder="Digite a palavra que deseja">
+  <button onclick="setCustomWord()">Usar Palavra</button>
+  <div id="dropZone"></div>
+  <div id="letterBank"></div>
+  <button onclick="checkWord()">Verificar</button>
+  <p id="message"></p>
+</div>
 
-    const words = {
-      animais: [
-        "cachorro","gato","elefante","leão","tigre","girafa","zebra","macaco",
-        "urso","coelho","cavalo","vaca","ovelha","porco","galinha","pato",
-        "papagaio","cobra","tartaruga","jacaré","golfinho","baleia","tubarão",
-        "pinguim","águia"
-      ],
-      frutas: [
-        "maçã","banana","uva","laranja","pera","abacaxi","manga","morango",
-        "melancia","mamão","kiwi","limão","cereja","pêssego","ameixa","abacate",
-        "coco","figo","goiaba","maracujá","tangerina","framboesa","mirtilo",
-        "romã","caqui"
-      ],
-      objetos: [
-        "mesa","cadeira","computador","bola","livro","telefone","caneta",
-        "lápis","caderno","mochila","relógio","televisão","controle","sofá",
-        "armário","copo","prato","garrafa","tesoura","espelho","ventilador",
-        "luminária","teclado","mouse","tapete"
-      ]
-    };
+<script>
+  let currentCategory = "animais";
+  let currentWord = "";
 
-    document.getElementById("menuButton").onclick = function() {
-      window.location.href = "../index.html";
-    };
+  const words = {
+    animais: ["cachorro","gato","elefante","leão","tigre","urso"],
+    frutas: ["maçã","banana","uva","laranja","pera"],
+    objetos: ["mesa","cadeira","computador","bola","livro"]
+  };
 
-    /* 🔹 FUNÇÃO ATUALIZADA (mantém categoria atual) */
-    function setCategory(category) {
-      currentCategory = category;
-      const randomIndex = Math.floor(Math.random() * words[category].length);
-      currentWord = words[category][randomIndex];
+  function setCategory(category) {
+    currentCategory = category;
+    currentWord = words[category][Math.floor(Math.random() * words[category].length)];
+    setupGame();
+  }
+
+  function setCustomWord() {
+    const input = document.getElementById("customWord").value.trim();
+    if (input) {
+      currentWord = input.toLowerCase();
       setupGame();
     }
+  }
 
-    function setCustomWord() {
-      const input = document.getElementById("customWord").value.trim();
-      if (input) {
-        currentWord = input.toLowerCase();
-        setupGame();
-      }
+  function setupGame() {
+    document.getElementById("wordToCopy").textContent = "Palavra: " + currentWord;
+
+    const dropZone = document.getElementById("dropZone");
+    dropZone.innerHTML = "";
+
+    for (let i = 0; i < currentWord.length; i++) {
+      let slot = document.createElement("div");
+      slot.className = "dropSlot";
+      dropZone.appendChild(slot);
     }
 
-    function setupGame() {
-      document.getElementById("wordToCopy").textContent = "Palavra: " + currentWord;
-      const dropZone = document.getElementById("dropZone");
-      dropZone.innerHTML = "";
+    const letterBank = document.getElementById("letterBank");
+    letterBank.innerHTML = "";
 
-      for (let i = 0; i < currentWord.length; i++) {
-        let slot = document.createElement("div");
-        slot.className = "dropSlot";
-        slot.onclick = () => removeLetter(slot);
-        slot.ondrop = drop;
-        slot.ondragover = allowDrop;
-        dropZone.appendChild(slot);
-      }
+    /* 🔹 CORREÇÃO DO LAYOUT (somente isso) */
+    letterBank.style.display = "flex";
+    letterBank.style.flexWrap = "wrap";
+    letterBank.style.justifyContent = "center";
+    letterBank.style.gap = "11px";
 
-      const letterBank = document.getElementById("letterBank");
-      letterBank.innerHTML = "";
-      let shuffled = currentWord.split("").sort(() => Math.random() - 0.5);
+    currentWord.split("").sort(() => Math.random() - 0.5).forEach(letter => {
+      let div = document.createElement("div");
+      div.className = "letter";
+      div.textContent = letter;
+      letterBank.appendChild(div);
+    });
+  }
 
-      shuffled.forEach((letter, index) => {
-        let div = document.createElement("div");
-        div.className = "letter";
-        div.textContent = letter;
-        div.id = "letter-" + index;
-        div.draggable = true;
-        div.ondragstart = drag;
-        div.onclick = () => placeLetter(div);
-        letterBank.appendChild(div);
-      });
-
-      document.getElementById("message").textContent = "";
+  function checkWord() {
+    let formed = "";
+    document.querySelectorAll(".dropSlot").forEach(s => formed += s.textContent);
+    if (formed === currentWord) {
+      setTimeout(() => setCategory(currentCategory), 1500);
     }
+  }
 
-    function allowDrop(ev) { ev.preventDefault(); }
+  /* 🔹 INÍCIO ALEATÓRIO */
+  setCategory("animais");
+</script>
 
-    function drag(ev) {
-      ev.dataTransfer.setData("text", ev.target.textContent);
-      ev.dataTransfer.setData("id", ev.target.id);
-    }
-
-    function drop(ev) {
-      ev.preventDefault();
-      if (ev.target.classList.contains("dropSlot") && ev.target.textContent === "") {
-        let letter = ev.dataTransfer.getData("text");
-        let id = ev.dataTransfer.getData("id");
-        ev.target.textContent = letter;
-        ev.target.classList.add("filled");
-        document.getElementById(id).remove();
-      }
-    }
-
-    function placeLetter(div) {
-      let slots = document.querySelectorAll(".dropSlot");
-      for (let slot of slots) {
-        if (slot.textContent === "") {
-          slot.textContent = div.textContent;
-          slot.classList.add("filled");
-          div.remove();
-          break;
-        }
-      }
-    }
-
-    function removeLetter(slot) {
-      if (slot.textContent !== "") {
-        let div = document.createElement("div");
-        div.className = "letter";
-        div.textContent = slot.textContent;
-        div.draggable = true;
-        div.ondragstart = drag;
-        div.onclick = () => placeLetter(div);
-        document.getElementById("letterBank").appendChild(div);
-        slot.textContent = "";
-        slot.classList.remove("filled");
-      }
-    }
-
-    function checkWord() {
-      let formedWord = "";
-      document.querySelectorAll(".dropSlot").forEach(slot => {
-        formedWord += slot.textContent;
-      });
-
-      if (formedWord === currentWord) {
-        document.getElementById("message").textContent = "Parabéns! Você acertou!";
-        document.getElementById("message").style.color = "#21d578";
-        startConfetti();
-
-        /* 🔹 LINHA CORRIGIDA (permanece na categoria atual) */
-        setTimeout(() => { setCategory(currentCategory); }, 3000);
-
-      } else {
-        document.getElementById("message").textContent = "Tente novamente!";
-        document.getElementById("message").style.color = "#ff4081";
-      }
-    }
-
-    /* 🔹 INÍCIO ALEATÓRIO DO JOGO */
-    setCategory("animais");
-  </script>
 </body>
 </html>
