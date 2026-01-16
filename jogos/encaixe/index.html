@@ -3,364 +3,303 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Arraste as Formas - MusiKids Fun</title>
+<title>Arraste as Formas - Geometria Divertida</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@700&family=Luckiest+Guy&display=swap');
+
+:root {
+  --neon-pink: #ff71ce;
+  --neon-yellow: #fdf200;
+  --neon-blue: #01cdfe;
+  --neon-purple: #7c4dff;
+  --soft-bg: #f7f4e9;
+}
+
 body {
   margin: 0; padding: 0;
   min-height: 100vh;
   font-family: 'Baloo 2', cursive, Arial, sans-serif;
-  background: linear-gradient(135deg, #f7f4e9, #f8b500, #ff7eb9 100%);
+  background: linear-gradient(135deg, var(--soft-bg), #f8b500, var(--neon-pink) 100%);
   color: #32434a;
   user-select: none;
-  box-sizing: border-box;
+  overflow-x: hidden;
   text-align: center;
 }
+
+/* --- Elementos Geométricos Flutuantes no Fundo --- */
+.bg-shape {
+  position: fixed;
+  z-index: -1;
+  opacity: 0.2;
+  animation: floatBG 25s infinite linear;
+}
+
+@keyframes floatBG {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-100px) rotate(180deg); }
+  100% { transform: translateY(0) rotate(360deg); }
+}
+
+/* Botão Menu Estilizado */
 #btn-menu {
   position: fixed;
-  top: 18px;
-  left: 18px;
-  background: #a1d578;
-  color: #214d0d;
+  top: 18px; left: 18px;
+  background: var(--neon-purple);
+  color: white;
   border-radius: 18px;
-  padding: 15px 30px;
+  padding: 12px 25px;
   font-weight: 900;
-  font-size: 1.25rem;
-  box-shadow: 0 0 15px #a1d578aa;
+  font-size: 1.1rem;
+  box-shadow: 4px 4px 0px #4b2cb3;
   border: none;
-  user-select: none;
   z-index: 10000;
   cursor: pointer;
-  transition: background .3s;
+  transition: 0.2s;
 }
-#btn-menu:hover {
-  background: #68922b;
-  color: white;
-}
-.header-area {
-  margin-top: 84px;
-  margin-bottom: 20px;
-}
+#btn-menu:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #4b2cb3; }
+
+.header-area { margin-top: 84px; margin-bottom: 20px; }
+
 .site-title {
-  font-family: 'Luckiest Guy', 'Baloo 2', cursive, Arial, sans-serif;
-  font-size: 2.35rem;
-  color: #d63a6d;
-  letter-spacing: 1px;
-  text-shadow: 2px 4px 16px #71C9FF99;
-  margin-bottom: 6px;
-  line-height: 1;
-  transition: all 0.25s;
+  font-family: 'Luckiest Guy', cursive;
+  font-size: 2.8rem;
+  color: white;
+  text-shadow: 4px 4px 0px var(--neon-pink), 8px 8px 20px rgba(0,0,0,0.2);
+  margin-bottom: 10px;
 }
+
 .instructions-title {
-  font-family: 'Baloo 2', cursive, Arial, sans-serif;
-  font-size: 1.27rem;
+  font-size: 1.3rem;
   color: #595bc3;
-  margin-bottom: 13px;
-  letter-spacing: .4px;
+  background: rgba(255,255,255,0.6);
+  display: inline-block;
+  padding: 5px 20px;
+  border-radius: 20px;
   font-weight: 700;
-  text-shadow: 1px 3px 14px #ffd3e444;
-  animation: instrglow 1.8s infinite alternate;
 }
-@keyframes instrglow {
-  to { text-shadow: 0 0 24px #ffd3e4cc, 0 0 8px #b7eaf6; }
-}
+
 #game-container {
-  max-width: 980px;
-  margin: 0 auto;
+  max-width: 900px;
+  margin: 0 auto 40px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 40px;
+  border: 6px solid white;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#shapes-row, #drop-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+/* Estilo das Formas Arrastáveis */
+.shape-draggable {
+  width: 100px; height: 100px;
   background: white;
-  border-radius: 32px;
-  box-shadow: 0 4px 22px #ffd3e466;
-  padding: 28px 20px 18px 20px;
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-#game-area {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 32px;
-  margin-top: 14px;
-}
-#shapes-row {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-  gap: 36px;
   justify-content: center;
-  margin-bottom: 8px;
-}
-#drop-row {
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
-  gap: 36px;
-  justify-content: center;
-  margin-top: 18px;
-}
-.shape-draggable, .drop-zone {
-  width: 90px; height: 90px;
-  border-radius: 19px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-  background: transparent;
-  cursor: pointer;
-  transition: box-shadow 0.27s, border 0.22s;
-}
-.shape-draggable.selected {
-  box-shadow: 0 0 0 5px #ff71ce88;
-  z-index: 1400;
-}
-.shape-draggable:active {
-  box-shadow: 0 0 0 7px #d63a6d55;
-}
-.shape-svg {
-  width: 86px;
-  height: 86px;
-  display: block;
-  pointer-events: none;
-}
-.shape-label {
-  font-family: 'Baloo 2', cursive, Arial, sans-serif;
-  font-size: 15px;
-  color: #2b2240;
-  margin-top: -7px;
-  letter-spacing:0.08em;
-  font-weight:700;
-}
-.drop-zone {
-  border: 3px dashed #d63a6d;
-  opacity: 0.73;
+  cursor: grab;
+  box-shadow: 0 8px 0px rgba(0,0,0,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
   position: relative;
-  min-width: 90px; min-height: 90px;
 }
-.drop-zone:hover, .drop-zone.active {
-  border-color: #ff7eb9;
-  opacity: 1;
+.shape-draggable:hover { transform: scale(1.05) translateY(-5px); }
+.shape-draggable.selected { border: 4px solid var(--neon-purple); box-shadow: 0 0 20px var(--neon-purple); }
+
+.shape-svg { width: 70px; height: 70px; pointer-events: none; }
+.shape-label { font-size: 14px; font-weight: bold; color: #444; margin-top: 2px; }
+
+/* Estilo das Zonas de Encaixe */
+.drop-zone {
+  width: 100px; height: 100px;
+  border: 4px dashed #ccc;
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.03);
+  transition: all 0.3s;
+  position: relative;
 }
-.drop-zone.correct {
-  border-color: #a1d578 !important;
-  background-color: rgba(161, 213, 120, 0.19);
-  opacity: 1 !important;
-}
-.drop-zone.filled {
-  border: none;
-  background: transparent;
-  opacity: 1 !important;
-}
+.drop-zone.active { border-color: var(--neon-blue); background: rgba(1, 205, 254, 0.1); }
+.drop-zone.correct { border-style: solid; border-color: #a1d578; background: #f0fff0; }
+
 #result-text {
-  margin-top: 16px;
-  font-weight: 700;
-  font-size: 1.33rem;
+  font-size: 1.5rem;
+  font-weight: 900;
   color: #d63a6d;
-  min-height: 36px;
-  font-family: 'Baloo 2', cursive, Arial, sans-serif;
+  margin-top: 20px;
+  min-height: 40px;
 }
-#confetti {
-  pointer-events: none;
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  z-index: 9999;
-  overflow: visible;
+
+/* Animações */
+@keyframes bounceSuccess {
+  0%, 100% { transform: scale(1) translate(-50%, -50%); }
+  50% { transform: scale(1.2) translate(-42%, -42%); }
 }
-.confetti-piece {
-  pointer-events: none;
-  position: fixed;
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  animation: fall 3s linear forwards;
-  opacity: 1;
-}
-@keyframes fall {
-  0% { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(100vh); opacity: 0; }
-}
-@keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  75% { transform: translateX(5px); }
-}
-.drop-zone.error {
-  animation: shake 0.4s;
-}
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } 60% { transform: translateY(-5px); }
-}
-@media (max-width: 768px) {
-  .header-area { margin-top: 63px; }
-  .site-title { font-size: 1.32rem; }
-  #btn-menu { left: 8px; top: 10px; padding: 12px 17px; font-size: 1.02rem;}
-  #game-container { padding: 8px 1vw 3px 1vw; }
-  #shapes-row, #drop-row { gap: 12px; }
-  .shape-draggable, .drop-zone { width: 56px; height: 56px; border-radius: 9px;}
-  .shape-svg { width: 48px; height: 48px; }
+
+@media (max-width: 600px) {
+  .site-title { font-size: 1.8rem; }
+  #game-container { padding: 15px; width: 95%; }
+  .shape-draggable, .drop-zone { width: 75px; height: 75px; }
+  .shape-svg { width: 50px; height: 50px; }
   .shape-label { font-size: 11px; }
 }
 </style>
 </head>
 <body>
-<button id="btn-menu" aria-label="Voltar ao menu" tabindex="1">MENU DE JOGOS</button>
+
+<svg class="bg-shape" style="top:10%; left:5%; width:80px;" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#01cdfe"/></svg>
+<svg class="bg-shape" style="bottom:20%; right:5%; width:100px;" viewBox="0 0 100 100"><rect x="20" y="20" width="60" height="60" fill="#fdf200" transform="rotate(15)"/></svg>
+<svg class="bg-shape" style="top:40%; right:10%; width:60px;" viewBox="0 0 100 100"><polygon points="50,10 90,90 10,90" fill="#ff71ce"/></svg>
+
+<button id="btn-menu">MENU</button>
+
 <div class="header-area">
-  <div class="site-title">Musikids Fun – Jogo de Encaixar Formas</div>
-  <div class="instructions-title">Arraste as formas 👆<br/>ou toque, depois clique no local correto</div>
+  <div class="site-title">Geometria Kids Fun</div>
+  <div class="instructions-title">Encaixe as formas nos lugares certos! 🌟</div>
 </div>
+
 <div id="game-container">
-  <div id="game-area">
-    <div id="shapes-row" aria-label="Formas arrastáveis horizontais"></div>
-    <div id="drop-row" aria-label="Zonas para soltar as formas (horizontal)"></div>
-  </div>
-  <div id="result-text" aria-live="polite"></div>
+  <div id="shapes-row"></div>
+  <div id="drop-row"></div>
+  <div id="result-text"></div>
 </div>
+
 <div id="confetti"></div>
+
 <script>
+// Banco de Formas Expandido
 const formasGeometricas = [
-  { nome: 'square', label: 'Quadrado', cor: '#ff6b6b', svg: '<rect x="6" y="6" width="62" height="62" rx="14" />' },
+  { nome: 'square', label: 'Quadrado', cor: '#ff6b6b', svg: '<rect x="10" y="10" width="54" height="54" rx="10" />' },
   { nome: 'circle', label: 'Círculo', cor: '#4ecdc4', svg: '<circle cx="37" cy="37" r="30" />' },
-  { nome: 'triangle', label: 'Triângulo', cor: '#45b7d1', svg: '<polygon points="37,11 13,63 61,63" />' },
-  { nome: 'rectangle', label: 'Retângulo', cor: '#96ceb4', svg: '<rect x="9" y="23" width="56" height="29" rx="10" />' }
+  { nome: 'triangle', label: 'Triângulo', cor: '#45b7d1', svg: '<polygon points="37,10 10,65 64,65" />' },
+  { nome: 'rectangle', label: 'Retângulo', cor: '#96ceb4', svg: '<rect x="7" y="22" width="60" height="30" rx="8" />' },
+  { nome: 'star', label: 'Estrela', cor: '#feca57', svg: '<polygon points="37,5 46,30 72,30 51,46 59,71 37,56 15,71 23,46 2,30 28,30" />' },
+  { nome: 'pentagon', label: 'Pentágono', cor: '#ff9ff3', svg: '<polygon points="37,8 68,30 56,66 18,66 6,30" />' },
+  { nome: 'hexagon', label: 'Hexágono', cor: '#54a0ff', svg: '<polygon points="37,7 65,22 65,52 37,67 9,52 9,22" />' },
+  { nome: 'diamond', label: 'Losango', cor: '#5f27cd', svg: '<polygon points="37,5 67,37 37,69 7,37" />' }
 ];
+
 let formasAtuais = [];
-let formasUsadas = [];
-const btnMenu = document.getElementById('btn-menu');
+let formaSelecionada = null;
+
 const shapesRow = document.getElementById('shapes-row');
 const dropRow = document.getElementById('drop-row');
 const resultText = document.getElementById('result-text');
-const confettiContainer = document.getElementById('confetti');
-function ajustarTopoContatoMenu() {
-  const headerElem = document.querySelector('.header-area');
-  const btnMenuRect = btnMenu.getBoundingClientRect();
-  const headerRect = headerElem.getBoundingClientRect();
-  if (btnMenuRect.bottom + 16 > headerRect.top) {
-    headerElem.style.marginTop = (btnMenuRect.height + 24) + 'px';
-  }
-}
-ajustarTopoContatoMenu();
-window.addEventListener('resize', ajustarTopoContatoMenu);
-btnMenu.onclick = function(){ location.href = '../index.html'; };
+
 function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
-function getFormasUnicas() {
-  let pool = formasGeometricas.filter(f => !formasUsadas.includes(f.nome));
-  if (pool.length < 4) { pool = [...formasGeometricas]; formasUsadas = []; }
-  let selecionadas = shuffle(pool).slice(0, 4);
-  formasUsadas.push(...selecionadas.map(f => f.nome));
-  return selecionadas;
-}
-let formaSelecionada = null;
+
 function criaJogo() {
-  formasAtuais = getFormasUnicas();
-  formaSelecionada = null;
+  // Sorteia 4 formas do banco de 8
+  formasAtuais = shuffle(formasGeometricas).slice(0, 4);
+  
   shapesRow.innerHTML = '';
   dropRow.innerHTML = '';
-  formasAtuais.forEach((forma) => {
-    const shapeDiv = document.createElement('div');
-    shapeDiv.className = `shape-draggable`;
-    shapeDiv.draggable = true;
-    shapeDiv.dataset.shapeType = forma.nome;
-    shapeDiv.innerHTML = `<div><svg class='shape-svg' viewBox='0 0 74 74' fill='${forma.cor}' xmlns='http://www.w3.org/2000/svg'>${forma.svg}</svg><div class='shape-label'>${forma.label}</div></div>`;
-    // drag & drop tradicional
-    shapeDiv.addEventListener('dragstart', dragStart);
-    // clique/tap para selecionar
-    shapeDiv.addEventListener('click', function(){
-      document.querySelectorAll('.shape-draggable').forEach(s=>s.classList.remove('selected'));
-      formaSelecionada = shapeDiv;
-      shapeDiv.classList.add('selected');
+  resultText.textContent = 'Vamos começar!';
+
+  // Gerar Origem (Embaralhado)
+  shuffle(formasAtuais).forEach(forma => {
+    const div = document.createElement('div');
+    div.className = 'shape-draggable';
+    div.draggable = true;
+    div.dataset.type = forma.nome;
+    div.innerHTML = `
+      <svg class="shape-svg" viewBox="0 0 74 74" fill="${forma.cor}">${forma.svg}</svg>
+      <div class="shape-label">${forma.label}</div>
+    `;
+
+    // Eventos Drag
+    div.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text', forma.nome);
+      div.style.opacity = '0.4';
     });
-    shapesRow.appendChild(shapeDiv);
-  });
-  formasAtuais.forEach((forma) => {
-    const zoneDiv = document.createElement('div');
-    zoneDiv.className = `drop-zone`;
-    zoneDiv.dataset.shapeType = forma.nome;
-    zoneDiv.innerHTML = `<svg class='shape-svg' viewBox='0 0 74 74' fill='${forma.cor}' opacity='0.4' xmlns='http://www.w3.org/2000/svg'>${forma.svg}</svg>`;
-    zoneDiv.addEventListener('dragover', dragOver);
-    zoneDiv.addEventListener('drop', drop);
-    // toque/click para receber forma selecionada
-    zoneDiv.addEventListener('click', function(){
-      if (formaSelecionada && !zoneDiv.classList.contains('filled')) {
-        if (formaSelecionada.dataset.shapeType === zoneDiv.dataset.shapeType) {
-          encaixarForma(formaSelecionada, zoneDiv);
-        } else {
-          zoneDiv.classList.add('error');
-          setTimeout(()=>zoneDiv.classList.remove('error'), 400);
-        }
-      }
+    div.addEventListener('dragend', () => div.style.opacity = '1');
+
+    // Evento Click (Mobile)
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.shape-draggable').forEach(s => s.classList.remove('selected'));
+      formaSelecionada = div;
+      div.classList.add('selected');
     });
-    dropRow.appendChild(zoneDiv);
+
+    shapesRow.appendChild(div);
   });
-  resultText.textContent = 'Arraste ou toque/click para encaixar as formas!';
+
+  // Gerar Destino (Embaralhado de novo para não ficar na mesma ordem da origem)
+  shuffle(formasAtuais).forEach(forma => {
+    const zone = document.createElement('div');
+    zone.className = 'drop-zone';
+    zone.dataset.type = forma.nome;
+    zone.innerHTML = `<svg class="shape-svg" viewBox="0 0 74 74" fill="${forma.cor}" opacity="0.2">${forma.svg}</svg>`;
+
+    zone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      zone.classList.add('active');
+    });
+    zone.addEventListener('dragleave', () => zone.classList.remove('active'));
+    zone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const type = e.dataTransfer.getData('text');
+      handleMatch(type, zone);
+    });
+
+    zone.addEventListener('click', () => {
+      if(formaSelecionada) handleMatch(formaSelecionada.dataset.type, zone);
+    });
+
+    dropRow.appendChild(zone);
+  });
 }
-function dragStart(e) {
-  e.dataTransfer.setData('text/plain', e.target.closest('.shape-draggable').dataset.shapeType);
-  e.target.closest('.shape-draggable').style.opacity = '0.5';
-  e.target.closest('.shape-draggable').style.transform = 'scale(1.1)';
-}
-function dragOver(e) {
-  e.preventDefault();
-  const dz = e.target.closest('.drop-zone');
-  dz.classList.add('active');
-}
-function drop(e) {
-  e.preventDefault();
-  const zoneDiv = e.target.closest('.drop-zone');
-  zoneDiv.classList.remove('active');
-  const shapeType = e.dataTransfer.getData('text/plain');
-  const draggedShape = document.querySelector(`.shape-draggable[data-shape-type="${shapeType}"]`);
-  if (shapeType === zoneDiv.dataset.shapeType) {
-    if (draggedShape && !zoneDiv.classList.contains('filled')) {
-      encaixarForma(draggedShape, zoneDiv);
-    }
+
+function handleMatch(draggedType, zone) {
+  if (draggedType === zone.dataset.type && !zone.classList.contains('correct')) {
+    const originalShape = document.querySelector(`.shape-draggable[data-type="${draggedType}"]`);
+    
+    zone.classList.remove('active');
+    zone.classList.add('correct');
+    zone.innerHTML = originalShape.innerHTML;
+    
+    // Centraliza a forma dentro do slot
+    const svg = zone.querySelector('svg');
+    svg.style.opacity = "1";
+    svg.style.position = "absolute";
+    svg.style.top = "50%";
+    svg.style.left = "50%";
+    svg.style.transform = "translate(-50%, -50%)";
+    svg.style.animation = "bounceSuccess 0.5s ease";
+
+    originalShape.style.visibility = 'hidden';
+    formaSelecionada = null;
+    
+    checkWin();
   } else {
-    zoneDiv.classList.add('error');
-    setTimeout(()=>zoneDiv.classList.remove('error'), 430);
+    zone.style.animation = 'shake 0.4s';
+    setTimeout(() => zone.style.animation = '', 400);
   }
 }
-function encaixarForma(shapeDiv, zoneDiv) {
-  zoneDiv.appendChild(shapeDiv);
-  shapeDiv.style.position = 'absolute';
-  shapeDiv.style.top = '50%';
-  shapeDiv.style.left = '50%';
-  shapeDiv.style.transform = 'translate(-50%, -50%) scale(1)';
-  shapeDiv.style.opacity = '1';
-  shapeDiv.draggable = false;
-  shapeDiv.classList.remove('selected');
-  zoneDiv.classList.add('correct','filled');
-  formaSelecionada = null;
-  zoneDiv.style.animation = 'bounce 0.6s';
-  checkCompletion();
-}
-function checkCompletion() {
-  const filledZones = document.querySelectorAll('.drop-zone.filled');
-  if (filledZones.length === 4) {
-    resultText.textContent = 'Parabéns! Todas as formas encaixadas!';
-    confetti();
-    setTimeout(criaJogo, 4200);
+
+function checkWin() {
+  const correct = document.querySelectorAll('.drop-zone.correct').length;
+  if (correct === 4) {
+    resultText.textContent = "🌟 PARABÉNS! VOCÊ É DEMAIS! 🌟";
+    setTimeout(criaJogo, 4000);
   } else {
-    resultText.textContent = `Encaixe ${filledZones.length} de 4 formas corretas!`;
+    resultText.textContent = `Muito bem! Faltam ${4 - correct}...`;
   }
 }
-const style = document.createElement('style');
-style.innerHTML = `
-  @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); }}
-  .drop-zone.error { animation: shake 0.45s; }
-  @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); } 40% { transform: translateY(-10px); } 60% { transform: translateY(-5px); } }
-`;
-document.head.appendChild(style);
-function confetti() {
-  confettiContainer.innerHTML = '';
-  const colors = ['#ff597f', '#ff9ea1', '#fcd677', '#a9d97a', '#79d79a', '#ff7eb9', '#61dafb'];
-  for(let i = 0; i < 120; i++) {
-    const c = document.createElement('div');
-    c.className = 'confetti-piece';
-    c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-    c.style.top = Math.random() * window.innerHeight + 'px';
-    c.style.left = Math.random() * window.innerWidth + 'px';
-    c.style.animationDelay = (i * 0.015) + 's';
-    confettiContainer.appendChild(c);
-  }
-  setTimeout(() => { confettiContainer.innerHTML = ''; }, 3500);
-}
+
 window.onload = criaJogo;
 </script>
 </body>
