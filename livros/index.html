@@ -3,15 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Livros - MusiKids Fun</title>     <meta name="description" content="Histórias ilustradas e ebooks para crianças. Leitura interativa que estimula a imaginação. Descubra histórias incríveis!">     <meta name="keywords" content="ebooks infantis, histórias para crianças, livros digitais, leitura infantil, contos ilustrados, histórias educativas">     <link rel="canonical" href="https://mfelipeg.github.io/MusiKids/livros/">          <!-- Google tag (gtag.js) -->     <script async src="https://www.googletagmanager.com/gtag/js?id=G-7198EQH1WP"></script>     <script>       window.dataLayer = window.dataLayer || [];       function gtag(){dataLayer.push(arguments);}       gtag('js', new Date());       gtag('config', 'G-7198EQH1WP');     </script>
+    <title>Livros - MusiKids Fun</title>
+    <meta name="description" content="Histórias ilustradas e ebooks interativos para crianças. Descubra mundos mágicos!">
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7198EQH1WP"></script>
+    <script>
+       window.dataLayer = window.dataLayer || [];
+       function gtag(){dataLayer.push(arguments);}
+       gtag('js', new Date());
+       gtag('config', 'G-7198EQH1WP');
+    </script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700;800&display=swap');
         
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             font-family: 'Baloo 2', cursive, Arial, sans-serif;
@@ -20,7 +26,7 @@
             min-height: 100vh;
             padding-bottom: 3rem;
         }
-        
+
         header {
             background: linear-gradient(135deg, #FF6B9D 0%, #C44569 100%);
             padding: 2rem 1rem;
@@ -29,345 +35,158 @@
             box-shadow: 0 4px 15px rgba(255, 107, 157, 0.4);
             position: relative;
         }
-        
-        header h1 {
-            font-size: 2.5rem;
-            font-weight: 900;
-            letter-spacing: 0.08em;
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-        }
-        
-        header p {
-            font-size: 1.1rem;
-            opacity: 0.95;
-        }
-        
+
+        header h1 { font-size: 2.5rem; font-weight: 900; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+
         .back-button {
-            position: absolute;
-            left: 1.5rem;
-            top: 50%;
-            transform: translateY(-50%);
-            background: white;
-            color: #FF6B9D;
-            padding: 0.7rem 1.2rem;
-            border-radius: 25px;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 1rem;
-            transition: all 0.3s ease;
+            position: absolute; left: 1.5rem; top: 50%; transform: translateY(-50%);
+            background: white; color: #FF6B9D; padding: 0.7rem 1.2rem;
+            border-radius: 25px; text-decoration: none; font-weight: 700;
             box-shadow: 0 3px 10px rgba(0,0,0,0.15);
         }
         
-        .back-button:hover {
-            transform: translateY(-50%) scale(1.05);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.25);
-        }
-        
-        main {
-            max-width: 1400px;
-            margin: 3rem auto;
-            padding: 0 1.5rem;
-        }
-        
-        .intro-section {
-            text-align: center;
-            margin-bottom: 3rem;
-            animation: fadeIn 0.8s ease-in;
-        }
-        
-        .intro-section h2 {
-            font-size: 2rem;
-            color: #C44569;
-            margin-bottom: 1rem;
-            font-weight: 800;
-        }
-        
-        .intro-section p {
-            font-size: 1.1rem;
-            color: #666;
-            line-height: 1.6;
-        }
-        
+        main { max-width: 1200px; margin: 3rem auto; padding: 0 1.5rem; }
+
+        .intro-section { text-align: center; margin-bottom: 3rem; }
+        .intro-section h2 { color: #C44569; font-weight: 800; font-size: 2rem; }
+
         .books-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 2rem;
-            animation: slideUp 0.8s ease-out;
         }
-        
+
         .book-card {
-            background: white;
-            border-radius: 25px;
-            padding: 2.5rem 2rem;
-            box-shadow: 0 10px 30px rgba(196, 69, 105, 0.15);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
+            background: white; border-radius: 25px; padding: 2rem;
+            box-shadow: 0 10px 30px rgba(196, 69, 105, 0.1);
+            transition: all 0.3s ease; text-align: center;
         }
-        
-        .book-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 8px;
-            background: linear-gradient(90deg, #FF6B9D, #C44569, #8E44AD);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-        
-        .book-card:hover::before {
-            transform: scaleX(1);
-        }
-        
-        .book-card:hover {
-            transform: translateY(-12px);
-            box-shadow: 0 20px 50px rgba(196, 69, 105, 0.25);
-        }
-        
-        .book-icon {
-            font-size: 5rem;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            animation: bounce 2s infinite;
-        }
-        
-        .book-title {
-            font-size: 1.6rem;
-            font-weight: 900;
-            color: #C44569;
-            margin-bottom: 1rem;
-            text-align: center;
-            line-height: 1.3;
-        }
-        
-        .book-description {
-            font-size: 1rem;
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-        
-        .book-meta {
-            display: flex;
-            justify-content: center;
-            gap: 0.8rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-        
-        .meta-badge {
-            background: linear-gradient(135deg, #FFE5EC, #E8DEF8);
-            color: #C44569;
-            padding: 0.4rem 1rem;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 0.85rem;
-        }
-        
+
+        .book-card:hover { transform: translateY(-10px); box-shadow: 0 15px 35px rgba(196, 69, 105, 0.2); }
+
+        .book-icon { font-size: 4.5rem; margin-bottom: 1rem; }
+        .book-title { font-size: 1.5rem; color: #C44569; margin-bottom: 0.8rem; font-weight: 800; }
+        .book-description { font-size: 0.95rem; color: #666; margin-bottom: 1.5rem; line-height: 1.5; }
+
         .read-button {
-            display: block;
-            width: 100%;
-            padding: 1rem;
+            display: block; width: 100%; padding: 1rem;
             background: linear-gradient(135deg, #FF6B9D, #C44569);
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 30px;
-            font-weight: 800;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 20px rgba(196, 69, 105, 0.3);
+            color: white; border-radius: 30px; text-decoration: none;
+            font-weight: 800; border: none; cursor: pointer; font-size: 1.1rem;
+            box-shadow: 0 5px 15px rgba(196, 69, 105, 0.3);
         }
-        
-        .read-button:hover {
-            transform: scale(1.03);
-            box-shadow: 0 8px 25px rgba(196, 69, 105, 0.4);
+
+        /* --- SISTEMA DE MODAL (JANELA DO LIVRO) --- */
+        .modal {
+            display: none; position: fixed; z-index: 9999;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.85); backdrop-filter: blur(5px);
         }
-        
-        footer {
-            text-align: center;
-            padding: 2rem 1rem;
-            background: linear-gradient(135deg, #FF6B9D 0%, #C44569 100%);
-            color: white;
-            margin-top: 4rem;
-            box-shadow: 0 -4px 15px rgba(255, 107, 157, 0.3);
+
+        .modal-content {
+            position: relative; margin: auto; top: 5%;
+            width: 90%; max-width: 1000px; height: 85vh;
+            background: white; border-radius: 15px; overflow: hidden;
         }
-        
-        footer p {
-            font-size: 1rem;
-            font-weight: 700;
+
+        .close-modal {
+            position: absolute; right: 20px; top: 10px;
+            color: #C44569; font-size: 40px; cursor: pointer; font-weight: bold; z-index: 10001;
         }
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-        
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes bounce {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-15px);
-            }
-        }
-        
+
+        iframe { width: 100%; height: 100%; border: none; }
+
+        footer { text-align: center; padding: 2rem; margin-top: 3rem; color: #C44569; font-weight: 700; }
+
         @media (max-width: 768px) {
-            header h1 {
-                font-size: 2rem;
-            }
-            
-            .back-button {
-                position: static;
-                transform: none;
-                display: inline-block;
-                margin-bottom: 1rem;
-            }
-            
-            .back-button:hover {
-                transform: scale(1.05);
-            }
-            
-            .books-grid {
-                grid-template-columns: 1fr;
-                gap: 1.5rem;
-            }
-            
-            .intro-section h2 {
-                font-size: 1.6rem;
-            }
-            
-            .book-icon {
-                font-size: 4rem;
-            }
+            header h1 { font-size: 1.8rem; }
+            .back-button { position: static; display: block; margin: 0 auto 1rem; width: fit-content; transform: none; }
+            .modal-content { width: 95%; height: 70vh; top: 15%; }
         }
     </style>
 </head>
 <body>
+
     <header>
         <a href="../index.html" class="back-button">← Voltar</a>
         <h1>📚 Biblioteca Mágica</h1>
-        <p>Histórias que encantam e educam!</p>
     </header>
-    
+
     <main>
         <div class="intro-section">
-            <h2>✨ Descubra Mundos Mágicos! ✨</h2>
-            <p>Livros infantis cheios de aventura, magia e aprendizado!</p>
+            <h2>✨ Escolha uma História! ✨</h2>
+            <p>Clique no botão para abrir o livro animado.</p>
         </div>
-        
+
         <div class="books-grid">
-            <!-- Livro 1: Coelhinho da Páscoa -->
             <div class="book-card">
                 <div class="book-icon">🐰</div>
-                <h3 class="book-title">O Coelhinho da Páscoa<br>Uma Aventura Doce e Encantada</h3>
-                <p class="book-description">
-                    Descubra o mundo mágico do Coelhinho da Páscoa! Uma jornada encantadora cheia de doçura, 
-                    amizade e muita magia perfeita para ler em família!
-                </p>
-                <div class="book-meta">
-                    <span class="meta-badge">🎯 Todas as Idades</span>
-                    <span class="meta-badge">🎨 Ilustrado</span>
-                </div>
-                <a href="O-Coelhinho-da-Pascoa-Uma-Aventura-Doce-e-Encantada-pdf.pdf" class="read-button">📖 Ler Agora</a>
+                <h3 class="book-title">O Coelhinho da Páscoa</h3>
+                <p class="book-description">Uma aventura doce e encantada para ler com toda a família!</p>
+                <button class="read-button" onclick="openBook('https://heyzine.com/flip-book/578e1a564b.html')">📖 Ler Agora</button>
             </div>
-            
-            <!-- Livro 2: Sonho Estelar de João -->
+
+            <div class="book-card">
+                <div class="book-icon">🐿️</div>
+                <h3 class="book-title">A Grande Aventura de Tito</h3>
+                <p class="book-description">O Mapa da Noz Mágica! Ajude Tito nesta jornada incrível.</p>
+                <button class="read-button" onclick="openBook('https://heyzine.com/flip-book/a34a4457e3.html')">📖 Ler Agora</button>
+            </div>
+
+            <div class="book-card">
+                <div class="book-icon">🐶</div>
+                <h3 class="book-title">Meu Amigo Pet</h3>
+                <p class="book-description">Uma história emocionante sobre amizade e carinho com os animais.</p>
+                <button class="read-button" onclick="openBook('https://heyzine.com/flip-book/511ea7b091.html')">📖 Ler Agora</button>
+            </div>
+
+            <div class="book-card">
+                <div class="book-icon">⭐</div>
+                <h3 class="book-title">A Estrelinha Sonhadora</h3>
+                <p class="book-description">Uma linda história para ninar e sonhar com as estrelas.</p>
+                <button class="read-button" onclick="openBook('https://heyzine.com/flip-book/a852e48057.html')">📖 Ler Agora</button>
+            </div>
+
             <div class="book-card">
                 <div class="book-icon">🚀</div>
                 <h3 class="book-title">O Sonho Estelar de João</h3>
-                <p class="book-description">
-                    A inspiradora história de João, um garoto que sonhava em ser astronauta. Uma jornada 
-                    sobre perseverança, determinação e o poder de acreditar em seus sonhos!
-                </p>
-                <div class="book-meta">
-                    <span class="meta-badge">🎯 7+ anos</span>
-                    <span class="meta-badge">⭐ Inspirador</span>
-                </div>
-                <a href="O-Sonho-Estelar-de-Joao.pdf" class="read-button">📖 Ler Agora</a>
-            </div>
-            
-            <!-- Livro 3: A Grande Aventura de Tito -->
-            <div class="book-card">
-                <div class="book-icon">🐿️</div>
-                <h3 class="book-title">A Grande Aventura de Tito<br>O Mapa da Noz Mágica</h3>
-                <p class="book-description">
-                    Conheça Tito, o esquilo curioso, e seus amigos em uma aventura repleta de desafios 
-                    divertidos, onde descobrem que a amizade é o maior tesouro!
-                </p>
-                <div class="book-meta">
-                    <span class="meta-badge">🎯 4-8 anos</span>
-                    <span class="meta-badge">🎨 Colorido</span>
-                </div>
-                <a href="A-Grande-Aventura-de-Tito-O-Mapa-da-Noz-Magica.pdf" class="read-button">📖 Ler Agora</a>
-            </div>
-
-                        <!-- Livro 4: A Estrelinha Sonhadora -->
-            <div class="book-card">
-                <div class="book-icon">⭐</div>
-                <h3 class="book-title">A Estrelinha Sonhadora<br>Uma História para Dormir</h3>
-                <p class="book-description">
-                    Prepare-se para uma jornada mágica pelo céu estrelado! Uma estrelinha especial desce à Terra para realizar seu sonho e conhecer novas amizades. Uma história perfeita para embalar o sono!
-                </p>
-                <div class="book-meta">
-                    <span class="meta-badge">🌙 Hora de dormir</span>
-                    <span class="meta-badge">✨ Sonhos</span>
-                </div>
-                <a href="A-Estrelinha-Sonhadora-Uma-Historia-para-Dormir.pdf" class="read-button">📖 Ler Agora</a>
-            </div>
-
-            <!-- Livro 5: A Jornada de Lucas -->
-            <div class="book-card">
-                <div class="book-icon">📚</div>
-                <h3 class="book-title">A Jornada de Lucas<br>Não Gostava de Estudar</h3>
-                <p class="book-description">
-                    Lucas descobre que o estudo é a chave mágica que abre portas para os sonhos! Uma história inspiradora sobre transformação, dedicação e o poder da educação na vida de uma criança.
-                </p>
-                <div class="book-meta">
-                    <span class="meta-badge">🎓 Educação</span>
-                    <span class="meta-badge">💪 Superação</span>
-                </div>
-                <a href="A-Jornada-de-Lucas-Nao-Gostava-de-Estudar.pdf" class="read-button">📖 Ler Agora</a>
-            </div>
-
-            <!-- Livro 6: A Mágica do Papai Noel -->
-            <div class="book-card">
-                <div class="book-icon">🎅</div>
-                <h3 class="book-title">A Mágica do Papai Noel</h3>
-                <p class="book-description">
-                    Descubra o verdadeiro segredo por trás da noite mais mágica do ano! Uma história de amor, bondade e magia natalina que aquece o coração e ensina o valor da gentileza.
-                </p>
-                <div class="book-meta">
-                    <span class="meta-badge">🎄 Natal</span>
-                    <span class="meta-badge">❤️ Amor</span>
-                </div>
-                <a href="A-Magica-do-Papai-Noel.pdf" class="read-button">📖 Ler Agora</a>
+                <p class="book-description">João sonha em ser astronauta. Venha descobrir como alcançar as estrelas!</p>
+                <button class="read-button" onclick="openBook('https://heyzine.com/flip-book/a1a59bf936.html')">📖 Ler Agora</button>
             </div>
         </div>
     </main>
-    
+
+    <div id="bookModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeBook()">&times;</span>
+            <iframe id="bookFrame" src="" allowfullscreen></iframe>
+        </div>
+    </div>
+
     <footer>
         <p>📚 Feito com ❤️ para pequenos leitores | MusiKids Fun</p>
     </footer>
+
+    <script>
+        function openBook(url) {
+            document.getElementById('bookFrame').src = url;
+            document.getElementById('bookModal').style.display = "block";
+            document.body.style.overflow = "hidden"; // Trava o scroll do fundo
+        }
+
+        function closeBook() {
+            document.getElementById('bookModal').style.display = "none";
+            document.getElementById('bookFrame').src = "";
+            document.body.style.overflow = "auto"; // Libera o scroll
+        }
+
+        // Fecha se clicar fora do livro
+        window.onclick = function(event) {
+            let modal = document.getElementById('bookModal');
+            if (event.target == modal) {
+                closeBook();
+            }
+        }
+    </script>
 </body>
 </html>
