@@ -485,64 +485,60 @@
     </style>
 
     <script>
-        // Pop-up PWA
-        let deferredPrompt;
-        const installPrompt = document.getElementById('pwa-install-prompt');
-        const installBtn = document.getElementById('pwa-install-btn');
-        const dismissBtn = document.getElementById('pwa-dismiss-btn');
+    // 1. REGISTRO DO SERVICE WORKER
+    if ('service-worker' in navigator) {
+        navigator.serviceWorker.register('/MusiKids/service-worker.js');
+    }
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            
-            // Mostrar após 2 segundos se não foi dispensado antes
-            if (!localStorage.getItem('pwa-dismissed')) {
-                setTimeout(() => {
-                    installPrompt.style.display = 'block';
-                }, 3000);
-            }
-        });
+    // 2. LÓGICA DO PWA (MOSTRAR SEMPRE)
+    let deferredPrompt;
+    const installPrompt = document.getElementById('pwa-install-prompt');
+    const installBtn = document.getElementById('pwa-install-btn');
+    const dismissBtn = document.getElementById('pwa-dismiss-btn');
 
-        installBtn.addEventListener('click', async () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                console.log('Escolha do usuário:', outcome);
-                deferredPrompt = null;
-            }
-            installPrompt.style.display = 'none';
-        });
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        // Aparece sempre após 3 segundos
+        setTimeout(() => {
+            installPrompt.style.display = 'block';
+        }, 3000);
+    });
 
-        dismissBtn.addEventListener('click', () => {
-            installPrompt.style.display = 'none';
-            localStorage.setItem('pwa-dismissed', Date.now());
-            // Mostrar novamente após 1 dias
-            setTimeout(() => {
-                localStorage.removeItem('pwa-dismissed');
-            }, 7 * 24 * 60 * 60 * 1000);
-        });
+    installBtn.addEventListener('click', async () => {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            await deferredPrompt.userChoice;
+            deferredPrompt = null;
+        }
+        installPrompt.style.display = 'none';
+    });
 
-        // Botão de Compartilhar
-        document.getElementById('share-btn').addEventListener('click', async () => {
-            const shareData = {
-                title: 'MusiKids Fun - Aprender Brincando',
-                text: 'Jogos educativos, músicas infantis e histórias ilustradas! 🎮🎶📚',
-                url: window.location.href
-            };
+    dismissBtn.addEventListener('click', () => {
+        installPrompt.style.display = 'none';
+    });
 
+    // 3. LÓGICA DO BOTÃO COMPARTILHAR
+    // Note que este código está DENTRO das tags <script>, logo abaixo do PWA
+    document.getElementById('share-btn').addEventListener('click', async () => {
+        const shareData = {
+            title: 'MusiKids Fun',
+            text: 'Olha que legal esses jogos educativos! 🎮🎶',
+            url: window.location.href
+        };
+
+        try {
             if (navigator.share) {
-                try {
-                    await navigator.share(shareData);
-                    console.log('Compartilhado com sucesso!');
-                } catch (err) {
-                    console.log('Erro ao compartilhar:', err);
-                }
+                await navigator.share(shareData);
             } else {
-                // Fallback para copiar link
-                navigator.clipboard.writeText(window.location.href);
-                alert('💝 Link copiado! Cole e compartilhe: ' + window.location.href);
+                await navigator.clipboard.writeText(window.location.href);
+                alert('💝 Link copiado! Cole e compartilhe com os amigos.');
             }
-        });
+        } catch (err) {
+            console.log('Erro ao compartilhar:', err);
+        }
+    });
     </script>
-
+</body>   
 </html>
