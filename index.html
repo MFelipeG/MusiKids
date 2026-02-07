@@ -1,168 +1,168 @@
-<!DOCTYPE html>
+l<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>MusiKids Fun - Aprender Brincando</title>
-    <link rel="manifest" href="manifest.json">
-    
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7198EQH1WP"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-7198EQH1WP');
-    </script>
-        
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700;800&display=swap');
-        
-        :root {
-            --primary-color: #FF77A9;
-            --secondary-color: #FF4C8B;
-            --bg-gradient: linear-gradient(135deg, #FFDDC1 0%, #FEC8D8 50%, #D291BC 100%);
-        }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>MusiKids Fun - Aprender Brincando</title>
+    <link rel="manifest" href="manifest.json">
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7198EQH1WP"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-7198EQH1WP');
+    </script>
+        
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700;800&display=swap');
+        
+        :root {
+            --primary-color: #FF77A9;
+            --secondary-color: #FF4C8B;
+            --bg-gradient: linear-gradient(135deg, #FFDDC1 0%, #FEC8D8 50%, #D291BC 100%);
+        }
 
-        body.theme-boy {
-            --primary-color: #4CA9FF;
-            --secondary-color: #2E86DE;
-            --bg-gradient: linear-gradient(135deg, #C1DFFF 0%, #C8E1FE 50%, #91B2D2 100%);
-        }
+        body.theme-boy {
+            --primary-color: #4CA9FF;
+            --secondary-color: #2E86DE;
+            --bg-gradient: linear-gradient(135deg, #C1DFFF 0%, #C8E1FE 50%, #91B2D2 100%);
+        }
 
-        body {
-            margin: 0; font-family: 'Baloo 2', cursive; background: var(--bg-gradient);
-            transition: background 0.5s ease; color: #333; text-align: center;
-            min-height: 100vh; display: flex; flex-direction: column; align-items: center;
-        }
+        body {
+            margin: 0; font-family: 'Baloo 2', cursive; background: var(--bg-gradient);
+            transition: background 0.5s ease; color: #333; text-align: center;
+            min-height: 100vh; display: flex; flex-direction: column; align-items: center;
+        }
 
-        header {
-            background: var(--primary-color); padding: 2rem 1.5rem; color: white;
-            font-size: 2.8rem; font-weight: 800; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            width: 100%; box-sizing: border-box;
-        }
+        header {
+            background: var(--primary-color); padding: 2rem 1.5rem; color: white;
+            font-size: 2.8rem; font-weight: 800; box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 100%; box-sizing: border-box;
+        }
 
-        /* --- PLAYER FLUTUANTE À DIREITA --- */
-        #musikids-player-card {
-            background: white; padding: 8px 18px; display: flex; align-items: center; gap: 12px;
-            border: 4px solid var(--primary-color); border-radius: 50px;
-            position: fixed; top: 20px; right: 20px; z-index: 2000;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-        }
-        .player-controls { display: flex; gap: 8px; align-items: center; }
-        .player-btn {
-            background: var(--primary-color); border: none; color: white;
-            width: 35px; height: 35px; border-radius: 50%; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; font-size: 14px;
-        }
-        .player-label { font-weight: 800; color: var(--secondary-color); font-size: 0.8rem; }
+        /* --- PLAYER FLUTUANTE À DIREITA --- */
+        #musikids-player-card {
+            background: white; padding: 8px 18px; display: flex; align-items: center; gap: 12px;
+            border: 4px solid var(--primary-color); border-radius: 50px;
+            position: fixed; top: 20px; right: 20px; z-index: 2000;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        .player-controls { display: flex; gap: 8px; align-items: center; }
+        .player-btn {
+            background: var(--primary-color); border: none; color: white;
+            width: 35px; height: 35px; border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 14px;
+        }
+        .player-label { font-weight: 800; color: var(--secondary-color); font-size: 0.8rem; }
 
-        .welcome-text {
-            max-width: 800px; margin: 3rem auto 1.5rem auto; padding: 0 20px;
-            font-size: 1.2rem; line-height: 1.6;
-        }
+        .welcome-text {
+            max-width: 800px; margin: 3rem auto 1.5rem auto; padding: 0 20px;
+            font-size: 1.2rem; line-height: 1.6;
+        }
 
-        .gender-selector { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
-        .gender-selector button {
-            border: none; padding: 12px 24px; border-radius: 30px; font-weight: bold;
-            cursor: pointer; color: white; font-family: 'Baloo 2'; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
-        }
-        .gender-selector button:hover { transform: scale(1.05); }
-        .btn-menina { background: #FF77A9; } .btn-menino { background: #4CA9FF; }
+        .gender-selector { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
+        .gender-selector button {
+            border: none; padding: 12px 24px; border-radius: 30px; font-weight: bold;
+            cursor: pointer; color: white; font-family: 'Baloo 2'; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .gender-selector button:hover { transform: scale(1.05); }
+        .btn-menina { background: #FF77A9; } .btn-menino { background: #4CA9FF; }
 
-        main { flex: 1; padding: 1rem; width: 100%; max-width: 1200px; }
-        .cards-container { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
-        .card {
-            background: white; border-radius: 30px; width: 280px; padding: 30px;
-            text-decoration: none; color: inherit; transition: 0.3s;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08); border: 3px solid transparent;
-        }
-        .card:hover { transform: translateY(-10px); border-color: var(--primary-color); }
-        .card-icon { font-size: 5rem; display: block; margin-bottom: 15px; }
-        .card h2 { color: var(--secondary-color); font-size: 2rem; margin: 10px 0; }
+        main { flex: 1; padding: 1rem; width: 100%; max-width: 1200px; }
+        .cards-container { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
+        .card {
+            background: white; border-radius: 30px; width: 280px; padding: 30px;
+            text-decoration: none; color: inherit; transition: 0.3s;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08); border: 3px solid transparent;
+        }
+        .card:hover { transform: translateY(-10px); border-color: var(--primary-color); }
+        .card-icon { font-size: 5rem; display: block; margin-bottom: 15px; }
+        .card h2 { color: var(--secondary-color); font-size: 2rem; margin: 10px 0; }
 
-        .social-section { padding: 50px 20px; width: 100%; }
-        .social-links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
-        .social-link {
-            background: white; padding: 20px; border-radius: 20px; text-decoration: none;
-            display: flex; flex-direction: column; align-items: center; width: 110px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1); transition: 0.2s;
-        }
-        .social-link span { font-weight: 800; font-size: 13px; margin-top: 8px; }
+        .social-section { padding: 50px 20px; width: 100%; }
+        .social-links { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+        .social-link {
+            background: white; padding: 20px; border-radius: 20px; text-decoration: none;
+            display: flex; flex-direction: column; align-items: center; width: 110px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1); transition: 0.2s;
+        }
+        .social-link span { font-weight: 800; font-size: 13px; margin-top: 8px; }
 
-        footer { background: var(--primary-color); color: white; padding: 40px 20px; width: 100%; margin-top: auto; }
-        .footer-links { margin-top: 15px; }
-        .footer-links a { color: white; text-decoration: none; margin: 0 10px; font-weight: 600; font-size: 0.9rem; }
-        .footer-links a:hover { text-decoration: underline; }
+        footer { background: var(--primary-color); color: white; padding: 40px 20px; width: 100%; margin-top: auto; }
+        .footer-links { margin-top: 15px; }
+        .footer-links a { color: white; text-decoration: none; margin: 0 10px; font-weight: 600; font-size: 0.9rem; }
+        .footer-links a:hover { text-decoration: underline; }
 
-        #share-btn {
-            position:fixed; bottom:25px; right:25px; background: var(--primary-color);
-            color:white; border:none; width:65px; height:65px; border-radius:50%;
-            font-size:28px; cursor:pointer; box-shadow:0 6px 20px rgba(0,0,0,0.25); z-index: 998;
-        }
+        #share-btn {
+            position:fixed; bottom:25px; right:25px; background: var(--primary-color);
+            color:white; border:none; width:65px; height:65px; border-radius:50%;
+            font-size:28px; cursor:pointer; box-shadow:0 6px 20px rgba(0,0,0,0.25); z-index: 998;
+        }
 
-        @media (max-width: 600px) { #musikids-player-card { top: 10px; right: 10px; scale: 0.85; } }
-    </style>
+        @media (max-width: 600px) { #musikids-player-card { top: 10px; right: 10px; scale: 0.85; } }
+    </style>
 </head>
 <body>
 
 <div id="musikids-player-card">
-    <span class="player-label">Música</span>
-    <div class="player-controls">
-        <button class="player-btn" onclick="playPrev()" title="Anterior">⏮️</button>
-        <button class="player-btn" onclick="toggleMusic()" id="play-pause-btn">▶️</button>
-        <button class="player-btn" onclick="playNext()" title="Próxima">⏭️</button>
-        <button class="player-btn" onclick="playRandom()" title="Aleatória">🔀</button>
-    </div>
+    <span class="player-label">Música</span>
+    <div class="player-controls">
+        <button class="player-btn" onclick="playPrev()" title="Anterior">⏮️</button>
+        <button class="player-btn" onclick="toggleMusic()" id="play-pause-btn">▶️</button>
+        <button class="player-btn" onclick="playNext()" title="Próxima">⏭️</button>
+        <button class="player-btn" onclick="playRandom()" title="Aleatória">🔀</button>
+    </div>
 </div>
 
 <header>MusiKids Fun</header>
 <div style="position: absolute; left: -9999px;"><div id="yt-audio-element"></div></div>
 
 <div class="welcome-text">
-    Bem-vindo ao <strong>MusiKids Fun!</strong> A plataforma completa de jogos educativos, músicas infantis e histórias ilustradas para crianças. Aprender brincando nunca foi tão divertido!
+    Bem-vindo ao <strong>MusiKids Fun!</strong> A plataforma completa de jogos educativos, músicas infantis e histórias ilustradas para crianças. Aprender brincando nunca foi tão divertido!
 </div>
 
 <div class="gender-selector">
-    <button onclick="setTheme('menina')" class="btn-menina">Sou Menina 🎀</button>
-    <button onclick="setTheme('menino')" class="btn-menino">Sou Menino 🧢</button>
+    <button onclick="setTheme('menina')" class="btn-menina">Sou Menina 🎀</button>
+    <button onclick="setTheme('menino')" class="btn-menino">Sou Menino 🧢</button>
 </div>
 
 <main>
-    <div class="cards-container">
-        <a href="jogos/index.html" class="card"><span class="card-icon">🎮</span><h2>Jogos</h2><p>Venha se divertir e aprender!</p></a>
-        <a href="musicas/index.html" class="card"><span class="card-icon">🎶</span><h2>Músicas</h2><p>Canções alegres para cantar!</p></a>
-        <a href="livros/index.html" class="card"><span class="card-icon">📚</span><h2>Livros</h2><p>Histórias maravilhosas!</p></a>
-    </div>
+    <div class="cards-container">
+        <a href="jogos/index.html" class="card"><span class="card-icon">🎮</span><h2>Jogos</h2><p>Venha se divertir e aprender!</p></a>
+        <a href="musicas/index.html" class="card"><span class="card-icon">🎶</span><h2>Músicas</h2><p>Canções alegres para cantar!</p></a>
+        <a href="livros/index.html" class="card"><span class="card-icon">📚</span><h2>Livros</h2><p>Histórias maravilhosas!</p></a>
+    </div>
 
-    <section class="social-section">
-        <h3>Siga-nos nas Redes Sociais</h3>
-        <div class="social-links">
-            <a href="https://www.youtube.com/@musikidschannel" target="_blank" class="social-link">
-                <svg viewBox="0 0 24 24" width="35" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                <span style="color:#FF0000">YouTube</span>
-            </a>
-            <a href="https://www.instagram.com/musikids_channel/" target="_blank" class="social-link">
-                <svg viewBox="0 0 24 24" width="35" fill="#E4405F"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849s-.011 3.585-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.849-.07c-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849s.012-3.584.07-4.849c.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.668-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
-                <span style="color:#E4405F">Instagram</span>
-            </a>
-            <a href="https://www.tiktok.com/@musikids.channel" target="_blank" class="social-link">
-                <svg viewBox="0 0 24 24" width="35" fill="#000000"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
-                <span style="color:#000000">TikTok</span>
-            </a>
-        </div>
-    </section>
+    <section class="social-section">
+        <h3>Siga-nos nas Redes Sociais</h3>
+        <div class="social-links">
+            <a href="https://www.youtube.com/@musikidschannel" target="_blank" class="social-link">
+                <svg viewBox="0 0 24 24" width="35" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                <span style="color:#FF0000">YouTube</span>
+            </a>
+            <a href="https://www.instagram.com/musikids_channel/" target="_blank" class="social-link">
+                <svg viewBox="0 0 24 24" width="35" fill="#E4405F"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849s-.011 3.585-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.849-.07c-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849s.012-3.584.07-4.849c.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.668-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+                <span style="color:#E4405F">Instagram</span>
+            </a>
+            <a href="https://www.tiktok.com/@musikids.channel" target="_blank" class="social-link">
+                <svg viewBox="0 0 24 24" width="35" fill="#000000"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+                <span style="color:#000000">TikTok</span>
+            </a>
+        </div>
+    </section>
 </main>
 
 <footer>
-    <p>Feito com ❤️ para crianças felizes</p>
-    <div class="footer-links">
-        <a href="sobre.html">Sobre</a> | 
-        <a href="contato.html">Contato</a> | 
-        <a href="termos.html">Termos de Uso</a> | 
-        <a href="privacidade.html">Privacidade</a> | 
-        <a href="apoio.html" style="background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 12px;">Apoie o MusiKids 💝</a>
-    </div>
+    <p>Feito com ❤️ para crianças felizes</p>
+    <div class="footer-links">
+        <a href="sobre.html">Sobre</a> | 
+        <a href="contato.html">Contato</a> | 
+        <a href="termos.html">Termos de Uso</a> | 
+        <a href="privacidade.html">Privacidade</a> | 
+        <a href="apoio.html" style="background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 12px;">Apoie o MusiKids 💝</a>
+    </div>
 </footer>
 
 <button id="share-btn" title="Compartilhar">💝</button>
@@ -170,113 +170,109 @@
 <script src="js/musicas_data.js"></script>
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
-    let player;
-    let currentIndex = parseInt(sessionStorage.getItem('musi_index')) || 0; 
+    let currentIndex = parseInt(sessionStorage.getItem('musi_index')) || 0; 
+    let player;
 
-    function onYouTubeIframeAPIReady() {
-        const savedTime = parseFloat(sessionStorage.getItem('musi_time')) || 0;
-        const isPlaying = sessionStorage.getItem('musi_playing') === 'true';
+    function onYouTubeIframeAPIReady() {
+        const savedTime = parseFloat(sessionStorage.getItem('musi_time')) || 0;
+        const isPlaying = sessionStorage.getItem('musi_playing') === 'true';
 
-        player = new YT.Player('yt-audio-element', {
-            height: '1', width: '1', 
-            videoId: listaMusicasIds[currentIndex],
-            playerVars: { 
-                'autoplay': isPlaying ? 1 : 0 
-            },
-            events: { 
-                'onReady': (event) => {
-                    // AQUI ESTÁ A CORREÇÃO: Força o pulo para o tempo salvo
-                    if (savedTime > 0) {
-                        event.target.seekTo(savedTime, true);
-                    }
-                    if (isPlaying) {
-                        event.target.playVideo();
-                        updatePlayButton(true);
-                    }
-                },
-                'onStateChange': (e) => { 
-                    if(e.data === 1) sessionStorage.setItem('musi_playing', 'true');
-                    if(e.data === 2) sessionStorage.setItem('musi_playing', 'false');
-                    if(e.data === 0) playNext(); 
-                },
-                'onError': () => { playNext(); } 
-            }
-        });
+        player = new YT.Player('yt-audio-element', {
+            height: '1', width: '1', videoId: listaMusicasIds[currentIndex],
+            playerVars: { 
+                'start': Math.floor(savedTime), 
+                'autoplay': isPlaying ? 1 : 0 
+            },
+            events: { 
+                'onReady': (event) => {
+                    if (isPlaying) {
+                        event.target.playVideo();
+                        updatePlayButton(true);
+                    }
+                },
+                'onStateChange': (e) => { 
+                    if(e.data === 1) sessionStorage.setItem('musi_playing', 'true');
+                    if(e.data === 2) sessionStorage.setItem('musi_playing', 'false');
+                    if(e.data === 0) playNext(); 
+                },
+                'onError': () => { playNext(); } 
+            }
+        });
 
-        // O RELÓGIO QUE VOCÊ TINHA, MANTIDO IGUAL
-        setInterval(() => {
-            if (player && player.getCurrentTime) {
-                sessionStorage.setItem('musi_time', player.getCurrentTime());
-                sessionStorage.setItem('musi_index', currentIndex);
-            }
-        }, 1000);
-    }
+        // SALVA O TEMPO A CADA 1 SEGUNDO
+        setInterval(() => {
+            if (player && player.getCurrentTime) {
+                sessionStorage.setItem('musi_time', player.getCurrentTime());
+                sessionStorage.setItem('musi_index', currentIndex);
+            }
+        }, 1000);
+    }
 
-    function updatePlayButton(isPlaying) {
-        const btn = document.getElementById('play-pause-btn');
-        if(btn) btn.innerText = isPlaying ? "⏸" : "▶️";
-    }
+    function updatePlayButton(isPlaying) {
+        const btn = document.getElementById('play-pause-btn');
+        if(btn) btn.innerText = isPlaying ? "⏸" : "▶️";
+    }
 
-    function toggleMusic() {
-        const s = player.getPlayerState();
-        if (s === 1) { 
-            player.pauseVideo(); 
-            updatePlayButton(false);
-        } else { 
-            player.playVideo(); 
-            updatePlayButton(true);
-        }
-    }
+    function toggleMusic() {
+        const s = player.getPlayerState();
+        if (s === 1) { 
+            player.pauseVideo(); 
+            updatePlayButton(false);
+        } else { 
+            player.playVideo(); 
+            updatePlayButton(true);
+        }
+    }
 
-    function playNext() {
-        currentIndex = (currentIndex + 1) % listaMusicasIds.length;
-        sessionStorage.setItem('musi_time', 0);
-        player.loadVideoById(listaMusicasIds[currentIndex]);
-        updatePlayButton(true);
-    }
+    function playNext() {
+        currentIndex = (currentIndex + 1) % listaMusicasIds.length;
+        sessionStorage.setItem('musi_time', 0);
+        player.loadVideoById(listaMusicasIds[currentIndex]);
+        updatePlayButton(true);
+    }
 
-    function playPrev() {
-        currentIndex = (currentIndex - 1 + listaMusicasIds.length) % listaMusicasIds.length;
-        sessionStorage.setItem('musi_time', 0);
-        player.loadVideoById(listaMusicasIds[currentIndex]);
-        updatePlayButton(true);
-    }
+    function playPrev() {
+        currentIndex = (currentIndex - 1 + listaMusicasIds.length) % listaMusicasIds.length;
+        sessionStorage.setItem('musi_time', 0);
+        player.loadVideoById(listaMusicasIds[currentIndex]);
+        updatePlayButton(true);
+    }
 
-    function playRandom() {
-        currentIndex = Math.floor(Math.random() * listaMusicasIds.length);
-        sessionStorage.setItem('musi_time', 0);
-        player.loadVideoById(listaMusicasIds[currentIndex]);
-        updatePlayButton(true);
-    }
+    function playRandom() {
+        currentIndex = Math.floor(Math.random() * listaMusicasIds.length);
+        sessionStorage.setItem('musi_time', 0);
+        player.loadVideoById(listaMusicasIds[currentIndex]);
+        updatePlayButton(true);
+    }
 
-    function setTheme(g) {
-        if (g === 'menino') { 
-            document.body.classList.add('theme-boy'); 
-            localStorage.setItem('musi-theme', 'menino'); 
-        } else { 
-            document.body.classList.remove('theme-boy'); 
-            localStorage.setItem('musi-theme', 'menina'); 
-        }
-        if(player && player.playVideo) { 
-            player.playVideo(); 
-            updatePlayButton(true);
-        }
-    }
+    function setTheme(g) {
+        if (g === 'menino') { 
+            document.body.classList.add('theme-boy'); 
+            localStorage.setItem('musi-theme', 'menino'); 
+        } else { 
+            document.body.classList.remove('theme-boy'); 
+            localStorage.setItem('musi-theme', 'menina'); 
+        }
+        if(player) { 
+            player.playVideo(); 
+            updatePlayButton(true);
+        }
+    }
 
-    window.onload = () => { 
-        if(localStorage.getItem('musi-theme') === 'menino') setTheme('menino'); 
-    };
+    window.onload = () => { 
+        if(localStorage.getItem('musi-theme') === 'menino') setTheme('menino'); 
+    };
 
-    document.getElementById('share-btn').addEventListener('click', async () => {
-        try {
-            if (navigator.share) {
-                await navigator.share({ title: 'MusiKids Fun', text: 'Olha que legal! 🎮🎶', url: window.location.href });
-            } else {
-                navigator.clipboard.writeText(window.location.href);
-                alert('💝 Link copiado para você compartilhar!');
-            }
-        } catch (err) { console.log(err); }
-    });
+    document.getElementById('share-btn').addEventListener('click', async () => {
+        try {
+            if (navigator.share) {
+                await navigator.share({ title: 'MusiKids Fun', text: 'Olha que legal! 🎮🎶', url: window.location.href });
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                alert('💝 Link copiado para você compartilhar!');
+            }
+        } catch (err) { console.log(err); }
+    });
 </script>
 </body>
 </html>
