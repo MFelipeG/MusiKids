@@ -4,22 +4,43 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Menu de Jogos - MusiKids Fun</title>
-      <meta name="description" content="Jogos educativos divertidos para crianças! Labirinto, caça-palavras, memória, quebra-cabeça e muito mais. Aprenda brincando!">
-      <meta name="keywords" content="jogos educativos, jogos infantis, labirinto, caça-palavras, memória, quebra-cabeça, jogos online">
-      <link rel="canonical" href="https://mfelipeg.github.io/MusiKids/jogos/">          <!-- Google tag (gtag.js) -->     <script async src="https://www.googletagmanager.com/gtag/js?id=G-7198EQH1WP"></script>     <script>       window.dataLayer = window.dataLayer || [];       function gtag(){dataLayer.push(arguments);}       gtag('js', new Date());       gtag('config', 'G-7198EQH1WP');     </script>
+<meta name="description" content="Jogos educativos divertidos para crianças! Labirinto, caça-palavras, memória, quebra-cabeça e muito mais. Aprenda brincando!">
+<meta name="keywords" content="jogos educativos, jogos infantis, labirinto, caça-palavras, memória, quebra-cabeça, jogos online">
+<link rel="canonical" href="https://mfelipeg.github.io/MusiKids/jogos/">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-7198EQH1WP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-7198EQH1WP');
+</script>
+
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+  
+  /* --- ESTILOS DO PLAYER (Inclusão) --- */
+  #musikids-player-card {
+    background: white; padding: 8px 18px; display: flex; align-items: center; gap: 12px;
+    border: 4px solid #FF77A9; border-radius: 50px;
+    position: fixed; top: 15px; right: 15px; z-index: 10001;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+  .player-controls { display: flex; gap: 8px; align-items: center; }
+  .player-btn {
+    background: #FF77A9; border: none; color: white;
+    width: 35px; height: 35px; border-radius: 50%; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 14px;
+  }
+  .player-label { font-weight: 800; color: #FF4C8B; font-size: 0.8rem; }
+
+  /* --- SEUS ESTILOS ORIGINAIS --- */
   body {
     font-family: 'Baloo 2', cursive, Arial, sans-serif;
-    margin: 0;
-    min-height: 100vh;
-    text-align: center;
-    overflow-x: hidden;
+    margin: 0; min-height: 100vh; text-align: center; overflow-x: hidden;
     background: linear-gradient(120deg, #FFD23F 0%, #FF77A9 50%, #77DDFF 100%);
+    background-size: 200% 200%;
     animation: animateBG 12s ease-in-out infinite;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: flex; flex-direction: column; align-items: center;
   }
   @keyframes animateBG {
     0% { background-position: 0% 50%; }
@@ -27,96 +48,62 @@
     100% { background-position: 0% 50%; }
   }
   .menu-btn {
-    margin: 2rem auto 1.5rem auto;
-    padding: 1rem 2.5rem;
-    background: #6427C7;
-    color: white;
-    font-size: 1.17rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 20px;
-    text-decoration: none;
-    box-shadow: 1px 3px 12px #A592FF55;
-    transition: background 0.3s, transform 0.25s;
+    margin: 2rem auto 1.5rem auto; padding: 1rem 2.5rem;
+    background: #6427C7; color: white; font-size: 1.17rem; font-weight: bold;
+    border: none; border-radius: 20px; text-decoration: none;
+    box-shadow: 1px 3px 12px #A592FF55; transition: background 0.3s, transform 0.25s;
     cursor: pointer;
   }
-  .menu-btn:hover {
-    background: #3d1784;
-    transform: scale(1.06);
-  }
+  .menu-btn:hover { background: #3d1784; transform: scale(1.06); }
   h1 {
-    color: #ff77a9;
-    font-size: 2rem;
-    margin-bottom: 2rem;
-    font-weight: bold;
-    letter-spacing: 0.06em;
-    text-shadow: 1px 3px 9px #ffb3dd88;
-    user-select: none;
+    color: #ff77a9; font-size: 2rem; margin-bottom: 2rem; font-weight: bold;
+    letter-spacing: 0.06em; text-shadow: 1px 3px 9px #ffb3dd88; user-select: none;
   }
-
   .jogos-container {
-    display: grid;
-    grid-template-columns: repeat(2, 260px);
-    grid-gap: 28px 24px;
-    justify-content: center;
-    padding-bottom: 3rem;
-    width: 100%;
-    max-width: 580px;
+    display: grid; grid-template-columns: repeat(2, 260px); grid-gap: 28px 24px;
+    justify-content: center; padding-bottom: 3rem; width: 100%; max-width: 580px;
   }
   .jogo-card {
-    background: rgba(255,255,255,0.97);
-    border-radius: 22px;
+    background: rgba(255,255,255,0.97); border-radius: 22px;
     box-shadow: 0 9px 36px rgba(70,70,120,0.14), 0 1.5px 16px #fc9ce799;
-    font-weight: bold;
-    color: #4dabf7;
-    text-decoration: none;
-    padding: 2.2rem 1rem 1.2rem 1rem;
-    transition: transform 0.35s, box-shadow 0.38s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.18rem;
-    cursor: pointer;
-    user-select: none;
-    border: 3px solid #fff3a3;
-    min-height: 100px;
-    box-sizing: border-box;
-    user-select: none;
+    font-weight: bold; color: #4dabf7; text-decoration: none;
+    padding: 2.2rem 1rem 1.2rem 1rem; transition: transform 0.35s, box-shadow 0.38s;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-size: 1.18rem; cursor: pointer; border: 3px solid #fff3a3;
+    min-height: 100px; box-sizing: border-box; user-select: none;
   }
   .jogo-card:hover {
     transform: scale(1.08) rotate(-3deg);
     box-shadow: 0 15px 48px #ff77a9bb, 0 4px 20px #ffd23fdc;
-    background: #ffe9fb;
-    color: #fb4177;
+    background: #ffe9fb; color: #fb4177;
   }
-  .jogo-emoji {
-    font-size: 2.3rem;
-    margin-bottom: 0.7rem;
-    user-select: none;
-  }
+  .jogo-emoji { font-size: 2.3rem; margin-bottom: 0.7rem; }
 
   @media (max-width:480px) {
-    .jogos-container {
-      grid-template-columns: 1fr;
-      max-width: 90vw;
-      gap: 20px 12px;
-    }
-    .jogo-card {
-      min-height: 84px;
-      font-size: 1.07rem;
-      padding: 1.75rem 0.8rem 1rem 0.8rem;
-    }
-    .jogo-emoji {
-      font-size: 1.9rem;
-    }
+    .jogos-container { grid-template-columns: 1fr; max-width: 90vw; gap: 20px 12px; }
+    .jogo-card { min-height: 84px; font-size: 1.07rem; padding: 1.75rem 0.8rem 1rem 0.8rem; }
+    .jogo-emoji { font-size: 1.9rem; }
+    #musikids-player-card { top: auto; bottom: 15px; right: 15px; }
   }
 </style>
 </head>
 <body>
-  <a href="../index.html" class="menu-btn">🏠 Menu Principal</a>
-  <h1>🎮 Encontre seu Jogo Favorito!</h1>
-  <div class="jogos-container">
+
+<div id="musikids-player-card">
+    <span class="player-label">Música</span>
+    <div class="player-controls">
+        <button class="player-btn" onclick="playPrev()">⏮️</button>
+        <button class="player-btn" onclick="toggleMusic()" id="play-pause-btn">▶️</button>
+        <button class="player-btn" onclick="playNext()">⏭️</button>
+        <button class="player-btn" onclick="playRandom()">🔀</button>
+    </div>
+</div>
+<div style="position: absolute; left: -9999px;"><div id="yt-audio-element"></div></div>
+
+<a href="../index.html" class="menu-btn">🏠 Menu Principal</a>
+<h1>🎮 Encontre seu Jogo Favorito!</h1>
+
+<div class="jogos-container">
     <a href="letrinhas/index.html" class="jogo-card"><span class="jogo-emoji">✏️</span>Jogo das Letrinhas</a>
     <a href="continhas/index.html" class="jogo-card"><span class="jogo-emoji">➕</span>Jogo das Continhas</a>
     <a href="velha/index.html" class="jogo-card"><span class="jogo-emoji">❌⭕</span>Jogo da Velha</a>
@@ -127,6 +114,81 @@
     <a href="memoria/index.html" class="jogo-card"><span class="jogo-emoji">🃏</span>Jogo da Memória</a>
     <a href="labirinto/index.html" class="jogo-card"><span class="jogo-emoji">🏞️</span>Jogo do Labirinto</a>
     <a href="encaixe/index.html" class="jogo-card"><span class="jogo-emoji">🟦🟧🟩</span>Arrastar e Soltar Formas</a>
-  </div>
+</div>
+
+<script src="../js/musicas_data.js"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+    let player;
+    let currentIndex = parseInt(sessionStorage.getItem('musi_index')) || 0;
+
+    function onYouTubeIframeAPIReady() {
+        const savedTime = parseFloat(sessionStorage.getItem('musi_time')) || 0;
+        const isPlaying = sessionStorage.getItem('musi_playing') === 'true';
+
+        player = new YT.Player('yt-audio-element', {
+            height: '1', width: '1',
+            videoId: listaMusicasIds[currentIndex],
+            playerVars: { 'start': Math.floor(savedTime), 'autoplay': isPlaying ? 1 : 0 },
+            events: {
+                'onReady': (event) => {
+                    if (isPlaying) {
+                        event.target.playVideo();
+                        updatePlayStatus(true);
+                    }
+                },
+                'onStateChange': (e) => {
+                    if(e.data === 1) sessionStorage.setItem('musi_playing', 'true');
+                    if(e.data === 2) sessionStorage.setItem('musi_playing', 'false');
+                    if(e.data === 0) playNext();
+                }
+            }
+        });
+
+        setInterval(() => {
+            if (player && player.getCurrentTime) {
+                sessionStorage.setItem('musi_time', player.getCurrentTime());
+                sessionStorage.setItem('musi_index', currentIndex);
+            }
+        }, 1000);
+    }
+
+    function updatePlayStatus(playing) {
+        const btn = document.getElementById('play-pause-btn');
+        if(btn) btn.innerText = playing ? "⏸" : "▶️";
+    }
+
+    function toggleMusic() {
+        if (player.getPlayerState() === 1) {
+            player.pauseVideo();
+            updatePlayStatus(false);
+        } else {
+            player.playVideo();
+            updatePlayStatus(true);
+        }
+    }
+
+    function playNext() {
+        currentIndex = (currentIndex + 1) % listaMusicasIds.length;
+        sessionStorage.setItem('musi_time', 0);
+        player.loadVideoById(listaMusicasIds[currentIndex]);
+        updatePlayStatus(true);
+    }
+
+    function playPrev() {
+        currentIndex = (currentIndex - 1 + listaMusicasIds.length) % listaMusicasIds.length;
+        sessionStorage.setItem('musi_time', 0);
+        player.loadVideoById(listaMusicasIds[currentIndex]);
+        updatePlayStatus(true);
+    }
+
+    function playRandom() {
+        currentIndex = Math.floor(Math.random() * listaMusicasIds.length);
+        sessionStorage.setItem('musi_time', 0);
+        player.loadVideoById(listaMusicasIds[currentIndex]);
+        updatePlayStatus(true);
+    }
+</script>
+
 </body>
 </html>
