@@ -170,21 +170,47 @@
 <script src="js/musicas_data.js"></script>
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
-    let currentIndex = 0; 
+    let currentIndex = parseInt(sessionStorage.getItem('musi_index')) || 0; 
     let player;
 
     function onYouTubeIframeAPIReady() {
+        const savedTime = parseFloat(sessionStorage.getItem('musi_time')) || 0;
+        const isPlaying = sessionStorage.getItem('musi_playing') === 'true';
+
         player = new YT.Player('yt-audio-element', {
             height: '1', width: '1', videoId: listaMusicasIds[currentIndex],
+            playerVars: { 
+                'start': Math.floor(savedTime), 
+                'autoplay': isPlaying ? 1 : 0 
+            },
             events: { 
-                'onStateChange': (e) => { if(e.data === 0) playNext(); },
+                'onReady': (event) => {
+                    if (isPlaying) {
+                        event.target.playVideo();
+                        updatePlayButton(true);
+                    }
+                },
+                'onStateChange': (e) => { 
+                    if(e.data === 1) sessionStorage.setItem('musi_playing', 'true');
+                    if(e.data === 2) sessionStorage.setItem('musi_playing', 'false');
+                    if(e.data === 0) playNext(); 
+                },
                 'onError': () => { playNext(); } 
             }
         });
+
+        // SALVA O TEMPO A CADA 1 SEGUNDO
+        setInterval(() => {
+            if (player && player.getCurrentTime) {
+                sessionStorage.setItem('musi_time', player.getCurrentTime());
+                sessionStorage.setItem('musi_index', currentIndex);
+            }
+        }, 1000);
     }
 
     function updatePlayButton(isPlaying) {
-        document.getElementById('play-pause-btn').innerText = isPlaying ? "⏸" : "▶️";
+        const btn = document.getElementById('play-pause-btn');
+        if(btn) btn.innerText = isPlaying ? "⏸" : "▶️";
     }
 
     function toggleMusic() {
@@ -200,18 +226,21 @@
 
     function playNext() {
         currentIndex = (currentIndex + 1) % listaMusicasIds.length;
+        sessionStorage.setItem('musi_time', 0);
         player.loadVideoById(listaMusicasIds[currentIndex]);
         updatePlayButton(true);
     }
 
     function playPrev() {
         currentIndex = (currentIndex - 1 + listaMusicasIds.length) % listaMusicasIds.length;
+        sessionStorage.setItem('musi_time', 0);
         player.loadVideoById(listaMusicasIds[currentIndex]);
         updatePlayButton(true);
     }
 
     function playRandom() {
         currentIndex = Math.floor(Math.random() * listaMusicasIds.length);
+        sessionStorage.setItem('musi_time', 0);
         player.loadVideoById(listaMusicasIds[currentIndex]);
         updatePlayButton(true);
     }
