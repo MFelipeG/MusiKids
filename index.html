@@ -170,21 +170,25 @@
 <script src="js/musicas_data.js"></script>
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
-    let currentIndex = parseInt(sessionStorage.getItem('musi_index')) || 0; 
     let player;
+    let currentIndex = parseInt(sessionStorage.getItem('musi_index')) || 0; 
 
     function onYouTubeIframeAPIReady() {
         const savedTime = parseFloat(sessionStorage.getItem('musi_time')) || 0;
         const isPlaying = sessionStorage.getItem('musi_playing') === 'true';
 
         player = new YT.Player('yt-audio-element', {
-            height: '1', width: '1', videoId: listaMusicasIds[currentIndex],
+            height: '1', width: '1', 
+            videoId: listaMusicasIds[currentIndex],
             playerVars: { 
-                'start': Math.floor(savedTime), 
                 'autoplay': isPlaying ? 1 : 0 
             },
             events: { 
                 'onReady': (event) => {
+                    // AQUI ESTÁ A CORREÇÃO: Força o pulo para o tempo salvo
+                    if (savedTime > 0) {
+                        event.target.seekTo(savedTime, true);
+                    }
                     if (isPlaying) {
                         event.target.playVideo();
                         updatePlayButton(true);
@@ -199,7 +203,7 @@
             }
         });
 
-        // SALVA O TEMPO A CADA 1 SEGUNDO
+        // O RELÓGIO QUE VOCÊ TINHA, MANTIDO IGUAL
         setInterval(() => {
             if (player && player.getCurrentTime) {
                 sessionStorage.setItem('musi_time', player.getCurrentTime());
@@ -253,7 +257,7 @@
             document.body.classList.remove('theme-boy'); 
             localStorage.setItem('musi-theme', 'menina'); 
         }
-        if(player) { 
+        if(player && player.playVideo) { 
             player.playVideo(); 
             updatePlayButton(true);
         }
