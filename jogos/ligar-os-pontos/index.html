@@ -6,6 +6,19 @@
 <title>Musikids Fun - Jogo de Ligar Imagens</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+  <div id="musikids-player-card">
+    <span class="player-label">Música</span>
+    <div class="player-controls">
+        <button class="player-btn" onclick="playPrev()">⏮️</button>
+        <button class="player-btn" onclick="toggleMusic()" id="play-pause-btn">▶️</button>
+        <button class="player-btn" onclick="playNext()">⏭️</button>
+        <button class="player-btn" onclick="playRandom()">🔀</button>
+    </div>
+</div>
+<div style="position: absolute; left: -9999px;"><div id="yt-audio-element"></div></div>
+
+<script src="../js/musicas_data.js"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
   body {
     margin: 0; padding: 0;
     font-family: 'Baloo 2', cursive, Arial, sans-serif;
