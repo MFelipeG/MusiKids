@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>MusiKids Fun - Aprender Brincando</title>
     <link rel="manifest" href="manifest.json">
     
@@ -17,12 +17,19 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700;800&display=swap');
         
-        * {
+        /* Correções globais para eliminar scroll horizontal */
+        html, body {
             margin: 0;
             padding: 0;
+            width: 100%;
+            overflow-x: hidden;
             box-sizing: border-box;
         }
-        
+
+        * {
+            box-sizing: border-box;
+        }
+
         :root {
             --primary-color: #FF77A9;
             --secondary-color: #FF4C8B;
@@ -35,314 +42,265 @@
             --bg-gradient: linear-gradient(135deg, #C1DFFF 0%, #C8E1FE 50%, #91B2D2 100%);
         }
 
-        html {
-            overflow-x: hidden;
-            max-width: 100%;
-        }
-
         body {
-            font-family: 'Baloo 2', cursive; 
+            font-family: 'Baloo 2', cursive;
             background: var(--bg-gradient);
-            transition: background 0.5s ease; 
-            color: #333; 
+            transition: background 0.5s ease;
+            color: #333;
             text-align: center;
-            min-height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            overflow-x: hidden;
-            max-width: 100vw;
-            position: relative;
         }
 
         header {
-            background: var(--primary-color); 
-            padding: 2rem 1rem; 
+            background: var(--primary-color);
+            padding: 2rem 1.5rem;
             color: white;
-            font-size: 2.8rem; 
-            font-weight: 800; 
+            font-size: 2.8rem;
+            font-weight: 800;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 100%;
         }
 
-        /* --- PLAYER FLUTUANTE À DIREITA --- */
+        /* PLAYER FLUTUANTE */
         #musikids-player-card {
-            background: white; 
-            padding: 8px 18px; 
-            display: flex; 
-            align-items: center; 
+            background: white;
+            padding: 8px 18px;
+            display: flex;
+            align-items: center;
             gap: 12px;
-            border: 4px solid var(--primary-color); 
+            border: 4px solid var(--primary-color);
             border-radius: 50px;
-            position: fixed; 
-            top: 20px; 
-            right: 20px; 
+            position: fixed;
+            top: 20px;
+            right: 20px;
             z-index: 2000;
             box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-            max-width: calc(100vw - 40px);
-        }
-        .player-controls { display: flex; gap: 8px; align-items: center; }
-        .player-btn {
-            background: var(--primary-color); 
-            border: none; 
-            color: white;
-            width: 35px; 
-            height: 35px; 
-            border-radius: 50%; 
-            cursor: pointer;
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 14px;
-            flex-shrink: 0;
-        }
-        .player-label { 
-            font-weight: 800; 
-            color: var(--secondary-color); 
-            font-size: 0.8rem;
-            white-space: nowrap;
         }
 
+        .player-controls { display: flex; gap: 8px; align-items: center; }
+        .player-btn {
+            background: var(--primary-color);
+            border: none;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        .player-label { font-weight: 800; color: var(--secondary-color); font-size: 0.8rem; }
+
         .welcome-text {
-            max-width: 800px; 
-            margin: 3rem 1rem 1.5rem 1rem; 
-            padding: 0 1rem;
-            font-size: 1.2rem; 
+            max-width: 800px;
+            margin: 3rem auto 1.5rem auto;
+            padding: 0 20px;
+            font-size: 1.2rem;
             line-height: 1.6;
         }
 
-        .gender-selector { 
-            display: flex; 
-            justify-content: center; 
-            gap: 15px; 
+        .gender-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
             margin-bottom: 30px;
-            padding: 0 1rem;
             flex-wrap: wrap;
         }
+
         .gender-selector button {
-            border: none; 
-            padding: 12px 24px; 
-            border-radius: 30px; 
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
             font-weight: bold;
-            cursor: pointer; 
-            color: white; 
-            font-family: 'Baloo 2'; 
+            cursor: pointer;
+            color: white;
+            font-family: 'Baloo 2';
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             transition: transform 0.2s;
+            min-width: 140px;
         }
+
         .gender-selector button:hover { transform: scale(1.05); }
-        .btn-menina { background: #FF77A9; } 
+        .btn-menina { background: #FF77A9; }
         .btn-menino { background: #4CA9FF; }
 
         main { 
             flex: 1; 
-            padding: 1rem; 
+            padding: 1rem 0; 
             width: 100%; 
             max-width: 1200px; 
         }
-        .cards-container { 
-            display: flex; 
-            justify-content: center; 
-            gap: 2rem; 
+
+        .cards-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
             flex-wrap: wrap;
-            padding: 0 1rem;
+            margin-bottom: 3rem;
         }
+
         .card {
-            background: white; 
-            border-radius: 30px; 
-            width: 100%;
-            max-width: 280px; 
+            background: white;
+            border-radius: 30px;
+            width: 280px;
             padding: 30px;
-            text-decoration: none; 
-            color: inherit; 
+            text-decoration: none;
+            color: inherit;
             transition: 0.3s;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08); 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
             border: 3px solid transparent;
         }
+
         .card:hover { transform: translateY(-10px); border-color: var(--primary-color); }
         .card-icon { font-size: 5rem; display: block; margin-bottom: 15px; }
         .card h2 { color: var(--secondary-color); font-size: 2rem; margin: 10px 0; }
 
-        .social-section { 
-            padding: 50px 1rem; 
+        .social-section {
+            padding: 20px;
             width: 100%;
-            max-width: 100%;
+            margin: 2rem 0 3rem 0;
         }
-        .social-section h3 {
-            margin-bottom: 20px;
-        }
-        .social-links { 
-            display: flex; 
-            justify-content: center; 
-            gap: 20px; 
-            flex-wrap: wrap;
-            padding: 0 1rem;
-        }
-        .social-link {
-            background: white; 
-            padding: 20px; 
-            border-radius: 20px; 
-            text-decoration: none;
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            width: 110px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1); 
-            transition: 0.2s;
-        }
-        .social-link span { font-weight: 800; font-size: 13px; margin-top: 8px; }
 
-        footer { 
-            background: var(--primary-color); 
-            color: white; 
-            padding: 40px 1rem; 
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            background: white;
+            padding: 16px;
+            border-radius: 24px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90px;
+            min-width: 80px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.25s ease;
+        }
+
+        .social-link:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .social-link svg {
+            width: 40px;
+            height: 40px;
+        }
+
+        .social-link span {
+            font-weight: 800;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        footer {
+            background: var(--primary-color);
+            color: white;
+            padding: 40px 20px;
             width: 100%;
-            max-width: 100%;
-            margin-top: auto; 
+            margin-top: auto;
         }
-        .footer-links { margin-top: 15px; }
-        .footer-links a { 
-            color: white; 
-            text-decoration: none; 
-            margin: 0 10px; 
-            font-weight: 600; 
+
+        .footer-links {
+            margin-top: 15px;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 10px;
+            font-weight: 600;
             font-size: 0.9rem;
-            display: inline-block;
         }
+
         .footer-links a:hover { text-decoration: underline; }
 
         #share-btn {
-            position: fixed; 
-            bottom: 25px; 
-            right: 25px; 
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
             background: var(--primary-color);
-            color: white; 
-            border: none; 
-            width: 65px; 
-            height: 65px; 
+            color: white;
+            border: none;
+            width: 65px;
+            height: 65px;
             border-radius: 50%;
-            font-size: 28px; 
-            cursor: pointer; 
-            box-shadow: 0 6px 20px rgba(0,0,0,0.25); 
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.25);
             z-index: 998;
         }
 
-        @media (max-width: 768px) {
-            header {
-                font-size: 1.6rem;
-                padding: 1.2rem 0.5rem;
-            }
-
-            .welcome-text {
-                font-size: 1rem;
-                margin: 1.5rem 0.5rem 1rem 0.5rem;
-                padding: 0 0.5rem;
-            }
-
-            .gender-selector {
-                gap: 10px;
-                padding: 0 0.5rem;
-            }
-
-            .gender-selector button {
-                padding: 10px 20px;
-                font-size: 0.9rem;
-            }
-
+        /* RESPONSIVIDADE - agora com proteção contra overflow */
+        @media only screen and (max-width: 768px) {
+            header { font-size: 2.1rem; padding: 1.4rem 1rem; }
+            .welcome-text { font-size: 1.05rem; padding: 0 18px; margin: 2rem auto 1.2rem; }
+            
             .cards-container {
+                flex-direction: column;
+                align-items: center;
                 gap: 1.5rem;
-                padding: 0 0.5rem;
+                padding: 0 10px;
+                margin-bottom: 2rem;
             }
 
             .card {
-                max-width: 100%;
-                padding: 25px;
+                width: 90vw !important;
+                max-width: 320px;
+                margin: 0 auto;
+                padding: 24px 18px;
             }
 
-            .card-icon {
-                font-size: 4rem;
-            }
-
-            .card h2 {
-                font-size: 1.6rem;
-            }
-
-            .social-section {
-                padding: 30px 0.5rem;
-            }
-
-            .social-section h3 {
-                font-size: 1.3rem;
-                padding: 0 0.5rem;
-            }
-
-            .social-links {
-                gap: 15px;
-                padding: 0 0.5rem;
-            }
-
-            .social-link {
-                width: 90px;
-                padding: 15px;
-            }
-
-            footer {
-                padding: 30px 0.5rem;
-                font-size: 0.9rem;
-            }
-
-            .footer-links {
-                display: flex;
-                flex-direction: column;
-                gap: 8px;
-                line-height: 1.8;
-            }
-
-            .footer-links a {
-                margin: 0;
-            }
-
-            #share-btn {
-                width: 55px;
-                height: 55px;
-                font-size: 24px;
-                bottom: 20px;
-                right: 20px;
-            }
-
+            .card-icon { font-size: 4.2rem; }
+            .card h2 { font-size: 1.9rem; }
+            
             #musikids-player-card {
                 top: 10px;
-                right: 10px;
-                padding: 5px 10px;
-                gap: 6px;
-                max-width: calc(100vw - 20px);
+                right: 8px;
+                padding: 6px 14px;
+                gap: 8px;
+                transform: scale(0.88);
+                transform-origin: top right;
+                border-width: 3px;
+                max-width: 85vw;
             }
-
-            .player-btn {
-                width: 28px;
-                height: 28px;
-                font-size: 11px;
-            }
-
-            .player-label {
-                font-size: 0.65rem;
-            }
+            
+            .player-btn { width: 34px; height: 34px; font-size: 13px; }
+            
+            .gender-selector { gap: 12px; }
+            .gender-selector button { padding: 11px 22px; font-size: 0.98rem; min-width: 140px; }
+            
+            .social-section { margin: 1.5rem 0 2.5rem 0; padding: 0 10px; }
+            .social-link { width: 85px; padding: 14px; }
+            .social-link svg { width: 38px; height: 38px; }
+            .social-link span { font-size: 11.5px; }
+            
+            #share-btn { width: 58px; height: 58px; font-size: 25px; bottom: 18px; right: 18px; }
         }
 
-        @media (max-width: 480px) {
-            header {
-                font-size: 1.4rem;
-                padding: 1rem 0.5rem;
-            }
-
-            .welcome-text {
-                font-size: 0.95rem;
-            }
-
-            .card {
-                padding: 20px 15px;
-            }
+        @media only screen and (max-width: 480px) {
+            header { font-size: 1.8rem; }
+            .card { width: 94vw !important; padding: 20px 15px; }
+            .card-icon { font-size: 3.8rem; }
+            .gender-selector button { padding: 10px 20px; font-size: 0.95rem; min-width: 130px; }
+            .social-link { width: 80px; padding: 12px; }
+            .social-link svg { width: 36px; height: 36px; }
+            .social-link span { font-size: 11px; }
+            #musikids-player-card { transform: scale(0.82); right: 6px; }
         }
     </style>
 </head>
@@ -381,15 +339,15 @@
         <h3>Siga-nos nas Redes Sociais</h3>
         <div class="social-links">
             <a href="https://www.youtube.com/@musikidschannel" target="_blank" class="social-link">
-                <svg viewBox="0 0 24 24" width="35" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                <svg viewBox="0 0 24 24" width="40" fill="#FF0000"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                 <span style="color:#FF0000">YouTube</span>
             </a>
-            <a href="intent://instagram.com/_u/musikids_channel/#Intent;scheme=https;package=com.instagram.android;end" target="_blank" class="social-link" onclick="openInstagram(event)">
-                <svg viewBox="0 0 24 24" width="35" fill="#E4405F"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849s-.011 3.585-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.849-.07c-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849s.012-3.584.07-4.849c.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.668-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+            <a href="https://www.instagram.com/musikids_channel/" target="_blank" class="social-link">
+                <svg viewBox="0 0 24 24" width="40" fill="#E4405F"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849s-.011 3.585-.069 4.85c-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07s-3.584-.012-4.849-.07c-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849s.012-3.584.07-4.849c.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.668-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
                 <span style="color:#E4405F">Instagram</span>
             </a>
             <a href="https://www.tiktok.com/@musikids.channel" target="_blank" class="social-link">
-                <svg viewBox="0 0 24 24" width="35" fill="#000000"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+                <svg viewBox="0 0 24 24" width="40" fill="#000000"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
                 <span style="color:#000000">TikTok</span>
             </a>
         </div>
@@ -412,20 +370,6 @@
 <script src="js/musicas_data.js"></script>
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
-    // FUNÇÃO PARA ABRIR INSTAGRAM
-    function openInstagram(e) {
-        e.preventDefault();
-        const username = 'musikids_channel';
-        
-        // Tenta abrir no app do Instagram
-        window.location.href = `instagram://user?username=${username}`;
-        
-        // Fallback para o navegador após 1 segundo
-        setTimeout(function() {
-            window.open(`https://www.instagram.com/${username}/`, '_blank');
-        }, 1000);
-    }
-
     let currentIndex = parseInt(sessionStorage.getItem('musi_index')) || 0; 
     let player;
 
@@ -455,7 +399,6 @@
             }
         });
 
-        // SALVA O TEMPO A CADA 1 SEGUNDO
         setInterval(() => {
             if (player && player.getCurrentTime) {
                 sessionStorage.setItem('musi_time', player.getCurrentTime());
