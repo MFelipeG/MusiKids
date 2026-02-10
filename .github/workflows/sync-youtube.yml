@@ -17,7 +17,8 @@ jobs:
           python-version: '3.x'
       
       - name: Install dependencies
-        run: pip install feedparser
+        # CORREÇÃO AQUI: Instalando as ferramentas para a API e o tempo (isodate)
+        run: pip install requests isodate
       
       - name: Fetch and Update Videos
         run: python scripts/update_videos.py
@@ -26,10 +27,9 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-          # Adiciona os dois arquivos que o seu script Python altera
+          # Garante que ambos os arquivos atualizados sejam salvos
           git add js/musicas_data.js
           git add musicas/index.html
-          # Verifica se houve mudanças e faz o commit
-          git diff --quiet && git diff --staged --quiet || git commit -m "🎵 Auto-update: Player e Cards atualizados"
+          git diff --quiet && git diff --staged --quiet || git commit -m "🎵 Auto-update: Filtro 50 vídeos > 60s"
           git push
           
