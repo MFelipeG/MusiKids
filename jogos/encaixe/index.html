@@ -2,340 +2,232 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Arraste as Formas - Geometria Kids Fun</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+<title>Geometria Kids Fun</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@700&family=Luckiest+Guy&display=swap');
-
-:root {
-  --neon-pink: #ff71ce;
-  --neon-yellow: #fdf200;
-  --neon-blue: #01cdfe;
-  --neon-purple: #7c4dff;
-  --soft-bg: #f7f4e9;
-}
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Luckiest+Guy&display=swap');
 
 body {
-  margin: 0; padding: 0;
-  min-height: 100vh;
-  font-family: 'Baloo 2', cursive, Arial, sans-serif;
-  background: linear-gradient(135deg, var(--soft-bg), #f8b500, var(--neon-pink) 100%);
-  color: #32434a;
-  user-select: none;
+  margin: 0; padding: 0; min-height: 100vh;
+  font-family: 'Baloo 2', cursive;
+  background: linear-gradient(135deg, #f7f4e9, #f8b500, #ff71ce 100%);
+  display: flex; flex-direction: column; align-items: center;
   overflow-x: hidden;
-  text-align: center;
 }
 
-/* Formas Decorativas de Fundo */
-.bg-shape {
-  position: fixed;
-  z-index: -1;
-  opacity: 0.2;
-  animation: floatBG 25s infinite linear;
+/* --- PLAYER MUSIKIDS --- */
+#musikids-player-card {
+  background: white; padding: 6px 15px; display: flex; align-items: center; gap: 10px;
+  border: 3px solid #FF77A9; border-radius: 50px; position: fixed; top: 10px; right: 10px; 
+  z-index: 10001; box-shadow: 0 4px 15px rgba(0,0,0,0.15);
 }
-
-@keyframes floatBG {
-  0% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-100px) rotate(180deg); }
-  100% { transform: translateY(0) rotate(360deg); }
+.player-controls { display: flex; gap: 6px; align-items: center; }
+.player-btn {
+  background: #FF77A9; border: none; color: white; width: 30px; height: 30px; 
+  border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
 }
+.player-label { font-weight: 800; color: #FF4C8B; font-size: 0.8rem; }
+.btn-shuffle.active { background: #21a7ff !important; }
 
 #btn-menu {
-  position: fixed;
-  top: 18px; left: 18px;
-  background: var(--neon-purple);
-  color: white;
-  border-radius: 18px;
-  padding: 12px 25px;
-  font-weight: 900;
-  font-size: 1.1rem;
-  box-shadow: 4px 4px 0px #4b2cb3;
-  border: none;
-  z-index: 10000;
-  cursor: pointer;
-  transition: 0.2s;
-}
-#btn-menu:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #4b2cb3; }
-
-.header-area { margin-top: 84px; margin-bottom: 20px; }
-
-.site-title {
-  font-family: 'Luckiest Guy', cursive;
-  font-size: 2.8rem;
-  color: white;
-  text-shadow: 4px 4px 0px var(--neon-pink), 8px 8px 20px rgba(0,0,0,0.2);
-  margin-bottom: 10px;
+  position: fixed; top: 10px; left: 10px; background: #7c4dff; color: white;
+  border-radius: 15px; padding: 8px 15px; font-weight: 900; border: none; z-index: 10000;
+  cursor: pointer; box-shadow: 0 4px 0 #4b2cb3;
 }
 
-.instructions-title {
-  font-size: 1.3rem;
-  color: #595bc3;
-  background: rgba(255,255,255,0.6);
-  display: inline-block;
-  padding: 5px 20px;
-  border-radius: 20px;
-  font-weight: 700;
-}
+.header-area { margin-top: 80px; text-align: center; }
+.site-title { font-family: 'Luckiest Guy'; font-size: 2.5rem; color: white; text-shadow: 3px 3px 0 #ff71ce; margin: 0; }
 
 #game-container {
-  max-width: 900px;
-  margin: 0 auto 40px;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  border-radius: 40px;
-  border: 6px solid white;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.1);
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  width: 90%; max-width: 600px; background: rgba(255,255,255,0.9); border-radius: 30px;
+  padding: 20px; margin: 20px auto; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  display: block !important; position: relative;
 }
 
-#shapes-row, #drop-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 25px;
-  justify-content: center;
-  margin: 20px 0;
+.row { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin: 20px 0; min-height: 100px; }
+
+.shape-draggable, .drop-zone {
+  width: 85px; height: 85px; border-radius: 18px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
 }
 
-.shape-draggable {
-  width: 100px; height: 100px;
-  background: white;
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: grab;
-  box-shadow: 0 8px 0px rgba(0,0,0,0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
-  position: relative;
-}
-.shape-draggable:hover { transform: scale(1.05) translateY(-5px); }
-.shape-draggable.selected { border: 4px solid var(--neon-purple); box-shadow: 0 0 20px var(--neon-purple); }
+.shape-draggable { background: white; cursor: grab; box-shadow: 0 5px 0 #ddd; transition: 0.2s; }
+.shape-draggable.selected { border: 3px solid #7c4dff; transform: scale(1.05); }
 
-.shape-svg { width: 70px; height: 70px; pointer-events: none; }
-.shape-label { font-size: 14px; font-weight: bold; color: #444; margin-top: 2px; }
-
-.drop-zone {
-  width: 100px; height: 100px;
-  border: 4px dashed #ccc;
-  border-radius: 25px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0,0,0,0.03);
-  transition: all 0.3s;
-  position: relative;
-}
-.drop-zone.active { border-color: var(--neon-blue); background: rgba(1, 205, 254, 0.1); }
+.drop-zone { border: 3px dashed #bbb; background: rgba(0,0,0,0.03); position: relative; }
 .drop-zone.correct { border-style: solid; border-color: #a1d578; background: #f0fff0; }
 
-#result-text {
-  font-size: 1.5rem;
-  font-weight: 900;
-  color: #d63a6d;
-  margin-top: 20px;
-  min-height: 40px;
-}
+.shape-svg { width: 55px; height: 55px; pointer-events: none; }
+.shape-label { font-size: 11px; font-weight: bold; color: #444; margin-top: 4px; }
 
-#confetti-canvas {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  pointer-events: none;
-  z-index: 11000;
-}
+#result-text { font-size: 1.4rem; font-weight: 800; color: #d63a6d; margin: 15px; height: 35px; }
 
-@keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-8px); }
-  75% { transform: translateX(8px); }
-  100% { transform: translateX(0); }
-}
-
-@keyframes bounceSuccess {
-  0%, 100% { transform: scale(1) translate(-50%, -50%); }
-  50% { transform: scale(1.2) translate(-42%, -42%); }
-}
+/* --- CONFETES --- */
+#confetti-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+.confetti { position: absolute; width: 10px; height: 10px; animation: fall linear forwards; }
+@keyframes fall { to { transform: translateY(105vh) rotate(360deg); } }
 
 @media (max-width: 600px) {
-  .site-title { font-size: 1.8rem; }
-  #game-container { padding: 15px; width: 95%; }
-  .shape-draggable, .drop-zone { width: 75px; height: 75px; }
-  .shape-svg { width: 50px; height: 50px; }
-  .shape-label { font-size: 11px; }
+  #musikids-player-card { top: auto; bottom: 10px; right: 10px; scale: 0.85; }
+  .site-title { font-size: 2rem; }
 }
 </style>
 </head>
 <body>
 
-<svg class="bg-shape" style="top:10%; left:5%; width:80px;" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="#01cdfe"/></svg>
-<svg class="bg-shape" style="bottom:20%; right:5%; width:100px;" viewBox="0 0 100 100"><rect x="20" y="20" width="60" height="60" fill="#fdf200" transform="rotate(15)"/></svg>
-<svg class="bg-shape" style="top:40%; right:10%; width:60px;" viewBox="0 0 100 100"><polygon points="50,10 90,90 10,90" fill="#ff71ce"/></svg>
+<div id="confetti-wrapper"></div>
 
-<button id="btn-menu">MENU</button>
+<div id="musikids-player-card">
+    <span class="player-label">Música</span>
+    <div class="player-controls">
+        <button class="player-btn" onclick="playPrev()">⏮️</button>
+        <button class="player-btn" onclick="toggleMusic()" id="play-pause-btn">▶️</button>
+        <button class="player-btn" onclick="playNext()">⏭️</button>
+        <button class="player-btn btn-shuffle" onclick="toggleShuffle()" id="shuffle-btn">🔀</button>
+    </div>
+</div>
+<div style="position: absolute; left: -9999px;"><div id="yt-audio-element"></div></div>
+
+<button id="btn-menu" onclick="window.location.href='../index.html'">← MENU</button>
 
 <div class="header-area">
-  <div class="site-title">Geometria Kids Fun</div>
-  <div class="instructions-title">Encaixe as formas nos lugares certos! 🌟</div>
+  <h1 class="site-title">Geometria Kids</h1>
+  <p style="color:#595bc3; font-weight:bold; background:white; display:inline-block; padding:2px 12px; border-radius:15px;">Encaixe as formas! 🌟</p>
 </div>
 
 <div id="game-container">
-  <div id="shapes-row"></div>
-  <div id="drop-row"></div>
+  <div id="shapes-row" class="row"></div>
+  <div id="drop-row" class="row"></div>
   <div id="result-text"></div>
 </div>
 
-<canvas id="confetti-canvas"></canvas>
+<script src="../../js/musicas_data.js" onerror="console.log('Playlist não encontrada')"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
-// Ajuste do Botão Menu
-document.getElementById('btn-menu').onclick = function() {
-    window.location.href = '../index.html'; 
-};
+// --- PLAYER LOGIC ---
+let playerYT;
+let currentIndex = parseInt(sessionStorage.getItem('musi_index')) || 0;
+let isShuffle = sessionStorage.getItem('musi_shuffle') === 'true';
+const getPlaylist = () => (typeof listaMusicasIds !== 'undefined') ? listaMusicasIds : ['dQw4w9WgXcQ'];
 
-const formasGeometricas = [
-  { nome: 'square', label: 'Quadrado', cor: '#ff6b6b', svg: '<rect x="10" y="10" width="54" height="54" rx="10" />' },
-  { nome: 'circle', label: 'Círculo', cor: '#4ecdc4', svg: '<circle cx="37" cy="37" r="30" />' },
-  { nome: 'triangle', label: 'Triângulo', cor: '#45b7d1', svg: '<polygon points="37,10 10,65 64,65" />' },
-  { nome: 'rectangle', label: 'Retângulo', cor: '#96ceb4', svg: '<rect x="7" y="22" width="60" height="30" rx="8" />' },
-  { nome: 'star', label: 'Estrela', cor: '#feca57', svg: '<polygon points="37,5 46,30 72,30 51,46 59,71 37,56 15,71 23,46 2,30 28,30" />' },
-  { nome: 'pentagon', label: 'Pentágono', cor: '#ff9ff3', svg: '<polygon points="37,8 68,30 56,66 18,66 6,30" />' },
-  { nome: 'hexagon', label: 'Hexágono', cor: '#54a0ff', svg: '<polygon points="37,7 65,22 65,52 37,67 9,52 9,22" />' },
-  { nome: 'diamond', label: 'Losango', cor: '#5f27cd', svg: '<polygon points="37,5 67,37 37,69 7,37" />' }
+function onYouTubeIframeAPIReady() {
+    playerYT = new YT.Player('yt-audio-element', {
+        height: '0', width: '0',
+        videoId: getPlaylist()[currentIndex],
+        playerVars: { 'autoplay': sessionStorage.getItem('musi_playing') === 'true' ? 1 : 0 },
+        events: { 
+            'onReady': () => { if(isShuffle) document.getElementById('shuffle-btn').classList.add('active'); updatePlayBtn(); },
+            'onStateChange': (e) => { if(e.data === 0) playNext(); updatePlayBtn(); } 
+        }
+    });
+}
+function updatePlayBtn() { 
+    const btn = document.getElementById('play-pause-btn');
+    if(btn && playerYT?.getPlayerState) btn.innerText = playerYT.getPlayerState() === 1 ? "⏸️" : "▶️";
+}
+function toggleMusic() { 
+    if(!playerYT?.playVideo) return;
+    playerYT.getPlayerState() === 1 ? playerYT.pauseVideo() : playerYT.playVideo();
+    sessionStorage.setItem('musi_playing', playerYT.getPlayerState() !== 1);
+    setTimeout(updatePlayBtn, 200);
+}
+function playNext() { 
+    let list = getPlaylist();
+    currentIndex = isShuffle ? Math.floor(Math.random() * list.length) : (currentIndex + 1) % list.length;
+    playerYT?.loadVideoById(list[currentIndex]);
+    sessionStorage.setItem('musi_index', currentIndex);
+}
+function playPrev() {
+    let list = getPlaylist();
+    currentIndex = (currentIndex - 1 + list.length) % list.length;
+    playerYT?.loadVideoById(list[currentIndex]);
+    sessionStorage.setItem('musi_index', currentIndex);
+}
+function toggleShuffle() {
+    isShuffle = !isShuffle;
+    sessionStorage.setItem('musi_shuffle', isShuffle);
+    document.getElementById('shuffle-btn').classList.toggle('active');
+}
+
+// --- JOGO ---
+const formas = [
+  { id: 'q', n: 'Quadrado', c: '#ff6b6b', s: '<rect x="10" y="10" width="54" height="54" rx="8"/>' },
+  { id: 'c', n: 'Círculo', c: '#4ecdc4', s: '<circle cx="37" cy="37" r="30"/>' },
+  { id: 't', n: 'Triângulo', c: '#45b7d1', s: '<polygon points="37,10 10,65 64,65"/>' },
+  { id: 'r', n: 'Retângulo', c: '#96ceb4', s: '<rect x="5" y="20" width="64" height="34" rx="8"/>' },
+  { id: 's', n: 'Estrela', c: '#feca57', s: '<polygon points="37,5 46,30 72,30 51,46 59,71 37,56 15,71 23,46 2,30 28,30"/>' }
 ];
 
-let formasAtuais = [];
-let formaSelecionada = null;
+let selecionado = null;
 
-const shapesRow = document.getElementById('shapes-row');
-const dropRow = document.getElementById('drop-row');
-const resultText = document.getElementById('result-text');
-const canvas = document.getElementById('confetti-canvas');
-const ctx = canvas.getContext('2d');
+function iniciar() {
+  // Limpa confetes ao recomeçar
+  document.getElementById('confetti-wrapper').innerHTML = '';
+  
+  const baralhar = (a) => a.sort(() => Math.random() - 0.5);
+  const atual = baralhar([...formas]).slice(0, 4);
+  
+  const sRow = document.getElementById('shapes-row');
+  const dRow = document.getElementById('drop-row');
+  sRow.innerHTML = ''; dRow.innerHTML = '';
+  document.getElementById('result-text').textContent = "Vamos começar!";
 
-function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
-
-function criaJogo() {
-  formasAtuais = shuffle(formasGeometricas).slice(0, 4);
-  shapesRow.innerHTML = '';
-  dropRow.innerHTML = '';
-  resultText.textContent = 'Vamos começar!';
-
-  shuffle(formasAtuais).forEach(forma => {
-    const div = document.createElement('div');
-    div.className = 'shape-draggable';
-    div.draggable = true;
-    div.dataset.type = forma.nome;
-    div.innerHTML = `
-      <svg class="shape-svg" viewBox="0 0 74 74" fill="${forma.cor}">${forma.svg}</svg>
-      <div class="shape-label">${forma.label}</div>
-    `;
-
-    div.addEventListener('dragstart', (e) => {
-      e.dataTransfer.setData('text', forma.nome);
-      div.style.opacity = '0.4';
-    });
-    div.addEventListener('dragend', () => div.style.opacity = '1');
-    div.addEventListener('click', () => {
-      document.querySelectorAll('.shape-draggable').forEach(s => s.classList.remove('selected'));
-      formaSelecionada = div;
-      div.classList.add('selected');
-    });
-    shapesRow.appendChild(div);
+  atual.sort(() => Math.random() - 0.5).forEach(f => {
+    const el = document.createElement('div');
+    el.className = 'shape-draggable';
+    el.draggable = true;
+    el.innerHTML = `<svg class="shape-svg" viewBox="0 0 74 74" fill="${f.c}">${f.s}</svg><div class="shape-label">${f.n}</div>`;
+    el.onclick = () => {
+      document.querySelectorAll('.shape-draggable').forEach(x => x.classList.remove('selected'));
+      selecionado = { id: f.id, div: el, html: el.innerHTML };
+      el.classList.add('selected');
+    };
+    el.ondragstart = (e) => { selecionado = { id: f.id, div: el, html: el.innerHTML }; e.dataTransfer.setData('text', f.id); };
+    sRow.appendChild(el);
   });
 
-  shuffle(formasAtuais).forEach(forma => {
-    const zone = document.createElement('div');
-    zone.className = 'drop-zone';
-    zone.dataset.type = forma.nome;
-    zone.innerHTML = `<svg class="shape-svg" viewBox="0 0 74 74" fill="${forma.cor}" opacity="0.2">${forma.svg}</svg>`;
-
-    zone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      zone.classList.add('active');
-    });
-    zone.addEventListener('dragleave', () => zone.classList.remove('active'));
-    zone.addEventListener('drop', (e) => {
-      e.preventDefault();
-      const type = e.dataTransfer.getData('text');
-      handleMatch(type, zone);
-    });
-    zone.addEventListener('click', () => {
-      if(formaSelecionada) handleMatch(formaSelecionada.dataset.type, zone);
-    });
-    dropRow.appendChild(zone);
+  atual.sort(() => Math.random() - 0.5).forEach(f => {
+    const el = document.createElement('div');
+    el.className = 'drop-zone';
+    el.innerHTML = `<svg class="shape-svg" viewBox="0 0 74 74" fill="${f.c}" opacity="0.2">${f.s}</svg>`;
+    el.onclick = () => { if(selecionado) checar(selecionado.id, f.id, el); };
+    el.ondragover = (e) => e.preventDefault();
+    el.ondrop = (e) => { e.preventDefault(); checar(e.dataTransfer.getData('text'), f.id, el); };
+    dRow.appendChild(el);
   });
 }
 
-function handleMatch(draggedType, zone) {
-  if (draggedType === zone.dataset.type && !zone.classList.contains('correct')) {
-    const originalShape = document.querySelector(`.shape-draggable[data-type="${draggedType}"]`);
-    zone.classList.remove('active');
+function checar(dragId, dropId, zone) {
+  if (dragId === dropId && !zone.classList.contains('correct')) {
     zone.classList.add('correct');
-    zone.innerHTML = originalShape.innerHTML;
-    
-    const svg = zone.querySelector('svg');
-    svg.style.opacity = "1";
-    svg.style.position = "absolute";
-    svg.style.top = "50%";
-    svg.style.left = "50%";
-    svg.style.transform = "translate(-50%, -50%)";
-    svg.style.animation = "bounceSuccess 0.5s ease";
-
-    originalShape.style.visibility = 'hidden';
-    formaSelecionada = null;
-    checkWin();
-  } else {
-    zone.style.animation = 'shake 0.4s';
-    setTimeout(() => zone.style.animation = '', 400);
-  }
-}
-
-function checkWin() {
-  const correct = document.querySelectorAll('.drop-zone.correct').length;
-  if (correct === 4) {
-    resultText.textContent = "🌟 PARABÉNS! VOCÊ É DEMAIS! 🌟";
-    startConfetti();
-    setTimeout(criaJogo, 5000);
-  } else {
-    resultText.textContent = `Muito bem! Faltam ${4 - correct}...`;
-  }
-}
-
-// Lógica de Confete
-let particles = [];
-function startConfetti() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    particles = [];
-    for (let i = 0; i < 150; i++) {
-        particles.push({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height - canvas.height,
-            size: Math.random() * 10 + 5,
-            color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-            velocity: { x: (Math.random() - 0.5) * 5, y: Math.random() * 5 + 5 }
-        });
+    zone.innerHTML = selecionado.html;
+    selecionado.div.style.visibility = 'hidden';
+    selecionado = null;
+    if (document.querySelectorAll('.drop-zone.correct').length === 4) {
+      document.getElementById('result-text').textContent = "🌟 VOCÊ CONSEGUIU! 🌟";
+      lancarConfetes();
+      setTimeout(iniciar, 2000); // RECOMEÇO EM 2 SEGUNDOS
     }
-    animateConfetti();
+  }
 }
 
-function animateConfetti() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach((p, i) => {
-        p.x += p.velocity.x;
-        p.y += p.velocity.y;
-        ctx.fillStyle = p.color;
-        ctx.fillRect(p.x, p.y, p.size, p.size);
-        if (p.y > canvas.height) particles.splice(i, 1);
-    });
-    if (particles.length > 0) requestAnimationFrame(animateConfetti);
+function lancarConfetes() {
+  const wrapper = document.getElementById('confetti-wrapper');
+  const cores = ['#ff71ce', '#01cdfe', '#fdf200', '#7c4dff', '#a1d578'];
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.backgroundColor = cores[Math.floor(Math.random() * cores.length)];
+    c.style.animationDuration = (Math.random() * 2 + 1) + 's';
+    c.style.opacity = Math.random();
+    wrapper.appendChild(c);
+  }
 }
 
-window.onload = criaJogo;
+iniciar();
 </script>
 </body>
 </html>
