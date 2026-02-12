@@ -17,6 +17,21 @@
     user-select: none;
     overflow-x: hidden;
   }
+  
+  /* ESTILOS DO PLAYER (ADIÇÃO CIRÚRGICA) */
+  #musi-player-jogo {
+    position: fixed; top: 12px; right: 12px; z-index: 10001;
+    background: #fff; border: 3px solid #ff4c8b; border-radius: 50px;
+    display: flex; align-items: center; padding: 4px 12px;
+    box-shadow: 0 4px 15px rgba(255, 76, 139, 0.3); scale: 0.85;
+  }
+  .btn-musi-jogo {
+    background: #ff4c8b; border: none; color: white;
+    width: 32px; height: 32px; border-radius: 50%;
+    cursor: pointer; margin: 0 2px; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
   #menuButton {
     position: fixed;
     top: 12px;
@@ -203,10 +218,19 @@
       font-size: 1.6rem;
       margin: 19vw 0 12px 0;
     }
+    #musi-player-jogo { top: auto; bottom: 12px; right: 12px; scale: 0.75; }
   }
 </style>
 </head>
 <body>
+
+<div id="musi-player-jogo">
+    <button class="btn-musi-jogo" onclick="playPrev()">⏮️</button>
+    <button class="btn-musi-jogo" onclick="toggleMusic()" id="btn-play-pause-jogo">▶️</button>
+    <button class="btn-musi-jogo" onclick="playNext()">⏭️</button>
+</div>
+<div style="position: absolute; left: -9999px;"><div id="yt-player-bin"></div></div>
+
 <button id="menuButton" aria-label="Voltar para o menu de jogos">← Menu de Jogos</button>
 <div class="header-title">Jogo da Velha</div>
 <div id="config" role="region" aria-label="Configurações do jogo">
@@ -249,10 +273,73 @@
   <div id="board" role="grid" aria-label="Tabuleiro do jogo da velha"></div>
   <div id="message" role="alert" aria-live="polite"></div>
   <div id="controls" style="justify-content:center; max-width:430px; margin:0 auto; gap:0;">
-    <!-- Removido botões -->
-  </div>
+    </div>
 </div>
 <div id="confetti"></div>
+
+<script src="../../js/musicas_data.js"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+    let playerMusi;
+    let currentIndexMusi = parseInt(sessionStorage.getItem('musi_index')) || 0;
+
+    function onYouTubeIframeAPIReady() {
+        const savedTime = parseFloat(sessionStorage.getItem('musi_time')) || 0;
+        const isPlaying = sessionStorage.getItem('musi_playing') === 'true';
+
+        playerMusi = new YT.Player('yt-player-bin', {
+            height: '1', width: '1',
+            videoId: listaMusicasIds[currentIndexMusi],
+            playerVars: { 'autoplay': isPlaying ? 1 : 0, 'controls': 0 },
+            events: {
+                'onReady': (event) => {
+                    if (savedTime > 0) event.target.seekTo(savedTime, true);
+                    if (isPlaying) {
+                        event.target.playVideo();
+                        document.getElementById('btn-play-pause-jogo').innerText = "⏸";
+                    }
+                },
+                'onStateChange': (e) => {
+                    if(e.data === YT.PlayerState.ENDED) playNext();
+                }
+            }
+        });
+
+        setInterval(() => {
+            if (playerMusi && playerMusi.getCurrentTime) {
+                sessionStorage.setItem('musi_time', playerMusi.getCurrentTime());
+                sessionStorage.setItem('musi_index', currentIndexMusi);
+                sessionStorage.setItem('musi_playing', playerMusi.getPlayerState() === 1);
+            }
+        }, 1000);
+    }
+
+    function toggleMusic() {
+        const state = playerMusi.getPlayerState();
+        if (state === 1) {
+            playerMusi.pauseVideo();
+            document.getElementById('btn-play-pause-jogo').innerText = "▶️";
+        } else {
+            playerMusi.playVideo();
+            document.getElementById('btn-play-pause-jogo').innerText = "⏸";
+        }
+    }
+
+    function playNext() {
+        currentIndexMusi = (currentIndexMusi + 1) % listaMusicasIds.length;
+        sessionStorage.setItem('musi_time', 0);
+        playerMusi.loadVideoById(listaMusicasIds[currentIndexMusi]);
+        document.getElementById('btn-play-pause-jogo').innerText = "⏸";
+    }
+
+    function playPrev() {
+        currentIndexMusi = (currentIndexMusi - 1 + listaMusicasIds.length) % listaMusicasIds.length;
+        sessionStorage.setItem('musi_time', 0);
+        playerMusi.loadVideoById(listaMusicasIds[currentIndexMusi]);
+        document.getElementById('btn-play-pause-jogo').innerText = "⏸";
+    }
+</script>
+
 <script>
   document.getElementById('menuButton').onclick = function() {
     window.location.href = '../index.html';
