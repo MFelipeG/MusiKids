@@ -2,435 +2,314 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Jogo das Letrinhas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Jogo das Letrinhas - MusiKids Fun</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700;800&display=swap');
+
     body {
       font-family: 'Baloo 2', Arial, cursive, sans-serif;
       text-align: center;
       margin: 0;
-      padding: 0;
-      background: linear-gradient(120deg, #ff71ce 0%, #fdf200 45%, #01cdfe 100%);
+      padding: 1.5rem 0 .3rem 0;
+      background: linear-gradient(135deg,#f7f4e9,#f8b500,#ff7eb9 100%);
       min-height: 100vh;
+      color: #32434a;
+      overflow: hidden;
     }
-    h1 {
-      font-size: 32px;
-      margin: 28px 0 8px 0;
-      font-weight: bold;
-      color: #ff71ce;
-      text-shadow: 2px 3px 10px #71C9FF88;
+
+    /* --- PLAYER PADRÃO MARAVILHOSO --- */
+    #musikids-player-card {
+      background: white; padding: 8px 18px; display: flex; align-items: center; gap: 12px;
+      border: 4px solid #FF77A9; border-radius: 50px; position: fixed; top: 15px; right: 15px; 
+      z-index: 10001; box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     }
-    #menuButton {
-      position: fixed;
-      left: 10px;
-      top: 10px;
-      padding: 11px 18px;
-      font-size: 18px;
-      border: none;
-      border-radius: 10px;
-      background: linear-gradient(115deg, #7c4dff 60%, #ff4081 120%);
-      color: #fff;
-      cursor: pointer;
-      font-weight: 700;
-      box-shadow: 2px 2px 8px #7c4dffaa;
-      z-index: 1000;
+    .player-controls { display: flex; gap: 8px; align-items: center; }
+    .player-btn {
+      background: #FF77A9; border: none; color: white; width: 35px; height: 35px; 
+      border-radius: 50%; cursor: pointer; display: flex; align-items: center; 
+      justify-content: center; font-size: 14px;
     }
-    .menu {
-      margin: 70px 0 30px 0;
-      display: flex;
-      justify-content: center;
-      gap: 18px;
+    .player-label { font-weight: 800; color: #FF4C8B; font-size: 0.9rem; margin-right: 2px; }
+    .btn-shuffle.active { background: #21a7ff !important; }
+
+    /* --- BOTÃO VOLTAR --- */
+    #btn-menu {
+      position: fixed; top: 12px; left: 12px; z-index: 1000;
+      padding: 10px 20px; font-size: 1.1rem; border-radius: 9px; border: none;
+      background: linear-gradient(135deg, #ff007f, #21a7ff 110%);
+      color: #fff; font-family: 'Baloo 2', cursive; font-weight: bold;
+      box-shadow: 1px 3px 15px #21a7ff99; cursor: pointer; text-decoration: none;
     }
+
+    header { margin-top: 75px; font-weight: 900; font-size: 2.3rem; color: #d63a6d; margin-bottom: 10px; }
+
+    .menu { margin-bottom: 15px; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
     .menu button {
-      padding: 13px 27px;
-      font-size: 17px;
-      border: none;
-      border-radius: 20px;
-      font-weight: bold;
-      background: linear-gradient(120deg, #4CAF50 50%, #81c784 100%);
-      color: white;
-      cursor: pointer;
-      box-shadow: 2px 2px 8px #4caf5077;
-      letter-spacing: 1px;
-      transition: transform 0.2s;
+      padding: 8px 15px; font-size: 14px; border: none; border-radius: 15px;
+      font-weight: bold; background: #a1d578; color: #214d0d; cursor: pointer;
     }
-    .menu button:hover {
-      transform: scale(1.09) rotate(-3deg);
-      background: linear-gradient(120deg, #81c784 70%, #4CAF50 100%);
-    }
+    .menu button.active { background: #d63a6d; color: white; border: 2px solid white; }
+
     .game-container {
-      padding: 20px;
-      border-radius: 22px;
-      margin: 0 auto;
-      max-width: 370px;
-      background: rgba(248,248,255,0.94);
-      box-shadow: 0 8px 32px #71C9FF55;
+      padding: 15px; border-radius: 28px; margin: 0 auto; max-width: 90%;
+      background: rgba(255, 255, 255, 0.94); box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      display: inline-block; position: relative; z-index: 10;
     }
-    #wordToCopy {
-      font-size: 24px;
-      margin: 14px 0 18px 0;
-      font-weight: 900;
-      color: #333;
-      text-transform: capitalize; /* Deixa a primeira letra maiúscula visualmente */
-    }
-    #letterBank, #dropZone {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 11px;
-      margin: 14px 0 18px 0;
-      min-height: 60px; /* Garante altura mesmo vazio */
-    }
+
+    #wordToCopy { font-size: 32px; margin: 5px 0; font-weight: 900; color: #d63a6d; text-transform: uppercase; letter-spacing: 3px; }
+
+    #letterBank, #dropZone { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 15px 0; min-height: 55px; }
+
     .letter {
-      padding: 15px 19px;
-      background: linear-gradient(135deg,#ffe082 10%,#ffeb3b 90%);
-      border: 3px solid #ff71ce;
-      border-radius: 50%;
-      font-size: 22px;
-      font-weight: bold;
-      cursor: grab;
-      user-select: none;
-      touch-action: none;
-      box-shadow: 2px 4px 10px #fdf20055;
-      transition: transform 0.22s, background 0.32s;
+      padding: 10px 14px; background: #ffe082; border: 3px solid #ff71ce;
+      border-radius: 12px; font-size: 20px; font-weight: 800; cursor: pointer;
+      box-shadow: 0 4px 0 #ff71ce; transition: all 0.1s;
     }
-    .letter:hover {
-      transform: scale(1.13);
-      background: linear-gradient(135deg,#fdf200 20%,#ff71ce 100%);
-      border-color: #01cdfe;
-      color: #7c4dff;
-    }
+    .letter:active { transform: translateY(3px); box-shadow: none; }
+
     .dropSlot {
-      width: 50px;
-      height: 50px;
-      border: 3px dashed #01cdfe;
-      border-radius: 16px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      background: #fff;
-      cursor: pointer;
-      transition: background 0.33s;
+      min-width: 45px; height: 50px; border: 3px dashed #01cdfe; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center; font-size: 22px;
+      font-weight: 800; background: #fff; cursor: pointer; padding: 0 5px;
     }
-    .dropSlot.filled {
-      border: 3px solid #4CAF50;
-      background: #e8f5e9;
-      color: #4caf50;
+    .dropSlot.filled { border: 3px solid #4CAF50; background: #e8f5e9; color: #2e7d32; }
+
+    .btn-check {
+      background: #a1d578; color: #214d0d; padding: 12px 30px;
+      font-size: 18px; border-radius: 50px; border: none; font-weight: 900;
+      cursor: pointer; margin-top: 5px;
     }
-    input[type="text"] {
-      padding: 13px;
-      font-size: 20px;
-      width: 90%;
-      max-width: 340px;
-      margin: 14px 0;
-      border-radius: 12px;
-      border: 2px solid #7c4dff;
-      background: #fdf20011;
-      color: #333;
-      box-shadow: 0 2px 8px #01cdfe22;
-    }
-    button {
-      padding: 11px 22px;
-      font-size: 17px;
-      border: none;
-      border-radius: 10px;
-      background: linear-gradient(90deg, #4CAF50 65%, #81c784 100%);
-      color: white;
-      cursor: pointer;
-      margin: 10px 5px;
-      font-weight: 700;
-      box-shadow: 0 2px 8px #ff71ce22;
-    }
-    #message {
-      margin-top: 17px;
-      font-size: 22px;
-      font-weight: bold;
-      color: #ff4081;
-      min-height: 30px;
-    }
-    @media (max-width: 600px) {
-      body { min-height: calc(100vh + 80px); }
-      .game-container { max-width: 97vw; margin: 2vw; padding: 7vw 3vw; }
-      h1 { font-size: 24px; padding: 10px 0; }
-      #wordToCopy { font-size: 19px; }
-      .letter { font-size: 18px; padding: 10px 12px; }
-      .dropSlot { width: 40px; height: 40px; font-size: 17px; }
-      input[type="text"] { font-size: 16px; padding: 8px; }
-      button { font-size: 15px; padding: 8px 14px; }
-      #menuButton { position: fixed; top: 10px; left: 10px; z-index: 1000; }
-      .menu { margin-top: 80px; }
-    }
-    #confettiCanvas {
-      pointer-events: none;
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 999;
+
+    #message { margin-top: 10px; font-size: 24px; font-weight: 800; min-height: 35px; color: #d63a6d; }
+
+    canvas#confettiCanvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+
+    @media (max-width: 700px) {
+      #musikids-player-card { top: auto; bottom: 15px; right: 10px; scale: 0.8; }
+      header { margin-top: 80px; font-size: 1.6rem; }
+      .dropSlot { min-width: 35px; height: 45px; font-size: 18px; }
     }
   </style>
 </head>
 <body>
-  <button id="menuButton">Menu de Jogos</button>
-  
-  <div class="menu">
-    <button onclick="setCategory('animais')">Animais</button>
-    <button onclick="setCategory('frutas')">Frutas</button>
-    <button onclick="setCategory('objetos')">Objetos</button>
-  </div>
 
-  <div class="game-container">
-    <p id="wordToCopy">Palavra: ...</p>
-    
-    <input type="text" id="customWord" placeholder="Digite a palavra que deseja">
-    <button onclick="setCustomWord()">Usar Palavra</button>
-    
-    <div id="dropZone"></div>
-    <div id="letterBank"></div>
-    
-    <button onclick="checkWord()">Verificar</button>
-    <p id="message"></p>
-  </div>
+<div id="musikids-player-card">
+    <span class="player-label">Música</span>
+    <div class="player-controls">
+        <button class="player-btn" onclick="playPrev()">⏮️</button>
+        <button class="player-btn" onclick="toggleMusic()" id="play-pause-btn">▶️</button>
+        <button class="player-btn" onclick="playNext()">⏭️</button>
+        <button class="player-btn btn-shuffle" onclick="toggleShuffle()" id="shuffle-btn">🔀</button>
+    </div>
+</div>
+<div style="position: absolute; left: -9999px;"><div id="yt-audio-element"></div></div>
 
-  <canvas id="confettiCanvas"></canvas>
+<a href="../index.html" id="btn-menu">← Menu</a>
+<header>Jogo das Letrinhas</header>
 
-  <script>
-    // Variáveis globais
+<div class="menu">
+  <button id="cat-animais" onclick="changeCategory('animais')">Animais 🐶</button>
+  <button id="cat-frutas" onclick="changeCategory('frutas')">Frutas 🍎</button>
+  <button id="cat-objetos" onclick="changeCategory('objetos')">Objetos 🧸</button>
+</div>
+
+<div class="game-container">
+  <p id="wordToCopy">...</p>
+  <div id="dropZone"></div>
+  <div id="letterBank"></div>
+  <button class="btn-check" onclick="checkWord()">Verificar! ✅</button>
+  <p id="message"></p>
+</div>
+
+<canvas id="confettiCanvas"></canvas>
+
+<script src="../../js/musicas_data.js"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+    // Configurações do Player
+    let player;
+    let currentIndex = parseInt(sessionStorage.getItem('musi_index')) || 0;
+    let isShuffle = sessionStorage.getItem('musi_shuffle') === 'true';
+
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('yt-audio-element', {
+            height: '0', width: '0',
+            videoId: listaMusicasIds[currentIndex],
+            playerVars: { 'autoplay': sessionStorage.getItem('musi_playing') === 'true' ? 1 : 0 },
+            events: {
+                'onReady': (e) => {
+                    const savedTime = parseFloat(sessionStorage.getItem('musi_time')) || 0;
+                    if(savedTime > 0) e.target.seekTo(savedTime, true);
+                    if(isShuffle) document.getElementById('shuffle-btn').classList.add('active');
+                    updatePlayBtn();
+                },
+                'onStateChange': (e) => { if(e.data === 0) playNext(); updatePlayBtn(); }
+            }
+        });
+    }
+    function updatePlayBtn() { const btn = document.getElementById('play-pause-btn'); if(btn && player && player.getPlayerState) btn.innerText = player.getPlayerState() === 1 ? "⏸️" : "▶️"; }
+    function toggleMusic() { player.getPlayerState() === 1 ? player.pauseVideo() : player.playVideo(); setTimeout(updatePlayBtn, 200); }
+    function playNext() { currentIndex = isShuffle ? Math.floor(Math.random() * listaMusicasIds.length) : (currentIndex + 1) % listaMusicasIds.length; player.loadVideoById(listaMusicasIds[currentIndex]); sessionStorage.setItem('musi_index', currentIndex); }
+    function playPrev() { currentIndex = (currentIndex - 1 + listaMusicasIds.length) % listaMusicasIds.length; player.loadVideoById(listaMusicasIds[currentIndex]); sessionStorage.setItem('musi_index', currentIndex); }
+    function toggleShuffle() { isShuffle = !isShuffle; sessionStorage.setItem('musi_shuffle', isShuffle); document.getElementById('shuffle-btn').classList.toggle('active'); }
+
+    // --- LÓGICA DO JOGO ---
+    const wordsData = {
+      animais: ["GATO", "LEAO", "ZEBRA", "URSO", "PATO", "VACA", "PORCO", "SAPO", "COELHO", "TIGRE", "GIRAFA", "MACACO", "COBRA", "PEIXE", "ABELHA", "OVELHA", "CAVALO", "RATINHO", "JACARE", "PANDA", "BALEIA", "PERU", "GALO", "POLVO", "RAPOSA"],
+      frutas: ["MACA", "UVA", "PERA", "COCO", "MANGA", "LIMAO", "KIWI", "BANANA", "MELAO", "AMORA", "CAJU", "FIGO", "GOIABA", "JACA", "MAMAO", "ROMÃ", "TOMATE", "AMEIXA", "CEREJA", "MANGA", "CACAU", "ABACATE", "MORANGO", "ABACAXI", "PITAYA"],
+      objetos: ["MESA", "BOLA", "COPO", "SOFA", "DADO", "FACA", "LIVRO", "CASA", "COLA", "CAMA", "PIÃO", "BONECA", "CARRO", "VASO", "PENTE", "LÁPIS", "REDE", "MOTO", "RADIO", "TELEFONE", "SAPATO", "MEIA", "BOTA", "CADEIRA", "JANELA"]
+    };
+
+    let currentCategory = "animais";
+    let wordQueue = [];
     let currentWord = "";
-    let currentCategory = "animais"; // Começa com animais, mas muda dinamicamente
+    let isGameActive = true;
 
-    const words = {
-      animais: [
-        "cachorro", "gato", "elefante", "leão", "tigre",
-        "girafa", "zebra", "macaco", "urso", "coelho",
-        "cavalo", "vaca", "ovelha", "porco", "galinha",
-        "pato", "papagaio", "cobra", "tartaruga", "jacaré",
-        "golfinho", "baleia", "tubarão", "pinguim", "águia"
-      ],
-      frutas: [
-        "maçã", "banana", "uva", "laranja", "pera",
-        "abacaxi", "manga", "morango", "melancia", "mamão",
-        "kiwi", "limão", "cereja", "pêssego", "ameixa",
-        "abacate", "coco", "figo", "goiaba", "maracujá",
-        "tangerina", "framboesa", "mirtilo", "romã", "caqui"
-      ],
-      objetos: [
-        "mesa", "cadeira", "computador", "bola", "livro",
-        "telefone", "caneta", "lápis", "caderno", "mochila",
-        "relógio", "televisão", "controle", "sofá", "armário",
-        "copo", "prato", "garrafa", "tesoura", "espelho",
-        "ventilador", "luminária", "teclado", "mouse", "tapete"
-      ]
-    };
-
-    document.getElementById("menuButton").onclick = function() {
-      // Ajuste o link conforme necessário
-      window.location.href = "../index.html";
-    };
-
-    function setCategory(category) {
-      currentCategory = category; // Salva a categoria escolhida
-      generateNewWord();
+    function shuffleArray(array) {
+      let newArr = [...array];
+      for (let i = newArr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+      }
+      return newArr;
     }
 
-    function generateNewWord() {
-      // Pega uma palavra aleatória da categoria ATUAL
-      const lista = words[currentCategory];
-      const randomIndex = Math.floor(Math.random() * lista.length);
-      currentWord = lista[randomIndex];
+    function changeCategory(cat) {
+      currentCategory = cat;
+      wordQueue = shuffleArray(wordsData[cat]); // Reinicia a fila embaralhada
+      
+      document.querySelectorAll('.menu button').forEach(b => b.classList.remove('active'));
+      document.getElementById(`cat-${cat}`).classList.add('active');
+      
+      nextLevel();
+    }
+
+    function nextLevel() {
+      isGameActive = true;
+      stopConfetti();
+      
+      if (wordQueue.length === 0) {
+        wordQueue = shuffleArray(wordsData[currentCategory]);
+      }
+      
+      currentWord = wordQueue.shift();
       setupGame();
     }
 
-    function setCustomWord() {
-      const input = document.getElementById("customWord").value.trim();
-      if (input) {
-        currentWord = input.toLowerCase();
-        currentCategory = "custom"; // Marca como customizado
-        setupGame();
-        document.getElementById("customWord").value = ""; // Limpa o input
-      }
-    }
-
     function setupGame() {
-      document.getElementById("wordToCopy").textContent = "Palavra: " + currentWord;
-      
+      document.getElementById("wordToCopy").textContent = currentWord;
       const dropZone = document.getElementById("dropZone");
+      const letterBank = document.getElementById("letterBank");
       dropZone.innerHTML = "";
-      
-      // Cria os slots vazios
+      letterBank.innerHTML = "";
+      document.getElementById("message").textContent = "";
+
       for (let i = 0; i < currentWord.length; i++) {
         let slot = document.createElement("div");
         slot.className = "dropSlot";
         slot.onclick = () => removeLetter(slot);
-        slot.ondrop = drop;
-        slot.ondragover = allowDrop;
         dropZone.appendChild(slot);
       }
 
-      const letterBank = document.getElementById("letterBank");
-      letterBank.innerHTML = "";
-      
-      // Embaralha as letras
-      let shuffled = currentWord.split("").sort(() => Math.random() - 0.5);
-      
-      shuffled.forEach((letter, index) => {
-        createLetterElement(letter, "letter-" + index);
+      let letters = currentWord.split("");
+      let shuffledLetters = shuffleArray(letters);
+      shuffledLetters.forEach((letter, idx) => {
+        let div = document.createElement("div");
+        div.className = "letter";
+        div.textContent = letter;
+        div.dataset.origIdx = idx;
+        div.onclick = () => placeLetter(div);
+        letterBank.appendChild(div);
       });
-
-      document.getElementById("message").textContent = "";
-    }
-
-    // Função auxiliar para criar a letra (evita repetição de código)
-    function createLetterElement(char, id) {
-      let div = document.createElement("div");
-      div.className = "letter";
-      div.textContent = char;
-      div.id = id; 
-      div.draggable = true;
-      div.ondragstart = drag;
-      div.onclick = () => placeLetter(div);
-      document.getElementById("letterBank").appendChild(div);
-    }
-
-    function allowDrop(ev) { ev.preventDefault(); }
-
-    function drag(ev) {
-      ev.dataTransfer.setData("text", ev.target.textContent);
-      ev.dataTransfer.setData("id", ev.target.id);
-    }
-
-    function drop(ev) {
-      ev.preventDefault();
-      if (ev.target.classList.contains("dropSlot") && ev.target.textContent === "") {
-        let letter = ev.dataTransfer.getData("text");
-        let id = ev.dataTransfer.getData("id");
-        
-        // Verifica se o elemento existe antes de tentar remover (segurança)
-        let originalElement = document.getElementById(id);
-        if (originalElement) {
-          ev.target.textContent = letter;
-          ev.target.classList.add("filled");
-          originalElement.remove();
-        }
-      }
     }
 
     function placeLetter(div) {
+      if(!isGameActive) return;
       let slots = document.querySelectorAll(".dropSlot");
       for (let slot of slots) {
         if (slot.textContent === "") {
           slot.textContent = div.textContent;
           slot.classList.add("filled");
-          div.remove();
+          slot.dataset.bankRef = div.dataset.origIdx;
+          div.style.visibility = "hidden";
           break;
         }
       }
     }
 
     function removeLetter(slot) {
-      if (slot.textContent !== "") {
-        // CORREÇÃO IMPORTANTE: Gera um ID único para a letra que volta
-        // Se não tiver ID, o drag-and-drop para de funcionar nela
-        let uniqueId = "returned-" + Math.random().toString(36).substr(2, 9);
-        
-        createLetterElement(slot.textContent, uniqueId);
-        
-        slot.textContent = "";
-        slot.classList.remove("filled");
-      }
+      if(!isGameActive || slot.textContent === "") return;
+      const bankRef = slot.dataset.bankRef;
+      slot.textContent = "";
+      slot.classList.remove("filled");
+      
+      const bankLetters = document.querySelectorAll(".letter");
+      bankLetters.forEach(b => {
+        if (b.dataset.origIdx === bankRef) b.style.visibility = "visible";
+      });
     }
 
     function checkWord() {
+      if(!isGameActive) return;
       let formedWord = "";
-      document.querySelectorAll(".dropSlot").forEach(slot => {
-        formedWord += slot.textContent;
-      });
-
-      const messageEl = document.getElementById("message");
+      document.querySelectorAll(".dropSlot").forEach(slot => formedWord += slot.textContent);
+      const msg = document.getElementById("message");
 
       if (formedWord === currentWord) {
-        messageEl.textContent = "Parabéns! Você acertou!";
-        messageEl.style.color = "#21d578";
+        isGameActive = false;
+        msg.innerHTML = "🎉 PARABÉNS! VOCÊ CONSEGUIU! 🎉";
+        msg.style.color = "#2e7d32";
         startConfetti();
-        
-        // CORREÇÃO: Usa a categoria atual em vez de voltar para animais
-        setTimeout(() => { 
-          if(currentCategory === "custom") {
-             // Se for palavra customizada, apenas limpa a mensagem ou pede nova
-             messageEl.textContent = "Escolha uma nova palavra ou categoria!";
-             messageEl.style.color = "#333";
-          } else {
-             generateNewWord(); 
-          }
-        }, 3000);
-        
+        setTimeout(nextLevel, 2000);
       } else {
-        messageEl.textContent = "Tente novamente!";
-        messageEl.style.color = "#ff4081";
+        msg.textContent = "Tente de novo! 💪";
+        msg.style.color = "#d63a6d";
       }
     }
 
-    // --- Confetti Logic ---
+    // --- SISTEMA DE CONFETES ---
     const canvas = document.getElementById("confettiCanvas");
     const ctx = canvas.getContext("2d");
-
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener("resize", resizeCanvas);
-    resizeCanvas();
-
-    let confetti = [];
+    let particles = [];
+    let animationId;
 
     function startConfetti() {
-      confetti = [];
-      for (let i = 0; i < 140; i++) {
-        confetti.push({
+      particles = [];
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      for (let i = 0; i < 80; i++) {
+        particles.push({
           x: Math.random() * canvas.width,
-          y: -Math.random() * 80 - 30,
+          y: -10,
           r: Math.random() * 6 + 4,
-          d: Math.random() * 12 + 18,
-          // Corrigido uso de template literals (crase)
-          color: `hsl(${Math.random() * 360}, 97%, 53%)`,
-          tilt: Math.random() * 14 - 7
+          d: Math.random() * 4 + 2,
+          color: `hsl(${Math.random() * 360}, 100%, 50%)`
         });
       }
-      animateConfetti();
-      setTimeout(() => confetti = [], 2800);
+      animate();
     }
 
-    function animateConfetti() {
+    function stopConfetti() {
+      cancelAnimationFrame(animationId);
+      particles = [];
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      confetti.forEach(c => {
-        ctx.save();
-        ctx.translate(c.x, c.y);
-        ctx.rotate(c.tilt * 0.1);
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p, i) => {
+        p.y += p.d;
         ctx.beginPath();
-        ctx.arc(0, 0, c.r, 0, 2 * Math.PI);
-        ctx.fillStyle = c.color;
-        ctx.globalAlpha = .98;
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
         ctx.fill();
-        ctx.restore();
+        if (p.y > canvas.height) particles.splice(i, 1);
       });
-      updateConfetti();
-      if (confetti.length > 0) requestAnimationFrame(animateConfetti);
+      if (particles.length > 0) animationId = requestAnimationFrame(animate);
     }
 
-    function updateConfetti() {
-      confetti.forEach(c => {
-        c.y += c.d * 0.11 + Math.sin(c.tilt*0.77);
-        c.x += Math.sin(c.d * 0.12 + c.y * 0.04);
-      });
-    }
-
-    // Inicialização aleatória ao carregar a página
-    // Sorteia uma categoria inicial aleatória
-    const categorias = Object.keys(words);
-    const catAleatoria = categorias[Math.floor(Math.random() * categorias.length)];
-    setCategory(catAleatoria);
-
-  </script>
+    window.onload = () => changeCategory('animais');
+</script>
 </body>
 </html>
