@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Caça Palavras - MusiKids Fun</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Luckiest+Guy&display=swap');
+  
   body {
     margin: 0; padding: 1.5rem;
     background: linear-gradient(135deg,#f7f4e9,#f8b500,#ff7eb9 100%);
@@ -14,6 +15,22 @@
     box-sizing: border-box; text-align: center;
     min-height: 100vh;
   }
+
+  /* --- PLAYER MUSIKIDS --- */
+  #musikids-player-card {
+    background: white; padding: 6px 15px; display: flex; align-items: center; gap: 10px;
+    border: 3px solid #FF77A9; border-radius: 50px; position: fixed; top: 10px; right: 10px; 
+    z-index: 10001; box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  }
+  .player-controls { display: flex; gap: 6px; align-items: center; }
+  .player-btn {
+    background: #FF77A9; border: none; color: white; width: 30px; height: 30px; 
+    border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .player-label { font-weight: 800; color: #FF4C8B; font-size: 0.8rem; }
+  .btn-shuffle.active { background: #21a7ff !important; }
+
   #btn-menu {
     position: fixed; top: 1rem; left: 1rem;
     background: #a1d578; color: #214d0d;
@@ -21,442 +38,343 @@
     font-weight: 900; font-size: 1.1rem;
     cursor: pointer; box-shadow: 0 0 15px #a1d578aa;
     border: none; user-select: none; z-index: 10000;
-    transition: background-color .3s ease;
   }
-  #btn-menu:hover { background: #68922b; color: white; }
+
   header {
-    margin-top: 4rem; font-weight: 900; font-size: 2.4rem;
-    color: #d63a6d; user-select: none;
-    margin-bottom: 1rem;
+    margin-top: 5rem; font-weight: 900; font-size: 2.4rem;
+    color: #d63a6d; margin-bottom: 1rem;
   }
+
   main {
-    max-width: 950px;
-    margin: 0 auto;
-    background: white;
-    border-radius: 28px;
+    max-width: 950px; margin: 0 auto;
+    background: white; border-radius: 28px;
     box-shadow: 0 4px 18px #ffd3e466;
     padding: 20px 18px 30px 18px;
-    display: flex;
-    gap: 28px;
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-start;
+    display: flex; gap: 28px; justify-content: center; align-items: flex-start;
   }
+
   .panel {
-    width: 170px;
-    min-width: 135px;
-    background: #fcf4ff;
-    border-radius: 23px;
-    padding: 16px 8px 24px 8px;
-    box-shadow: 0 3px 12px #ffd1e2aa;
-    text-align: left;
+    width: 170px; min-width: 135px; background: #fcf4ff;
+    border-radius: 23px; padding: 16px 8px 24px 8px;
+    box-shadow: 0 3px 12px #ffd1e2aa; text-align: left;
   }
+
   .panel h3 { font-size: 1.15rem; color: #ff7eb9; margin-bottom: .5rem; font-weight: 800; }
-  .panel ul {
-    list-style: none; padding: 0; margin: 0;
-    font-size: 1.21rem; color: #4c6d8c; font-weight: 700;
-  }
+  .panel ul { list-style: none; padding: 0; margin: 0; font-size: 1rem; color: #4c6d8c; font-weight: 700; line-height: 1.4; }
   .panel-found { background: #e7ffd2; }
+
   #grid-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; }
   #grid {
-    display: grid; gap: 4px;
-    background: #f6ebff; border-radius: 20px;
-    padding: 18px; box-shadow: 0 0 12px #e7abd7a6;
-    margin-bottom: 20px;
+    display: grid; gap: 4px; background: #f6ebff; border-radius: 20px;
+    padding: 18px; box-shadow: 0 0 12px #e7abd7a6; margin-bottom: 20px;
+    touch-action: none; /* Importante para o arrasto no celular */
   }
+
   .grid-cell {
-    width: 38px; height: 38px;
-    background: #fff5ea; border-radius: 11px;
-    font-size: 1.42rem; font-weight: 800;
-    color: #5e219b; box-shadow: 0 0 6px #fdafb855;
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: background-color .3s, color .3s;
-    user-select: none;
+    width: 38px; height: 38px; background: #fff5ea; border-radius: 11px;
+    font-size: 1.4rem; font-weight: 800; color: #5e219b;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+    transition: background 0.2s;
   }
-  .grid-cell.found { color: white; font-weight: 900; }
-  .grid-cell.selected { background: #d3d3d3; color: #fff; }
-  #result-text {
-    font-size: 1.3rem; color: #d63a6d; margin: 14px 0 0 0;
-    font-weight: 700;
-  }
+  .grid-cell.found { color: white !important; font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+  .grid-cell.selected { background: #7c4dff !important; color: #fff !important; }
+
+  #result-text { font-size: 1.3rem; color: #d63a6d; margin: 14px 0 0 0; font-weight: 800; }
   #btn-novo {
-    background: #e4bafe; color: #6121a9;
-    border: none; border-radius: 19px; font-weight: 900;
-    font-size: 1.17rem; box-shadow: 0 3px 12px #edbbdb88;
-    padding: 12px 38px; margin-top: 18px; cursor: pointer;
-    transition: background-color .3s;
+    background: #ff7eb9; color: #fff; border: none; border-radius: 19px;
+    font-weight: 900; font-size: 1.17rem; padding: 12px 38px; margin-top: 18px; 
+    cursor: default;
   }
-  #btn-novo:hover {background: #912ba2; color: #fff;}
+
+  #confetti-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+
+  @media (max-width: 768px) {
+    #musikids-player-card { top: auto; bottom: 10px; right: 10px; scale: 0.85; }
+    main { flex-direction: column; align-items: center; }
+    .grid-cell { width: 30px; height: 30px; font-size: 1.1rem; }
+    header { margin-top: 3.5rem; font-size: 2rem; }
+  }
 </style>
 </head>
 <body>
-<button id="btn-menu" aria-label="Voltar ao menu">MENU DE JOGOS</button>
-<header>Caça Palavras - MusiKids Fun</header>
+
+<div id="confetti-wrapper"></div>
+
+<div id="musikids-player-card">
+    <span class="player-label">Música</span>
+    <div class="player-controls">
+        <button class="player-btn" onclick="playPrev()">⏮️</button>
+        <button class="player-btn" onclick="toggleMusic()" id="play-pause-btn">▶️</button>
+        <button class="player-btn" onclick="playNext()">⏭️</button>
+        <button class="player-btn btn-shuffle" onclick="toggleShuffle()" id="shuffle-btn">🔀</button>
+    </div>
+</div>
+<div style="position: absolute; left: -9999px;"><div id="yt-audio-element"></div></div>
+
+<button id="btn-menu" onclick="location.href='../index.html'">MENU</button>
+
+<header>Caça Palavras MusiKids</header>
+
 <main>
   <div class="panel">
     <h3>Encontrar:</h3>
     <ul id="palavras-alvo"></ul>
   </div>
+
   <div id="grid-wrap">
     <div id="grid"></div>
     <div id="result-text"></div>
-    <button id="btn-novo" style="display:none;">Novo Jogo</button>
+    <button id="btn-novo" style="display:none;">Próxima fase em 2s...</button>
   </div>
+
   <div class="panel panel-found">
     <h3>Encontradas:</h3>
     <ul id="palavras-achadas"></ul>
   </div>
 </main>
-<div id="confetti"></div>
+
+<script src="../../js/musicas_data.js" onerror="console.log('Playlist offline')"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
+
 <script>
-const PALAVRAS = [
-"ANJO","CACHORRO","GATO","JARDIM","CARRO","TIGRE","CAJU","BORBOLETA","PATO","CASA","FELICIDADE","CERTO","JANELA","SORRISO","CORAÇÃO","LARANJA","AMOR","PASSARINHO","AMIZADE","VACA","SOL","VERDE","FAMÍLIA","FLOR","ESCOLA","PEIXE","ARVORE","CEBOLA","SAPO","TERRA","AMARELO","AZUL","ROSA","NAVIO","ONÇA","LIVRO","GEMA","BANANA","FOFO","CEREJA","FITA","CAIXA","PAPAI","MAMÃE","ELEFANTE","BRINQUEDO","BOLA","TESOURA","BACIA"
-];
-const CORES = [
-  "#ff7eb9","#bcebff","#e7ffd2","#ffd0d3","#b8b9ff","#fdffa9","#b9faf8","#f9b9ff",
-  "#ffd9ae","#baffda","#fbb1b1","#e3cdff","#fdf07a","#f7bbe6","#7ef5be","#ccecff"
-];
+// --- LÓGICA DO PLAYER (IGUAL ANTERIOR) ---
+let playerYT;
+let currentIndex = parseInt(sessionStorage.getItem('musi_index')) || 0;
+let isShuffle = sessionStorage.getItem('musi_shuffle') === 'true';
+const getPlaylist = () => (typeof listaMusicasIds !== 'undefined') ? listaMusicasIds : ['dQw4w9WgXcQ'];
+
+function onYouTubeIframeAPIReady() {
+    playerYT = new YT.Player('yt-audio-element', {
+        height: '0', width: '0',
+        videoId: getPlaylist()[currentIndex],
+        playerVars: { 'autoplay': sessionStorage.getItem('musi_playing') === 'true' ? 1 : 0 },
+        events: { 
+            'onReady': () => { if(isShuffle) document.getElementById('shuffle-btn').classList.add('active'); updatePlayBtn(); },
+            'onStateChange': (e) => { if(e.data === 0) playNext(); updatePlayBtn(); } 
+        }
+    });
+}
+function updatePlayBtn() { 
+    const btn = document.getElementById('play-pause-btn');
+    if(btn && playerYT?.getPlayerState) btn.innerText = playerYT.getPlayerState() === 1 ? "⏸️" : "▶️";
+}
+function toggleMusic() { 
+    if(!playerYT?.playVideo) return;
+    playerYT.getPlayerState() === 1 ? playerYT.pauseVideo() : playerYT.playVideo();
+    setTimeout(updatePlayBtn, 200);
+}
+function playNext() { 
+    let list = getPlaylist();
+    currentIndex = isShuffle ? Math.floor(Math.random() * list.length) : (currentIndex + 1) % list.length;
+    playerYT?.loadVideoById(list[currentIndex]);
+    sessionStorage.setItem('musi_index', currentIndex);
+}
+function playPrev() {
+    let list = getPlaylist();
+    currentIndex = (currentIndex - 1 + list.length) % list.length;
+    playerYT?.loadVideoById(list[currentIndex]);
+    sessionStorage.setItem('musi_index', currentIndex);
+}
+function toggleShuffle() {
+    isShuffle = !isShuffle;
+    sessionStorage.setItem('musi_shuffle', isShuffle);
+    document.getElementById('shuffle-btn').classList.toggle('active');
+}
+
+// --- BANCO DE DADOS E CORES ---
+const PALAVRAS_BANCO = ["ANJO", "GATO", "CARRO", "PATO", "CASA", "SOL", "VERDE", "FLOR", "PEIXE", "BOLA", "DOCE", "LUA", "MESA", "DADO", "ESCOLA", "BALAO", "SAPATO", "LIVRO", "PAPEL", "NAVIO", "AMOR", "DENTE", "UVA", "BANANA", "GIRAFA", "ZEBRA", "LEAO", "BOLO", "COCO", "DEDO", "FADA", "GELO", "ILHA", "JOGO", "KART", "LIMAO", "MACA", "NUVEM", "OVO", "PERA", "QUEIJO", "ROSA", "SUCO", "TREM", "URSO", "VELA", "WIND", "XALE", "YOGA", "ZOO", "AMARELO", "AZUL", "BONECA", "CABELO", "DORMIR", "ELEFANTE", "FOGUETE", "GALINHA", "HOJE", "IGREJA", "JANELA", "KIWI", "LAPIS", "MAMAE", "NARIZ", "ONIBUS", "PAPAI", "QUENTE", "RATO", "SAPO", "TIGRE", "URIBU", "VACA", "WAFFLE", "XADREZ", "YOUTUBE", "ZANGADO", "AMIZADE", "BRINCAR", "FELIZ"];
+const CORES = ["#FF595E", "#FFCA3A", "#8AC926", "#1982C4", "#6A4C93", "#FF924C", "#FF6392", "#00B4D8", "#70E000", "#FF006E", "#2D00F7", "#F15BB5", "#00F5D4", "#9B5DE5"];
 const TAMANHO = 12;
-const btnMenu = document.getElementById("btn-menu");
+
+let palavrasAtivas = [], encontradas = [], gridData = [], corDasPalavras = {}, selecao = [], isDragging = false;
+
 const gridElem = document.getElementById("grid");
 const alvoElem = document.getElementById("palavras-alvo");
 const achadasElem = document.getElementById("palavras-achadas");
 const resultText = document.getElementById("result-text");
 const btnNovo = document.getElementById("btn-novo");
-btnMenu.onclick = () => location.href = "../index.html";
-let palavrasAtivas = [], encontradas = [], gridData = [], corDasPalavras = {};
-let selecao = [];
-let isDragging = false;
-function shuffle(arr) {
-  return arr.map(i=>[Math.random(),i]).sort((a,b)=>a[0]-b[0]).map(i=>i[1]);
-}
-function sorteiaPalavras() {
-  return shuffle(PALAVRAS).slice(0,10);
-}
-function iniciaGrid() {
-  gridData = Array(TAMANHO).fill(0).map(()=>Array(TAMANHO).fill(''));
-  corDasPalavras = {};
-  palavrasAtivas.forEach((palavra, idx) => {
-    let colocada = false, tentativas = 0, modo = Math.random() > 0.5 ? 'H' : 'V';
-    const cor = CORES[idx % CORES.length];
-    corDasPalavras[palavra] = cor;
-    while(!colocada && tentativas<40) {
-      if(modo==='H') {
-        let row = Math.floor(Math.random() * TAMANHO);
-        let col = Math.floor(Math.random() * (TAMANHO-palavra.length+1));
-        let cabem = true;
-        for(let k=0;k<palavra.length;k++) {
-          const letra = gridData[row][col+k];
-          if(letra && letra!==palavra[k]) { cabem=false; break; }
-        }
-        if(cabem) {
-          for(let k=0;k<palavra.length;k++) gridData[row][col+k]=palavra[k];
-          colocada=true;
-        }
-      }
-      else {
-        let row = Math.floor(Math.random() * (TAMANHO-palavra.length+1));
-        let col = Math.floor(Math.random() * TAMANHO);
-        let cabem = true;
-        for(let k=0;k<palavra.length;k++) {
-          const letra = gridData[row+k][col];
-          if(letra && letra!==palavra[k]) {cabem=false;break;}
-        }
-        if(cabem) {
-          for(let k=0;k<palavra.length;k++) gridData[row+k][col]=palavra[k];
-          colocada=true;
-        }
-      }
-      tentativas++;
-      if(tentativas===20) modo = modo==='H'?'V':'H';
-    }
-  });
-  for(let i=0;i<TAMANHO;i++)
-    for(let j=0;j<TAMANHO;j++)
-      if(!gridData[i][j])
-        gridData[i][j] = String.fromCharCode(65+Math.floor(Math.random()*26));
-}
-function desenhaGrid() {
-  gridElem.innerHTML = '';
-  gridElem.style.gridTemplateColumns = `repeat(${TAMANHO}, 1fr)`;
-  gridElem.style.gridTemplateRows = `repeat(${TAMANHO}, 1fr)`;
-  for(let i=0;i<TAMANHO;i++) {
-    for(let j=0;j<TAMANHO;j++) {
-      let cell = document.createElement('div');
-      cell.className = 'grid-cell';
-      cell.textContent = gridData[i][j];
-      cell.dataset.row = i; cell.dataset.col = j;
-      cell.addEventListener('click', handleClick);
-      gridElem.appendChild(cell);
-    }
-  }
-}
-function desenhaPainel() {
-  alvoElem.innerHTML = '';
-  achadasElem.innerHTML = '';
-  palavrasAtivas.forEach(p=> {
-    if(encontradas.includes(p)) return;
-    let li = document.createElement('li');
-    li.textContent = p;
-    alvoElem.appendChild(li);
-  });
-  encontradas.forEach((p,idx)=> {
-    let li = document.createElement('li');
-    li.innerHTML = `<span style="padding:3px 8px;border-radius:9px;background:${corDasPalavras[p]};color:#fff;">${p}</span>`;
-    achadasElem.appendChild(li);
-  });
-}
-function reiniciaJogo() {
-  palavrasAtivas = sorteiaPalavras();
-  encontradas = [];
-  iniciaGrid();
-  desenhaGrid();
-  desenhaPainel();
-  resultText.textContent = '';
-  btnNovo.style.display = 'none';
-  Array.from(document.querySelectorAll('.grid-cell')).forEach(cell=>cell.classList.remove('found', 'selected'));
-  selecao = [];
-  isDragging = false;
-}
-function verificaPalavraSelecionada(indices) {
-  let texto = indices.map(([i,j])=>gridData[i][j]).join('');
-  let textoInvert = indices.map(([i,j])=>gridData[i][j]).reverse().join('');
-  for(let palavra of palavrasAtivas) {
-    if((texto===palavra || textoInvert===palavra) && !encontradas.includes(palavra)) {
-      destacando(indices, corDasPalavras[palavra]);
-      encontradas.push(palavra);
-      desenhaPainel();
-      if(encontradas.length===palavrasAtivas.length) {
-        resultText.textContent = 'Parabéns! Encontrou todas!';
-        btnNovo.style.display = "inline-block";
-        btnNovo.focus();
-        confetti();
-      }
-      clearSelection();
-      return true;
-    }
-  }
-  return false;
-}
-function destacando(indices, cor) {
-  indices.forEach(([i,j])=>{
-    Array.from(gridElem.children).forEach(cell=>{
-      if(Number(cell.dataset.row)===i && Number(cell.dataset.col)===j) {
-        cell.classList.remove('selected');
-        cell.classList.add('found');
-        cell.style.background=cor;
-        cell.style.color="#fff";
-      }
-    });
-  });
-}
-function handleClick(e) {
-  if (isDragging) return;
-  const cell = e.target;
-  if (!cell.classList.contains('grid-cell')) return; // permite selecionar mesmo que já encontrou
-  const row = Number(cell.dataset.row);
-  const col = Number(cell.dataset.col);
-  if (selecao.length === 0) {
-    selecao = [[row, col]];
-    cell.classList.add('selected');
-  } else {
-    const last = selecao[selecao.length - 1];
-    const isValid = isValidNextClick(last[0], last[1], row, col);
-    if (isValid) {
-      selecao.push([row, col]);
-      cell.classList.add('selected');
-      if (verificaPalavraSelecionada(selecao)) {
-        clearSelection();
-      }
-    } else {
-      clearSelection();
-      selecao = [[row, col]];
-      cell.classList.add('selected');
-    }
-  }
-}
-function isValidNextClick(lastRow, lastCol, newRow, newCol) {
-  if (selecao.length === 1) {
-    return Math.abs(lastRow - newRow) <= 1 && Math.abs(lastCol - newCol) <= 1 && !(lastRow === newRow && lastCol === newCol);
-  }
-  const first = selecao[0];
-  const second = selecao[1];
-  const rowDiff = second[0] - first[0];
-  const colDiff = second[1] - first[1];
-  const expectedRow = lastRow + rowDiff;
-  const expectedCol = lastCol + colDiff;
-  return newRow === expectedRow && newCol === expectedCol;
-}
-function clearSelection() {
-  Array.from(document.querySelectorAll('.grid-cell')).forEach(cell => cell.classList.remove('selected'));
-  selecao = [];
-}
-gridElem.addEventListener('mousedown', (e)=>{
-  if(e.target.classList.contains('grid-cell')) {
-    isDragging = true;
-    clearSelection();
-    selecao = [[Number(e.target.dataset.row), Number(e.target.dataset.col)]];
-    e.target.classList.add('selected');
-    gridElem.addEventListener('mousemove', mousemove);
-  }
-});
-document.addEventListener('mouseup', ()=>{
-  if(isDragging && selecao.length>1) verificaPalavraSelecionada(selecao);
-  clearSelection();
-  gridElem.removeEventListener('mousemove', mousemove);
-  isDragging = false;
-});
-function mousemove(e){
-  if(isDragging && e.target.classList.contains('grid-cell')) {
-    let inicio = selecao[0];
-    let fim = [Number(e.target.dataset.row),Number(e.target.dataset.col)];
-    selecao = [];
-    if(inicio[0]===fim[0]) {
-      let a = inicio[1], b = fim[1];
-      let arr = []; for(let k=Math.min(a,b);k<=Math.max(a,b);k++) arr.push([inicio[0],k]);
-      selecao = arr;
-    } else if(inicio[1]===fim[1]) {
-      let a = inicio[0], b = fim[0];
-      let arr=[]; for(let k=Math.min(a,b);k<=Math.max(a,b);k++) arr.push([k,inicio[1]]);
-      selecao = arr;
-    }
-    Array.from(document.querySelectorAll('.grid-cell')).forEach(cell => cell.classList.remove('selected'));
-    selecao.forEach(([i,j])=>{
-      Array.from(gridElem.children).forEach(cell=>{
-        if(Number(cell.dataset.row)===i && Number(cell.dataset.col)===j) {
-          cell.classList.add('selected');
-        }
-      });
-    });
-  }
-}
-gridElem.addEventListener('touchstart', (e)=>{
-  e.preventDefault();
-  if(e.target.classList.contains('grid-cell')) {
-    isDragging = true;
-    clearSelection();
-    selecao = [[Number(e.target.dataset.row), Number(e.target.dataset.col)]];
-    e.target.classList.add('selected');
-    gridElem.addEventListener('touchmove', touchmove, { passive: false });
-  }
-});
-document.addEventListener('touchend', ()=>{
-  if(isDragging && selecao.length>1) verificaPalavraSelecionada(selecao);
-  clearSelection();
-  gridElem.removeEventListener('touchmove', touchmove);
-  isDragging = false;
-});
-function touchmove(e){
-  e.preventDefault();
-  const touch = e.touches[0];
-  const target = document.elementFromPoint(touch.clientX, touch.clientY);
-  if(isDragging && target.classList.contains('grid-cell')) {
-    let inicio = selecao[0];
-    let fim = [Number(target.dataset.row),Number(target.dataset.col)];
-    selecao = [];
-    if(inicio[0]===fim[0]) {
-      let a = inicio[1], b = fim[1];
-      let arr = []; for(let k=Math.min(a,b);k<=Math.max(a,b);k++) arr.push([inicio[0],k]);
-      selecao = arr;
-    } else if(inicio[1]===fim[1]) {
-      let a = inicio[0], b = fim[0];
-      let arr=[]; for(let k=Math.min(a,b);k<=Math.max(a,b);k++) arr.push([k,inicio[1]]);
-      selecao = arr;
-    }
-    Array.from(document.querySelectorAll('.grid-cell')).forEach(cell => cell.classList.remove('selected'));
-    selecao.forEach(([i,j])=>{
-      Array.from(gridElem.children).forEach(cell=>{
-        if(Number(cell.dataset.row)===i && Number(cell.dataset.col)===j) {
-          cell.classList.add('selected');
-        }
-      });
-    });
-  }
-}
-btnNovo.onclick = ()=>{reiniciaJogo()};
-function confetti() {
-  const container = document.getElementById("confetti");
-  container.innerHTML = "";
-  const colors = ["#ff597f", "#ff9ea1", "#fcd677", "#a9d97a", "#79d79a"];
-  for (let i = 0; i < 150; i++) {
-    const c = document.createElement("div");
-    c.className = "confetti-piece";
-    c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-    c.style.top = Math.random() * -100 + "px";
-    c.style.left = Math.random() * window.innerWidth + "px";
-    c.style.width = Math.random() * 10 + 5 + "px";
-    c.style.height = Math.random() * 10 + 5 + "px";
-    c.style.position = "absolute";
-    c.style.borderRadius = "50%";
-    c.style.animation = `fall ${Math.random() * 2 + 2}s linear forwards`;
-    c.style.transform = `rotate(${Math.random() * 360}deg)`;
-    container.appendChild(c);
-  }
-  setTimeout(() => {
-    container.innerHTML = "";
-  }, 4000);
-}
-const style = document.createElement("style");
-style.innerHTML = `
-  @keyframes fall {
-    0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 1; }
-    100% { transform: translateY(100vh) translateX(${Math.random() * 100 - 50}px) rotate(360deg); opacity: 0; }
-  }
-`;
-document.head.appendChild(style);
-reiniciaJogo();
-</script>
-<style>
-  /* Media queries para responsividade */
-  @media (max-width: 768px) {
-    body { padding: 1rem; }
-    #btn-menu {
-      top: 0.75rem; right: 0.75rem; left: auto;
-      padding: 10px 16px; font-size: 1rem;
-    }
-    header {
-      margin-top: 3rem; font-size: 2rem;
-      margin-bottom: 0.75rem;
-    }
-    main {
-      flex-direction: column;
-      gap: 16px; padding: 16px 12px 24px 12px;
-      max-width: 100%;
-    }
-    .panel {
-      width: 100%; min-width: auto;
-      padding: 12px 16px 16px 16px;
-    }
-    .panel h3 { font-size: 1.1rem; }
-    .panel ul { font-size: 1.1rem; }
-    #grid {
-      padding: 12px; gap: 2px;
-      margin-bottom: 16px;
-    }
-    .grid-cell {
-      width: 28px; height: 28px;
-      font-size: 1.2rem; border-radius: 8px;
-    }
-    #result-text { font-size: 1.2rem; }
-    #btn-novo {
-      font-size: 1.1rem; padding: 10px 32px;
-    }
-  }
 
-  @media (max-width: 480px) {
-    body { padding: 0.75rem; }
-    header { font-size: 1.8rem; margin-top: 2.5rem; }
-    main { padding: 12px 8px 20px 8px; gap: 12px; }
-    .panel { padding: 10px 12px 12px 12px; }
-    .panel ul { font-size: 1rem; }
-    #grid { padding: 8px; }
-    .grid-cell {
-      width: 24px; height: 24px;
-      font-size: 1.1rem;
+function iniciaGrid() {
+    gridData = Array(TAMANHO).fill(0).map(()=>Array(TAMANHO).fill(''));
+    palavrasAtivas = [...PALAVRAS_BANCO].sort(() => 0.5 - Math.random()).slice(0, 10);
+    
+    palavrasAtivas.forEach((p, idx) => {
+        let colocada = false;
+        corDasPalavras[p] = CORES[idx % CORES.length];
+        let tentativas = 0;
+        while(!colocada && tentativas < 200) {
+            let horizontal = Math.random() > 0.5;
+            let r = Math.floor(Math.random() * (horizontal ? TAMANHO : TAMANHO - p.length));
+            let c = Math.floor(Math.random() * (horizontal ? TAMANHO - p.length : TAMANHO));
+            let pode = true;
+            for(let i=0; i<p.length; i++) {
+                let lr = horizontal ? r : r+i;
+                let lc = horizontal ? c+i : c;
+                if(gridData[lr][lc] !== '' && gridData[lr][lc] !== p[i]) pode = false;
+            }
+            if(pode) {
+                for(let i=0; i<p.length; i++) gridData[horizontal?r:r+i][horizontal?c+i:c] = p[i];
+                colocada = true;
+            }
+            tentativas++;
+        }
+    });
+
+    for(let i=0; i<TAMANHO; i++)
+        for(let j=0; j<TAMANHO; j++)
+            if(!gridData[i][j]) gridData[i][j] = String.fromCharCode(65 + Math.floor(Math.random()*26));
+}
+
+function desenhaGrid() {
+    gridElem.innerHTML = '';
+    gridElem.style.gridTemplateColumns = `repeat(${TAMANHO}, 1fr)`;
+    for(let i=0; i<TAMANHO; i++) {
+        for(let j=0; j<TAMANHO; j++) {
+            let cell = document.createElement('div');
+            cell.className = 'grid-cell';
+            cell.textContent = gridData[i][j];
+            cell.dataset.row = i; cell.dataset.col = j;
+            
+            // Eventos para Clique e Arrasto combinados
+            cell.onmousedown = (e) => { e.preventDefault(); onStart(i, j, cell); };
+            cell.onmouseover = () => onEnter(i, j, cell);
+            cell.ontouchstart = (e) => { e.preventDefault(); onStart(i, j, cell); };
+            
+            gridElem.appendChild(cell);
+        }
     }
-    #result-text { font-size: 1.1rem; }
-    #btn-novo { padding: 8px 24px; font-size: 1rem; }
-  }
-</style>
+}
+
+// --- NOVA LÓGICA DE SELEÇÃO (CLIQUE + ARRASTO) ---
+function onStart(r, c, el) {
+    isDragging = true;
+    // Se clicar em algo novo, limpa a seleção anterior a menos que seja continuação
+    if (selecao.length > 0) {
+        let last = selecao[selecao.length - 1];
+        let dist = Math.max(Math.abs(last[0] - r), Math.abs(last[1] - c));
+        if (dist > 1) { 
+            limparSelecaoEstilo();
+            selecao = [];
+        }
+    }
+    
+    // Adiciona apenas se não for a mesma célula
+    if (!selecao.some(p => p[0] === r && p[1] === c)) {
+        selecao.push([r, c]);
+        el.classList.add('selected');
+        checarPalavra(); // Checa a cada letra (para modo clique)
+    }
+}
+
+function onEnter(r, c, el) {
+    if (!isDragging) return;
+    if (!selecao.some(p => p[0] === r && p[1] === c)) {
+        selecao.push([r, c]);
+        el.classList.add('selected');
+        checarPalavra();
+    }
+}
+
+// Suporte para touch dragging
+gridElem.ontouchmove = (e) => {
+    if(!isDragging) return;
+    let touch = e.touches[0];
+    let el = document.elementFromPoint(touch.clientX, touch.clientY);
+    if(el && el.classList.contains('grid-cell')) {
+        let r = parseInt(el.dataset.row);
+        let c = parseInt(el.dataset.col);
+        onEnter(r, c, el);
+    }
+};
+
+window.onmouseup = window.ontouchend = () => {
+    isDragging = false;
+    // Não limpamos a seleção aqui para permitir o modo clique letra por letra
+};
+
+function checarPalavra() {
+    let palavra = selecao.map(pos => gridData[pos[0]][pos[1]]).join('');
+    let invertida = palavra.split('').reverse().join('');
+    
+    let achou = palavrasAtivas.find(p => (p === palavra || p === invertida) && !encontradas.includes(p));
+    
+    if(achou) {
+        encontradas.push(achou);
+        marcarComoAchada(achou);
+        desenhaPainel();
+        selecao = []; // Limpa para a próxima palavra
+        
+        if(encontradas.length === palavrasAtivas.length) {
+            resultText.textContent = "🏆 VOCÊ CONSEGUIU!";
+            lancarConfetes();
+            btnNovo.style.display = 'block';
+            setTimeout(reiniciarJogoGlobal, 2000);
+        }
+    }
+}
+
+function marcarComoAchada(p) {
+    let cor = corDasPalavras[p];
+    selecao.forEach(pos => {
+        let el = Array.from(gridElem.children).find(c => c.dataset.row == pos[0] && c.dataset.col == pos[1]);
+        if(el) {
+            el.classList.add('found');
+            el.style.background = cor;
+            el.classList.remove('selected');
+        }
+    });
+}
+
+function limparSelecaoEstilo() {
+    Array.from(gridElem.children).forEach(c => { if(!c.classList.contains('found')) c.classList.remove('selected'); });
+}
+
+function desenhaPainel() {
+    alvoElem.innerHTML = '';
+    achadasElem.innerHTML = '';
+    palavrasAtivas.forEach(p => {
+        if(!encontradas.includes(p)) {
+            let li = document.createElement('li');
+            li.textContent = "• " + p;
+            alvoElem.appendChild(li);
+        }
+    });
+    encontradas.forEach(p => {
+        let li = document.createElement('li');
+        li.innerHTML = `<span style="background:${corDasPalavras[p]}; color:white; padding:1px 6px; border-radius:6px; font-size:0.9rem; display:inline-block; margin-bottom:4px;">${p}</span>`;
+        achadasElem.appendChild(li);
+    });
+}
+
+function lancarConfetes() {
+    const wrapper = document.getElementById('confetti-wrapper');
+    for (let i = 0; i < 60; i++) {
+        const c = document.createElement('div');
+        c.style.position = 'absolute';
+        c.style.width = '10px'; c.style.height = '10px';
+        c.style.backgroundColor = CORES[Math.floor(Math.random()*CORES.length)];
+        c.style.left = Math.random() * 100 + 'vw';
+        c.style.top = '-10px';
+        c.style.borderRadius = '50%';
+        c.animate([{transform: 'translateY(0)'}, {transform: 'translateY(100vh)'}], {duration: 2000 + Math.random()*2000});
+        wrapper.appendChild(c);
+    }
+}
+
+function reiniciarJogoGlobal() {
+    encontradas = [];
+    selecao = [];
+    resultText.textContent = '';
+    btnNovo.style.display = 'none';
+    document.getElementById('confetti-wrapper').innerHTML = '';
+    iniciaGrid();
+    desenhaGrid();
+    desenhaPainel();
+}
+
+iniciaGrid();
+desenhaGrid();
+desenhaPainel();
+</script>
 </body>
 </html>
