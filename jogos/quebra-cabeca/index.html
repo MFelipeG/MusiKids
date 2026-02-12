@@ -2,14 +2,14 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
 <title>Quebra-Cabeça - MusiKids Fun</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
- 
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700;800&display=swap');
+  
   body {
     margin: 0;
-    padding: 1.5rem;
+    padding: 1.5rem 0 .3rem 0;
     background: linear-gradient(135deg, #a0eaff 0%, #ffbad2 100%);
     font-family: 'Baloo 2', cursive, Arial, sans-serif;
     color: #333;
@@ -19,220 +19,123 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    position: relative;
     overflow-x: hidden;
   }
- 
+
+  /* --- PLAYER PADRÃO MARAVILHOSO --- */
+  #musikids-player-card {
+    background: white; 
+    padding: 8px 18px; 
+    display: flex; 
+    align-items: center; 
+    gap: 12px;
+    border: 4px solid #FF77A9; 
+    border-radius: 50px;
+    position: fixed; 
+    top: 15px; 
+    right: 15px; 
+    z-index: 10001;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+  .player-controls { display: flex; gap: 8px; align-items: center; }
+  .player-btn {
+    background: #FF77A9; 
+    border: none; 
+    color: white;
+    width: 35px; 
+    height: 35px; 
+    border-radius: 50%; 
+    cursor: pointer;
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-size: 14px;
+    transition: transform 0.2s;
+  }
+  .player-btn:active { transform: scale(0.9); }
+  .player-label { font-weight: 800; color: #FF4C8B; font-size: 0.9rem; margin-right: 2px; }
+  .btn-shuffle.active { background: #21a7ff !important; }
+
+  /* --- ESTILO DO JOGO --- */
   #voltar-menu-btn {
-    position: absolute;
-    top: 1.5rem;
-    left: 1.5rem;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px #ffadc3b0;
-    z-index: 10;
+    position: fixed; top: 12px; left: 12px; z-index: 1000;
+    padding: 10px 20px; font-size: 1.1rem; border-radius: 9px; border: none;
+    background: linear-gradient(135deg, #ff007f, #21a7ff 110%);
+    color: #fff; font-family: 'Baloo 2', cursive; font-weight: bold;
+    box-shadow: 1px 3px 15px #21a7ff99; cursor: pointer; text-decoration: none;
   }
 
-  header {
-    font-weight: 900;
-    font-size: 2.1rem;
-    margin-bottom: 1.5rem;
-    color: #ff4c8b;
-    text-shadow: 0 2px 8px #ffe1ee;
-  }
+  header { font-weight: 900; font-size: 2.1rem; margin: 60px 0 1.5rem 0; color: #ff4c8b; text-shadow: 0 2px 8px #ffe1ee; }
 
   #config {
-    width: 320px;
-    background: #fff1f9;
-    border-radius: 18px;
-    padding: 1.3rem 1.6rem;
-    box-shadow: 0 6px 30px #ffcce1a0;
-    margin-bottom: 2rem;
+    width: 320px; background: #fff1f9; border-radius: 18px;
+    padding: 1.3rem 1.6rem; box-shadow: 0 6px 30px #ffcce1a0; margin-bottom: 2rem;
   }
 
-  label {
-    font-weight: 700;
-    display: block;
-    margin-bottom: 0.5rem;
-    color: #d23065;
-    user-select: none;
-  }
+  label { font-weight: 700; display: block; margin-bottom: 0.5rem; color: #d23065; }
 
   select {
-    width: 100%;
-    padding: 0.4rem 0.6rem;
-    font-size: 1rem;
-    border-radius: 12px;
-    border: 2px solid #ff2d7f;
-    background: white;
-    cursor: pointer;
-    user-select: none;
-    margin-bottom: 12px;
+    width: 100%; padding: 0.5rem; font-size: 1rem; border-radius: 12px;
+    border: 2px solid #ff2d7f; margin-bottom: 12px; font-family: 'Baloo 2';
+    background: white; cursor: pointer;
   }
 
-  #btns-row {
-    display: block;
+  #start-btn {
+    width: 100%; padding: 1rem; font-weight: 700; border-radius: 20px; border: none;
+    background-color: #ff4c8b; color: white; font-size: 1.25rem; cursor: pointer;
+    box-shadow: 0 10px 20px #ffadc3b0; transition: transform 0.2s;
   }
-
-  button, a.btn {
-    padding: 1rem 0;
-    font-weight: 700;
-    border-radius: 20px;
-    border: none;
-    background-color: #ff4c8b;
-    color: white;
-    font-size: 1.25rem;
-    cursor: pointer;
-    box-shadow: 0 10px 20px #ffadc3b0;
-    transition: background-color 0.3s ease, transform 0.25s ease;
-    text-decoration: none;
-    display: inline-block;
-    user-select: none;
-  }
-
-  button#start-btn {
-    width: 100%;
-    margin-top: 1rem;
-  }
-
-  button:hover, a.btn:hover {
-    background-color: #e93c73;
-    transform: scale(1.04);
-  }
+  #start-btn:active { transform: scale(0.95); }
 
   #puzzle-container {
-    display: none;
-    margin-bottom: 2rem;
-    width: 90vw;
-    max-width: 500px;
-    background: #fff0f7;
-    border-radius: 20px;
-    box-shadow: 0 8px 38px #ffa4c5cc;
-    user-select: none;
-    padding: 1rem;
+    display: none; width: 90vw; max-width: 500px; background: #fff0f7;
+    border-radius: 20px; padding: 1rem; box-shadow: 0 8px 38px #ffa4c5cc; margin-bottom: 2rem;
   }
 
-  #puzzle {
-    display: grid;
-    gap: 2px;
-    margin: auto;
-    background: #ffbad2cc;
-    border-radius: 20px;
-    overflow: hidden;
-    user-select: none;
-    width: 100%;
-    height: auto;
-    min-height: 200px;
-  }
+  #puzzle { display: grid; gap: 2px; background: #ffbad2cc; border-radius: 20px; overflow: hidden; width: 100%; }
 
   .piece {
-    cursor: grab;
-    user-select: none;
-    border-radius: 10px;
-    box-shadow: 0 8px 19px #ff70a0aa;
-    transition: box-shadow 0.25s;
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    cursor: grab; border-radius: 10px; box-shadow: 0 4px 10px rgba(255,112,160,0.4);
+    background-repeat: no-repeat; background-size: 100% 100%;
   }
+  .piece:active { cursor: grabbing; }
 
-  .piece.dragging {
-    cursor: grabbing;
-    box-shadow: 0 14px 28px #ff377bee;
-  }
+  #instructions { font-weight: 700; margin-bottom: 12px; color: #d23065; min-height: 1.5em; }
 
-  #instructions {
-    font-weight: 700;
-    margin: 0.8rem 0 12px 0;
-    color: #d23065;
-    user-select: none;
-    min-height: 2.3em;
-  }
-
-  #confetti {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 100;
-    display: none;
-  }
-
-  .confetti-piece {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background-color: #ff4c8b;
-    pointer-events: none;
-    animation: confetti-fall 3s linear infinite;
-  }
-
-  .confetti-piece:nth-child(odd) {
-    background-color: #a0eaff;
-    animation-duration: 4s;
-  }
-
-  .confetti-piece:nth-child(3n) {
-    background-color: #ffbad2;
-    animation-duration: 2.5s;
-  }
-
-  .confetti-piece:nth-child(4n) {
-    background-color: #fff1f9;
-    animation-duration: 3.5s;
-  }
-
-  @keyframes confetti-fall {
-    0% {
-      transform: translateY(-100vh) rotate(0deg);
-      opacity: 1;
-    }
-    100% {
-      transform: translateY(100vh) rotate(720deg);
-      opacity: 0;
-    }
-  }
-
-  @media (max-width: 600px) {
-    .piece {
-      border-radius: 8px;
-      box-shadow: 0 5px 15px #ff70a0cc;
-    }
-    #config { width: 98vw; }
-    #puzzle-container { width: 99vw; max-width: 99vw; }
-    #puzzle { min-height: 150px; }
-    #voltar-menu-btn {
-        top: 1rem;
-        left: 1rem;
-        padding: 0.4rem 0.8rem;
-        font-size: 0.9rem;
-    }
-    header { margin-top: 2.5rem; }
-  }
-
-  @media (min-width: 768px) {
-    #puzzle { max-height: 400px; }
+  @media (max-width: 700px) {
+    #musikids-player-card { top: auto; bottom: 15px; right: 10px; scale: 0.85; }
+    header { margin-top: 80px; font-size: 1.6rem; }
+    #config { width: 90vw; }
   }
 </style>
 </head>
 <body>
-<a href="../index.html" role="button" class="btn" id="voltar-menu-btn" aria-label="Voltar ao Menu de Jogos">← Menu</a>
-<header>Quebra-Cabeça - MusiKids Fun</header>
-<div id="config" aria-label="Configurações do quebra-cabeça">
+
+<div id="musikids-player-card">
+    <span class="player-label">Música</span>
+    <div class="player-controls">
+        <button class="player-btn" onclick="playPrev()">⏮️</button>
+        <button class="player-btn" onclick="toggleMusic()" id="play-pause-btn">▶️</button>
+        <button class="player-btn" onclick="playNext()">⏭️</button>
+        <button class="player-btn btn-shuffle" onclick="toggleShuffle()" id="shuffle-btn">🔀</button>
+    </div>
+</div>
+<div style="position: absolute; left: -9999px;"><div id="yt-audio-element"></div></div>
+
+<a href="../index.html" class="btn" id="voltar-menu-btn">← Menu</a>
+<header>Quebra-Cabeça</header>
+
+<div id="config">
   <label for="pieces-select">Nível (peças):</label>
-  <select id="pieces-select" aria-describedby="pieces-desc" aria-required="true">
+  <select id="pieces-select">
     <option value="4" selected>Muito Fácil (2x2)</option>
     <option value="6">Fácil (3x2)</option>
     <option value="9">Médio (3x3)</option>
     <option value="15">Difícil (5x3)</option>
   </select>
+
   <label for="image-select">Selecione a imagem:</label>
-  <select id="image-select" aria-describedby="image-desc" aria-required="true">
+  <select id="image-select">
     <option value="https://i.imgur.com/koHNUpP.jpeg">Logo MusiKids 🎵</option>
     <option value="https://i.imgur.com/Bsjz43J.jpeg">Meu Amorzinho ❤️</option>
     <option value="https://i.imgur.com/l9ovoXM.jpeg">Animais 🦁🐯🦒</option>
@@ -254,246 +157,153 @@
     <option value="https://i.imgur.com/ksaXISB.jpeg">Ursinho Brincalhão 🧸🎉</option>
     <option value="https://i.imgur.com/ASmGG1a.jpeg">Ursinho Dorminhoco 🧸🌙</option>
   </select>
-  <div id="btns-row">
-    <button id="start-btn" aria-label="Iniciar Quebra-Cabeça">Iniciar Quebra-Cabeça</button>
-  </div>
+  <button id="start-btn">Iniciar Quebra-Cabeça</button>
 </div>
 
-<div id="puzzle-container" style="display:none;">
+<div id="puzzle-container">
   <div id="instructions"></div>
   <div id="puzzle"></div>
 </div>
 
-<div id="confetti"></div>
-
+<script src="../../js/musicas_data.js"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
 <script>
-const puzzle = document.getElementById("puzzle");
-const piecesSelect = document.getElementById("pieces-select");
-const imageSelect = document.getElementById("image-select");
-const startBtn = document.getElementById("start-btn");
+    let player;
+    let currentIndex = parseInt(sessionStorage.getItem('musi_index')) || 0;
+    let isShuffle = sessionStorage.getItem('musi_shuffle') === 'true';
 
-document.addEventListener('DOMContentLoaded', () => {
-  const instructions = document.getElementById("instructions");
-  const puzzleContainer = document.getElementById("puzzle-container");
-  const confettiContainer = document.getElementById("confetti");
-  let rows, cols, totalPieces;
-  let pieces = [];
-  let originalPositions = [];
-  let imageUrl;
-  let confettiInterval;
-
-  function determineGrid(total) {
-    if(total === 4){ rows = 2; cols = 2; }
-    else if(total === 6){ rows = 2; cols = 3; }
-    else if(total === 9){ rows = 3; cols = 3; }
-    else if(total === 15){ rows = 3; cols = 5;}
-    else if(total === 20){ rows = 4; cols = 5;}
-    else { rows = 2; cols = 2;}
-  }
-
-  function shuffle(array){
-    for(let i = array.length - 1; i > 0; i--){
-      const j = Math.floor(Math.random()*(i+1));
-      [array[i], array[j]] = [array[j], array[i]];
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('yt-audio-element', {
+            height: '0', width: '0',
+            videoId: listaMusicasIds[currentIndex],
+            playerVars: { 'autoplay': sessionStorage.getItem('musi_playing') === 'true' ? 1 : 0 },
+            events: {
+                'onReady': (e) => {
+                    const savedTime = parseFloat(sessionStorage.getItem('musi_time')) || 0;
+                    if(savedTime > 0) e.target.seekTo(savedTime, true);
+                    if(isShuffle) document.getElementById('shuffle-btn').classList.add('active');
+                    updatePlayBtn();
+                },
+                'onStateChange': (e) => {
+                    if(e.data === 0) playNext();
+                    updatePlayBtn();
+                }
+            }
+        });
     }
-  }
 
-  function createConfetti() {
-    confettiContainer.style.display = 'block';
-    let pieceCount = 0;
-    const maxPieces = 100;
-    confettiInterval = setInterval(() => {
-      if (pieceCount >= maxPieces) {
-        clearInterval(confettiInterval);
-        setTimeout(() => {
-          confettiContainer.innerHTML = '';
-          confettiContainer.style.display = 'none';
-        }, 3000);
-        return;
-      }
-      const confettiPiece = document.createElement('div');
-      confettiPiece.classList.add('confetti-piece');
-      confettiPiece.style.left = Math.random() * 100 + 'vw';
-      confettiPiece.style.animationDelay = Math.random() * 2 + 's';
-      confettiPiece.style.transform = `rotate(${Math.random() * 360}deg)`;
-      confettiContainer.appendChild(confettiPiece);
-      pieceCount++;
-      setTimeout(() => {
-        if (confettiPiece.parentNode) {
-          confettiPiece.parentNode.removeChild(confettiPiece);
+    function updatePlayBtn() {
+        const btn = document.getElementById('play-pause-btn');
+        if(!btn || !player || !player.getPlayerState) return;
+        const isPlaying = player.getPlayerState() === 1;
+        btn.innerText = isPlaying ? "⏸️" : "▶️";
+        sessionStorage.setItem('musi_playing', isPlaying);
+    }
+
+    function toggleMusic() {
+        player.getPlayerState() === 1 ? player.pauseVideo() : player.playVideo();
+        setTimeout(updatePlayBtn, 200);
+    }
+
+    function playNext() {
+        currentIndex = isShuffle ? Math.floor(Math.random() * listaMusicasIds.length) : (currentIndex + 1) % listaMusicasIds.length;
+        player.loadVideoById(listaMusicasIds[currentIndex]);
+        sessionStorage.setItem('musi_index', currentIndex);
+    }
+
+    function playPrev() {
+        currentIndex = (currentIndex - 1 + listaMusicasIds.length) % listaMusicasIds.length;
+        player.loadVideoById(listaMusicasIds[currentIndex]);
+        sessionStorage.setItem('musi_index', currentIndex);
+    }
+
+    function toggleShuffle() {
+        isShuffle = !isShuffle;
+        sessionStorage.setItem('musi_shuffle', isShuffle);
+        document.getElementById('shuffle-btn').classList.toggle('active');
+    }
+
+    setInterval(() => {
+        if(player && player.getCurrentTime) sessionStorage.setItem('musi_time', player.getCurrentTime());
+    }, 1000);
+
+    // Lógica do Quebra-Cabeça
+    const puzzle = document.getElementById("puzzle");
+    const piecesSelect = document.getElementById("pieces-select");
+    const imageSelect = document.getElementById("image-select");
+    const startBtn = document.getElementById("start-btn");
+    const instructions = document.getElementById("instructions");
+    const puzzleContainer = document.getElementById("puzzle-container");
+
+    let rows, cols, totalPieces, imageUrl, draggedPiece = null;
+
+    startBtn.onclick = () => {
+        totalPieces = Number(piecesSelect.value);
+        if(totalPieces === 4){ rows = 2; cols = 2; }
+        else if(totalPieces === 6){ rows = 2; cols = 3; }
+        else if(totalPieces === 9){ rows = 3; cols = 3; }
+        else { rows = 3; cols = 5; }
+        
+        imageUrl = imageSelect.value;
+        puzzleContainer.style.display = 'block';
+        instructions.textContent = "Arraste as peças para montar!";
+        createPuzzle();
+        window.scrollTo({ top: puzzleContainer.offsetTop - 20, behavior: 'smooth' });
+    };
+
+    function createPuzzle() {
+        puzzle.innerHTML = "";
+        puzzle.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+        puzzle.style.aspectRatio = `${cols} / ${rows}`;
+        let piecesArr = [];
+        for(let i=0; i<totalPieces; i++) {
+            const piece = document.createElement("div");
+            piece.classList.add("piece");
+            piece.style.backgroundImage = `url(${imageUrl})`;
+            piece.style.backgroundSize = `${cols*100}% ${rows*100}%`;
+            const r = Math.floor(i / cols);
+            const c = i % cols;
+            piece.style.backgroundPosition = `${(c*100)/(cols-1)}% ${(r*100)/(rows-1)}%`;
+            piece.draggable = true;
+            piece.dataset.index = i;
+            
+            // Eventos Mouse
+            piece.addEventListener('dragstart', () => draggedPiece = piece);
+            piece.addEventListener('dragover', e => e.preventDefault());
+            piece.addEventListener('drop', () => swapPieces(piece));
+            
+            // Suporte Touch Básico
+            piece.addEventListener('touchstart', (e) => { draggedPiece = piece; }, {passive: true});
+            piece.addEventListener('touchend', (e) => {
+                let touch = e.changedTouches[0];
+                let target = document.elementFromPoint(touch.clientX, touch.clientY);
+                if (target && target.classList.contains('piece') && target !== piece) swapPieces(target);
+            });
+
+            piecesArr.push(piece);
         }
-      }, 4000);
-    }, 50);
-  }
-
-  startBtn.onclick = () => {
-    totalPieces = Number(piecesSelect.value);
-    determineGrid(totalPieces);
-    imageUrl = imageSelect.value;
-    instructions.textContent = "Carregando imagem...";
-   
-    const img = new Image();
-    img.onload = () => {
-      puzzleContainer.style.display = 'block';
-      instructions.textContent = `Monte o quebra-cabeça de ${totalPieces} peças!`;
-      createPuzzle();
-    };
-    img.onerror = () => {
-      instructions.textContent = "Erro ao carregar a imagem, tente outra.";
-      puzzleContainer.style.display = 'none';
-      console.error("Erro ao carregar imagem: " + imageUrl);
-    };
-    img.src = imageUrl;
-  };
-
-  function createPuzzle() {
-    puzzle.innerHTML = "";
-    puzzle.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
-    puzzle.style.gridTemplateRows = `repeat(${rows}, 1fr)`;
-    puzzle.style.aspectRatio = `${cols} / ${rows}`;
-    pieces = [];
-    originalPositions = [];
-    for(let r=0; r<rows; r++){
-      for(let c=0; c<cols; c++){
-        const idx = r*cols + c;
-        if(idx >= totalPieces) break;
-        const piece = document.createElement("div");
-        piece.classList.add("piece");
-        piece.style.backgroundImage = `url(${imageUrl})`;
-        piece.style.backgroundSize = `${cols*100}% ${rows*100}%`;
-        const xPos = (cols > 1) ? (c * 100) / (cols - 1) : 0;
-        const yPos = (rows > 1) ? (r * 100) / (rows - 1) : 0;
-        piece.style.backgroundPosition = `${xPos}% ${yPos}%`;
-        piece.draggable = true;
-        piece.dataset.index = idx;
-        puzzle.appendChild(piece);
-        pieces.push(piece);
-        originalPositions.push(idx);
-      }
+        // Embaralhar
+        piecesArr.sort(() => Math.random() - 0.5);
+        piecesArr.forEach(p => puzzle.appendChild(p));
     }
-    shufflePieces();
-  }
 
-  function isSolved() {
-    let order = Array.from(puzzle.children).map(p => Number(p.dataset.index));
-    return order.every((val, i) => val === i);
-  }
-
-  function shufflePieces() {
-    let attempts = 0;
-    do {
-      shuffle(originalPositions);
-      while (puzzle.firstChild) {
-        puzzle.removeChild(puzzle.firstChild);
-      }
-      originalPositions.forEach(i => puzzle.appendChild(pieces[i]));
-      attempts++;
-    } while (isSolved() && attempts < 10);
-    addListeners();
-  }
-
-  function addListeners() {
-    Array.from(puzzle.children).forEach(piece => {
-      piece.addEventListener("dragstart", dragStart);
-      piece.addEventListener("dragover", dragOver);
-      piece.addEventListener("drop", drop);
-      piece.addEventListener("dragenter", dragEnter);
-      piece.addEventListener("dragleave", dragLeave);
-      piece.addEventListener("dragend", dragEnd);
-      piece.addEventListener("touchstart", dragStart, { passive: false });
-      piece.addEventListener("touchmove", dragOver, { passive: false });
-      piece.addEventListener("touchend", drop, { passive: false });
-    });
-  }
-
-  let draggedPiece = null;
-  let touchIdentifier = null;
-
-  function getTouch(e) {
-    if (e.changedTouches) return e.changedTouches[0];
-    return e;
-  }
-
-  function dragStart(e){
-    if (e.type === 'touchstart') {
-      if(e.touches.length > 1) return;
-      e.preventDefault();
-      touchIdentifier = e.changedTouches[0].identifier;
+    function swapPieces(targetPiece) {
+        const allPieces = Array.from(puzzle.children);
+        const srcIdx = allPieces.indexOf(draggedPiece);
+        const destIdx = allPieces.indexOf(targetPiece);
+        
+        if (srcIdx < destIdx) puzzle.insertBefore(draggedPiece, targetPiece.nextSibling);
+        else puzzle.insertBefore(draggedPiece, targetPiece);
+        
+        checkWin();
     }
-    draggedPiece = e.target;
-    if (e.dataTransfer) e.dataTransfer.effectAllowed = "move";
-    setTimeout(() => { if(draggedPiece) draggedPiece.classList.add("dragging"); }, 0);
-  }
 
-  function dragOver(e){
-    e.preventDefault();
-    if (e.dataTransfer) e.dataTransfer.dropEffect = "move";
-    let target = getTargetFromTouch(e);
-    if(target && target !== draggedPiece && target.classList.contains('piece')) {
-      Array.from(puzzle.children).forEach(p => p.classList.remove("drag-over"));
-      target.classList.add("drag-over");
+    function checkWin() {
+        const currentOrder = Array.from(puzzle.children).map(p => p.dataset.index);
+        if(currentOrder.every((val, i) => Number(val) === i)) {
+            instructions.innerHTML = "🌟 <strong>Parabéns! Conseguiste!</strong> 🌟";
+        }
     }
-  }
-
-  function getTargetFromTouch(e) {
-    if (e.type === 'touchmove' || e.type === 'touchend') {
-      if (touchIdentifier === null) return null;
-      let touch = Array.from(e.changedTouches).find(t => t.identifier === touchIdentifier);
-      if (!touch) return null;
-      return document.elementFromPoint(touch.clientX, touch.clientY);
-    }
-    return e.target;
-  }
-
-  function dragEnter(e){
-    let target = e.target;
-    if(target && target !== draggedPiece && target.classList.contains('piece')) target.classList.add("drag-over");
-  }
-
-  function dragLeave(e){
-    let target = e.target;
-    if(target && target.classList.contains('piece')) target.classList.remove("drag-over");
-  }
-
-  function drop(e){
-    e.preventDefault();
-    let target = getTargetFromTouch(e);
-    if(target && target !== draggedPiece && target.classList.contains('piece')) {
-      swapPieces(draggedPiece, target);
-      target.classList.remove("drag-over");
-    }
-    if(e.type === 'touchend') dragEnd();
-  }
-
-  function dragEnd(){
-    if(draggedPiece) draggedPiece.classList.remove("dragging");
-    Array.from(puzzle.children).forEach(p => p.classList.remove("drag-over"));
-    draggedPiece = null;
-    touchIdentifier = null;
-    checkComplete();
-  }
-
-  function swapPieces(el1, el2) {
-    if (!el1 || !el2 || el1 === el2) return;
-    const parent = el1.parentNode;
-    if (parent !== el2.parentNode) return;
-    const marker = document.createElement('div');
-    parent.insertBefore(marker, el1);
-    parent.insertBefore(el1, el2);
-    parent.insertBefore(el2, marker);
-    parent.removeChild(marker);
-  }
-
-  function checkComplete(){
-    let order = Array.from(puzzle.children).map(p => Number(p.dataset.index));
-    if(order.every((val,i) => val === i)){
-      instructions.textContent = "Parabéns! Você completou o quebra-cabeça!";
-      createConfetti();
-    } else {
-      instructions.textContent = `Monte o quebra-cabeça de ${totalPieces} peças!`;
-    }
-  }
-});
 </script>
 </body>
 </html>
