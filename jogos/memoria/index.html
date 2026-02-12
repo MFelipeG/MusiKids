@@ -8,109 +8,89 @@
   @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700;800&display=swap');
 
   body {
-    margin: 0;
-    padding: 1.5rem 0 .3rem 0;
+    margin: 0; padding: 1rem 0;
     min-height: 100vh;
     font-family: 'Baloo 2', cursive, Arial, sans-serif;
     background: linear-gradient(135deg,#f7f4e9,#f8b500,#ff7eb9 100%);
-    color: #32434a;
-    user-select: none;
-    text-align: center;
-    overflow-x: hidden;
+    color: #32434a; user-select: none; text-align: center; overflow-x: hidden;
   }
 
-  /* --- PLAYER PADRÃO MARAVILHOSO --- */
+  /* --- PLAYER --- */
   #musikids-player-card {
-    background: white; 
-    padding: 8px 18px; 
-    display: flex; 
-    align-items: center; 
-    gap: 12px;
-    border: 4px solid #FF77A9; 
-    border-radius: 50px;
-    position: fixed; 
-    top: 15px; 
-    right: 15px; 
-    z-index: 10001;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    background: white; padding: 6px 15px; display: flex; align-items: center; gap: 10px;
+    border: 3px solid #FF77A9; border-radius: 50px; position: fixed; top: 10px; right: 10px; 
+    z-index: 10001; box-shadow: 0 4px 15px rgba(0,0,0,0.15);
   }
-  .player-controls { display: flex; gap: 8px; align-items: center; }
+  .player-controls { display: flex; gap: 6px; align-items: center; }
   .player-btn {
-    background: #FF77A9; 
-    border: none; 
-    color: white;
-    width: 35px; 
-    height: 35px; 
-    border-radius: 50%; 
-    cursor: pointer;
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
+    background: #FF77A9; border: none; color: white; width: 30px; height: 30px; 
+    border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
     font-size: 14px;
   }
-  .player-label { font-weight: 800; color: #FF4C8B; font-size: 0.9rem; margin-right: 2px; }
-  .btn-shuffle.active { background: #21a7ff !important; }
+  .player-label { font-weight: 800; color: #FF4C8B; font-size: 0.8rem; }
 
-  /* --- BOTÃO VOLTAR --- */
+  /* --- BOTÃO MENU --- */
   #btn-menu {
     position: fixed; top: 12px; left: 12px; z-index: 1000;
-    padding: 10px 20px; font-size: 1.1rem; border-radius: 9px; border: none;
-    background: linear-gradient(135deg, #ff007f, #21a7ff 110%);
-    color: #fff; font-family: 'Baloo 2', cursive; font-weight: bold;
-    box-shadow: 1px 3px 15px #21a7ff99; cursor: pointer; text-decoration: none;
+    padding: 8px 15px; font-size: 0.9rem; border-radius: 12px; border: none;
+    background: #a1d578; color: #214d0d; font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1); cursor: pointer; text-decoration: none;
   }
 
-  header { margin-top: 75px; font-weight: 900; font-size: 2.3rem; color: #d63a6d; margin-bottom: 18px; }
+  header { margin-top: 4.5rem; font-weight: 900; font-size: 2rem; color: #d63a6d; margin-bottom: 10px; }
 
   #game-container {
-    max-width: 95%; margin: 0 auto; background: white;
+    margin: 0 auto; background: white;
     border-radius: 28px; box-shadow: 0 4px 18px rgba(0,0,0,0.1);
-    padding: 20px; display: inline-block;
+    padding: 20px; 
+    display: inline-flex; /* Faz o container envolver as cartas sem sobrar espaço lateral */
+    flex-direction: column;
+    align-items: center;
+    max-width: 95%;
   }
 
-  .select-group { display: inline-flex; flex-direction: column; font-weight: 700; color: #d63a6d; margin: 0 10px 15px 10px; }
-  select { font-size: 1rem; border-radius: 14px; padding: 6px; border: 2px solid #d63a6d; font-family: 'Baloo 2'; }
+  .select-group { display: inline-flex; flex-direction: column; font-weight: 700; color: #d63a6d; margin: 0 5px 10px 5px; }
+  select { font-size: 0.9rem; border-radius: 10px; padding: 4px; border: 2px solid #d63a6d; font-family: 'Baloo 2'; }
 
-  #buttons { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+  #buttons { display: flex; gap: 8px; justify-content: center; margin-bottom: 15px; }
   .action-btn {
-    background: #a1d578; color: #214d0d; border-radius: 18px;
-    padding: 12px 20px; font-weight: 900; border: none; cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    background: #a1d578; color: #214d0d; border-radius: 15px;
+    padding: 10px 18px; font-weight: 900; border: none; cursor: pointer;
   }
-  .action-btn:disabled { background: #ccc; cursor: not-allowed; opacity: 0.7; }
 
-  /* --- GRID E CARTAS --- */
-  #cards-grid { display: grid; gap: 10px; justify-content: center; margin: 15px auto; }
+  /* --- GRID CENTRALIZADO E JUNTO --- */
+  #cards-grid { 
+    display: grid; 
+    gap: 10px; /* Espaço pequeno e fixo entre as cartas */
+    justify-content: center; 
+    width: fit-content; /* O grid só ocupa o tamanho das cartas */
+    margin: 0 auto;
+  }
 
-  .card { width: 70px; height: 90px; perspective: 800px; cursor: pointer; }
+  .card { width: 70px; height: 95px; perspective: 800px; cursor: pointer; }
+
+  /* Ajuste específico para 20 cartas em telas pequenas */
+  @media (max-width: 500px) {
+    .card { width: 16vw; height: 23vw; max-width: 70px; max-height: 95px; }
+    #cards-grid { gap: 6px; }
+    #game-container { padding: 10px; }
+  }
+
   .card-inner {
     position: relative; width: 100%; height: 100%;
     transition: transform 0.6s; transform-style: preserve-3d; border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
   }
-  
-  /* A carta começa escondida (back) e vira (flipped) para mostrar o desenho (front) */
   .card.flipped .card-inner { transform: rotateY(180deg); }
-
   .card-front, .card-back {
     position: absolute; width: 100%; height: 100%; border-radius: 12px;
     backface-visibility: hidden; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
   }
-  
-  /* Face com o desenho (fica atrás inicialmente) */
-  .card-front { background: #f7f7f7; font-size: 35px; transform: rotateY(180deg); }
-  
-  /* Face rosa (verso que a criança vê primeiro) */
-  .card-back { background: #ff7eb9; border: 3px solid white; }
+  .card-front { background: #f7f7f7; font-size: 2.2rem; transform: rotateY(180deg); }
+  .card-back { background: #ff7eb9; border: 3px solid white; box-sizing: border-box; }
+  .card.matched .card-inner { opacity: 0.7; transform: scale(0.95) rotateY(180deg); }
 
-  .card.matched .card-inner { box-shadow: 0 0 15px 3px #7ef5be; border: 2px solid #7ef5be; }
-
-  #result-text { font-weight: 800; font-size: 1.2rem; color: #d63a6d; margin-top: 15px; min-height: 1.5em; }
-
-  @media (max-width: 700px) {
-    #musikids-player-card { top: auto; bottom: 15px; right: 10px; scale: 0.85; }
-    header { margin-top: 80px; font-size: 1.8rem; }
-  }
+  #result-text { font-weight: 800; font-size: 1.1rem; color: #d63a6d; margin-top: 15px; }
 </style>
 </head>
 <body>
@@ -121,7 +101,6 @@
         <button class="player-btn" onclick="playPrev()">⏮️</button>
         <button class="player-btn" onclick="toggleMusic()" id="play-pause-btn">▶️</button>
         <button class="player-btn" onclick="playNext()">⏭️</button>
-        <button class="player-btn btn-shuffle" onclick="toggleShuffle()" id="shuffle-btn">🔀</button>
     </div>
 </div>
 <div style="position: absolute; left: -9999px;"><div id="yt-audio-element"></div></div>
@@ -163,7 +142,6 @@
 <script>
     let player;
     let currentIndex = parseInt(sessionStorage.getItem('musi_index')) || 0;
-    let isShuffle = sessionStorage.getItem('musi_shuffle') === 'true';
 
     function onYouTubeIframeAPIReady() {
         player = new YT.Player('yt-audio-element', {
@@ -171,24 +149,15 @@
             videoId: listaMusicasIds[currentIndex],
             playerVars: { 'autoplay': sessionStorage.getItem('musi_playing') === 'true' ? 1 : 0 },
             events: {
-                'onReady': (e) => {
-                    const savedTime = parseFloat(sessionStorage.getItem('musi_time')) || 0;
-                    if(savedTime > 0) e.target.seekTo(savedTime, true);
-                    if(isShuffle) document.getElementById('shuffle-btn').classList.add('active');
-                    updatePlayBtn();
-                },
-                'onStateChange': (e) => {
-                    if(e.data === 0) playNext();
-                    updatePlayBtn();
-                }
+                'onReady': (e) => updatePlayBtn(),
+                'onStateChange': (e) => { if(e.data === 0) playNext(); updatePlayBtn(); }
             }
         });
     }
 
     function updatePlayBtn() {
         const btn = document.getElementById('play-pause-btn');
-        if(!btn || !player || !player.getPlayerState) return;
-        btn.innerText = player.getPlayerState() === 1 ? "⏸️" : "▶️";
+        if(btn && player?.getPlayerState) btn.innerText = player.getPlayerState() === 1 ? "⏸️" : "▶️";
     }
 
     function toggleMusic() {
@@ -197,7 +166,7 @@
     }
 
     function playNext() {
-        currentIndex = isShuffle ? Math.floor(Math.random() * listaMusicasIds.length) : (currentIndex + 1) % listaMusicasIds.length;
+        currentIndex = (currentIndex + 1) % listaMusicasIds.length;
         player.loadVideoById(listaMusicasIds[currentIndex]);
         sessionStorage.setItem('musi_index', currentIndex);
     }
@@ -208,19 +177,8 @@
         sessionStorage.setItem('musi_index', currentIndex);
     }
 
-    function toggleShuffle() {
-        isShuffle = !isShuffle;
-        sessionStorage.setItem('musi_shuffle', isShuffle);
-        document.getElementById('shuffle-btn').classList.toggle('active');
-    }
-
-    setInterval(() => {
-        if(player && player.getCurrentTime) sessionStorage.setItem('musi_time', player.getCurrentTime());
-    }, 1000);
-
-    // Lógica do Jogo da Memória
-    const animais = ["🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🐨","🐷","🐸","🐵","🐔","🐧","🦄","🐝"];
-    const objetos = ["🎈","🎁","🎀","📦","📚","🎨","🎸","🚗","🚀","🎮","🎲","🧩","🧸","🔔","💡","💎"];
+    const animais = ["🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🐨","🐷","🐸","🐵","🐔","🐧","🦄","🐝","🐘","🐙","🐢","🦁"];
+    const objetos = ["🎈","🎁","🎀","📦","📚","🎨","🎸","🚗","🚀","🎮","🎲","🧩","🧸","🔔","💡","💎","🍎","🍦","⚽","🚲"];
 
     let cartas = [], cartasViradas = [], paresEncontrados = 0;
     let espiarContador = 3, bloqueado = false;
@@ -237,11 +195,17 @@
         
         const grid = document.getElementById('cards-grid');
         grid.innerHTML = '';
-        grid.style.gridTemplateColumns = `repeat(${qtd > 12 ? 5 : 4}, 1fr)`;
+        
+        // Ajuste dinâmico de colunas para ficar simétrico
+        let colunas = 4;
+        if (qtd === 20) colunas = 5;
+        if (qtd === 8) colunas = 4;
+
+        grid.style.gridTemplateColumns = `repeat(${colunas}, 1fr)`;
         
         cartas = deck.map(fig => {
             const div = document.createElement('div');
-            div.className = 'card'; // Começa desvirado (mostrando o rosa)
+            div.className = 'card';
             div.innerHTML = `<div class="card-inner"><div class="card-front">${fig}</div><div class="card-back"></div></div>`;
             div.dataset.fig = fig;
             div.onclick = () => virar(div);
@@ -249,10 +213,7 @@
             return div;
         });
 
-        paresEncontrados = 0;
-        espiarContador = 3;
-        bloqueado = false;
-        cartasViradas = [];
+        paresEncontrados = 0; espiarContador = 3; bloqueado = false; cartasViradas = [];
         document.getElementById('btn-espiar').disabled = false;
         document.getElementById('btn-espiar').innerText = `Espiar (3)`;
         document.getElementById('result-text').innerText = `Pares: 0 de ${pares}`;
@@ -260,10 +221,8 @@
 
     function virar(card) {
         if(bloqueado || card.classList.contains('flipped') || card.classList.contains('matched') || cartasViradas.length >= 2) return;
-        
         card.classList.add('flipped');
         cartasViradas.push(card);
-        
         if(cartasViradas.length === 2) {
             bloqueado = true;
             setTimeout(checarPar, 800);
@@ -273,38 +232,32 @@
     function checarPar() {
         const [c1, c2] = cartasViradas;
         if(c1.dataset.fig === c2.dataset.fig) {
-            c1.classList.add('matched');
-            c2.classList.add('matched');
+            c1.classList.add('matched'); c2.classList.add('matched');
             paresEncontrados++;
             if(paresEncontrados === cartas.length / 2) {
-                document.getElementById('result-text').innerHTML = "<strong>Parabéns! Você conseguiu! 🎉</strong>";
+                document.getElementById('result-text').innerHTML = "<strong>🎉 Parabéns! Próximo em 2s...</strong>";
+                setTimeout(criarCartas, 2000);
             }
         } else {
-            c1.classList.remove('flipped');
-            c2.classList.remove('flipped');
+            c1.classList.remove('flipped'); c2.classList.remove('flipped');
         }
-        cartasViradas = [];
-        bloqueado = false;
+        cartasViradas = []; bloqueado = false;
         if(paresEncontrados < cartas.length / 2) {
             document.getElementById('result-text').innerText = `Pares: ${paresEncontrados} de ${cartas.length / 2}`;
         }
     }
 
     document.getElementById('btn-novo').onclick = criarCartas;
-
     document.getElementById('btn-espiar').onclick = function() {
         if(espiarContador <= 0 || bloqueado) return;
         bloqueado = true;
         cartas.forEach(c => { if(!c.classList.contains('matched')) c.classList.add('flipped'); });
         espiarContador--;
         this.innerText = `Espiar (${espiarContador})`;
-        this.disabled = true;
-        
         setTimeout(() => {
             cartas.forEach(c => { if(!c.classList.contains('matched')) c.classList.remove('flipped'); });
             bloqueado = false;
-            if(espiarContador > 0) this.disabled = false;
-        }, 2000);
+        }, 1500);
     };
 
     window.onload = criarCartas;
