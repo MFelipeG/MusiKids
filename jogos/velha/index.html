@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
 <title>Jogo da Velha</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700;800&display=swap');
+  
   body {
     margin: 0;
     padding: 1.2rem 0 .3rem 0;
@@ -17,608 +18,235 @@
     user-select: none;
     overflow-x: hidden;
   }
-  
-  /* ESTILOS DO PLAYER (ADIÇÃO CIRÚRGICA) */
-  #musi-player-jogo {
-    position: fixed; top: 12px; right: 12px; z-index: 10001;
-    background: #fff; border: 3px solid #ff4c8b; border-radius: 50px;
-    display: flex; align-items: center; padding: 4px 12px;
-    box-shadow: 0 4px 15px rgba(255, 76, 139, 0.3); scale: 0.85;
-  }
-  .btn-musi-jogo {
-    background: #ff4c8b; border: none; color: white;
-    width: 32px; height: 32px; border-radius: 50%;
-    cursor: pointer; margin: 0 2px; font-size: 14px;
-    display: flex; align-items: center; justify-content: center;
-  }
 
-  #menuButton {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    z-index: 1000;
-    padding: 10px 20px;
-    font-size: 1.1rem;
-    border-radius: 9px;
-    border: none;
-    background: linear-gradient(135deg, #ff007f, #21a7ff 110%);
-    color: #fff;
-    font-family: 'Baloo 2', cursive, Arial, sans-serif;
-    font-weight: bold;
-    box-shadow: 1px 3px 15px #21a7ff99;
+  /* --- PLAYER "LIGAR OS PONTOS" (O QUE VOCÊ GOSTOU) --- */
+  #musikids-player-card {
+    background: white; 
+    padding: 8px 18px; 
+    display: flex; 
+    align-items: center; 
+    gap: 12px;
+    border: 4px solid #FF77A9; 
+    border-radius: 50px;
+    position: fixed; 
+    top: 15px; 
+    right: 15px; 
+    z-index: 10001;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+  .player-controls { display: flex; gap: 8px; align-items: center; }
+  .player-btn {
+    background: #FF77A9; 
+    border: none; 
+    color: white;
+    width: 35px; 
+    height: 35px; 
+    border-radius: 50%; 
     cursor: pointer;
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-size: 14px;
+    transition: transform 0.2s;
   }
-  .header-title {
-    margin: 56px 0 18px 0;
-    font-size: 2.3rem;
-    font-weight: 900;
-    color: #ff4c8b;
-    text-shadow: 0 3px 16px #f0629222;
-    letter-spacing: 1.5px;
+  .player-btn:active { transform: scale(0.9); }
+  .player-label { font-weight: 800; color: #FF4C8B; font-size: 0.9rem; margin-right: 2px; }
+  .btn-shuffle.active { background: #21a7ff !important; }
+
+  /* --- RESTANTE DO JOGO --- */
+  #menuButton {
+    position: fixed; top: 12px; left: 12px; z-index: 1000;
+    padding: 10px 20px; font-size: 1.1rem; border-radius: 9px; border: none;
+    background: linear-gradient(135deg, #ff007f, #21a7ff 110%);
+    color: #fff; font-family: 'Baloo 2', cursive; font-weight: bold;
+    box-shadow: 1px 3px 15px #21a7ff99; cursor: pointer;
   }
+  .header-title { margin: 60px 0 18px 0; font-size: 2.3rem; font-weight: 900; color: #ff4c8b; }
   #config, #game {
-    margin: 0 auto 1.6rem auto;
-    max-width: 430px;
-    background: #fff3f7;
-    border-radius: 20px;
-    padding: 1.1rem 1.4rem;
-    box-shadow: 2px 6px 15px rgba(255, 0, 127, 0.15);
-    text-align: left;
-  }
-  label {
-    font-weight: 700;
-    margin-right: 8px;
+    margin: 0 auto 1.6rem auto; max-width: 430px; background: #fff3f7;
+    border-radius: 20px; padding: 1.1rem 1.4rem; box-shadow: 2px 6px 15px rgba(255, 0, 127, 0.15); text-align: left;
   }
   select, input[type="text"] {
-    border-radius: 8px;
-    border: 2.5px solid #f8bbd0;
-    font-family: 'Baloo 2', cursive, Arial, sans-serif;
-    height: 36px;
-    font-size: 1rem;
-    padding: 0 1rem;
-    margin-bottom: 1rem;
-    width: 100%;
-    box-sizing: border-box;
+    border-radius: 8px; border: 2.5px solid #f8bbd0; font-family: 'Baloo 2';
+    height: 36px; width: 100%; box-sizing: border-box; margin-bottom: 1rem; padding: 0 10px;
   }
-  #config .input-row {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 1rem;
-  }
-  #config .input-row > div {
-    flex: 1;
-  }
-  button, .btn {
-    background: #ff4c8b;
-    border: none;
-    border-radius: 16px;
-    padding: 1rem 2.4rem;
-    color: white;
-    font-size: 1.09rem;
-    font-weight: bold;
-    cursor: pointer;
-    user-select: none;
-    box-shadow: 0 6px 20px rgba(255,76,139,0.24);
-    margin-top: 1rem;
-    width: 100%;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    transition: background 0.3s, transform 0.23s;
-  }
-  button:hover, .btn:hover {
-    background: #e03e72;
-    transform: scale(1.05);
-  }
-  #game {
-    display: none;
-    text-align: center;
-    position: relative;
+  button.start-btn {
+    background: #ff4c8b; border: none; border-radius: 16px; padding: 1rem;
+    color: white; font-size: 1.1rem; font-weight: bold; width: 100%; cursor: pointer;
   }
   #board {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(87px,1fr));
-    grid-template-rows: repeat(3, minmax(87px,1fr));
-    gap: 13px;
-    justify-content: center;
-    margin-top: 15px;
-    margin-bottom: 8px;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px; margin-top: 15px;
   }
   .cell {
-    background: #ffe3eb;
-    border-radius: 14px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 3.7rem;
-    font-weight: 900;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    user-select: none;
-    box-shadow: 0 4px 12px rgba(255,76,139,0.16);
+    background: #ffe3eb; border-radius: 14px; height: 100px;
+    display: flex; justify-content: center; align-items: center;
+    font-size: 3.5rem; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(255,76,139,0.16);
   }
-  .cell:hover {
-    background-color: #ffccd7;
-  }
-  .cell.X {
-    color: #f50057;
-  }
-  .cell.O {
-    color: #2e7d32;
-  }
-  .cell.win {
-    background-color: #ff6f91;
-    color: white !important;
-    box-shadow: 0 0 14px #ff6f91aa;
-  }
-  #message {
-    font-size: 1.19rem;
-    font-weight: 700;
-    min-height: 27px;
-    color: #bf1650;
-    margin-top: 13px;
-  }
-  #controls {
-    display: flex;
-    justify-content: flex-end;
-    max-width: 430px;
-    margin: 0 auto;
-    gap: 0;
-  }
-  #confetti {
-    pointer-events: none;
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%;
-    height: 0;
-    z-index: 9999;
-  }
-  .confetti-piece {
-    position: absolute;
-    width: 10px;
-    height: 14px;
-    opacity: 0.85;
-    animation-name: confetti-fall, confetti-spin;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-  }
-  @keyframes confetti-fall {
-    0% { top: -20px; opacity: 1; }
-    100% { top: 105vh; opacity: 0; }
-  }
-  @keyframes confetti-spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
+  .cell.X { color: #f50057; }
+  .cell.O { color: #2e7d32; }
+  .cell.win { background-color: #ff6f91; color: white !important; }
+  #message { font-size: 1.2rem; font-weight: 700; color: #bf1650; margin-top: 15px; text-align: center; }
+
   @media (max-width: 700px) {
-    #config, #game {
-      max-width: 97vw;
-      padding: 0.6rem 0.17rem;
-    }
-    #controls {
-      max-width: 97vw;
-      gap: 5vw;
-      justify-content: center;
-    }
-    #board {
-      grid-template-columns: repeat(3, 28vw);
-      grid-template-rows: repeat(3, 28vw);
-      gap: 3.5vw;
-      margin-bottom: 2vw;
-    }
-    .cell {
-      font-size: 11vw;
-    }
-    #menuButton {
-      font-size: 1rem;
-      padding: 8px 12px;
-      left: 10px; top: 10px;
-    }
-    .header-title {
-      font-size: 1.6rem;
-      margin: 19vw 0 12px 0;
-    }
-    #musi-player-jogo { top: auto; bottom: 12px; right: 12px; scale: 0.75; }
+    #musikids-player-card { top: auto; bottom: 15px; right: 10px; scale: 0.85; }
+    .header-title { margin-top: 80px; font-size: 1.8rem; }
   }
 </style>
 </head>
 <body>
 
-<div id="musi-player-jogo">
-    <button class="btn-musi-jogo" onclick="playPrev()">⏮️</button>
-    <button class="btn-musi-jogo" onclick="toggleMusic()" id="btn-play-pause-jogo">▶️</button>
-    <button class="btn-musi-jogo" onclick="playNext()">⏭️</button>
+<div id="musikids-player-card">
+    <span class="player-label">Música</span>
+    <div class="player-controls">
+        <button class="player-btn" onclick="playPrev()"> ⏮️</button>
+        <button class="player-btn" onclick="toggleMusic()" id="play-pause-btn"> ▶️</button>
+        <button class="player-btn" onclick="playNext()"> ⏭️</button>
+        <button class="player-btn btn-shuffle" onclick="toggleShuffle()" id="shuffle-btn"> 🔀</button>
+    </div>
 </div>
-<div style="position: absolute; left: -9999px;"><div id="yt-player-bin"></div></div>
+<div style="position: absolute; left: -9999px;"><div id="yt-audio-element"></div></div>
 
-<button id="menuButton" aria-label="Voltar para o menu de jogos">← Menu de Jogos</button>
+<button id="menuButton" onclick="window.location.href='../index.html'">← Menu de Jogos</button>
 <div class="header-title">Jogo da Velha</div>
-<div id="config" role="region" aria-label="Configurações do jogo">
-  <div class="input-group" style="margin-bottom:1rem;">
-    <label for="mode">Selecionar modo de jogo:</label>
-    <select id="mode" aria-describedby="modeDesc" style="width:auto; display:inline-block;">
-      <option value="1vs1">1 vs 1</option>
-      <option value="1vscpu">1 vs Computador</option>
-    </select>
-    <div id="modeDesc" hidden>Método de jogo: contra outro jogador ou contra o computador.</div>
+
+<div id="config">
+  <label>Modo de jogo:</label>
+  <select id="mode">
+    <option value="1vs1">1 vs 1</option>
+    <option value="1vscpu">Contra Computador</option>
+  </select>
+  <div id="names-area">
+    <input type="text" id="p1-name" placeholder="Jogador 1" value="Jogador 1">
+    <input type="text" id="p2-name" placeholder="Jogador 2" value="Jogador 2">
   </div>
-  <div id="players-names" style="margin-bottom:1rem;">
-    <div class="input-row" id="players1vs1" style="display:flex; gap:12px;">
-      <div>
-        <label for="player1-name">Nome do Jogador 1:</label>
-        <input type="text" id="player1-name" placeholder="Jogador 1" maxlength="12" value="Jogador 1" />
-      </div>
-      <div>
-        <label for="player2-name">Nome do Jogador 2:</label>
-        <input type="text" id="player2-name" placeholder="Jogador 2" maxlength="12" value="Jogador 2" />
-      </div>
-    </div>
-    <div id="player-cpu" style="display:none;">
-      <label for="player1-name-cpu">Nome do Jogador:</label>
-      <input type="text" id="player1-name-cpu" placeholder="Jogador" maxlength="12" value="Jogador"/>
-    </div>
-  </div>
-  <div id="cpu-difficulty-group" style="display:none; margin-bottom: 1rem;">
-    <label for="cpu-difficulty">Dificuldade do computador:</label>
-    <select id="cpu-difficulty" aria-describedby="cpuDiffDesc" style="width:auto; display:inline-block;">
-      <option value="easy">Fácil</option>
-      <option value="medium" selected>Médio</option>
-      <option value="hard">Difícil</option>
-    </select>
-    <div id="cpuDiffDesc" hidden>Escolha a dificuldade do computador.</div>
-  </div>
-  <button id="startBtn" aria-label="Começar o jogo">Começar</button>
+  <button class="start-btn" onclick="startGame()">Começar</button>
 </div>
-<div id="game">
-  <div id="board" role="grid" aria-label="Tabuleiro do jogo da velha"></div>
-  <div id="message" role="alert" aria-live="polite"></div>
-  <div id="controls" style="justify-content:center; max-width:430px; margin:0 auto; gap:0;">
-    </div>
+
+<div id="game" style="display:none;">
+  <div id="board"></div>
+  <div id="message"></div>
 </div>
-<div id="confetti"></div>
+
+<div id="confetti" style="position:fixed; top:0; left:0; pointer-events:none;"></div>
 
 <script src="../../js/musicas_data.js"></script>
 <script src="https://www.youtube.com/iframe_api"></script>
+
 <script>
-    let playerMusi;
-    let currentIndexMusi = parseInt(sessionStorage.getItem('musi_index')) || 0;
+    // Lógica do Player (Integrada com sessionStorage para continuidade)
+    let player;
+    let currentIndex = parseInt(sessionStorage.getItem('musi_index')) || 0;
+    let isShuffle = sessionStorage.getItem('musi_shuffle') === 'true';
 
     function onYouTubeIframeAPIReady() {
-        const savedTime = parseFloat(sessionStorage.getItem('musi_time')) || 0;
-        const isPlaying = sessionStorage.getItem('musi_playing') === 'true';
-
-        playerMusi = new YT.Player('yt-player-bin', {
-            height: '1', width: '1',
-            videoId: listaMusicasIds[currentIndexMusi],
-            playerVars: { 'autoplay': isPlaying ? 1 : 0, 'controls': 0 },
+        player = new YT.Player('yt-audio-element', {
+            height: '0', width: '0',
+            videoId: listaMusicasIds[currentIndex],
+            playerVars: { 'autoplay': sessionStorage.getItem('musi_playing') === 'true' ? 1 : 0 },
             events: {
-                'onReady': (event) => {
-                    if (savedTime > 0) event.target.seekTo(savedTime, true);
-                    if (isPlaying) {
-                        event.target.playVideo();
-                        document.getElementById('btn-play-pause-jogo').innerText = "⏸";
-                    }
+                'onReady': (e) => {
+                    const savedTime = parseFloat(sessionStorage.getItem('musi_time')) || 0;
+                    if(savedTime > 0) e.target.seekTo(savedTime, true);
+                    if(isShuffle) document.getElementById('shuffle-btn').classList.add('active');
                 },
                 'onStateChange': (e) => {
-                    if(e.data === YT.PlayerState.ENDED) playNext();
+                    if(e.data === 0) playNext();
+                    updatePlayBtn();
                 }
             }
         });
+    }
 
-        setInterval(() => {
-            if (playerMusi && playerMusi.getCurrentTime) {
-                sessionStorage.setItem('musi_time', playerMusi.getCurrentTime());
-                sessionStorage.setItem('musi_index', currentIndexMusi);
-                sessionStorage.setItem('musi_playing', playerMusi.getPlayerState() === 1);
-            }
-        }, 1000);
+    function updatePlayBtn() {
+        const btn = document.getElementById('play-pause-btn');
+        const isPlaying = player && player.getPlayerState && player.getPlayerState() === 1;
+        btn.innerText = isPlaying ? "⏸️" : "▶️";
+        sessionStorage.setItem('musi_playing', isPlaying);
     }
 
     function toggleMusic() {
-        const state = playerMusi.getPlayerState();
-        if (state === 1) {
-            playerMusi.pauseVideo();
-            document.getElementById('btn-play-pause-jogo').innerText = "▶️";
-        } else {
-            playerMusi.playVideo();
-            document.getElementById('btn-play-pause-jogo').innerText = "⏸";
-        }
+        player.getPlayerState() === 1 ? player.pauseVideo() : player.playVideo();
+        setTimeout(updatePlayBtn, 100);
     }
 
     function playNext() {
-        currentIndexMusi = (currentIndexMusi + 1) % listaMusicasIds.length;
-        sessionStorage.setItem('musi_time', 0);
-        playerMusi.loadVideoById(listaMusicasIds[currentIndexMusi]);
-        document.getElementById('btn-play-pause-jogo').innerText = "⏸";
+        currentIndex = isShuffle ? Math.floor(Math.random() * listaMusicasIds.length) : (currentIndex + 1) % listaMusicasIds.length;
+        player.loadVideoById(listaMusicasIds[currentIndex]);
+        sessionStorage.setItem('musi_index', currentIndex);
     }
 
     function playPrev() {
-        currentIndexMusi = (currentIndexMusi - 1 + listaMusicasIds.length) % listaMusicasIds.length;
-        sessionStorage.setItem('musi_time', 0);
-        playerMusi.loadVideoById(listaMusicasIds[currentIndexMusi]);
-        document.getElementById('btn-play-pause-jogo').innerText = "⏸";
+        currentIndex = (currentIndex - 1 + listaMusicasIds.length) % listaMusicasIds.length;
+        player.loadVideoById(listaMusicasIds[currentIndex]);
+        sessionStorage.setItem('musi_index', currentIndex);
     }
-</script>
 
-<script>
-  document.getElementById('menuButton').onclick = function() {
-    window.location.href = '../index.html';
-  };
-
-  const modeSelect = document.getElementById('mode');
-  const player1NameInput = document.getElementById('player1-name');
-  const player2NameInput = document.getElementById('player2-name');
-  const players1vs1 = document.getElementById('players1vs1');
-  const playerCpu = document.getElementById('player-cpu');
-  const player1NameCpuInput = document.getElementById('player1-name-cpu');
-  const cpuDifficultyGroup = document.getElementById('cpu-difficulty-group');
-  const cpuDifficultySelect = document.getElementById('cpu-difficulty');
-  const startBtn = document.getElementById('startBtn');
-  const gameDiv = document.getElementById('game');
-  const configDiv = document.getElementById('config');
-  const boardDiv = document.getElementById('board');
-  const messageDiv = document.getElementById('message');
-  const confettiContainer = document.getElementById('confetti');
-
-  const winCombos = [
-    [0,1,2],[3,4,5],[6,7,8],
-    [0,3,6],[1,4,7],[2,5,8],
-    [0,4,8],[2,4,6]
-  ];
-
-  let board = Array(9).fill(null);
-  let currentPlayer = 'X';
-  let gameActive = false;
-  let mode = '1vs1';
-  let players = ['Jogador 1', 'Jogador 2'];
-  let cpuDifficulty = 'medium';
-  let winningCells = [];
-  let autoRestartTimeout = null;
-
-  modeSelect.addEventListener('change', e => {
-    mode = e.target.value;
-    if(mode === '1vs1') {
-      players1vs1.style.display = 'flex';
-      playerCpu.style.display = 'none';
-      cpuDifficultyGroup.style.display = 'none';
-    } else {
-      players1vs1.style.display = 'none';
-      playerCpu.style.display = 'block';
-      cpuDifficultyGroup.style.display = 'block';
-      player1NameCpuInput.value = 'Jogador';
+    function toggleShuffle() {
+        isShuffle = !isShuffle;
+        sessionStorage.setItem('musi_shuffle', isShuffle);
+        document.getElementById('shuffle-btn').classList.toggle('active');
     }
-  });
 
-  startBtn.addEventListener('click', () => {
-    if(mode === '1vs1') {
-      const p1 = player1NameInput.value.trim() || 'Jogador 1';
-      const p2 = player2NameInput.value.trim() || 'Jogador 2';
-      players = [p1, p2];
-    } else {
-      const p1 = player1NameCpuInput.value.trim() || 'Jogador';
-      players = [p1, 'Computador'];
+    setInterval(() => {
+        if(player && player.getCurrentTime) sessionStorage.setItem('musi_time', player.getCurrentTime());
+    }, 1000);
+
+    // Lógica do Jogo da Velha
+    let board = Array(9).fill(null);
+    let currentPlayer = 'X';
+    let active = false;
+    let names = [];
+
+    function startGame() {
+        names = [document.getElementById('p1-name').value, document.getElementById('p2-name').value];
+        document.getElementById('config').style.display = 'none';
+        document.getElementById('game').style.display = 'block';
+        initBoard();
     }
-    cpuDifficulty = cpuDifficultySelect.value;
-    configDiv.style.display = 'none';
-    gameDiv.style.display = 'block';
-    messageDiv.textContent = `${players[0]} (X) começa!`;
-    initGame();
-  });
 
-  function initGame() {
-    clearConfetti();
-    board.fill(null);
-    currentPlayer = 'X';
-    gameActive = true;
-    clearBoard();
-    winningCells = [];
-    messageDiv.textContent = `${players[0]} (X) começa!`;
-    renderBoard();
-    if(mode === '1vscpu' && currentPlayer === 'O') {
-      setTimeout(cpuPlay, 600);
+    function initBoard() {
+        active = true;
+        board.fill(null);
+        const b = document.getElementById('board');
+        b.innerHTML = '';
+        for(let i=0; i<9; i++) {
+            let c = document.createElement('div');
+            c.className = 'cell';
+            c.onclick = () => makeMove(i);
+            b.appendChild(c);
+        }
+        document.getElementById('message').innerText = `Vez de ${names[0]}`;
     }
-  }
 
-  function clearBoard() {
-    boardDiv.innerHTML = '';
-  }
-
-  function renderBoard() {
-    boardDiv.innerHTML = '';
-    boardDiv.style.position = 'relative';
-    for(let i=0; i<9; i++) {
-      const cell = document.createElement('div');
-      cell.classList.add('cell');
-      if(winningCells.includes(i)) cell.classList.add('win');
-      cell.dataset.index = i;
-      if(board[i]) {
-        cell.textContent = board[i];
-        cell.classList.add(board[i]);
-      }
-      cell.addEventListener('click', onCellClick);
-      boardDiv.appendChild(cell);
-    }
-  }
-
-  function onCellClick(e) {
-    const idx = +e.target.dataset.index;
-    if(!gameActive || board[idx]) return;
-    if(mode === '1vscpu' && currentPlayer === 'O') return;
-    makeMove(idx, currentPlayer);
-    if(gameActive) {
-      switchPlayer();
-      if(mode === '1vscpu' && currentPlayer === 'O') {
-        setTimeout(cpuPlay, 650);
-      }
-    }
-  }
-
-  function makeMove(idx, player) {
-    board[idx] = player;
-    const winInfo = checkWin(player);
-    if(winInfo) {
-      gameActive = false;
-      winningCells = winInfo;
-      messageDiv.textContent = `${players[player === 'X' ? 0 : 1]} venceu! 🎉`;
-      renderBoard();
-      showConfetti();
-      scheduleAutoRestart();
-    } else if(board.every(cell => cell !== null)) {
-      gameActive = false;
-      winningCells = [];
-      messageDiv.textContent = "Empate! 🤝";
-      renderBoard();
-      clearConfetti();
-      scheduleAutoRestart();
-    } else {
-      renderBoard();
-    }
-  }
-
-  function scheduleAutoRestart() {
-    if(autoRestartTimeout) clearTimeout(autoRestartTimeout);
-    autoRestartTimeout = setTimeout(() => {
-      initGame();
-    }, 3000);
-  }
-
-  function switchPlayer() {
-    currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-    const playerName = players[currentPlayer === 'X' ? 0 : 1];
-    if(!gameActive) return;
-    messageDiv.textContent = `Vez de ${playerName} (${currentPlayer})`;
-  }
-
-  function checkWin(player) {
-    for(const combo of winCombos) {
-      if(combo.every(i => board[i] === player)) {
-        return combo;
-      }
-    }
-    return null;
-  }
-
-  function cpuPlay() {
-    switch(cpuDifficulty) {
-      case 'easy': playRandom(); break;
-      case 'medium': if(!tryToWinOrBlock()) playRandom(); break;
-      case 'hard': if(!tryToWinOrBlock()) playPerfect(); break;
-    }
-  }
-
-  function playRandom() {
-    const freePositions = board.map((v,i) => v === null ? i : null).filter(i => i !== null);
-    if(freePositions.length === 0) return;
-    const idx = freePositions[Math.floor(Math.random() * freePositions.length)];
-    makeMove(idx, currentPlayer);
-    switchPlayer();
-  }
-
-  function tryToWinOrBlock() {
-    const target = findWinningOrBlockingMove(currentPlayer) || findWinningOrBlockingMove(currentPlayer === 'X' ? 'O' : 'X');
-    if(target !== null) {
-      makeMove(target, currentPlayer);
-      switchPlayer();
-      return true;
-    }
-    return false;
-  }
-
-  function findWinningOrBlockingMove(player) {
-    for(const combo of winCombos) {
-      const vals = combo.map(i => board[i]);
-      if(vals.filter(v => v === player).length === 2 && vals.includes(null)) {
-        return combo[vals.indexOf(null)];
-      }
-    }
-    return null;
-  }
-
-  function playPerfect() {
-    let bestScore = -Infinity;
-    let move;
-    for(let i = 0; i < 9; i++) {
-      if(board[i] === null) {
+    function makeMove(i) {
+        if(!active || board[i]) return;
         board[i] = currentPlayer;
-        let score = minimax(board, false);
-        board[i] = null;
-        if(score > bestScore) {
-          bestScore = score;
-          move = i;
+        render();
+        if(checkWin()) {
+            document.getElementById('message').innerText = `${currentPlayer === 'X' ? names[0] : names[1]} Venceu! 🎉`;
+            active = false;
+            setTimeout(initBoard, 3000);
+        } else if(board.every(x => x)) {
+            document.getElementById('message').innerText = "Empate! 🤝";
+            setTimeout(initBoard, 3000);
+        } else {
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            document.getElementById('message').innerText = `Vez de ${currentPlayer === 'X' ? names[0] : names[1]}`;
         }
-      }
     }
-    if(move !== undefined) {
-      makeMove(move, currentPlayer);
-      switchPlayer();
-    } else {
-      playRandom();
-    }
-  }
 
-  function minimax(brd, isMaximizing) {
-    let winner = checkWinner(brd);
-    if(winner !== null) {
-      if(winner === currentPlayer) return 10;
-      else if(winner === 'tie') return 0;
-      else return -10;
+    function render() {
+        const cells = document.querySelectorAll('.cell');
+        board.forEach((val, i) => {
+            cells[i].innerText = val;
+            if(val) cells[i].classList.add(val);
+        });
     }
-    if(isMaximizing) {
-      let bestScore = -Infinity;
-      for(let i = 0; i < 9; i++) {
-        if(brd[i] === null) {
-          brd[i] = currentPlayer;
-          let score = minimax(brd, false);
-          brd[i] = null;
-          bestScore = Math.max(score, bestScore);
-        }
-      }
-      return bestScore;
-    } else {
-      let opponent = currentPlayer === 'X' ? 'O' : 'X';
-      let bestScore = Infinity;
-      for(let i = 0; i < 9; i++) {
-        if(brd[i] === null) {
-          brd[i] = opponent;
-          let score = minimax(brd, true);
-          brd[i] = null;
-          bestScore = Math.min(score, bestScore);
-        }
-      }
-      return bestScore;
-    }
-  }
 
-  function checkWinner(brd) {
-    for(const combo of winCombos) {
-      const [a,b,c] = combo;
-      if(brd[a] && brd[a] === brd[b] && brd[a] === brd[c]) {
-        return combo;
-      }
+    function checkWin() {
+        const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+        return wins.some(w => board[w[0]] && board[w[0]] === board[w[1]] && board[w[0]] === board[w[2]]);
     }
-    if(brd.every(cell => cell !== null)) return 'tie';
-    return null;
-  }
-
-  function showConfetti() {
-    clearConfetti();
-    const colors = ['#f44336','#ffeb3b','#4caf50','#2196f3','#ff9800','#9c27b0','#00bcd4','#ffc107'];
-    const count = 150;
-    for(let i=0; i<count; i++) {
-      let confetti = document.createElement('div');
-      confetti.className = 'confetti-piece';
-      confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-      confetti.style.left = Math.random() * window.innerWidth + 'px';
-      confetti.style.animationDuration = (2 + Math.random() * 3) + 's';
-      confetti.style.animationDelay = (Math.random() * 2) + 's';
-      confettiContainer.appendChild(confetti);
-    }
-    setTimeout(clearConfetti, 7000);
-  }
-
-  function clearConfetti() {
-    confettiContainer.innerHTML = '';
-  }
 </script>
 </body>
 </html>
