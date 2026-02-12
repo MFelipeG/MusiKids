@@ -2,18 +2,19 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
 <title>Caça Palavras - MusiKids Fun</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Luckiest+Guy&display=swap');
   
   body {
-    margin: 0; padding: 1.5rem;
+    margin: 0; padding: 1rem;
     background: linear-gradient(135deg,#f7f4e9,#f8b500,#ff7eb9 100%);
     font-family: 'Baloo 2', cursive, Arial, sans-serif;
     color: #32434a; user-select: none;
     box-sizing: border-box; text-align: center;
     min-height: 100vh;
+    overflow-x: hidden;
   }
 
   /* --- PLAYER MUSIKIDS --- */
@@ -32,67 +33,84 @@
   .btn-shuffle.active { background: #21a7ff !important; }
 
   #btn-menu {
-    position: fixed; top: 1rem; left: 1rem;
+    position: fixed; top: 10px; left: 10px;
     background: #a1d578; color: #214d0d;
-    border-radius: 18px; padding: 12px 20px;
-    font-weight: 900; font-size: 1.1rem;
-    cursor: pointer; box-shadow: 0 0 15px #a1d578aa;
+    border-radius: 18px; padding: 10px 15px;
+    font-weight: 900; font-size: 0.9rem;
+    cursor: pointer; box-shadow: 0 0 10px #a1d578aa;
     border: none; user-select: none; z-index: 10000;
   }
 
   header {
-    margin-top: 5rem; font-weight: 900; font-size: 2.4rem;
-    color: #d63a6d; margin-bottom: 1rem;
+    margin-top: 4.5rem; font-weight: 900; font-size: 2rem;
+    color: #d63a6d; margin-bottom: 0.5rem;
   }
 
   main {
     max-width: 950px; margin: 0 auto;
     background: white; border-radius: 28px;
     box-shadow: 0 4px 18px #ffd3e466;
-    padding: 20px 18px 30px 18px;
-    display: flex; gap: 28px; justify-content: center; align-items: flex-start;
+    padding: 15px;
+    display: flex; gap: 15px; justify-content: center; align-items: flex-start;
   }
 
   .panel {
-    width: 170px; min-width: 135px; background: #fcf4ff;
-    border-radius: 23px; padding: 16px 8px 24px 8px;
+    width: 150px; min-width: 120px; background: #fcf4ff;
+    border-radius: 20px; padding: 10px;
     box-shadow: 0 3px 12px #ffd1e2aa; text-align: left;
   }
 
-  .panel h3 { font-size: 1.15rem; color: #ff7eb9; margin-bottom: .5rem; font-weight: 800; }
-  .panel ul { list-style: none; padding: 0; margin: 0; font-size: 1rem; color: #4c6d8c; font-weight: 700; line-height: 1.4; }
+  .panel h3 { font-size: 1rem; color: #ff7eb9; margin-bottom: .3rem; font-weight: 800; }
+  .panel ul { list-style: none; padding: 0; margin: 0; font-size: 0.85rem; color: #4c6d8c; font-weight: 700; line-height: 1.3; }
   .panel-found { background: #e7ffd2; }
 
-  #grid-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; }
+  #grid-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; width: 100%; }
   #grid {
-    display: grid; gap: 4px; background: #f6ebff; border-radius: 20px;
-    padding: 18px; box-shadow: 0 0 12px #e7abd7a6; margin-bottom: 20px;
-    touch-action: none; /* Importante para o arrasto no celular */
+    display: grid; gap: 4px; background: #f6ebff; border-radius: 15px;
+    padding: 10px; box-shadow: 0 0 10px #e7abd7a6; margin-bottom: 15px;
+    touch-action: none;
   }
 
   .grid-cell {
-    width: 38px; height: 38px; background: #fff5ea; border-radius: 11px;
-    font-size: 1.4rem; font-weight: 800; color: #5e219b;
+    width: 38px; height: 38px; background: #fff5ea; border-radius: 8px;
+    font-size: 1.2rem; font-weight: 800; color: #5e219b;
     display: flex; align-items: center; justify-content: center; cursor: pointer;
     transition: background 0.2s;
   }
   .grid-cell.found { color: white !important; font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
   .grid-cell.selected { background: #7c4dff !important; color: #fff !important; }
 
-  #result-text { font-size: 1.3rem; color: #d63a6d; margin: 14px 0 0 0; font-weight: 800; }
+  #result-text { font-size: 1.1rem; color: #d63a6d; margin: 5px 0; font-weight: 800; }
   #btn-novo {
     background: #ff7eb9; color: #fff; border: none; border-radius: 19px;
-    font-weight: 900; font-size: 1.17rem; padding: 12px 38px; margin-top: 18px; 
+    font-weight: 900; font-size: 1rem; padding: 10px 25px; margin-top: 10px; 
     cursor: default;
   }
 
   #confetti-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
 
+  /* AJUSTE PARA TELEMÓVEL (CELULAR) */
   @media (max-width: 768px) {
-    #musikids-player-card { top: auto; bottom: 10px; right: 10px; scale: 0.85; }
-    main { flex-direction: column; align-items: center; }
-    .grid-cell { width: 30px; height: 30px; font-size: 1.1rem; }
-    header { margin-top: 3.5rem; font-size: 2rem; }
+    body { padding: 0.5rem; }
+    header { margin-top: 4rem; font-size: 1.6rem; }
+    main { flex-direction: column; align-items: center; padding: 10px; gap: 10px; }
+    
+    /* Faz o grid ocupar o máximo da largura da tela sem sair */
+    .grid-cell { 
+      width: calc((95vw - 60px) / 12); 
+      height: calc((95vw - 60px) / 12); 
+      font-size: 0.9rem;
+      border-radius: 5px;
+    }
+    #grid { padding: 8px; gap: 2px; }
+
+    /* Coloca as listas lado a lado no mobile */
+    .panel { width: 90%; display: flex; flex-direction: column; min-width: unset; }
+    .panel ul { display: flex; flex-wrap: wrap; gap: 8px; }
+    .panel ul li { font-size: 0.75rem; }
+    
+    #musikids-player-card { top: auto; bottom: 10px; right: 10px; scale: 0.8; }
+    #btn-menu { padding: 8px 12px; font-size: 0.8rem; }
   }
 </style>
 </head>
@@ -137,7 +155,7 @@
 <script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
-// --- LÓGICA DO PLAYER (IGUAL ANTERIOR) ---
+// --- LÓGICA DO PLAYER ---
 let playerYT;
 let currentIndex = parseInt(sessionStorage.getItem('musi_index')) || 0;
 let isShuffle = sessionStorage.getItem('musi_shuffle') === 'true';
@@ -235,7 +253,6 @@ function desenhaGrid() {
             cell.textContent = gridData[i][j];
             cell.dataset.row = i; cell.dataset.col = j;
             
-            // Eventos para Clique e Arrasto combinados
             cell.onmousedown = (e) => { e.preventDefault(); onStart(i, j, cell); };
             cell.onmouseover = () => onEnter(i, j, cell);
             cell.ontouchstart = (e) => { e.preventDefault(); onStart(i, j, cell); };
@@ -245,10 +262,8 @@ function desenhaGrid() {
     }
 }
 
-// --- NOVA LÓGICA DE SELEÇÃO (CLIQUE + ARRASTO) ---
 function onStart(r, c, el) {
     isDragging = true;
-    // Se clicar em algo novo, limpa a seleção anterior a menos que seja continuação
     if (selecao.length > 0) {
         let last = selecao[selecao.length - 1];
         let dist = Math.max(Math.abs(last[0] - r), Math.abs(last[1] - c));
@@ -257,12 +272,10 @@ function onStart(r, c, el) {
             selecao = [];
         }
     }
-    
-    // Adiciona apenas se não for a mesma célula
     if (!selecao.some(p => p[0] === r && p[1] === c)) {
         selecao.push([r, c]);
         el.classList.add('selected');
-        checarPalavra(); // Checa a cada letra (para modo clique)
+        checarPalavra();
     }
 }
 
@@ -275,7 +288,6 @@ function onEnter(r, c, el) {
     }
 }
 
-// Suporte para touch dragging
 gridElem.ontouchmove = (e) => {
     if(!isDragging) return;
     let touch = e.touches[0];
@@ -287,23 +299,18 @@ gridElem.ontouchmove = (e) => {
     }
 };
 
-window.onmouseup = window.ontouchend = () => {
-    isDragging = false;
-    // Não limpamos a seleção aqui para permitir o modo clique letra por letra
-};
+window.onmouseup = window.ontouchend = () => { isDragging = false; };
 
 function checarPalavra() {
     let palavra = selecao.map(pos => gridData[pos[0]][pos[1]]).join('');
     let invertida = palavra.split('').reverse().join('');
-    
     let achou = palavrasAtivas.find(p => (p === palavra || p === invertida) && !encontradas.includes(p));
     
     if(achou) {
         encontradas.push(achou);
         marcarComoAchada(achou);
         desenhaPainel();
-        selecao = []; // Limpa para a próxima palavra
-        
+        selecao = [];
         if(encontradas.length === palavrasAtivas.length) {
             resultText.textContent = "🏆 VOCÊ CONSEGUIU!";
             lancarConfetes();
@@ -362,14 +369,10 @@ function lancarConfetes() {
 }
 
 function reiniciarJogoGlobal() {
-    encontradas = [];
-    selecao = [];
-    resultText.textContent = '';
-    btnNovo.style.display = 'none';
+    encontradas = []; selecao = [];
+    resultText.textContent = ''; btnNovo.style.display = 'none';
     document.getElementById('confetti-wrapper').innerHTML = '';
-    iniciaGrid();
-    desenhaGrid();
-    desenhaPainel();
+    iniciaGrid(); desenhaGrid(); desenhaPainel();
 }
 
 iniciaGrid();
