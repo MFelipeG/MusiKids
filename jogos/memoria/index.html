@@ -2,475 +2,312 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
 <title>Jogo da Memória - MusiKids Fun</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700;800&display=swap');
 
-body {
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  font-family: 'Baloo 2', cursive, Arial, sans-serif;
-  background: linear-gradient(135deg,#f7f4e9,#f8b500,#ff7eb9 100%);
-  color: #32434a;
-  user-select: none;
-  box-sizing: border-box;
-  text-align: center;
-}
+  body {
+    margin: 0;
+    padding: 1.5rem 0 .3rem 0;
+    min-height: 100vh;
+    font-family: 'Baloo 2', cursive, Arial, sans-serif;
+    background: linear-gradient(135deg,#f7f4e9,#f8b500,#ff7eb9 100%);
+    color: #32434a;
+    user-select: none;
+    text-align: center;
+    overflow-x: hidden;
+  }
 
-#btn-menu {
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  background: #a1d578;
-  color: #214d0d;
-  border-radius: 18px;
-  padding: 14px 22px;
-  font-weight: 900;
-  font-size: 1.25rem;
-  cursor: pointer;
-  box-shadow: 0 0 15px #a1d578aa;
-  border: none;
-  user-select: none;
-  z-index: 10000;
-  transition: background-color .3s ease;
-}
+  /* --- PLAYER PADRÃO MARAVILHOSO --- */
+  #musikids-player-card {
+    background: white; 
+    padding: 8px 18px; 
+    display: flex; 
+    align-items: center; 
+    gap: 12px;
+    border: 4px solid #FF77A9; 
+    border-radius: 50px;
+    position: fixed; 
+    top: 15px; 
+    right: 15px; 
+    z-index: 10001;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+  .player-controls { display: flex; gap: 8px; align-items: center; }
+  .player-btn {
+    background: #FF77A9; 
+    border: none; 
+    color: white;
+    width: 35px; 
+    height: 35px; 
+    border-radius: 50%; 
+    cursor: pointer;
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-size: 14px;
+  }
+  .player-label { font-weight: 800; color: #FF4C8B; font-size: 0.9rem; margin-right: 2px; }
+  .btn-shuffle.active { background: #21a7ff !important; }
 
-#btn-menu:hover {
-  background: #68922b;
-  color: white;
-}
+  /* --- BOTÃO VOLTAR --- */
+  #btn-menu {
+    position: fixed; top: 12px; left: 12px; z-index: 1000;
+    padding: 10px 20px; font-size: 1.1rem; border-radius: 9px; border: none;
+    background: linear-gradient(135deg, #ff007f, #21a7ff 110%);
+    color: #fff; font-family: 'Baloo 2', cursive; font-weight: bold;
+    box-shadow: 1px 3px 15px #21a7ff99; cursor: pointer; text-decoration: none;
+  }
 
-header {
-  margin-top: 75px;
-  font-weight: 900;
-  font-size: 2.4rem;
-  color: #d63a6d;
-  user-select: none;
-  margin-bottom: 20px;
-}
+  header { margin-top: 75px; font-weight: 900; font-size: 2.3rem; color: #d63a6d; margin-bottom: 18px; }
 
-#game-container {
-  max-width: 980px;
-  margin: 0 auto;
-  background: white;
-  border-radius: 28px;
-  box-shadow: 0 4px 18px #ffd3e466;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+  #game-container {
+    max-width: 95%; margin: 0 auto; background: white;
+    border-radius: 28px; box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+    padding: 20px; display: inline-block;
+  }
 
-#config-container {
-  margin-bottom: 20px;
-  display: flex;
-  gap: 20px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.select-group {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-weight: 700;
-  color: #5e219b;
-}
-.select-group label {
-  margin-bottom: 6px;
-}
+  .select-group { display: inline-flex; flex-direction: column; font-weight: 700; color: #d63a6d; margin: 0 10px 15px 10px; }
+  select { font-size: 1rem; border-radius: 14px; padding: 6px; border: 2px solid #d63a6d; font-family: 'Baloo 2'; }
 
-select {
-  font-size: 1rem;
-  border-radius: 14px;
-  padding: 6px 12px;
-  border: 2px solid #d63a6d;
-  cursor: pointer;
-}
+  #buttons { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; flex-wrap: wrap; }
+  .action-btn {
+    background: #a1d578; color: #214d0d; border-radius: 18px;
+    padding: 12px 20px; font-weight: 900; border: none; cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+  .action-btn:disabled { background: #ccc; cursor: not-allowed; opacity: 0.7; }
 
-#buttons {
-  margin-top: 10px;
-  display: flex;
-  gap: 15px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
+  /* --- GRID E CARTAS --- */
+  #cards-grid { display: grid; gap: 10px; justify-content: center; margin: 15px auto; }
 
-button.action-btn {
-  background: #a1d578;
-  color: #214d0d;
-  border-radius: 18px;
-  padding: 14px 22px;
-  font-weight: 900;
-  font-size: 1.15rem;
-  cursor: pointer;
-  box-shadow: 0 0 15px #a1d578aa;
-  border: none;
-  user-select: none;
-  transition: background-color .3s ease;
-  min-width: 140px;
-}
+  .card { width: 70px; height: 90px; perspective: 800px; cursor: pointer; }
+  .card-inner {
+    position: relative; width: 100%; height: 100%;
+    transition: transform 0.6s; transform-style: preserve-3d; border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  /* A carta começa escondida (back) e vira (flipped) para mostrar o desenho (front) */
+  .card.flipped .card-inner { transform: rotateY(180deg); }
 
-button.action-btn:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-  box-shadow: none;
-}
+  .card-front, .card-back {
+    position: absolute; width: 100%; height: 100%; border-radius: 12px;
+    backface-visibility: hidden; display: flex; align-items: center; justify-content: center;
+  }
+  
+  /* Face com o desenho (fica atrás inicialmente) */
+  .card-front { background: #f7f7f7; font-size: 35px; transform: rotateY(180deg); }
+  
+  /* Face rosa (verso que a criança vê primeiro) */
+  .card-back { background: #ff7eb9; border: 3px solid white; }
 
-button.action-btn:hover:not(:disabled) {
-  background: #68922b;
-  color: white;
-}
+  .card.matched .card-inner { box-shadow: 0 0 15px 3px #7ef5be; border: 2px solid #7ef5be; }
 
-#cards-grid {
-  display: grid;
-  gap: 12px;
-  justify-content: center;
-  margin-top: 15px;
-  max-width: 900px;
-}
+  #result-text { font-weight: 800; font-size: 1.2rem; color: #d63a6d; margin-top: 15px; min-height: 1.5em; }
 
-.card {
-  width: 70px;
-  height: 90px;
-  perspective: 800px;
-  cursor: pointer;
-}
-
-.card-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transition: transform 0.5s;
-  transform-style: preserve-3d;
-  border-radius: 15px;
-  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
-}
-
-.card.flipped .card-inner {
-  transform: rotateY(180deg);
-}
-
-.card-front, .card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  border-radius: 15px;
-  backface-visibility: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 40px;
-  user-select: none;
-}
-
-.card-front {
-  background: #f7f7f7;
-  box-shadow: 0 0 10px #d63a6d80 inset;
-}
-
-.card-back {
-  background: #ff7eb9;
-  transform: rotateY(180deg);
-  box-shadow: 0 0 10px #4a004a inset;
-}
-
-.card.matched {
-  cursor: default;
-  box-shadow: 0 0 15px 3px #7ef5be;
-}
-
-#result-text {
-  margin-top: 15px;
-  font-weight: 700;
-  font-size: 1.35rem;
-  color: #d63a6d;
-  min-height: 36px;
-}
-
-#confetti {
-  pointer-events: none;
-  position: fixed;
-  top:0; left:0; right:0; bottom:0;
-  z-index: 9999;
-  overflow: visible;
-}
-
-.confetti-piece {
-  pointer-events: none;
-  position: fixed;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  animation: fall 3s linear forwards;
-  opacity: 1;
-}
-
-@keyframes fall {
-  0% { transform: translateY(0); opacity: 1;}
-  100% { transform: translateY(100vh); opacity: 0;}
-}
+  @media (max-width: 700px) {
+    #musikids-player-card { top: auto; bottom: 15px; right: 10px; scale: 0.85; }
+    header { margin-top: 80px; font-size: 1.8rem; }
+  }
 </style>
 </head>
 <body>
 
-<button id="btn-menu" aria-label="Voltar ao menu">MENU DE JOGOS</button>
-<header>Jogo da Memória - MusiKids Fun</header>
+<div id="musikids-player-card">
+    <span class="player-label">Música</span>
+    <div class="player-controls">
+        <button class="player-btn" onclick="playPrev()">⏮️</button>
+        <button class="player-btn" onclick="toggleMusic()" id="play-pause-btn">▶️</button>
+        <button class="player-btn" onclick="playNext()">⏭️</button>
+        <button class="player-btn btn-shuffle" onclick="toggleShuffle()" id="shuffle-btn">🔀</button>
+    </div>
+</div>
+<div style="position: absolute; left: -9999px;"><div id="yt-audio-element"></div></div>
+
+<a href="../index.html" id="btn-menu">← Menu</a>
+<header>Jogo da Memória</header>
 
 <div id="game-container">
-
   <div id="config-container">
     <div class="select-group">
-      <label for="select-categoria">Categoria:</label>
-      <select id="select-categoria" aria-label="Selecionar categoria">
-        <option value="animais">Animais</option>
-        <option value="objetos">Objetos</option>
+      <label>Categoria:</label>
+      <select id="select-categoria">
+        <option value="animais">Animais 🐶</option>
+        <option value="objetos">Objetos 🎈</option>
       </select>
     </div>
     <div class="select-group">
-      <label for="select-quantidade">Quantidade de cartas:</label>
-      <select id="select-quantidade" aria-label="Selecionar quantidade de cartas">
-        <option value="8">8 cartas (4 pares)</option>
-        <option value="10" selected>10 cartas (5 pares)</option>
-        <option value="16">16 cartas (8 pares)</option>
-        <option value="20">20 cartas (10 pares)</option>
+      <label>Cartas:</label>
+      <select id="select-quantidade">
+        <option value="8">8 cartas</option>
+        <option value="12" selected>12 cartas</option>
+        <option value="16">16 cartas</option>
+        <option value="20">20 cartas</option>
       </select>
     </div>
   </div>
 
   <div id="buttons">
-    <button id="btn-novo" class="action-btn" aria-label="Iniciar novo jogo">Iniciar Novo Jogo</button>
-    <button id="btn-virar" class="action-btn" aria-label="Virar as cartas para trás" disabled>Virar Cartas</button>
-    <button id="btn-espiar" class="action-btn" aria-label="Espiar cartas" disabled>Espiar (3)</button>
+    <button id="btn-novo" class="action-btn">Novo Jogo</button>
+    <button id="btn-espiar" class="action-btn" disabled>Espiar (3)</button>
   </div>
 
-  <div id="cards-grid" aria-label="Tabuleiro de cartas da memória"></div>
-  <div id="result-text" aria-live="polite" aria-atomic="true" role="status"></div>
+  <div id="cards-grid"></div>
+  <div id="result-text">Clique em Novo Jogo!</div>
 </div>
 
-<div id="confetti"></div>
-
+<script src="../../js/musicas_data.js"></script>
+<script src="https://www.youtube.com/iframe_api"></script>
 <script>
-const figurasAnimais = [
-  "🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🦄","🐮",
-  "🐷","🐸","🐵","🐔","🐧","🐦","🦉","🐴","🐝","🐞",
-  "🦋","🐌","🐢","🐍","🦎","🦂","🦀","🐠","🐳","🐬",
-  "🐋","🦈","🐊","🐅","🐆","🦓","🦍","🦧","🐘","🦛",
-  "🦏","🐪","🐫","🦙","🦒","🐃","🐂","🐄","🐎","🦌",
-];
+    let player;
+    let currentIndex = parseInt(sessionStorage.getItem('musi_index')) || 0;
+    let isShuffle = sessionStorage.getItem('musi_shuffle') === 'true';
 
-const figurasObjetos = [
-  "🎈","🎁","🎀","📦","📚","🖍️","✂️","🖊️","🖌️","🔑",
-  "📸","📱","💻","⌚","🎨","🎸","📖","💡","🔦","🧸",
-  "🚗","🚲","⛵","✈️","🚀","🛴","🏀","⚽","🎾","🎯",
-  "🎮","🎲","🧩","🛒","🧸","🎤","🎧","📺","📻","💰",
-  "🔔","📅","📌","📍","📎","🖇️","🛏️","🛋️","🚪","🚿"
-];
-
-// Estado do jogo
-let cartas = [];
-let cartasViradas = [];
-let paresEncontrados = 0;
-let podeVirar = false;
-let espiarContador = 3;
-let jogoComecou = false;
-
-const btnMenu = document.getElementById('btn-menu');
-const btnNovo = document.getElementById('btn-novo');
-const btnVirar = document.getElementById('btn-virar');
-const btnEspiar = document.getElementById('btn-espiar');
-const selectCategoria = document.getElementById('select-categoria');
-const selectQuantidade = document.getElementById('select-quantidade');
-const cardsGrid = document.getElementById('cards-grid');
-const resultText = document.getElementById('result-text');
-const confettiContainer = document.getElementById('confetti');
-
-// Configura grid conforme quantidade
-function ajustaGrid(quantidade) {
-  if(quantidade <= 10) {
-    cardsGrid.style.gridTemplateColumns = 'repeat(5, 1fr)';
-    cardsGrid.style.maxWidth = '380px';
-  } else if(quantidade <= 16) {
-    cardsGrid.style.gridTemplateColumns = 'repeat(4, 1fr)';
-    cardsGrid.style.maxWidth = '320px';
-  } else {
-    cardsGrid.style.gridTemplateColumns = 'repeat(5, 1fr)';
-    cardsGrid.style.maxWidth = '400px';
-  }
-}
-
-btnMenu.onclick = () => {
-  location.href = '../index.html';
-};
-
-function shuffle(arr) {
-  return arr.map(i => [Math.random(), i]).sort((a,b) => a[0]-b[0]).map(i=>i[1]);
-}
-
-function criaCartas() {
-  const categoria = selectCategoria.value;
-  const quantidadeCartas = Number(selectQuantidade.value);
-  const pares = quantidadeCartas / 2;
-
-  let figuras = categoria === 'animais' ? figurasAnimais : figurasObjetos;
-  // Embaralha sempre para variar as seleções em jogos novos
-  figuras = shuffle(figuras);
-  if(pares > figuras.length) {
-    figuras = figuras.slice(0, pares);
-  } else {
-    figuras = figuras.slice(0, pares);
-  }
-
-  let figurasDuplicadas = [...figuras, ...figuras];
-  figurasDuplicadas = shuffle(figurasDuplicadas);
-
-  cartas = [];
-  cardsGrid.innerHTML = '';
-
-  figurasDuplicadas.forEach(figura => {
-    const card = document.createElement('div');
-    card.className = 'card'; // Começa sem 'flipped', mostrando a face da frente (figura)
-    card.dataset.figura = figura;
-    card.setAttribute('role', 'button');
-    card.setAttribute('tabindex', '0');
-    card.innerHTML = `
-      <div class="card-inner">
-        <div class="card-front">${figura}</div>
-        <div class="card-back"></div>
-      </div>
-    `;
-    card.addEventListener('click', () => virarCarta(card));
-    cardsGrid.appendChild(card);
-    cartas.push(card);
-  });
-
-  ajustaGrid(quantidadeCartas);
-  paresEncontrados = 0;
-  cartasViradas = [];
-  espiarContador = 3;
-  podeVirar = false;
-  jogoComecou = false;
-  btnVirar.disabled = false;
-  btnVirar.textContent = 'Virar Cartas para trás';
-  btnEspiar.disabled = true;
-  btnEspiar.textContent = `Espiar (${espiarContador})`;
-  updateTexto();
-}
-
-function virarCarta(card) {
-  if(!podeVirar) return;
-  if(cartasViradas.includes(card) || card.classList.contains('matched')) return;
-  card.classList.remove('flipped'); // Remove 'flipped' para mostrar a face da frente (figura)
-  cartasViradas.push(card);
-  if(cartasViradas.length === 2) {
-    podeVirar = false;
-    setTimeout(verificaPar, 900);
-  }
-}
-
-function verificaPar() {
-  const [carta1, carta2] = cartasViradas;
-  if(carta1.dataset.figura === carta2.dataset.figura) {
-    carta1.classList.add('matched');
-    carta2.classList.add('matched');
-    paresEncontrados++;
-    if(paresEncontrados === cartas.length /2) {
-      encerraJogo();
-    }
-  } else {
-    // Vira de volta para trás (adiciona 'flipped')
-    carta1.classList.add('flipped');
-    carta2.classList.add('flipped');
-  }
-  cartasViradas = [];
-  podeVirar = true;
-  updateTexto();
-}
-
-btnNovo.onclick = () => {
-  criaCartas();
-};
-
-btnVirar.onclick = () => {
-  if(!jogoComecou) {
-    // Vira todas para trás (adiciona 'flipped')
-    cartas.forEach(carta => {
-      if (!carta.classList.contains('matched')) {
-        carta.classList.add('flipped');
-      }
-    });
-    podeVirar = true;
-    btnVirar.disabled = true;
-    btnEspiar.disabled = false;
-    jogoComecou = true;
-  }
-};
-
-btnEspiar.onclick = () => {
-  if(espiarContador > 0 && jogoComecou) {
-    // Remove 'flipped' temporariamente para mostrar as faces da frente
-    cartas.forEach(carta => {
-      if (!carta.classList.contains('matched')) {
-        carta.classList.remove('flipped');
-      }
-    });
-    btnEspiar.disabled = true;
-    espiarContador--;
-    updateTexto();
-    btnEspiar.textContent = `Espiar (${espiarContador})`;
-    setTimeout(() => {
-      if(podeVirar) {
-        // Vira de volta para trás (adiciona 'flipped')
-        cartas.forEach(carta => {
-          if(!carta.classList.contains('matched')) {
-            carta.classList.add('flipped');
-          }
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('yt-audio-element', {
+            height: '0', width: '0',
+            videoId: listaMusicasIds[currentIndex],
+            playerVars: { 'autoplay': sessionStorage.getItem('musi_playing') === 'true' ? 1 : 0 },
+            events: {
+                'onReady': (e) => {
+                    const savedTime = parseFloat(sessionStorage.getItem('musi_time')) || 0;
+                    if(savedTime > 0) e.target.seekTo(savedTime, true);
+                    if(isShuffle) document.getElementById('shuffle-btn').classList.add('active');
+                    updatePlayBtn();
+                },
+                'onStateChange': (e) => {
+                    if(e.data === 0) playNext();
+                    updatePlayBtn();
+                }
+            }
         });
-        btnEspiar.disabled = espiarContador === 0;
-      }
-    }, 7000); // Aumentado para 7 segundos
-  }
-};
+    }
 
-function updateTexto() {
-  resultText.textContent = `Pares encontrados: ${paresEncontrados} de ${cartas.length / 2}`;
-}
+    function updatePlayBtn() {
+        const btn = document.getElementById('play-pause-btn');
+        if(!btn || !player || !player.getPlayerState) return;
+        btn.innerText = player.getPlayerState() === 1 ? "⏸️" : "▶️";
+    }
 
-function encerraJogo() {
-  resultText.textContent = 'Parabéns! Você encontrou todos os pares!';
-  confete();
-  btnVirar.disabled = true;
-  btnEspiar.disabled = true;
-  
-  // Inicia novo jogo automaticamente após 4 segundos
-  setTimeout(() => {
-    criaCartas();
-  }, 4000);
-}
+    function toggleMusic() {
+        player.getPlayerState() === 1 ? player.pauseVideo() : player.playVideo();
+        setTimeout(updatePlayBtn, 200);
+    }
 
-function confete() {
-  confettiContainer.innerHTML = '';
-  const colors = ['#ff597f', '#ff9ea1', '#fcd677', '#a9d97a', '#79d79a', '#ff7eb9', '#61dafb'];
-  for(let i=0; i<120; i++){
-    const c = document.createElement('div');
-    c.className = 'confetti-piece';
-    c.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
-    c.style.top = Math.random()*window.innerHeight + 'px';
-    c.style.left = Math.random()*window.innerWidth + 'px';
-    c.style.animationDelay = (i*0.015) + 's';
-    confettiContainer.appendChild(c);
-  }
-  setTimeout(() => { confettiContainer.innerHTML = ''; }, 3500);
-}
+    function playNext() {
+        currentIndex = isShuffle ? Math.floor(Math.random() * listaMusicasIds.length) : (currentIndex + 1) % listaMusicasIds.length;
+        player.loadVideoById(listaMusicasIds[currentIndex]);
+        sessionStorage.setItem('musi_index', currentIndex);
+    }
 
-window.onload = () => {
-  updateTexto();
-  btnVirar.disabled = true;
-  btnEspiar.disabled = true;
-  cardsGrid.innerHTML = '';
-};
+    function playPrev() {
+        currentIndex = (currentIndex - 1 + listaMusicasIds.length) % listaMusicasIds.length;
+        player.loadVideoById(listaMusicasIds[currentIndex]);
+        sessionStorage.setItem('musi_index', currentIndex);
+    }
+
+    function toggleShuffle() {
+        isShuffle = !isShuffle;
+        sessionStorage.setItem('musi_shuffle', isShuffle);
+        document.getElementById('shuffle-btn').classList.toggle('active');
+    }
+
+    setInterval(() => {
+        if(player && player.getCurrentTime) sessionStorage.setItem('musi_time', player.getCurrentTime());
+    }, 1000);
+
+    // Lógica do Jogo da Memória
+    const animais = ["🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🐨","🐷","🐸","🐵","🐔","🐧","🦄","🐝"];
+    const objetos = ["🎈","🎁","🎀","📦","📚","🎨","🎸","🚗","🚀","🎮","🎲","🧩","🧸","🔔","💡","💎"];
+
+    let cartas = [], cartasViradas = [], paresEncontrados = 0;
+    let espiarContador = 3, bloqueado = false;
+
+    function shuffle(a) { return a.sort(() => Math.random() - 0.5); }
+
+    function criarCartas() {
+        const categoria = document.getElementById('select-categoria').value === 'animais' ? animais : objetos;
+        const qtd = parseInt(document.getElementById('select-quantidade').value);
+        const pares = qtd / 2;
+        
+        let selecionadas = shuffle([...categoria]).slice(0, pares);
+        let deck = shuffle([...selecionadas, ...selecionadas]);
+        
+        const grid = document.getElementById('cards-grid');
+        grid.innerHTML = '';
+        grid.style.gridTemplateColumns = `repeat(${qtd > 12 ? 5 : 4}, 1fr)`;
+        
+        cartas = deck.map(fig => {
+            const div = document.createElement('div');
+            div.className = 'card'; // Começa desvirado (mostrando o rosa)
+            div.innerHTML = `<div class="card-inner"><div class="card-front">${fig}</div><div class="card-back"></div></div>`;
+            div.dataset.fig = fig;
+            div.onclick = () => virar(div);
+            grid.appendChild(div);
+            return div;
+        });
+
+        paresEncontrados = 0;
+        espiarContador = 3;
+        bloqueado = false;
+        cartasViradas = [];
+        document.getElementById('btn-espiar').disabled = false;
+        document.getElementById('btn-espiar').innerText = `Espiar (3)`;
+        document.getElementById('result-text').innerText = `Pares: 0 de ${pares}`;
+    }
+
+    function virar(card) {
+        if(bloqueado || card.classList.contains('flipped') || card.classList.contains('matched') || cartasViradas.length >= 2) return;
+        
+        card.classList.add('flipped');
+        cartasViradas.push(card);
+        
+        if(cartasViradas.length === 2) {
+            bloqueado = true;
+            setTimeout(checarPar, 800);
+        }
+    }
+
+    function checarPar() {
+        const [c1, c2] = cartasViradas;
+        if(c1.dataset.fig === c2.dataset.fig) {
+            c1.classList.add('matched');
+            c2.classList.add('matched');
+            paresEncontrados++;
+            if(paresEncontrados === cartas.length / 2) {
+                document.getElementById('result-text').innerHTML = "<strong>Parabéns! Você conseguiu! 🎉</strong>";
+            }
+        } else {
+            c1.classList.remove('flipped');
+            c2.classList.remove('flipped');
+        }
+        cartasViradas = [];
+        bloqueado = false;
+        if(paresEncontrados < cartas.length / 2) {
+            document.getElementById('result-text').innerText = `Pares: ${paresEncontrados} de ${cartas.length / 2}`;
+        }
+    }
+
+    document.getElementById('btn-novo').onclick = criarCartas;
+
+    document.getElementById('btn-espiar').onclick = function() {
+        if(espiarContador <= 0 || bloqueado) return;
+        bloqueado = true;
+        cartas.forEach(c => { if(!c.classList.contains('matched')) c.classList.add('flipped'); });
+        espiarContador--;
+        this.innerText = `Espiar (${espiarContador})`;
+        this.disabled = true;
+        
+        setTimeout(() => {
+            cartas.forEach(c => { if(!c.classList.contains('matched')) c.classList.remove('flipped'); });
+            bloqueado = false;
+            if(espiarContador > 0) this.disabled = false;
+        }, 2000);
+    };
+
+    window.onload = criarCartas;
 </script>
-
 </body>
 </html>
