@@ -2,187 +2,210 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>Forca - MusiKids</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700;800&display=swap');
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-      margin: 0; padding: 0;
       font-family: 'Baloo 2', cursive, Arial, sans-serif;
       background: linear-gradient(135deg, #fceabb 0%, #f8b500 50%, #ff7eb9 100%);
       color: #333;
       user-select: none;
-      text-align: center;
       min-height: 100vh;
       display: flex; flex-direction: column; align-items: center;
+      overflow-x: hidden;
     }
+
+    /* --- PLAYER PADRÃO MUSIKIDS --- */
+    #musikids-player-card {
+      background: white; padding: 6px 15px; display: flex; align-items: center; gap: 10px;
+      border: 3px solid #FF77A9; border-radius: 50px; position: fixed; top: 10px; right: 10px; 
+      z-index: 10001; box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    }
+    .player-controls { display: flex; gap: 6px; align-items: center; }
+    .player-btn {
+      background: #FF77A9; border: none; color: white; width: 30px; height: 30px; 
+      border-radius: 50%; cursor: pointer; display: flex; align-items: center; 
+      justify-content: center; font-size: 12px;
+    }
+    .player-label { font-weight: 800; color: #FF4C8B; font-size: 0.8rem; }
+    .btn-shuffle.active { background: #21a7ff !important; }
+
     #btn-menu {
-      position: relative;
-      top: 15px; left: 15px;
+      position: fixed; top: 10px; left: 10px;
       background: #a1d578; color: #214d0d;
-      border-radius: 18px; padding: 14px 22px;
-      font-weight: 900; font-size: 1.25rem;
-      cursor: pointer; box-shadow: 0 0 15px #a1d578aa;
-      border: none; user-select: none; z-index: 10000;
-      transition: background-color 0.3s ease;
-      margin-bottom: 15px;
-      align-self: flex-start;
+      border-radius: 18px; padding: 8px 15px;
+      font-weight: 900; font-size: 1rem;
+      cursor: pointer; border: none; z-index: 10000;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
-    #btn-menu:hover {background: #68922b; color: white;}
+
     header {
-      font-weight: 900; font-size: 2.8rem;
-      color: #d63a6d; user-select: none;
-      margin-bottom: 20px;
+      font-weight: 900; font-size: 2.2rem;
+      color: #d63a6d; margin: 60px 0 10px 0;
+      text-shadow: 2px 2px 0px white;
     }
+
     main {
-      margin: 0 auto 40px auto;
-      width: 90vw; max-width: 600px;
+      margin-bottom: 20px;
+      width: 95vw; max-width: 500px;
       background: white; border-radius: 28px;
-      box-shadow: 0 4px 16px #dddde1cc;
-      padding: 24px 18px 40px 18px; display: flex;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      padding: 20px; display: flex;
       flex-direction: column; align-items: center;
     }
+
     #palavra {
-      font-weight: 900; font-size: 2.4rem;
-      letter-spacing: 14px; user-select: none;
-      margin-bottom: 24px; color: #2c6b3e;
-      white-space: normal !important;
-      overflow-wrap: break-word;
-      word-break: break-word;
-      max-width: 100%;
-      text-align: center;
+      font-weight: 900; font-size: 2rem;
+      letter-spacing: 8px; margin-bottom: 15px; color: #2c6b3e;
+      text-align: center; width: 100%;
     }
-    #dica-container {
-      display: flex; justify-content: center;
-      gap: 15px; margin-bottom: 30px; flex-wrap: wrap;
-    }
+
+    #dica-container { display: flex; justify-content: center; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
+    
     .dica-btn {
-      cursor: pointer; background: #ffe3e8;
-      border-radius: 12px; padding: 10px 15px;
-      font-size: 1rem; font-weight: 600;
-      color: #ad2b5e; box-shadow: 0 3px 12px #ffc4d2cc;
-      user-select: none; transition: background-color 0.3s ease,color 0.3s ease;
+      cursor: pointer; background: #ffe3e8; border: none;
+      border-radius: 10px; padding: 6px 12px;
+      font-size: 0.85rem; font-weight: 600; color: #ad2b5e;
     }
-    .dica-btn:hover:not(.used) {
-      background-color: #ffb1c0; color: white;
-    }
-    .dica-btn.used {
-      background-color: #ff6b84; color: white; cursor: default;
-    }
+    .dica-btn.used { background-color: #ff6b84; color: white; cursor: default; }
+
     #letras-container {
-      display: flex; flex-wrap: wrap;
-      justify-content: center; gap: 10px; max-width: 450px;
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; max-width: 100%;
     }
+
     .letra-btn {
-      width: 44px; height: 44px; border-radius: 18px;
+      width: 38px; height: 38px; border-radius: 12px;
       background-color: #afe4d6; border: none;
-      font-size: 1.4rem; font-weight: 700; cursor: pointer;
-      color: #2a5949; box-shadow: 0 6px 12px #7ba88bcc;
-      transition: background-color 0.25s ease,color 0.25s ease;
-      user-select: none;
+      font-size: 1.2rem; font-weight: 700; cursor: pointer;
+      color: #2a5949; box-shadow: 0 3px 0 #7ba88b;
     }
-    .letra-btn:hover:not(.disabled) {
-      background-color: #5eaf90; color: white;
-    }
-    .letra-btn.disabled {
-      background-color: #dcdcdc; color: #909090;
-      cursor: default; box-shadow: none;
-    }
-    #bonequinho-container {
-      margin-top: 20px;
-      margin-bottom: 28px;
-      width: 160px;
-      height: 240px;
-    }
-    svg {
-      max-width: 100%;
-      height: auto;
-    }
-    #result-text {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: #a42e53;
-      margin-bottom: 24px;
-      user-select: none;
-    }
+    .letra-btn.disabled { background-color: #dcdcdc; color: #909090; box-shadow: none; transform: translateY(3px); }
+
+    #bonequinho-container { width: 120px; height: 160px; margin: 10px 0; }
+    
+    #result-text { font-size: 1.3rem; font-weight: 800; color: #a42e53; margin: 10px 0; min-height: 1.5em; }
+
     #btn-novo {
-      background: #a6d27a;
-      color: #124015;
-      border: none;
-      border-radius: 20px;
-      padding: 14px 30px;
-      font-weight: 900;
-      font-size: 1.3rem;
-      cursor: pointer;
-      box-shadow: 0 0 12px #8db96fcc;
-      user-select: none;
-      transition: background-color 0.25s ease;
-      display: none;
+      background: #a6d27a; color: #124015; border: none; border-radius: 50px;
+      padding: 10px 25px; font-weight: 900; font-size: 1.1rem;
+      cursor: pointer; display: none; box-shadow: 0 4px 0 #689330;
     }
-    #btn-novo:hover {
-      background-color: #689330;
-      color: white;
-    }
-    #confetti {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      pointer-events: none;
-      z-index: 9999;
-      overflow: visible;
-    }
-    .confetti-piece {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      opacity: 0.85;
-      animation-name: fall, spin;
-      animation-timing-function: linear;
-      animation-iteration-count: 1;
-    }
+
+    #confetti { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
+    .confetti-piece { position: absolute; animation: fall linear forwards; }
+
     @keyframes fall {
-      0% {
-        transform: translateY(-20px) translateX(0) rotate(0deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(100vh) translateX(calc(var(--x-move, 0) * 1px)) rotate(360deg);
-        opacity: 0;
-      }
+      to { transform: translateY(105vh) rotate(360deg); }
     }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+
+    @media (max-width: 600px) {
+      header { font-size: 1.6rem; margin-top: 50px; }
+      #musikids-player-card { top: auto; bottom: 10px; right: 10px; scale: 0.9; }
+      #palavra { font-size: 1.6rem; letter-spacing: 5px; }
+      .letra-btn { width: 34px; height: 34px; font-size: 1rem; }
     }
   </style>
 </head>
 <body>
-  <button id="btn-menu" aria-label="Voltar ao menu">MENU DE JOGOS</button>
-  <header>Forca Afetiva - MusiKids Fun</header>
+
+  <div id="musikids-player-card">
+      <span class="player-label">Música</span>
+      <div class="player-controls">
+          <button class="player-btn" onclick="playPrev()">⏮️</button>
+          <button class="player-btn" onclick="toggleMusic()" id="play-pause-btn">▶️</button>
+          <button class="player-btn" onclick="playNext()">⏭️</button>
+          <button class="player-btn btn-shuffle" onclick="toggleShuffle()" id="shuffle-btn">🔀</button>
+      </div>
+  </div>
+  <div style="position: absolute; left: -9999px;"><div id="yt-audio-element"></div></div>
+
+  <button id="btn-menu" onclick="location.href='../index.html'">← MENU</button>
+  
+  <header>Forca Afetiva</header>
+  
   <main>
-    <div id="palavra" aria-label="Palavra oculta para jogar" aria-live="polite">_ _ _ _ _</div>
-    <div id="dica-container" aria-label="Dicas da palavra para ajudar"></div>
-    <div id="letras-container" aria-label="Letras para clicar e jogar"></div>
-    <div id="bonequinho-container" aria-label="Bonequinho que se forma com erros">
-      <svg viewBox="0 0 160 240" xmlns="http://www.w3.org/2000/svg" >
+    <div id="palavra">_ _ _ _ _</div>
+    <div id="dica-container"></div>
+    
+    <div id="bonequinho-container">
+      <svg viewBox="0 0 160 240" xmlns="http://www.w3.org/2000/svg">
         <circle id="head" cx="80" cy="40" r="20" fill="#f5c6cb" stroke="#b56067" stroke-width="2" style="display: none;"/>
         <rect id="body" x="60" y="60" width="40" height="70" fill="#a9d6df" stroke="#559ba6" stroke-width="2" rx="20" ry="15" style="display: none;" />
         <rect id="left-arm" x="40" y="60" width="20" height="50" fill="#f8bfe5" stroke="#b96ea0" stroke-width="2" rx="10" ry="10" style="display: none;" />
         <rect id="right-arm" x="100" y="60" width="20" height="50" fill="#f8bfe5" stroke="#b96ea0" stroke-width="2" rx="10" ry="10" style="display: none;" />
         <rect id="left-leg" x="55" y="130" width="20" height="75" fill="#d3e8a8" stroke="#7c9733" stroke-width="2" rx="10" ry="10" style="display: none;" />
         <rect id="right-leg" x="85" y="130" width="20" height="75" fill="#d3e8a8" stroke="#7c9733" stroke-width="2" rx="10" ry="10" style="display: none;" />
-        <ellipse id="left-foot" cx="65" cy="210" rx="20" ry="10" fill="#8a9e37" stroke="#6d8225" stroke-width="1" style="display: none;" />
-        <ellipse id="right-foot" cx="110" cy="210" rx="20" ry="10" fill="#8a9e37" stroke="#6d8225" stroke-width="1" style="display: none;" />
       </svg>
     </div>
-    <div id="result-text" aria-live="polite"></div>
-    <button id="btn-novo" aria-label="Jogar nova palavra">Nova Palavra</button>
+
+    <div id="letras-container"></div>
+    <div id="result-text"></div>
+    <button id="btn-novo">Nova Palavra</button>
   </main>
+
   <div id="confetti"></div>
+
+  <script src="../../js/musicas_data.js"></script>
+  <script src="https://www.youtube.com/iframe_api"></script>
   <script>
+    // --- LÓGICA DO PLAYER (YOUTUBE) ---
+    let playerYT;
+    let currentIndex = parseInt(sessionStorage.getItem('musi_index')) || 0;
+    let isShuffle = sessionStorage.getItem('musi_shuffle') === 'true';
+
+    function onYouTubeIframeAPIReady() {
+        playerYT = new YT.Player('yt-audio-element', {
+            height: '0', width: '0',
+            videoId: listaMusicasIds[currentIndex],
+            playerVars: { 'autoplay': sessionStorage.getItem('musi_playing') === 'true' ? 1 : 0 },
+            events: {
+                'onReady': (e) => {
+                    const savedTime = parseFloat(sessionStorage.getItem('musi_time')) || 0;
+                    if(savedTime > 0) e.target.seekTo(savedTime, true);
+                    if(isShuffle) document.getElementById('shuffle-btn').classList.add('active');
+                    updatePlayBtn();
+                },
+                'onStateChange': (e) => { if(e.data === 0) playNext(); updatePlayBtn(); }
+            }
+        });
+    }
+
+    function updatePlayBtn() { 
+        const btn = document.getElementById('play-pause-btn'); 
+        if(btn && playerYT && playerYT.getPlayerState) {
+            btn.innerText = playerYT.getPlayerState() === 1 ? "⏸️" : "▶️";
+        }
+    }
+
+    function toggleMusic() { 
+        if(playerYT.getPlayerState() === 1) { playerYT.pauseVideo(); sessionStorage.setItem('musi_playing', 'false'); }
+        else { playerYT.playVideo(); sessionStorage.setItem('musi_playing', 'true'); }
+        setTimeout(updatePlayBtn, 200); 
+    }
+
+    function playNext() { 
+        currentIndex = isShuffle ? Math.floor(Math.random() * listaMusicasIds.length) : (currentIndex + 1) % listaMusicasIds.length; 
+        playerYT.loadVideoById(listaMusicasIds[currentIndex]); 
+        sessionStorage.setItem('musi_index', currentIndex); 
+    }
+
+    function playPrev() { 
+        currentIndex = (currentIndex - 1 + listaMusicasIds.length) % listaMusicasIds.length; 
+        playerYT.loadVideoById(listaMusicasIds[currentIndex]); 
+        sessionStorage.setItem('musi_index', currentIndex); 
+    }
+
+    function toggleShuffle() { 
+        isShuffle = !isShuffle; 
+        sessionStorage.setItem('musi_shuffle', isShuffle); 
+        document.getElementById('shuffle-btn').classList.toggle('active'); 
+    }
+
+    // --- LÓGICA DO JOGO DA FORCA ---
     const bancoPalavras = [
       { palavra: "FELICIDADE", dicas: ["Estado de alegria", "Sentimento bom", "Sorriso no rosto", "Coração leve", "Momento feliz"] },
       { palavra: "BORBOLETA", dicas: ["Inseto colorido", "Voa em jardins", "Tem asas bonitas", "Transforma-se de lagarta", "Pousa nas flores"] },
@@ -208,38 +231,24 @@
       { palavra: "CARRO", dicas: ["Meio de transporte", "Tem rodas", "Anda na estrada", "Usado para viajar", "Tem motor"] }
     ];
 
-    const btnMenu = document.getElementById("btn-menu");
     const palavraElem = document.getElementById("palavra");
     const dicasContainer = document.getElementById("dica-container");
     const letrasContainer = document.getElementById("letras-container");
     const resultText = document.getElementById("result-text");
     const btnNovo = document.getElementById("btn-novo");
 
-    let palavraAtual;
-    let letrasAcertadas;
-    let erros;
+    let palavraAtual, letrasAcertadas, erros, autoRestartTimeout;
     const maxErros = 5;
-    let autoRestartTimeout;
 
-    btnMenu.onclick = () => location.href = "../index.html";
-
-    function normalizaLetra(letra) {
-      const mapa = {
-        Á: "A", À: "A", Â: "A", Ã: "A",
-        É: "E", È: "E", Ê: "E",
-        Í: "I", Ì: "I", Î: "I",
-        Ó: "O", Ò: "O", Ô: "O", Õ: "O",
-        Ú: "U", Ù: "U", Û: "U",
-        Ç: "C",
-      };
-      return mapa[letra.toUpperCase()] || letra.toUpperCase();
+    function normalizaLetra(l) {
+      return l.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
     }
 
     function iniciarJogo() {
+      if(autoRestartTimeout) clearTimeout(autoRestartTimeout);
       erros = 0;
       palavraAtual = bancoPalavras[Math.floor(Math.random() * bancoPalavras.length)];
       letrasAcertadas = Array(palavraAtual.palavra.length).fill(false);
-      dicasContainer.innerHTML = "";
       resultText.textContent = "";
       btnNovo.style.display = "none";
       letrasContainer.innerHTML = "";
@@ -250,151 +259,91 @@
     }
 
     function exibirPalavra() {
-      const display = palavraAtual.palavra
-        .split("")
-        .map((l, i) => (letrasAcertadas[i] ? l : "_"))
-        .join(" ");
-      palavraElem.textContent = display;
+      palavraElem.textContent = palavraAtual.palavra.split("").map((l, i) => (letrasAcertadas[i] ? l : "_")).join(" ");
     }
 
     function criarLetras() {
-      const alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-      for (const letra of alfabeto) {
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").forEach(letra => {
         const btn = document.createElement("button");
         btn.className = "letra-btn";
         btn.textContent = letra;
-        btn.addEventListener("click", () => tentarLetra(letra, btn));
+        btn.onclick = () => tentarLetra(letra, btn);
         letrasContainer.appendChild(btn);
-      }
+      });
     }
 
     function tentarLetra(letra, btn) {
-      if (btn.classList.contains("disabled")) return;
-      const letraNorm = normalizaLetra(letra);
+      if (btn.classList.contains("disabled") || erros >= maxErros) return;
       let acertou = false;
-      for (let i = 0; i < palavraAtual.palavra.length; i++) {
-        if (normalizaLetra(palavraAtual.palavra[i]) === letraNorm) {
-          letrasAcertadas[i] = true;
-          acertou = true;
-        }
-      }
+      const letraNorm = normalizaLetra(letra);
+      
+      palavraAtual.palavra.split("").forEach((l, i) => {
+        if (normalizaLetra(l) === letraNorm) { letrasAcertadas[i] = true; acertou = true; }
+      });
+
       btn.classList.add("disabled");
-      if (!acertou) {
-        erros++;
-        atualizarBonequinho();
-        if (erros >= maxErros) {
-          mostrarPerdeu();
-          return;
-        }
-      }
+      if (!acertou) { erros++; atualizarBonequinho(); }
+      
       exibirPalavra();
       verificarFim();
     }
 
     function criarDicas() {
       dicasContainer.innerHTML = "";
-      const maxDicas = Math.min(5, palavraAtual.dicas.length);
-      const dicasEscolhidas = palavraAtual.dicas.slice(0, maxDicas);
-      dicasEscolhidas.forEach((dica) => {
-        const btnDica = document.createElement("button");
-        btnDica.className = "dica-btn";
-        btnDica.textContent = "Mostrar dica";
-        btnDica.title = dica;
-        btnDica.addEventListener("click", () => {
-          if (!btnDica.classList.contains("used")) {
-            btnDica.textContent = dica;
-            btnDica.classList.add("used");
-          }
-        });
-        dicasContainer.appendChild(btnDica);
+      palavraAtual.dicas.forEach(dica => {
+        const btn = document.createElement("button");
+        btn.className = "dica-btn";
+        btn.textContent = "Dica?";
+        btn.onclick = () => { if(!btn.classList.contains("used")){ btn.textContent = dica; btn.classList.add("used"); }};
+        dicasContainer.appendChild(btn);
       });
     }
 
     function atualizarBonequinho() {
-      const partes = [
-        document.getElementById("head"),
-        document.getElementById("body"),
-        document.getElementById("left-arm"),
-        document.getElementById("right-arm"),
-        document.getElementById("left-leg"),
-        document.getElementById("right-leg"),
-        document.getElementById("left-foot"),
-        document.getElementById("right-foot"),
-      ];
-      partes.forEach((p) => (p.style.display = "none"));
-      if (erros >= 1) partes[0].style.display = "block";
-      if (erros >= 2) partes[1].style.display = "block";
-      if (erros >= 3) {
-        partes[2].style.display = "block";
-        partes[3].style.display = "block";
-      }
-      if (erros >= 4) {
-        partes[4].style.display = "block";
-        partes[5].style.display = "block";
-      }
-      if (erros >= 5) {
-        partes[6].style.display = "block";
-        partes[7].style.display = "block";
-      }
+      const ids = ["head", "body", "left-arm", "right-arm", "left-leg", "right-leg"];
+      ids.forEach(id => document.getElementById(id).style.display = "none");
+      if (erros >= 1) document.getElementById("head").style.display = "block";
+      if (erros >= 2) document.getElementById("body").style.display = "block";
+      if (erros >= 3) { document.getElementById("left-arm").style.display = "block"; document.getElementById("right-arm").style.display = "block"; }
+      if (erros >= 4) { document.getElementById("left-leg").style.display = "block"; }
+      if (erros >= 5) { document.getElementById("right-leg").style.display = "block"; mostrarPerdeu(); }
     }
 
     function verificarFim() {
-      if (letrasAcertadas.every((x) => x)) {
-        resultText.textContent = "Parabéns! Você acertou a palavra!";
-        confetti(); // confete só ao ganhar
-        btnNovo.style.display = "inline-block";
-        btnNovo.focus();
-        desabilitarLetras();
-        scheduleAutoRestart();
+      if (letrasAcertadas.every(x => x)) {
+        resultText.textContent = "🌟 VOCÊ VENCEU! 🌟";
+        lançarConfete();
+        finalizar();
       }
     }
 
     function mostrarPerdeu() {
-      resultText.textContent = "Que pena! A palavra era: " + palavraAtual.palavra;
+      resultText.textContent = "Fim de jogo! Era: " + palavraAtual.palavra;
+      finalizar();
+    }
+
+    function finalizar() {
       btnNovo.style.display = "inline-block";
-      btnNovo.focus();
-      desabilitarLetras();
-      scheduleAutoRestart();
+      document.querySelectorAll(".letra-btn").forEach(b => b.classList.add("disabled"));
+      // RECOMEÇO AUTOMÁTICO EM 2 SEGUNDOS
+      autoRestartTimeout = setTimeout(iniciarJogo, 2000);
     }
 
-    function desabilitarLetras() {
-      document.querySelectorAll(".letra-btn").forEach((btn) => btn.classList.add("disabled"));
-    }
-
-    btnNovo.addEventListener("click", iniciarJogo);
-
-    function scheduleAutoRestart() {
-      if (autoRestartTimeout) clearTimeout(autoRestartTimeout);
-      autoRestartTimeout = setTimeout(() => {
-        iniciarJogo();
-      }, 3500);
-    }
-
-    // confetti effect
-    function confetti() {
+    function lançarConfete() {
       const container = document.getElementById("confetti");
-      container.innerHTML = "";
-      const colors = ["#ff597f", "#ff9ea1", "#fcd677", "#a9d97a", "#79d79a"];
-
-      for (let i = 0; i < 140; i++) {
-        const c = document.createElement("div");
-        c.classList.add("confetti-piece");
-        c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-        c.style.left = Math.random() * window.innerWidth + "px";
-        c.style.top = -10 + "px";
-        c.style.width = Math.random() * 8 + 4 + "px";
-        c.style.height = Math.random() * 8 + 4 + "px";
-        c.style.setProperty("--x-move", (Math.random() - 0.5) * 200);
-        c.style.animationDuration = Math.random() * 2 + 2 + "s";
-        container.appendChild(c);
+      for (let i = 0; i < 50; i++) {
+        const div = document.createElement("div");
+        div.className = "confetti-piece";
+        div.style.left = Math.random() * 100 + "vw";
+        div.style.backgroundColor = ["#ff597f", "#ff9ea1", "#fcd677", "#a9d97a"][Math.floor(Math.random()*4)];
+        div.style.width = "10px"; div.style.height = "10px";
+        div.style.animationDuration = (Math.random() * 2 + 1) + "s";
+        container.appendChild(div);
+        setTimeout(() => div.remove(), 3000);
       }
-
-      // limpa confetes depois de 3 segundos
-      setTimeout(() => {
-        container.innerHTML = "";
-      }, 3000);
     }
 
+    btnNovo.onclick = iniciarJogo;
     iniciarJogo();
   </script>
 </body>
