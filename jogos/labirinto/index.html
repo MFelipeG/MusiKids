@@ -2,256 +2,204 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   <title>Jogo do Labirinto - MusiKids Fun</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700;800&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Baloo 2', Arial, cursive, sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
+      height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
+      overflow: hidden; /* Garante que nada escape da tela */
       position: relative;
     }
 
-    /* Botão Menu fixo */
+    /* --- PLAYER PADRÃO MUSIKIDS --- */
+    #musikids-player-card {
+      background: white; padding: 6px 15px; display: flex; align-items: center; gap: 10px;
+      border: 3px solid #FF77A9; border-radius: 50px; position: fixed; top: 10px; right: 10px; 
+      z-index: 10001; box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    }
+    .player-controls { display: flex; gap: 6px; align-items: center; }
+    .player-btn {
+      background: #FF77A9; border: none; color: white; width: 30px; height: 30px; 
+      border-radius: 50%; cursor: pointer; display: flex; align-items: center; 
+      justify-content: center; font-size: 12px;
+    }
+    .player-label { font-weight: 800; color: #FF4C8B; font-size: 0.8rem; }
+    .btn-shuffle.active { background: #21a7ff !important; }
+
+    /* Botão Menu */
     #menuButton {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      padding: 12px 20px;
-      font-size: 16px;
-      font-weight: 700;
-      border: none;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-      color: white;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(240, 147, 251, 0.4);
-      z-index: 1000;
-      transition: transform 0.2s;
+      position: fixed; top: 10px; left: 10px; z-index: 1000;
+      padding: 8px 15px; font-size: 0.9rem; border-radius: 9px; border: none;
+      background: linear-gradient(135deg, #ff007f, #21a7ff 110%);
+      color: #fff; font-weight: bold; cursor: pointer;
     }
 
-    #menuButton:hover {
-      transform: scale(1.05);
-    }
-
-    #menuButton:active {
-      transform: scale(0.98);
-    }
-
-    /* Contador de vitórias */
     #scoreBoard {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      padding: 12px 20px;
-      font-size: 16px;
-      font-weight: 700;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      backdrop-filter: blur(10px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      position: fixed; top: 50px; left: 10px;
+      padding: 5px 12px; font-size: 12px; font-weight: 700; border-radius: 8px;
+      background: rgba(255, 255, 255, 0.2); color: white; backdrop-filter: blur(5px);
       z-index: 1000;
     }
 
-    /* Container do jogo */
-    .game-wrapper {
-      text-align: center;
-      padding: 20px;
-      max-width: 95vw;
+    .game-wrapper { 
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      width: 100%; max-height: 95vh; padding: 10px;
     }
 
-    h1 {
-      color: white;
-      font-size: 28px;
-      margin-bottom: 10px;
-      text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
-    }
-
-    #levelInfo {
-      color: rgba(255,255,255,0.95);
-      font-size: 16px;
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-
-    #instructions {
-      color: rgba(255,255,255,0.95);
-      font-size: 14px;
-      margin-bottom: 15px;
-      background: rgba(0,0,0,0.2);
-      padding: 10px;
-      border-radius: 10px;
-    }
+    h1 { color: white; font-size: 1.8rem; margin-bottom: 2px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
+    #levelInfo { color: rgba(255,255,255,0.9); font-size: 0.9rem; margin-bottom: 5px; }
 
     #gameCanvas {
-      display: block;
-      margin: 0 auto;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-      max-width: 100%;
+      display: block; background: white; border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      max-width: 85vw; 
+      max-height: 45vh; /* Ajuste crucial para não empurrar os botões */
+      object-fit: contain;
       touch-action: none;
     }
 
-    #message {
-      margin-top: 15px;
-      font-size: 20px;
-      font-weight: bold;
-      color: #fff;
-      min-height: 30px;
-    }
+    #message { margin-top: 5px; font-size: 1.1rem; font-weight: bold; color: #fff; min-height: 25px; }
 
-    .controls {
-      margin-top: 15px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .control-row {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-    }
-
+    .controls { margin-top: 10px; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+    .control-row { display: flex; gap: 8px; justify-content: center; }
     .control-btn {
-      width: 60px;
-      height: 60px;
-      font-size: 24px;
-      border: none;
-      border-radius: 50%;
+      width: 50px; height: 50px; font-size: 20px; border: none; border-radius: 50%;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-      font-weight: bold;
-      transition: all 0.2s;
-      user-select: none;
-      -webkit-tap-highlight-color: transparent;
+      color: white; cursor: pointer; font-weight: bold;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
     }
-
-    .control-btn:active {
-      transform: scale(0.95);
-      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.6);
-    }
+    .control-btn:active { transform: scale(0.9); }
 
     #restartBtn {
-      margin-top: 10px;
-      padding: 12px 24px;
-      font-size: 16px;
-      font-weight: 700;
-      border: none;
-      border-radius: 10px;
-      background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-      color: white;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(250, 112, 154, 0.4);
-      transition: transform 0.2s;
+      margin-top: 5px; padding: 8px 20px; font-size: 13px; font-weight: 700; border: none;
+      border-radius: 50px; background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+      color: white; cursor: pointer;
     }
 
-    #restartBtn:hover {
-      transform: scale(1.05);
-    }
+    #confettiCanvas { pointer-events: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 999; }
 
-    #restartBtn:active {
-      transform: scale(0.98);
-    }
-
-    /* Canvas para confetes */
-    #confettiCanvas {
-      pointer-events: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 999;
-    }
-
-    /* Responsividade */
     @media (max-width: 600px) {
-      h1 {
-        font-size: 22px;
-        margin-top: 50px;
-      }
-
-      #levelInfo {
-        font-size: 14px;
-      }
-
-      #instructions {
-        font-size: 12px;
-      }
-
-      .control-btn {
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
-      }
-
-      #menuButton, #scoreBoard {
-        font-size: 14px;
-        padding: 10px 16px;
-      }
+      #musikids-player-card { top: auto; bottom: 10px; right: 10px; scale: 0.85; }
+      h1 { font-size: 1.4rem; }
+      .control-btn { width: 45px; height: 45px; }
+      #gameCanvas { max-height: 40vh; }
     }
   </style>
 </head>
 <body>
-  <button id="menuButton">Menu de Jogos</button>
-  <div id="scoreBoard">🏆 Vitórias: <span id="winsCount">0</span></div>
+
+  <div id="musikids-player-card">
+      <span class="player-label">Música</span>
+      <div class="player-controls">
+          <button class="player-btn" onclick="playPrev()">⏮️</button>
+          <button class="player-btn" onclick="toggleMusic()" id="play-pause-btn">▶️</button>
+          <button class="player-btn" onclick="playNext()">⏭️</button>
+          <button class="player-btn btn-shuffle" onclick="toggleShuffle()" id="shuffle-btn">🔀</button>
+      </div>
+  </div>
+  <div style="position: absolute; left: -9999px;"><div id="yt-audio-element"></div></div>
+
+  <button id="menuButton" onclick="window.location.href='../index.html'">← Menu</button>
+  <div id="scoreBoard">🏆: <span id="winsCount">0</span></div>
 
   <div class="game-wrapper">
-    <h1>🐭 Jogo do Labirinto 🧀</h1>
+    <h1>🐭 Labirinto 🧀</h1>
     <p id="levelInfo">Nível: <span id="currentLevel">1</span></p>
-    <p id="instructions">Use as setas do teclado ou os botões abaixo para mover o rato até o queijo!</p>
     
     <canvas id="gameCanvas"></canvas>
     
     <p id="message"></p>
     
-    <!-- Controles para mobile -->
     <div class="controls">
       <div class="control-row">
-        <button class="control-btn" id="upBtn">↑</button>
+        <button class="control-btn" onclick="movePlayer(0,-1)">↑</button>
       </div>
       <div class="control-row">
-        <button class="control-btn" id="leftBtn">←</button>
-        <button class="control-btn" id="downBtn">↓</button>
-        <button class="control-btn" id="rightBtn">→</button>
+        <button class="control-btn" onclick="movePlayer(-1,0)">←</button>
+        <button class="control-btn" onclick="movePlayer(0,1)">↓</button>
+        <button class="control-btn" onclick="movePlayer(1,0)">→</button>
       </div>
-      <button id="restartBtn">🔄 Recomeçar</button>
+      <button id="restartBtn" onclick="resetPosition()">🔄 Recomeçar</button>
     </div>
   </div>
 
   <canvas id="confettiCanvas"></canvas>
 
+  <script src="../../js/musicas_data.js"></script>
+  <script src="https://www.youtube.com/iframe_api"></script>
   <script>
-    // Configuração do canvas
+    // Lógica do Player (YouTube)
+    let playerYT;
+    let currentIndex = parseInt(sessionStorage.getItem('musi_index')) || 0;
+    let isShuffle = sessionStorage.getItem('musi_shuffle') === 'true';
+
+    function onYouTubeIframeAPIReady() {
+        playerYT = new YT.Player('yt-audio-element', {
+            height: '0', width: '0',
+            videoId: listaMusicasIds[currentIndex],
+            playerVars: { 'autoplay': sessionStorage.getItem('musi_playing') === 'true' ? 1 : 0 },
+            events: {
+                'onReady': (e) => {
+                    const savedTime = parseFloat(sessionStorage.getItem('musi_time')) || 0;
+                    if(savedTime > 0) e.target.seekTo(savedTime, true);
+                    if(isShuffle) document.getElementById('shuffle-btn').classList.add('active');
+                    updatePlayBtn();
+                },
+                'onStateChange': (e) => { if(e.data === 0) playNext(); updatePlayBtn(); }
+            }
+        });
+    }
+
+    function updatePlayBtn() { 
+        const btn = document.getElementById('play-pause-btn'); 
+        if(btn && playerYT && playerYT.getPlayerState) {
+            btn.innerText = playerYT.getPlayerState() === 1 ? "⏸️" : "▶️";
+        }
+    }
+
+    function toggleMusic() { 
+        playerYT.getPlayerState() === 1 ? playerYT.pauseVideo() : playerYT.playVideo(); 
+        setTimeout(updatePlayBtn, 200); 
+    }
+
+    function playNext() { 
+        currentIndex = isShuffle ? Math.floor(Math.random() * listaMusicasIds.length) : (currentIndex + 1) % listaMusicasIds.length; 
+        playerYT.loadVideoById(listaMusicasIds[currentIndex]); 
+        sessionStorage.setItem('musi_index', currentIndex); 
+    }
+
+    function playPrev() { 
+        currentIndex = (currentIndex - 1 + listaMusicasIds.length) % listaMusicasIds.length; 
+        playerYT.loadVideoById(listaMusicasIds[currentIndex]); 
+        sessionStorage.setItem('musi_index', currentIndex); 
+    }
+
+    function toggleShuffle() { 
+        isShuffle = !isShuffle; 
+        sessionStorage.setItem('musi_shuffle', isShuffle); 
+        document.getElementById('shuffle-btn').classList.toggle('active'); 
+    }
+
+    // Lógica do Labirinto
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
-    
-    // Tamanho responsivo
     const isMobile = window.innerWidth <= 600;
     const cellSize = isMobile ? 30 : 40;
     const mazeWidth = isMobile ? 9 : 11;
-    const mazeHeight = isMobile ? 11 : 11;    
+    const mazeHeight = 11;    
     canvas.width = mazeWidth * cellSize;
     canvas.height = mazeHeight * cellSize;
 
-    // Variáveis de jogo
     let player = { x: 1, y: 1 };
     let cheese = { x: mazeWidth - 2, y: mazeHeight - 2 };
     let gameWon = false;
@@ -259,492 +207,63 @@
     let currentLevel = 1;
     let currentMaze = null;
 
-    // Navegação de volta ao menu
-    document.getElementById('menuButton').onclick = function() {
-      window.location.href = '../index.html';
-    };
-
-    // Coleção de labirintos diferentes (PC - 11x13)
     const mazes = [
-      // Labirinto 1 - Fácil
-      [
-        [1,1,1,1,1,1,1,1,1,1,1],
-        [1,0,0,0,1,0,0,0,0,0,1],
-        [1,0,1,0,1,0,1,1,1,0,1],
-        [1,0,1,0,0,0,0,0,1,0,1],
-        [1,0,1,1,1,1,1,0,1,0,1],
-        [1,0,0,0,0,0,1,0,0,0,1],
-        [1,1,1,0,1,0,1,1,1,0,1],
-        [1,0,0,0,1,0,0,0,1,0,1],
-        [1,0,1,1,1,1,1,0,1,0,1],
-        [1,0,0,0,0,0,0,0,0,0,1],
-        [1,1,1,1,1,1,1,1,1,1,1]
-      ],
-      // Labirinto 2 - Médio
-      [
-        [1,1,1,1,1,1,1,1,1,1,1],
-        [1,0,0,0,0,0,0,0,1,0,1],
-        [1,0,1,1,1,1,1,0,1,0,1],
-        [1,0,1,0,0,0,0,0,0,0,1],
-        [1,0,1,0,1,1,1,1,1,0,1],
-        [1,0,0,0,1,0,0,0,1,0,1],
-        [1,1,1,0,1,0,1,0,1,0,1],
-        [1,0,0,0,0,0,1,0,0,0,1],
-        [1,0,1,1,1,1,1,1,1,1,1],
-        [1,0,0,0,0,0,0,0,0,0,1],
-        [1,1,1,1,1,1,1,1,1,1,1]
-      ],
-      // Labirinto 3 - Difícil
-      [
-        [1,1,1,1,1,1,1,1,1,1,1],
-        [1,0,0,0,1,0,1,0,0,0,1],
-        [1,1,1,0,1,0,1,0,1,0,1],
-        [1,0,0,0,0,0,0,0,1,0,1],
-        [1,0,1,1,1,1,1,1,1,0,1],
-        [1,0,0,0,0,0,0,0,0,0,1],
-        [1,1,1,1,1,0,1,1,1,1,1],
-        [1,0,0,0,1,0,1,0,0,0,1],
-        [1,0,1,0,1,0,1,0,1,0,1],
-        [1,0,1,0,0,0,0,0,1,0,1],
-        [1,1,1,1,1,1,1,1,1,1,1]
-      ],
-      // Labirinto 4 - Espiral
-      [
-        [1,1,1,1,1,1,1,1,1,1,1],
-        [1,0,0,0,0,0,0,0,0,0,1],
-        [1,0,1,1,1,1,1,1,1,0,1],
-        [1,0,1,0,0,0,0,0,1,0,1],
-        [1,0,1,0,1,1,1,0,1,0,1],
-        [1,0,1,0,1,0,0,0,1,0,1],
-        [1,0,1,0,1,1,1,1,1,0,1],
-        [1,0,1,0,0,0,0,0,0,0,1],
-      [1,0,1,1,1,1,1,1,1,0,1],        [1,0,0,0,0,0,0,0,0,0,1],
-        [1,1,1,1,1,1,1,1,1,1,1]
-      ],
-      // Labirinto 5 - Desafio
-      [
-        [1,1,1,1,1,1,1,1,1,1,1],
-        [1,0,0,0,1,0,0,0,0,0,1],
-        [1,0,1,0,1,1,1,0,1,1,1],
-        [1,0,1,0,0,0,1,0,0,0,1],
-        [1,0,1,1,1,0,1,1,1,0,1],
-        [1,0,0,0,1,0,0,0,1,0,1],
-        [1,1,1,0,1,1,1,0,1,0,1],
-        [1,0,1,0,0,0,0,0,1,0,1],
-      [1,0,1,0,1,1,1,0,1,0,1],        [1,0,0,0,1,0,0,0,0,0,1],
-        [1,1,1,1,1,1,1,1,1,1,1]
-      ]
-              ,
-        // Labirinto 6 - Zig-zag
-        [
-            [1,1,1,1,1,1,1,1,1,1,1],
-            [1,0,0,0,0,0,0,0,0,0,1],
-            [1,1,1,1,1,1,1,1,1,0,1],
-            [1,0,0,0,0,0,0,0,0,0,1],
-            [1,0,1,1,1,1,1,1,1,1,1],
-            [1,0,0,0,0,0,0,0,0,0,1],
-            [1,1,1,1,1,1,1,1,1,0,1],
-            [1,0,0,0,0,0,0,0,0,0,1],
-            [1,0,1,1,1,1,1,1,1,1,1],
-            [1,0,0,0,0,0,0,0,0,0,1],
-            [1,1,1,1,1,1,1,1,1,1,1]
-        ],
-        // Labirinto 7 - Cruz
-        [
-            [1,1,1,1,1,1,1,1,1,1,1],
-            [1,0,0,0,0,1,0,0,0,0,1],
-            [1,0,1,1,0,1,0,1,1,0,1],
-            [1,0,1,1,0,1,0,1,1,0,1],
-            [1,0,1,1,0,0,0,1,1,0,1],
-            [1,1,1,1,0,1,0,1,1,1,1],
-            [1,0,1,1,0,0,0,1,1,0,1],
-            [1,0,1,1,0,1,0,1,1,0,1],
-            [1,0,1,1,0,1,0,1,1,0,1],
-            [1,0,0,0,0,1,0,0,0,0,1],
-            [1,1,1,1,1,1,1,1,1,1,1]
-        ],
-        // Labirinto 8 - Diagonal
-        [
-            [1,1,1,1,1,1,1,1,1,1,1],
-            [1,0,0,1,1,1,1,1,1,1,1],
-            [1,1,0,0,1,1,1,1,1,1,1],
-            [1,1,1,0,0,1,1,1,1,1,1],
-            [1,1,1,1,0,0,1,1,1,1,1],
-            [1,1,1,1,1,0,0,1,1,1,1],
-            [1,1,1,1,1,1,0,0,1,1,1],
-            [1,1,1,1,1,1,1,0,0,1,1],
-            [1,1,1,1,1,1,1,1,0,0,1],
-            [1,1,1,1,1,1,1,1,1,0,0],
-            [1,1,1,1,1,1,1,1,1,1,1]
-        ],
-        // Labirinto 9 - Sala Central
-        [
-            [1,1,1,1,1,1,1,1,1,1,1],
-            [1,0,0,0,1,0,1,0,0,0,1],
-            [1,0,1,0,1,0,1,0,1,0,1],
-            [1,0,1,0,0,0,0,0,1,0,1],
-            [1,0,1,1,1,0,1,1,1,0,1],
-            [1,0,0,0,0,0,0,0,0,0,1],
-            [1,0,1,1,1,0,1,1,1,0,1],
-            [1,0,1,0,0,0,0,0,1,0,1],
-            [1,0,1,0,1,0,1,0,1,0,1],
-            [1,0,0,0,1,0,1,0,0,0,1],
-            [1,1,1,1,1,1,1,1,1,1,1]
-        ],
-        // Labirinto 10 - Corredores Duplos
-        [
-            [1,1,1,1,1,1,1,1,1,1,1],
-            [1,0,0,1,0,0,0,1,0,0,1],
-            [1,0,1,1,0,1,0,1,1,0,1],
-            [1,0,0,1,0,1,0,1,0,0,1],
-            [1,1,0,1,0,1,0,1,0,1,1],
-            [1,0,0,0,0,1,0,0,0,0,1],
-            [1,1,0,1,0,1,0,1,0,1,1],
-            [1,0,0,1,0,1,0,1,0,0,1],
-            [1,0,1,1,0,1,0,1,1,0,1],
-            [1,0,0,1,0,0,0,1,0,0,1],
-            [1,1,1,1,1,1,1,1,1,1,1]
-        ]
+      [[1,1,1,1,1,1,1,1,1,1,1],[1,0,0,0,1,0,0,0,0,0,1],[1,0,1,0,1,0,1,1,1,0,1],[1,0,1,0,0,0,0,0,1,0,1],[1,0,1,1,1,1,1,0,1,0,1],[1,0,0,0,0,0,1,0,0,0,1],[1,1,1,0,1,0,1,1,1,0,1],[1,0,0,0,1,0,0,0,1,0,1],[1,0,1,1,1,1,1,0,1,0,1],[1,0,0,0,0,0,0,0,0,0,1],[1,1,1,1,1,1,1,1,1,1,1]],
+      [[1,1,1,1,1,1,1,1,1,1,1],[1,0,0,0,0,0,0,0,1,0,1],[1,0,1,1,1,1,1,0,1,0,1],[1,0,1,0,0,0,0,0,0,0,1],[1,0,1,0,1,1,1,1,1,0,1],[1,0,0,0,1,0,0,0,1,0,1],[1,1,1,0,1,0,1,0,1,0,1],[1,0,0,0,0,0,1,0,0,0,1],[1,0,1,1,1,1,1,1,1,1,1],[1,0,0,0,0,0,0,0,0,0,1],[1,1,1,1,1,1,1,1,1,1,1]]
     ];
 
-    // Coleção de labirintos para mobile (9x11)
     const mazesMobile = [
-      // Labirinto 1 - Fácil
-      [
-        [1,1,1,1,1,1,1,1,1],
-        [1,0,0,0,1,0,0,0,1],
-        [1,0,1,0,1,0,1,0,1],
-        [1,0,1,0,0,0,1,0,1],
-        [1,0,1,1,1,0,1,0,1],
-        [1,0,0,0,1,0,0,0,1],
-        [1,1,1,0,1,1,1,0,1],
-        [1,0,0,0,0,0,0,0,1],
-        [1,0,1,1,1,1,1,0,1],
-        [1,0,0,0,0,0,0,0,1],
-        [1,1,1,1,1,1,1,1,1]
-      ],
-      // Labirinto 2 - Médio
-      [
-        [1,1,1,1,1,1,1,1,1],
-        [1,0,0,0,0,0,1,0,1],
-        [1,0,1,1,1,0,1,0,1],
-        [1,0,0,0,1,0,0,0,1],
-        [1,1,1,0,1,1,1,0,1],
-        [1,0,0,0,0,0,1,0,1],
-        [1,0,1,1,1,0,1,0,1],
-        [1,0,1,0,0,0,0,0,1],
-        [1,0,1,0,1,1,1,1,1],
-        [1,0,0,0,0,0,0,0,1],
-        [1,1,1,1,1,1,1,1,1]
-      ],
-      // Labirinto 3 - Difícil
-      [
-        [1,1,1,1,1,1,1,1,1],
-        [1,0,0,0,1,0,0,0,1],
-        [1,1,1,0,1,0,1,0,1],
-        [1,0,0,0,0,0,1,0,1],
-        [1,0,1,1,1,1,1,0,1],
-        [1,0,0,0,0,0,0,0,1],
-        [1,1,1,0,1,1,1,1,1],
-        [1,0,0,0,1,0,0,0,1],
-        [1,0,1,0,1,0,1,0,1],
-        [1,0,1,0,0,0,1,0,1],
-        [1,1,1,1,1,1,1,1,1]
-      ],
-      // Labirinto 4 - Espiral
-      [
-        [1,1,1,1,1,1,1,1,1],
-        [1,0,0,0,0,0,0,0,1],
-        [1,0,1,1,1,1,1,0,1],
-        [1,0,1,0,0,0,1,0,1],
-        [1,0,1,0,1,0,1,0,1],
-        [1,0,1,0,1,0,1,0,1],
-        [1,0,1,0,1,1,1,0,1],
-        [1,0,1,0,0,0,0,0,1],
-        [1,0,1,1,1,1,1,1,1],
-        [1,0,0,0,0,0,0,0,1],
-        [1,1,1,1,1,1,1,1,1]
-      ],
-      // Labirinto 5 - Desafio
-      [
-        [1,1,1,1,1,1,1,1,1],
-        [1,0,0,0,1,0,0,0,1],
-        [1,0,1,0,1,1,1,0,1],
-        [1,0,1,0,0,0,1,0,1],
-        [1,0,1,1,1,0,1,0,1],
-        [1,0,0,0,1,0,0,0,1],
-        [1,1,1,0,1,0,1,1,1],
-        [1,0,0,0,0,0,1,0,1],
-        [1,0,1,1,1,1,1,0,1],
-        [1,0,0,0,0,0,0,0,1],
-        [1,1,1,1,1,1,1,1,1]
-      ]
-              ,
-        // Labirinto 6 - Zig-zag (Mobile)
-        [
-            [1,1,1,1,1,1,1,1,1],
-            [1,0,0,0,0,0,0,0,1],
-            [1,1,1,1,1,1,1,0,1],
-            [1,0,0,0,0,0,0,0,1],
-            [1,0,1,1,1,1,1,1,1],
-            [1,0,0,0,0,0,0,0,1],
-            [1,1,1,1,1,1,1,0,1],
-            [1,0,0,0,0,0,0,0,1],
-            [1,0,1,1,1,1,1,1,1],
-            [1,0,0,0,0,0,0,0,1],
-            [1,1,1,1,1,1,1,1,1]
-        ],
-        // Labirinto 7 - Cruz (Mobile)
-        [
-            [1,1,1,1,1,1,1,1,1],
-            [1,0,0,0,1,0,0,0,1],
-            [1,0,1,0,1,0,1,0,1],
-            [1,0,1,0,1,0,1,0,1],
-            [1,0,1,0,0,0,1,0,1],
-            [1,1,1,0,1,0,1,1,1],
-            [1,0,1,0,0,0,1,0,1],
-            [1,0,1,0,1,0,1,0,1],
-            [1,0,1,0,1,0,1,0,1],
-            [1,0,0,0,1,0,0,0,1],
-            [1,1,1,1,1,1,1,1,1]
-        ],
-        // Labirinto 8 - Diagonal (Mobile)
-        [
-            [1,1,1,1,1,1,1,1,1],
-            [1,0,0,1,1,1,1,1,1],
-            [1,1,0,0,1,1,1,1,1],
-            [1,1,1,0,0,1,1,1,1],
-            [1,1,1,1,0,0,1,1,1],
-            [1,1,1,1,1,0,0,1,1],
-            [1,1,1,1,1,1,0,0,1],
-            [1,1,1,1,1,1,1,0,0],
-            [1,1,1,1,1,1,1,1,0],
-            [1,1,1,1,1,1,1,0,0],
-            [1,1,1,1,1,1,1,1,1]
-        ],
-        // Labirinto 9 - Sala Central (Mobile)
-        [
-            [1,1,1,1,1,1,1,1,1],
-            [1,0,0,1,0,1,0,0,1],
-            [1,0,1,1,0,1,1,0,1],
-            [1,0,0,0,0,0,0,0,1],
-            [1,0,1,1,0,1,1,0,1],
-            [1,0,0,0,0,0,0,0,1],
-            [1,0,1,1,0,1,1,0,1],
-            [1,0,0,0,0,0,0,0,1],
-            [1,0,1,1,0,1,1,0,1],
-            [1,0,0,1,0,1,0,0,1],
-            [1,1,1,1,1,1,1,1,1]
-        ],
-        // Labirinto 10 - Corredores Duplos (Mobile)
-        [
-            [1,1,1,1,1,1,1,1,1],
-            [1,0,0,1,0,1,0,0,1],
-            [1,0,1,1,0,1,1,0,1],
-            [1,0,0,1,0,1,0,0,1],
-            [1,1,0,1,0,1,0,1,1],
-            [1,0,0,0,0,0,0,0,1],
-            [1,1,0,1,0,1,0,1,1],
-            [1,0,0,1,0,1,0,0,1],
-            [1,0,1,1,0,1,1,0,1],
-            [1,0,0,1,0,1,0,0,1],
-            [1,1,1,1,1,1,1,1,1]
-        ]
+      [[1,1,1,1,1,1,1,1,1],[1,0,0,0,1,0,0,0,1],[1,0,1,0,1,0,1,0,1],[1,0,1,0,0,0,1,0,1],[1,0,1,1,1,0,1,0,1],[1,0,0,0,1,0,0,0,1],[1,1,1,0,1,1,1,0,1],[1,0,0,0,0,0,0,0,1],[1,0,1,1,1,1,1,0,1],[1,0,0,0,0,0,0,0,1],[1,1,1,1,1,1,1,1,1]],
+      [[1,1,1,1,1,1,1,1,1],[1,0,0,0,0,0,1,0,1],[1,0,1,1,1,0,1,0,1],[1,0,0,0,1,0,0,0,1],[1,1,1,0,1,1,1,0,1],[1,0,0,0,0,0,1,0,1],[1,0,1,1,1,0,1,0,1],[1,0,1,0,0,0,0,0,1],[1,0,1,0,1,1,1,1,1],[1,0,0,0,0,0,0,0,1],[1,1,1,1,1,1,1,1,1]]
     ];
 
-    // Selecionar labirinto aleatório
     function getRandomMaze() {
-      const mazeCollection = isMobile ? mazesMobile : mazes;
-      const randomIndex = Math.floor(Math.random() * mazeCollection.length);
-      return mazeCollection[randomIndex];
+      const coll = isMobile ? mazesMobile : mazes;
+      return coll[Math.floor(Math.random() * coll.length)];
     }
 
-    // Desenhar o labirinto
-    function drawMaze() {
-      for (let y = 0; y < currentMaze.length; y++) {
-        for (let x = 0; x < currentMaze[y].length; x++) {
-          if (currentMaze[y][x] === 1) {
-            // Parede - cores diferentes por nível
-            const wallColors = ['#4a5568', '#2c5282', '#744210', '#553c9a', '#9f1239'];
-            ctx.fillStyle = wallColors[(currentLevel - 1) % wallColors.length];
-            ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
-            ctx.strokeStyle = '#2d3748';
-            ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
-          } else {
-            // Caminho
-            ctx.fillStyle = '#f7fafc';
-            ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
-          }
+    function render() {
+      ctx.clearRect(0,0, canvas.width, canvas.height);
+      const wallColors = ['#4a5568', '#2c5282', '#744210', '#553c9a', '#9f1239'];
+      ctx.fillStyle = wallColors[(currentLevel - 1) % wallColors.length];
+      for(let y=0; y<currentMaze.length; y++) {
+        for(let x=0; x<currentMaze[y].length; x++) {
+          if(currentMaze[y][x] === 1) ctx.fillRect(x*cellSize, y*cellSize, cellSize, cellSize);
         }
       }
+      ctx.font = `${cellSize-8}px Arial`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('🧀', cheese.x*cellSize+cellSize/2, cheese.y*cellSize+cellSize/2);
+      ctx.fillText('🐭', player.x*cellSize+cellSize/2, player.y*cellSize+cellSize/2);
     }
 
-    // Desenhar o rato (emoji)
-    function drawPlayer() {
-      ctx.font = `${cellSize - 8}px Arial`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('🐭', player.x * cellSize + cellSize / 2, player.y * cellSize + cellSize / 2);
-    }
-
-    // Desenhar o queijo (emoji)
-    function drawCheese() {
-      ctx.font = `${cellSize - 8}px Arial`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('🧀', cheese.x * cellSize + cellSize / 2, cheese.y * cellSize + cellSize / 2);
-    }
-
-    // Renderizar tudo
-    function render() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawMaze();
-      drawCheese();
-      drawPlayer();
-    }
-
-    // Mover o jogador
     function movePlayer(dx, dy) {
-      if (gameWon) return;
-
-      const newX = player.x + dx;
-      const newY = player.y + dy;
-
-      // Verificar colisão com paredes
-      if (currentMaze[newY] && currentMaze[newY][newX] === 0) {
-        player.x = newX;
-        player.y = newY;
-        
-        // Verificar vitória
-        if (player.x === cheese.x && player.y === cheese.y) {
-          gameWon = true;
-          wins++;
-          document.getElementById('winsCount').textContent = wins;
-          document.getElementById('message').textContent = '🎉 Parabéns! Você ganhou! 🎉';
-          document.getElementById('message').style.color = '#48bb78';
-          startConfetti();
-          
-          // Iniciar novo jogo automático após 2 segundos
-          setTimeout(() => {
-            startNewGame();
-          }, 2000);
+      if(gameWon) return;
+      let nx = player.x + dx, ny = player.y + dy;
+      if(currentMaze[ny] && currentMaze[ny][nx] === 0) {
+        player.x = nx; player.y = ny;
+        if(player.x === cheese.x && player.y === cheese.y) {
+          gameWon = true; wins++; document.getElementById('winsCount').textContent = wins;
+          document.getElementById('message').textContent = '🎉 CONSEGUIU! 🎉';
+          setTimeout(startNewGame, 1500);
         }
-        
         render();
       }
     }
 
-    // Iniciar novo jogo
+    function resetPosition() { player = { x: 1, y: 1 }; render(); }
     function startNewGame() {
-      currentMaze = getRandomMaze();
-      player = { x: 1, y: 1 };
-      cheese = { x: mazeWidth - 2, y: mazeHeight - 2 };
-      gameWon = false;
-      currentLevel++;
-      document.getElementById('currentLevel').textContent = currentLevel;
-      document.getElementById('message').textContent = '';
-      render();
+      currentMaze = getRandomMaze(); player = { x: 1, y: 1 };
+      gameWon = false; currentLevel++; document.getElementById('currentLevel').textContent = currentLevel;
+      document.getElementById('message').textContent = ''; render();
     }
 
-    // Controles de teclado
     document.addEventListener('keydown', (e) => {
-      switch(e.key) {
-        case 'ArrowUp': 
-          e.preventDefault();
-          movePlayer(0, -1); 
-          break;
-        case 'ArrowDown': 
-          e.preventDefault();
-          movePlayer(0, 1); 
-          break;
-        case 'ArrowLeft': 
-          e.preventDefault();
-          movePlayer(-1, 0); 
-          break;
-        case 'ArrowRight': 
-          e.preventDefault();
-          movePlayer(1, 0); 
-          break;
-      }
+      if(e.key === "ArrowUp") movePlayer(0,-1);
+      if(e.key === "ArrowDown") movePlayer(0,1);
+      if(e.key === "ArrowLeft") movePlayer(-1,0);
+      if(e.key === "ArrowRight") movePlayer(1,0);
     });
 
-    // Controles de botão
-    document.getElementById('upBtn').addEventListener('click', () => movePlayer(0, -1));
-    document.getElementById('downBtn').addEventListener('click', () => movePlayer(0, 1));
-    document.getElementById('leftBtn').addEventListener('click', () => movePlayer(-1, 0));
-    document.getElementById('rightBtn').addEventListener('click', () => movePlayer(1, 0));
-
-    // Botão de reiniciar
-    document.getElementById('restartBtn').addEventListener('click', () => {
-      player = { x: 1, y: 1 };
-      gameWon = false;
-      document.getElementById('message').textContent = '';
-      render();
-    });
-
-    // Sistema de confetes
-    const confettiCanvas = document.getElementById('confettiCanvas');
-    const confettiCtx = confettiCanvas.getContext('2d');
-
-    function resizeConfettiCanvas() {
-      confettiCanvas.width = window.innerWidth;
-      confettiCanvas.height = window.innerHeight;
-    }
-
-    window.addEventListener('resize', resizeConfettiCanvas);
-    resizeConfettiCanvas();
-
-    let confetti = [];
-
-    function startConfetti() {
-      confetti = [];
-      for (let i = 0; i < 150; i++) {
-        confetti.push({
-          x: Math.random() * confettiCanvas.width,
-          y: -Math.random() * 100 - 50,
-          r: Math.random() * 6 + 3,
-          d: Math.random() * 10 + 15,
-          color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-          tilt: Math.random() * 10 - 5,
-          tiltAngle: Math.random() * Math.PI
-        });
-      }
-      animateConfetti();
-      setTimeout(() => confetti = [], 4000);
-    }
-
-    function animateConfetti() {
-      confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
-      
-      confetti.forEach(c => {
-        confettiCtx.save();
-        confettiCtx.translate(c.x, c.y);
-        confettiCtx.rotate(c.tiltAngle);
-        confettiCtx.beginPath();
-        confettiCtx.arc(0, 0, c.r, 0, 2 * Math.PI);
-        confettiCtx.fillStyle = c.color;
-        confettiCtx.fill();
-        confettiCtx.restore();
-      });
-      
-      updateConfetti();
-      
-      if (confetti.length > 0) {
-        requestAnimationFrame(animateConfetti);
-      }
-    }
-
-    function updateConfetti() {
-      confetti.forEach(c => {
-        c.tiltAngle += 0.1;
-        c.y += c.d * 0.5;
-        c.x += Math.sin(c.tiltAngle) * 2;
-      });
-      
-      confetti = confetti.filter(c => c.y < confettiCanvas.height);
-    }
-
-    // Iniciar o primeiro jogo
     currentMaze = getRandomMaze();
     render();
   </script>
