@@ -8,9 +8,30 @@
             <style>
                 @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700;800&display=swap');
                 
-                body { font-family: 'Baloo 2', cursive; background: #fdfbf0; margin: 0; padding: 0; text-align: center; color: #32434a; }
+                body { font-family: 'Baloo 2', cursive; background: #fdfbf0; margin: 0; padding: 0; text-align: center; color: #32434a; position: relative; }
                 
-                .header-amazon { background: #232f3e; color: white; padding: 25px; margin-bottom: 10px; }
+                /* BOTÃO VOLTAR */
+                .btn-voltar {
+                    position: absolute;
+                    top: 20px;
+                    left: 20px;
+                    background: white;
+                    color: #ff77a9;
+                    text-decoration: none;
+                    padding: 8px 15px;
+                    border-radius: 20px;
+                    font-weight: 800;
+                    font-size: 0.9rem;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    z-index: 9999;
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    transition: transform 0.2s;
+                }
+                .btn-voltar:hover { transform: scale(1.05); }
+
+                .header-amazon { background: #232f3e; color: white; padding: 35px 20px; margin-bottom: 10px; }
                 .header-amazon span { color: #ff9900; }
                 
                 .filtros { margin: 15px; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
@@ -30,20 +51,20 @@
                 
                 .tag { position: absolute; top: 10px; left: 10px; background: #ff7eb9; color: white; padding: 3px 10px; border-radius: 8px; font-size: 0.7rem; font-weight: 800; z-index: 5; }
 
-                /* SEÇÃO DE RESPONSABILIDADE NO RODAPÉ */
                 .footer-info { background: #fff; margin-top: 50px; padding: 40px 20px; border-top: 2px solid #ffdeeb; }
                 .info-container { max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
-                .info-steps { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; margin-bottom: 30px; }
-                .step { flex: 1; min-width: 150px; }
-                .step span { font-size: 2rem; display: block; margin-bottom: 10px; }
-                .step h4 { margin: 0; color: #ff9900; }
-                .step p { font-size: 0.85rem; color: #666; margin-top: 5px; }
                 
                 .disclaimer { background: #f9f9f9; padding: 20px; border-radius: 15px; font-size: 0.85rem; line-height: 1.5; color: #555; text-align: left; border-left: 5px solid #232f3e; }
-                .disclaimer b { color: #232f3e; }
+
+                @media (max-width: 600px) {
+                    .header-amazon { padding-top: 70px; } /* Espaço para o botão não tapar o título */
+                    .btn-voltar { top: 15px; left: 15px; }
+                }
             </style>
         </head>
         <body>
+            <a href="../index.html" class="btn-voltar">🏠 Início</a>
+
             <div class="header-amazon">
                 <h1>📦 MusiKids <span>na Amazon</span></h1>
             </div>
@@ -339,37 +360,11 @@
 
             <footer class="footer-info">
                 <div class="info-container">
-                    <div class="info-steps">
-                        <div class="step">
-                            <span>🔍</span>
-                            <h4>1. Curadoria</h4>
-                            <p>Selecionamos itens de alta qualidade para crianças.</p>
-                        </div>
-                        <div class="step">
-                            <span>🛒</span>
-                            <h4>2. Redirecionamento</h4>
-                            <p>Enviamos você para a Amazon com total segurança.</p>
-                        </div>
-                        <div class="step">
-                            <span>📦</span>
-                            <h4>3. Entrega Global</h4>
-                            <p>A Amazon processa o envio para a sua região.</p>
-                        </div>
-                    </div>
-                    
                     <div class="disclaimer">
-                        <b>Por que não exibimos preços?</b><br>
-                        Os preços na Amazon podem variar a qualquer momento com base em ofertas ou stock. Para garantir que você veja sempre o <b>valor mais atualizado e as melhores condições de envio</b>, o preço real é exibido apenas no site oficial da Amazon ao clicar no botão de Ver na Amazon.
-                        <br><br>
                         <b>Informação Importante:</b><br>
-                        Este site é uma <b>vitrine de curadoria e afiliação</b>. Atuamos na seleção de produtos, mas não somos uma loja direta. 
-                        Não possuímos stock físico e não processamos pagamentos. 
+                        Este site é uma vitrine de curadoria e afiliação. Ao clicar em "Ver na Amazon", será direcionado para a plataforma oficial. Toda a transação e envio são da inteira responsabilidade da Amazon.
                         <br><br>
-                        <b>Logística e Pós-Venda:</b><br>
-                        Ao clicar em "Ver na Amazon", será direcionado para a plataforma oficial da <b>Amazon (referência Espanha para Portugal)</b> ou para o marketplace internacional correspondente. 
-                        Toda a transação, faturação, envio e eventuais processos de <b>devolução ou garantia</b> são da inteira responsabilidade da Amazon e dos seus vendedores. 
-                        <br><br>
-                        <i>* Nota: Como Associados Amazon, a MusiKids Fun beneficia de uma comissão por compras qualificadas, o que ajuda a manter este projeto gratuito para a comunidade.</i>
+                        <i>* Nota: Como Associados Amazon, a MusiKids Fun beneficia de uma comissão por compras qualificadas.</i>
                     </div>
                 </div>
             </footer>
