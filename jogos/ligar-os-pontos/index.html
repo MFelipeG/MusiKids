@@ -2,413 +2,459 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"/>
 <title>Musikids Fun - Jogo de Ligar Imagens</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Baloo+2&display=swap');
-  
-  /* ESTILOS DO PLAYER (Inclusão) */
-  #musikids-player-card {
-    background: white; padding: 8px 18px; display: flex; align-items: center; gap: 12px;
-    border: 4px solid #FF77A9; border-radius: 50px;
-    position: fixed; top: 15px; right: 15px; z-index: 10001;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-  }
-  .player-controls { display: flex; gap: 8px; align-items: center; }
-  .player-btn {
-    background: #FF77A9; border: none; color: white;
-    width: 35px; height: 35px; border-radius: 50%; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; font-size: 14px;
-  }
-  .player-label { font-weight: 800; color: #FF4C8B; font-size: 0.8rem; }
 
-  /* SEUS ESTILOS ORIGINAIS DO JOGO */
+  * { box-sizing: border-box; }
+
   body {
     margin: 0; padding: 0;
     font-family: 'Baloo 2', cursive, Arial, sans-serif;
     background: linear-gradient(135deg, #f7f7ff, #ffd3e4);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: flex; flex-direction: column; align-items: center;
     min-height: 100vh;
     user-select: none;
   }
+
+  /* ── BARRA SUPERIOR FIXA ── */
+  #top-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.93);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 3px solid #FF77A9;
+    box-shadow: 0 3px 14px rgba(255,119,169,0.18);
+    gap: 10px;
+  }
+
   #btn-menu {
-    position: fixed; top: 15px; left: 15px;
-    padding: 14px 24px; background: #a1d578; color: #214d0d;
-    border-radius: 20px; font-weight: 900; box-shadow: 0 0 20px #a1d578aa;
-    cursor: pointer; border: none; transition: background .3s; z-index: 1000;
+    padding: 8px 16px; font-size: 1rem; border-radius: 9px; border: none;
+    background: #a1d578; color: #214d0d;
+    font-family: 'Baloo 2', cursive; font-weight: 900;
+    box-shadow: 0 3px 10px #a1d578aa; cursor: pointer;
+    white-space: nowrap; flex-shrink: 0;
   }
-  #btn-menu:hover { background: #68922b; color: white; }
-  header { margin: 65px 0 14px 0; font-weight: 900; font-size: 1.35rem; color: #d63a6d; letter-spacing: 1px; }
+
+  #musikids-player-card {
+    display: flex; align-items: center; gap: 8px;
+    background: #fff0f7; border: 3px solid #FF77A9;
+    border-radius: 50px; padding: 5px 14px; flex-shrink: 0;
+  }
+  .player-controls { display: flex; gap: 6px; align-items: center; }
+  .player-btn {
+    background: #FF77A9; border: none; color: white;
+    width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 13px;
+    transition: transform 0.2s;
+  }
+  .player-btn:active { transform: scale(0.88); }
+  .player-label { font-weight: 800; color: #FF4C8B; font-size: 0.85rem; }
+  .btn-shuffle.active { background: #21a7ff !important; }
+
+  /* ── CONTEÚDO ── */
+  #page-content {
+    width: 100%;
+    display: flex; flex-direction: column; align-items: center;
+    padding-top: 68px;
+    padding-bottom: 30px;
+  }
+
+  header {
+    margin: 16px 0 14px 0;
+    font-weight: 900; font-size: 1.35rem;
+    color: #d63a6d; letter-spacing: 1px;
+    text-align: center;
+  }
+
   #game-container {
-    max-width: 900px; width: 100%; background: white; border-radius: 30px;
-    padding: 20px 30px 30px 30px; box-shadow: 0 8px 30px #f3bbcfaa;
-    display: flex; justify-content: space-between; position: relative; overflow: visible;
+    max-width: 900px; width: 95%;
+    background: white; border-radius: 30px;
+    padding: 20px 30px 30px 30px;
+    box-shadow: 0 8px 30px #f3bbcfaa;
+    display: flex; justify-content: space-between;
+    position: relative; overflow: visible;
   }
-  #left-col, #right-col { display: flex; flex-direction: column; gap: 25px; width: 40%; align-items: center; }
+
+  #left-col, #right-col {
+    display: flex; flex-direction: column;
+    gap: 25px; width: 40%; align-items: center;
+    /* z-index alto para ficar na frente do SVG */
+    position: relative; z-index: 2;
+  }
+
   .img-item {
-    width: 130px; height: 130px; font-size: 70px; border-radius: 18px;
-    background: #ffe4f3; box-shadow: 0 2px 8px rgba(214, 58, 109, 0.35);
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    transition: transform 0.3s, box-shadow 0.3s; position: relative;
+    width: 130px; height: 130px; font-size: 70px;
+    border-radius: 18px; background: #ffe4f3;
+    box-shadow: 0 2px 8px rgba(214,58,109,0.35);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    /* Garante que as peças fiquem sempre na frente */
+    z-index: 2;
   }
-  .img-item.selected { box-shadow: 0 0 18px 5px #f99bbf; transform: scale(1.1); z-index: 10; }
+  .img-item.selected {
+    box-shadow: 0 0 18px 5px #f99bbf;
+    transform: scale(1.1);
+  }
+  .img-item.matched {
+    opacity: 0.75;
+    cursor: default;
+  }
   .img-item img { max-width: 115px; max-height: 115px; pointer-events: none; }
-  #message { position: absolute; bottom: -70px; left: 50%; transform: translateX(-50%); font-weight: 800; font-size: 1.35rem; color: #d63a6d; }
-  #canvas-lines { position: absolute; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 10; overflow: visible; }
-  .confetti-piece { position: fixed; width: 8px; height: 8px; border-radius: 50%; animation: fall 3s linear forwards; }
-  @keyframes fall { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(100vh); opacity: 0; } }
-  
+
+  #message {
+    position: absolute; bottom: -60px; left: 50%;
+    transform: translateX(-50%);
+    font-weight: 800; font-size: 1.35rem; color: #d63a6d;
+    white-space: nowrap;
+  }
+
+  /* SVG ATRÁS das colunas */
+  #canvas-lines {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none;
+    /* z-index 1 = atrás das colunas (z-index 2) */
+    z-index: 1;
+    overflow: visible;
+  }
+
+  .confetti-piece {
+    position: fixed; width: 8px; height: 8px; border-radius: 50%;
+    animation: fall 3s linear forwards;
+  }
+  @keyframes fall {
+    0%   { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(100vh); opacity: 0; }
+  }
+
   @media (max-width: 720px) {
-    #game-container { flex-direction: column; align-items: center; gap: 40px; }
-    #left-col, #right-col { width: 100%; flex-direction: row; justify-content: center; gap: 20px; flex-wrap: wrap; }
+    #game-container {
+      flex-direction: column; align-items: center; gap: 30px;
+    }
+    #left-col, #right-col {
+      width: 100%; flex-direction: row;
+      justify-content: center; gap: 16px; flex-wrap: wrap;
+    }
     .img-item { width: 100px; height: 100px; font-size: 50px; }
-    #message { position: static; margin-top: 10px; transform: none; }
-    header { margin-top: 55px; font-size: 1.05rem; }
-    #musikids-player-card { top: auto; bottom: 15px; right: 15px; }
+    #message { position: static; margin-top: 10px; transform: none; white-space: normal; text-align: center; }
+    header { font-size: 1.05rem; }
+
+    /* No mobile o SVG precisa cobrir todo o game-container incluindo as colunas empilhadas */
+    #canvas-lines { width: 100%; height: 100%; }
+
+    .player-label { display: none; }
+    #musikids-player-card { padding: 5px 8px; }
   }
 </style>
 </head>
 <body>
 
-<div id="musikids-player-card">
-    <span class="player-label">Música</span>
+<!-- ── BARRA SUPERIOR ── -->
+<div id="top-bar">
+  <button id="btn-menu" onclick="location.href='../index.html'">← Menu de Jogos</button>
+
+  <div id="musikids-player-card">
+    <span class="player-label">🎵</span>
     <div class="player-controls">
-        <button class="player-btn" onclick="playPrev()">⏮️</button>
-        <button class="player-btn" onclick="toggleMusic()" id="play-pause-btn">▶️</button>
-        <button class="player-btn" onclick="playNext()">⏭️</button>
-        <button class="player-btn" onclick="playRandom()">🔀</button>
+      <button class="player-btn" onclick="playPrev()">⏮️</button>
+      <button class="player-btn" onclick="toggleMusic()" id="play-pause-btn">▶️</button>
+      <button class="player-btn" onclick="playNext()">⏭️</button>
+      <button class="player-btn btn-shuffle" onclick="toggleShuffle()" id="shuffle-btn">🔀</button>
     </div>
+  </div>
 </div>
-<div style="position: absolute; left: -9999px;"><div id="yt-audio-element"></div></div>
 
-<button id="btn-menu" aria-label="Voltar ao menu">MENU DE JOGOS</button>
-<header>Musikids Fun, Jogo de Ligar Imagens</header>
+<div style="position:absolute;left:-9999px;"><div id="yt-audio-element"></div></div>
 
-<div id="game-container">
-  <div id="left-col"></div>
-  <svg id="canvas-lines"></svg>
-  <div id="right-col"></div>
-  <div id="message" aria-live="assertive" role="alert"></div>
+<!-- ── CONTEÚDO ── -->
+<div id="page-content">
+  <header>Musikids Fun — Jogo de Ligar Imagens</header>
+
+  <div id="game-container">
+    <div id="left-col"></div>
+    <!-- SVG PRIMEIRO no DOM = atrás dos elementos seguintes -->
+    <svg id="canvas-lines"></svg>
+    <div id="right-col"></div>
+    <div id="message" aria-live="assertive" role="alert"></div>
+  </div>
 </div>
+
 <div id="confetti-container"></div>
 
 <script src="../../js/musicas_data.js"></script>
 <script src="https://www.youtube.com/iframe_api"></script>
 <script>
-    let player;
-    let currentIndex = parseInt(sessionStorage.getItem('musi_index')) || 0;
+// ── PLAYER ────────────────────────────────────────────────
+let player;
+let currentIndex = parseInt(sessionStorage.getItem('musi_index')) || 0;
+let isShuffle    = sessionStorage.getItem('musi_shuffle') === 'true';
+const getPlaylist = () => typeof listaMusicasIds !== 'undefined' ? listaMusicasIds : ['dQw4w9WgXcQ'];
 
-    function onYouTubeIframeAPIReady() {
-        const savedTime = parseFloat(sessionStorage.getItem('musi_time')) || 0;
-        const isPlaying = sessionStorage.getItem('musi_playing') === 'true';
-
-        player = new YT.Player('yt-audio-element', {
-            height: '1', width: '1',
-            videoId: listaMusicasIds[currentIndex],
-            playerVars: { 'autoplay': isPlaying ? 1 : 0 },
-            events: {
-                'onReady': (event) => {
-                    // CORREÇÃO: Pula para o segundo salvo
-                    if (savedTime > 0) {
-                        event.target.seekTo(savedTime, true);
-                    }
-                    if (isPlaying) {
-                        event.target.playVideo();
-                        updatePlayStatus(true);
-                    }
-                },
-                'onStateChange': (e) => {
-                    if(e.data === 1) sessionStorage.setItem('musi_playing', 'true');
-                    if(e.data === 2) sessionStorage.setItem('musi_playing', 'false');
-                    if(e.data === 0) playNext();
-                }
-            }
-        });
-
-        setInterval(() => {
-            if (player && player.getCurrentTime) {
-                sessionStorage.setItem('musi_time', player.getCurrentTime());
-                sessionStorage.setItem('musi_index', currentIndex);
-            }
-        }, 1000);
+function onYouTubeIframeAPIReady() {
+  const savedTime = parseFloat(sessionStorage.getItem('musi_time')) || 0;
+  const wasPlaying = sessionStorage.getItem('musi_playing') === 'true';
+  player = new YT.Player('yt-audio-element', {
+    height: '0', width: '0',
+    videoId: getPlaylist()[currentIndex],
+    playerVars: { autoplay: wasPlaying ? 1 : 0 },
+    events: {
+      onReady(e) {
+        if (savedTime > 0) e.target.seekTo(savedTime, true);
+        if (isShuffle) document.getElementById('shuffle-btn').classList.add('active');
+        updatePlayBtn();
+      },
+      onStateChange(e) {
+        if (e.data === 0) playNext();
+        updatePlayBtn();
+        sessionStorage.setItem('musi_playing', e.data === 1);
+      }
     }
-
-    function updatePlayStatus(playing) {
-        const btn = document.getElementById('play-pause-btn');
-        if(btn) btn.innerText = playing ? "⏸" : "▶️";
+  });
+  setInterval(() => {
+    if (player?.getCurrentTime) {
+      sessionStorage.setItem('musi_time', player.getCurrentTime());
+      sessionStorage.setItem('musi_index', currentIndex);
     }
+  }, 1000);
+}
 
-    function toggleMusic() {
-        if (player.getPlayerState() === 1) {
-            player.pauseVideo();
-            updatePlayStatus(false);
-        } else {
-            player.playVideo();
-            updatePlayStatus(true);
-        }
-    }
-
-    function playNext() {
-        currentIndex = (currentIndex + 1) % listaMusicasIds.length;
-        sessionStorage.setItem('musi_time', 0);
-        player.loadVideoById(listaMusicasIds[currentIndex]);
-        updatePlayStatus(true);
-    }
-
-    function playPrev() {
-        currentIndex = (currentIndex - 1 + listaMusicasIds.length) % listaMusicasIds.length;
-        sessionStorage.setItem('musi_time', 0);
-        player.loadVideoById(listaMusicasIds[currentIndex]);
-        updatePlayStatus(true);
-    }
-
-    function playRandom() {
-        currentIndex = Math.floor(Math.random() * listaMusicasIds.length);
-        sessionStorage.setItem('musi_time', 0);
-        player.loadVideoById(listaMusicasIds[currentIndex]);
-        updatePlayStatus(true);
-    }
+function updatePlayBtn() {
+  const btn = document.getElementById('play-pause-btn');
+  if (btn && player?.getPlayerState) btn.innerText = player.getPlayerState() === 1 ? '⏸️' : '▶️';
+}
+function toggleMusic() {
+  if (!player?.playVideo) return;
+  player.getPlayerState() === 1 ? player.pauseVideo() : player.playVideo();
+  setTimeout(updatePlayBtn, 200);
+}
+function playNext() {
+  const list = getPlaylist();
+  currentIndex = isShuffle ? Math.floor(Math.random() * list.length) : (currentIndex + 1) % list.length;
+  player?.loadVideoById(list[currentIndex]);
+  sessionStorage.setItem('musi_time', 0);
+  updatePlayBtn();
+}
+function playPrev() {
+  const list = getPlaylist();
+  currentIndex = (currentIndex - 1 + list.length) % list.length;
+  player?.loadVideoById(list[currentIndex]);
+  sessionStorage.setItem('musi_time', 0);
+  updatePlayBtn();
+}
+function toggleShuffle() {
+  isShuffle = !isShuffle;
+  sessionStorage.setItem('musi_shuffle', isShuffle);
+  document.getElementById('shuffle-btn').classList.toggle('active');
+}
 </script>
 
 <script>
-// SEUS PARES ORIGINAIS PRESERVADOS
+// ── JOGO ──────────────────────────────────────────────────
 const allPairs = [
-  {left:"dog", leftImg: "🐶", right:"doghouse", rightImg:"🏠"},
-  {left:"mouse", leftImg:"🐭", right:"cheese", rightImg:"🧀"},
-  {left:"cat", leftImg:"🐱", right:"yarn", rightImg:"🧶"},
-  {left:"bird", leftImg:"🐦", right:"nest", rightImg:"🪹"},
-  {left:"fish", leftImg:"🐟", right:"water", rightImg:"💧"},
-  {left:"turtle", leftImg:"🐢", right:"pond", rightImg:"🏞️"},
-  {left:"frog", leftImg:"🐸", right:"lily", rightImg:"🌸"},
-  {left:"cow", leftImg:"🐄", right:"milk", rightImg:"🥛"},
-  {left:"horse", leftImg:"🐴", right:"stable", rightImg:"🏇"},
-  {left:"bee", leftImg:"🐝", right:"hive", rightImg:"🍯"},
-  {left:"pig", leftImg:"🐷", right:"mud", rightImg:"🟤"},
-  {left:"rabbit", leftImg:"🐰", right:"carrot", rightImg:"🥕"},
-  {left:"owl", leftImg:"🦉", right:"tree", rightImg:"🌳"},
-  {left:"duck", leftImg:"🦆", right:"pond", rightImg:"🌊"},
-  {left:"lion", leftImg:"🦁", right:"jungle", rightImg:"🌴"},
-  {left:"elephant", leftImg:"🐘", right:"waterhole", rightImg:"🏜️"},
-  {left:"bear", leftImg:"🐻", right:"forest", rightImg:"🌲"},
-  {left:"snake", leftImg:"🐍", right:"rock", rightImg:"🪨"},
-  {left:"monkey", leftImg:"🐒", right:"banana", rightImg:"🍌"},
-  {left:"crown", leftImg:"👑", right:"king", rightImg:"🤴"},
-  {left:"cat-face", leftImg:"😺", right:"box", rightImg:"📦"},
-  {left:"dog-face", leftImg:"🐕", right:"ball", rightImg:"⚽"},
-  {left:"mouse-face", leftImg:"🐀", right:"hole", rightImg:"🕳️"},
-  {left:"sheep", leftImg:"🐑", right:"wool", rightImg:"🧶"},
-  {left:"baby-chick", leftImg:"🐤", right:"egg", rightImg:"🥚"},
-  {left:"car", leftImg:"🚗", right:"garage", rightImg:"🏠"},
-  {left:"plane", leftImg:"✈️", right:"airport", rightImg:"🛫"},
-  {left:"bicycle", leftImg:"🚲", right:"helmet", rightImg:"⛑️"},
-  {left:"fire", leftImg:"🔥", right:"firefighter", rightImg:"🚒"},
-  {left:"book", leftImg:"📖", right:"library", rightImg:"🏛️"},
-  {left:"phone", leftImg:"📱", right:"charger", rightImg:"🔌"},
-  {left:"clock", leftImg:"⏰", right:"alarm", rightImg:"📢"},
-  {left:"camera", leftImg:"📸", right:"photo", rightImg:"🖼️"},
-  {left:"hat", leftImg:"🎩", right:"man", rightImg:"👨"},
-  {left:"poodle", leftImg:"🐩", right:"groomer", rightImg:"✂️"},
-  {left:"cat", leftImg:"🐈", right:"scratching post", rightImg:"🪵"},
-  {left:"fox", leftImg:"🦊", right:"den", rightImg:"🏚️"},
-  {left:"snowman", leftImg:"☃️", right:"snow", rightImg:"❄️"},
-  {left:"sun", leftImg:"☀️", right:"beach", rightImg:"🏖️"},
-  {left:"cloud", leftImg:"☁️", right:"rain", rightImg:"🌧️"},
-  {left:"airplane", leftImg:"🛩️", right:"pilot", rightImg:"👨‍✈️"},
-  {left:"rocket", leftImg:"🚀", right:"space", rightImg:"🌌"},
-  {left:"flower", leftImg:"🌷", right:"garden", rightImg:"🌻"},
-  {left:"tree", leftImg:"🌳", right:"forest", rightImg:"🌲"},
-  {left:"heart-eyes", leftImg:"😍", right:"love", rightImg:"❤️"},
-  {left:"guide-dog", leftImg:"🐕‍🦺", right:"leash", rightImg:"🦮"},
-  {left:"bull", leftImg:"🐂", right:"barn", rightImg:"🏚️"}
+  {left:"dog",        leftImg:"🐶",  right:"doghouse",  rightImg:"🏠"},
+  {left:"mouse",      leftImg:"🐭",  right:"cheese",    rightImg:"🧀"},
+  {left:"cat",        leftImg:"🐱",  right:"yarn",      rightImg:"🧶"},
+  {left:"bird",       leftImg:"🐦",  right:"nest",      rightImg:"🪹"},
+  {left:"fish",       leftImg:"🐟",  right:"water",     rightImg:"💧"},
+  {left:"turtle",     leftImg:"🐢",  right:"pond",      rightImg:"🏞️"},
+  {left:"frog",       leftImg:"🐸",  right:"lily",      rightImg:"🌸"},
+  {left:"cow",        leftImg:"🐄",  right:"milk",      rightImg:"🥛"},
+  {left:"horse",      leftImg:"🐴",  right:"stable",    rightImg:"🏇"},
+  {left:"bee",        leftImg:"🐝",  right:"hive",      rightImg:"🍯"},
+  {left:"pig",        leftImg:"🐷",  right:"mud",       rightImg:"🟤"},
+  {left:"rabbit",     leftImg:"🐰",  right:"carrot",    rightImg:"🥕"},
+  {left:"owl",        leftImg:"🦉",  right:"tree",      rightImg:"🌳"},
+  {left:"duck",       leftImg:"🦆",  right:"pond2",     rightImg:"🌊"},
+  {left:"lion",       leftImg:"🦁",  right:"jungle",    rightImg:"🌴"},
+  {left:"elephant",   leftImg:"🐘",  right:"waterhole", rightImg:"🏜️"},
+  {left:"bear",       leftImg:"🐻",  right:"forest",    rightImg:"🌲"},
+  {left:"snake",      leftImg:"🐍",  right:"rock",      rightImg:"🪨"},
+  {left:"monkey",     leftImg:"🐒",  right:"banana",    rightImg:"🍌"},
+  {left:"crown",      leftImg:"👑",  right:"king",      rightImg:"🤴"},
+  {left:"cat-face",   leftImg:"😺",  right:"box",       rightImg:"📦"},
+  {left:"sheep",      leftImg:"🐑",  right:"wool",      rightImg:"🧶"},
+  {left:"baby-chick", leftImg:"🐤",  right:"egg",       rightImg:"🥚"},
+  {left:"fire",       leftImg:"🔥",  right:"firefighter",rightImg:"🚒"},
+  {left:"book",       leftImg:"📖",  right:"library",   rightImg:"🏛️"},
+  {left:"rocket",     leftImg:"🚀",  right:"space",     rightImg:"🌌"},
+  {left:"flower",     leftImg:"🌷",  right:"garden",    rightImg:"🌻"},
+  {left:"bull",       leftImg:"🐂",  right:"barn",      rightImg:"🏚️"},
+  {left:"fox",        leftImg:"🦊",  right:"den",       rightImg:"🏡"},
+  {left:"snowman",    leftImg:"☃️",  right:"snow",      rightImg:"❄️"},
+  {left:"sun",        leftImg:"☀️",  right:"beach",     rightImg:"🏖️"},
+  {left:"cloud",      leftImg:"☁️",  right:"rain",      rightImg:"🌧️"},
 ];
 
-let usedPairs = [];
-const leftCol = document.getElementById("left-col");
-const rightCol = document.getElementById("right-col");
-const canvas = document.getElementById("canvas-lines");
-const message = document.getElementById("message");
-const btnMenu = document.getElementById("btn-menu");
-const confettiContainer = document.getElementById("confetti-container");
+const leftCol  = document.getElementById('left-col');
+const rightCol = document.getElementById('right-col');
+const canvas   = document.getElementById('canvas-lines');
+const message  = document.getElementById('message');
+const confettiContainer = document.getElementById('confetti-container');
 
-btnMenu.onclick = () => location.href = "../index.html";
-
-let selectedLeft = null;
+let usedPairs    = [];
+let selectedLeft  = null;
 let selectedRight = null;
-let lines = [];
+let drawnLines   = [];
 let matchedCount = 0;
 
 function startGame() {
-  clearGame();
+  leftCol.innerHTML  = '';
+  rightCol.innerHTML = '';
+  clearSVG();
+  drawnLines   = [];
   matchedCount = 0;
-  selectedLeft = null;
+  selectedLeft  = null;
   selectedRight = null;
-  message.textContent = "";
+  message.textContent = '';
+
   usedPairs = getRandomPairs(5);
   renderItems();
 }
 
-function clearGame() {
-  leftCol.innerHTML = "";
-  rightCol.innerHTML = "";
-  lines.forEach(line => line.remove());
-  lines = [];
-  clearCanvas();
-}
-
-function clearCanvas() {
-  while (canvas.firstChild) {
-    canvas.removeChild(canvas.firstChild);
-  }
+function clearSVG() {
+  while (canvas.firstChild) canvas.removeChild(canvas.firstChild);
 }
 
 function getRandomPairs(n) {
-  const pool = allPairs.filter(p => !usedPairs.some(up => up.left === p.left));
-  let arr = shuffle(pool);
-  if (arr.length < n) {
-    usedPairs = [];
-    arr = shuffle(allPairs);
-  }
-  return arr.slice(0, n);
+  let pool = allPairs.filter(p => !usedPairs.some(u => u.left === p.left));
+  if (pool.length < n) { usedPairs = []; pool = allPairs.slice(); }
+  return shuffle(pool).slice(0, n);
 }
 
 function renderItems() {
-  const leftItemsOrder = shuffle(usedPairs.slice());
-  const rightItemsOrder = shuffle(usedPairs.slice());
-  leftCol.innerHTML = "";
-  rightCol.innerHTML = "";
-  
-  leftItemsOrder.forEach(pair => {
-    const div = document.createElement("div");
-    div.classList.add("img-item");
-    div.textContent = pair.leftImg;
-    div.dataset.key = pair.left;
-    div.tabIndex = 0;
-    div.onclick = () => selectLeft(div);
+  const leftOrder  = shuffle(usedPairs.slice());
+  const rightOrder = shuffle(usedPairs.slice());
+
+  leftOrder.forEach(pair => {
+    const div = makeItem(pair.leftImg, pair.left, () => selectLeft(div));
     leftCol.appendChild(div);
   });
-  
-  rightItemsOrder.forEach(pair => {
-    const div = document.createElement("div");
-    div.classList.add("img-item");
-    div.textContent = pair.rightImg;
-    div.dataset.key = pair.right;
-    div.tabIndex = 0;
-    div.onclick = () => selectRight(div);
+  rightOrder.forEach(pair => {
+    const div = makeItem(pair.rightImg, pair.right, () => selectRight(div));
     rightCol.appendChild(div);
   });
-  updateLines();
 }
 
-function shuffle(array) {
-  let currentIndex = array.length, randomIndex;
-  while(currentIndex !== 0) {
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--; [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+function makeItem(emoji, key, clickFn) {
+  const div = document.createElement('div');
+  div.classList.add('img-item');
+  div.textContent = emoji;
+  div.dataset.key = key;
+  div.tabIndex = 0;
+  div.onclick = clickFn;
+  return div;
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
-  return array;
+  return arr;
 }
 
 function selectLeft(elem) {
-  if(selectedLeft) {
-    selectedLeft.classList.remove("selected");
-  }
+  if (elem.classList.contains('matched')) return;
+  if (selectedLeft) selectedLeft.classList.remove('selected');
   selectedLeft = elem;
-  elem.classList.add("selected");
+  elem.classList.add('selected');
   checkMatch();
 }
 
 function selectRight(elem) {
-  if(selectedRight) {
-    selectedRight.classList.remove("selected");
-  }
+  if (elem.classList.contains('matched')) return;
+  if (selectedRight) selectedRight.classList.remove('selected');
   selectedRight = elem;
-  elem.classList.add("selected");
+  elem.classList.add('selected');
   checkMatch();
 }
 
 function checkMatch() {
-  if(selectedLeft && selectedRight) {
-    const leftKey = selectedLeft.dataset.key;
-    const rightKey = selectedRight.dataset.key;
-    if(isMatch(leftKey, rightKey)) {
-      drawLine(selectedLeft, selectedRight);
-      message.textContent = "Parabéns! Você acertou!";
-      matchedCount++;
-      selectedLeft.classList.add("matched");
-      selectedRight.classList.add("matched");
-      selectedLeft.onclick = null;
-      selectedRight.onclick = null;
-      clearSelection();
-      if(matchedCount === usedPairs.length) {
-        setTimeout(() => {
-          confetti();
-          message.textContent = "🎉 Parabéns! Você ligou todos os pares! 🎉";
-        }, 350);
-        setTimeout(() => { startGame(); message.textContent = ""; }, 3000);
-      }
-    } else {
-      message.textContent = "Ops! Tente novamente!";
+  if (!selectedLeft || !selectedRight) return;
+
+  const lKey = selectedLeft.dataset.key;
+  const rKey = selectedRight.dataset.key;
+
+  if (usedPairs.some(p => p.left === lKey && p.right === rKey)) {
+    // Acerto
+    drawLine(selectedLeft, selectedRight);
+    selectedLeft.classList.add('matched');
+    selectedRight.classList.add('matched');
+    selectedLeft.onclick  = null;
+    selectedRight.onclick = null;
+    message.textContent = '✅ Muito bem!';
+    matchedCount++;
+    clearSelection();
+
+    if (matchedCount === usedPairs.length) {
       setTimeout(() => {
-        clearSelection();
-        message.textContent = "";
-      }, 1000);
+        launchConfetti();
+        message.textContent = '🎉 Parabéns! Você ligou todos os pares!';
+      }, 350);
+      setTimeout(startGame, 3500);
     }
+  } else {
+    // Erro
+    message.textContent = 'Ops! Tente novamente! 🙈';
+    setTimeout(() => { clearSelection(); message.textContent = ''; }, 900);
   }
 }
 
 function clearSelection() {
-  if(selectedLeft) selectedLeft.classList.remove("selected");
-  if(selectedRight) selectedRight.classList.remove("selected");
-  selectedLeft = null;
+  if (selectedLeft)  selectedLeft.classList.remove('selected');
+  if (selectedRight) selectedRight.classList.remove('selected');
+  selectedLeft  = null;
   selectedRight = null;
 }
 
+// ── Desenha linha ATRÁS das peças ────────────────────────
 function drawLine(leftEl, rightEl) {
-  const line = document.createElementNS("http://www.w3.org/2000/svg","line");
-  const rectLeft = leftEl.getBoundingClientRect();
+  const svgRect   = canvas.getBoundingClientRect();
+  const rectLeft  = leftEl.getBoundingClientRect();
   const rectRight = rightEl.getBoundingClientRect();
-  const svgRect = canvas.getBoundingClientRect();
-  let x1 = rectLeft.left + rectLeft.width/2 - svgRect.left;
-  let y1 = rectLeft.top + rectLeft.height/2 - svgRect.top;
-  let x2 = rectRight.left + rectRight.width/2 - svgRect.left;
-  let y2 = rectRight.top + rectRight.height/2 - svgRect.top;
-  line.setAttribute("x1", x1);
-  line.setAttribute("y1", y1);
-  line.setAttribute("x2", x2);
-  line.setAttribute("y2", y2);
-  line.setAttribute("stroke", "#d63a6d");
-  line.setAttribute("stroke-width", "5");
-  line.classList.add("connection-line");
+
+  const x1 = rectLeft.left  + rectLeft.width  / 2 - svgRect.left;
+  const y1 = rectLeft.top   + rectLeft.height / 2 - svgRect.top;
+  const x2 = rectRight.left + rectRight.width / 2 - svgRect.left;
+  const y2 = rectRight.top  + rectRight.height/ 2 - svgRect.top;
+
+  const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  line.setAttribute('x1', x1);
+  line.setAttribute('y1', y1);
+  line.setAttribute('x2', x2);
+  line.setAttribute('y2', y2);
+  line.setAttribute('stroke', '#d63a6d');
+  line.setAttribute('stroke-width', '6');
+  line.setAttribute('stroke-linecap', 'round');
+  line.setAttribute('opacity', '0.7');
   canvas.appendChild(line);
-  lines.push(line);
+  drawnLines.push(line);
 }
 
-function updateLines() {
-  lines.forEach(line => line.remove());
-  lines = [];
-  let matchedElements = document.querySelectorAll('.img-item.matched');
-  // Lógica interna de re-desenho preservada
-}
-
-function isMatch(leftKey, rightKey) {
-  return usedPairs.some(pair => (pair.left === leftKey && pair.right === rightKey));
-}
-
-function confetti() {
-  confettiContainer.innerHTML = "";
-  const colors = ['#ff597f','#ff9ea1','#fcd677','#a9d97a','#79d79a','#ff7eb9','#61dafb'];
-  for(let i=0;i<150;i++) {
-    const c = document.createElement("div");
-    c.className="confetti-piece";
-    c.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
-    c.style.top = Math.random()*window.innerHeight + "px";
-    c.style.left = Math.random()*window.innerWidth + "px";
-    c.style.animationDelay = (i*0.02) + "s";
+// ── Confetes ──────────────────────────────────────────────
+function launchConfetti() {
+  confettiContainer.innerHTML = '';
+  const colors = ['#ff597f','#fcd677','#a9d97a','#79d79a','#ff7eb9','#61dafb'];
+  for (let i = 0; i < 120; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    c.style.top  = Math.random() * window.innerHeight + 'px';
+    c.style.left = Math.random() * window.innerWidth  + 'px';
+    c.style.animationDelay = (i * 0.02) + 's';
     confettiContainer.appendChild(c);
   }
-  setTimeout(() => { confettiContainer.innerHTML = ""; }, 3500);
+  setTimeout(() => { confettiContainer.innerHTML = ''; }, 3500);
 }
 
 startGame();
