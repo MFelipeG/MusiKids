@@ -2,11 +2,13 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Continhas - Teclado Funcional Corrigido - MusiKids</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Continhas - MusiKids</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@700;800&family=Luckiest+Guy&display=swap');
-  
+
+  * { box-sizing: border-box; }
+
   body {
     margin: 0; padding: 0;
     font-family: 'Baloo 2', cursive, Arial, sans-serif;
@@ -14,86 +16,153 @@
     color: #444;
     user-select: none;
     display: flex; flex-direction: column; align-items: center;
-    min-height: 100vh; box-sizing: border-box;
+    min-height: 100vh;
   }
 
-  /* --- PLAYER MUSIKIDS --- */
+  /* ── BARRA SUPERIOR FIXA ── */
+  #top-bar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.93);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 3px solid #FF77A9;
+    box-shadow: 0 3px 14px rgba(255,119,169,0.18);
+    gap: 10px;
+  }
+
+  #btn-menu {
+    padding: 8px 16px; font-size: 1rem; border-radius: 9px; border: none;
+    background: #a1d578; color: #214d0d;
+    font-family: 'Baloo 2', cursive; font-weight: 900;
+    box-shadow: 0 3px 10px #a1d578aa; cursor: pointer;
+    white-space: nowrap; flex-shrink: 0;
+  }
+
   #musikids-player-card {
-    background: white; padding: 6px 15px; display: flex; align-items: center; gap: 10px;
-    border: 3px solid #FF77A9; border-radius: 50px; position: fixed; top: 10px; right: 10px; 
-    z-index: 10001; box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    display: flex; align-items: center; gap: 8px;
+    background: #fff0f7; border: 3px solid #FF77A9;
+    border-radius: 50px; padding: 5px 14px; flex-shrink: 0;
   }
   .player-controls { display: flex; gap: 6px; align-items: center; }
   .player-btn {
-    background: #FF77A9; border: none; color: white; width: 30px; height: 30px; 
-    border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
-    font-size: 14px;
+    background: #FF77A9; border: none; color: white;
+    width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 13px;
+    transition: transform 0.2s;
   }
-  .player-label { font-weight: 800; color: #FF4C8B; font-size: 0.8rem; }
+  .player-btn:active { transform: scale(0.88); }
+  .player-label { font-weight: 800; color: #FF4C8B; font-size: 0.85rem; }
   .btn-shuffle.active { background: #21a7ff !important; }
 
-  #btn-menu {
-    position: fixed; top: 15px; left: 15px;
-    background: #a1d578; color: #214d0d;
-    border: none; border-radius: 20px;
-    padding: 12px 18px; font-weight: 900;
-    font-size: 1.1rem; cursor: pointer;
-    box-shadow: 0 3px 16px #a1d578aa; z-index: 1000;
+  /* ── CONTEÚDO ── */
+  #page-content {
+    width: 100%;
+    display: flex; flex-direction: column; align-items: center;
+    padding-top: 72px;
+    padding-bottom: 24px;
   }
 
   header {
-    font-size: 2.4rem; font-weight: 900;
-    margin: 80px 0 10px 0; color: #de1e7e;
-    text-align: center;
+    font-size: 2.2rem; font-weight: 900;
+    margin: 18px 0 10px 0; color: #de1e7e; text-align: center;
   }
 
   main {
     width: 95%; max-width: 540px;
     background: #fffaf8; border-radius: 25px;
-    padding: 30px 20px; box-shadow: 0 3px 15px #fcdbe3;
-    display: flex; flex-direction: column; gap: 20px; align-items: center;
+    padding: 24px 18px; box-shadow: 0 3px 15px #fcdbe3;
+    display: flex; flex-direction: column; gap: 18px; align-items: center;
     margin-bottom: 20px;
   }
 
-  #simple-sum { font-size: 3rem; font-weight: 900; color: #4a977d; text-align: center; }
-
-  .answer-section { display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap; }
-
-  input#answer-input, input#custom-sum-input {
-    font-size: 1.25rem; font-weight: 600; padding: 10px 14px;
-    border-radius: 18px; border: 2px solid #a1d578; outline-offset: 3px;
+  #simple-sum {
+    font-size: 3rem; font-weight: 900; color: #4a977d; text-align: center;
   }
-  input#answer-input { width: 120px; text-align: center; }
-  input#custom-sum-input { width: 100%; box-sizing: border-box; background: #f4fff3; }
+
+  /* ── DISPLAY DA RESPOSTA (substitui o <input>) ── */
+  .answer-section {
+    display: flex; gap: 10px; align-items: center;
+    justify-content: center; flex-wrap: wrap;
+  }
+
+  #answer-display {
+    width: 130px; min-height: 52px;
+    font-size: 1.5rem; font-weight: 700;
+    text-align: center; line-height: 52px;
+    border-radius: 18px; border: 2.5px solid #a1d578;
+    background: #f4fff3; color: #214d0d;
+    letter-spacing: 2px;
+  }
+  #answer-display.has-value { color: #214d0d; }
+  #answer-display:empty::before { content: "?"; color: #aaa; }
+
+  /* Display da conta personalizada */
+  #custom-display {
+    flex: 1; min-height: 44px; line-height: 44px;
+    font-size: 1.15rem; font-weight: 700;
+    border-radius: 14px; border: 2px solid #a1d578;
+    background: #f4fff3; color: #214d0d;
+    padding: 0 12px; text-align: left;
+    overflow: hidden; white-space: nowrap;
+  }
+  #custom-display:empty::before { content: "Ou crie sua conta aqui..."; color: #aaa; font-weight: 400; }
 
   .action-btn {
     font-family: 'Baloo 2', cursive; font-weight: 900;
     padding: 10px 20px; border: none; border-radius: 18px;
-    cursor: pointer; color: white;
+    cursor: pointer; color: white; font-size: 1rem;
   }
 
-  #check-answer { background: linear-gradient(90deg,#fb3f7a, #fc8a96); box-shadow: 0 4px 0 #d42d62; }
-  #new-sum { background: linear-gradient(90deg,#4eb87f, #6ad89e); box-shadow: 0 4px 0 #3a8c60; }
-  
-  #feedback { font-weight: 700; font-size: 1.35rem; min-height: 2.5rem; color: #de1e7e; }
+  #check-answer { background: linear-gradient(90deg,#fb3f7a,#fc8a96); box-shadow: 0 4px 0 #d42d62; }
+  #new-sum      { background: linear-gradient(90deg,#4eb87f,#6ad89e); box-shadow: 0 4px 0 #3a8c60; }
 
+  #feedback {
+    font-weight: 700; font-size: 1.35rem;
+    min-height: 2.5rem; color: #de1e7e; text-align: center;
+  }
+
+  /* ── TECLADO VIRTUAL ── */
   #num-keyboard {
-    margin-top: 12px; display: grid;
+    margin-top: 8px; display: grid;
     grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%;
   }
 
   .num-btn {
     background: #7ecc7a; font-family: 'Baloo 2'; font-weight: 900;
     color: #164813; font-size: 1.5rem; border: none;
-    border-radius: 15px; padding: 12px 0; cursor: pointer;
+    border-radius: 15px; padding: 14px 0; cursor: pointer;
     box-shadow: 0 4px 0 #5e9e5a;
+    transition: transform 0.1s;
+    -webkit-tap-highlight-color: transparent;
   }
+  .num-btn:active { transform: scale(0.93); }
+
+  /* Indicador de qual campo está ativo */
+  .field-tab {
+    display: flex; gap: 0; width: 100%;
+    border-radius: 12px; overflow: hidden;
+    border: 2px solid #a1d578;
+  }
+  .field-tab button {
+    flex: 1; padding: 8px 4px; border: none; cursor: pointer;
+    font-family: 'Baloo 2'; font-weight: 700; font-size: 0.9rem;
+    background: #e9f9e5; color: #214d0d; transition: background 0.2s;
+  }
+  .field-tab button.active { background: #a1d578; color: #fff; }
 
   #confetti-wrapper { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; }
 
-  @media (max-width: 600px) {
-    #musikids-player-card { top: auto; bottom: 10px; right: 10px; scale: 0.85; }
-    header { font-size: 1.8rem; margin-top: 60px; }
+  @media (max-width: 480px) {
+    .player-label { display: none; }
+    #musikids-player-card { padding: 5px 8px; }
+    #simple-sum { font-size: 2.2rem; }
+    .num-btn { font-size: 1.25rem; padding: 12px 0; }
   }
 </style>
 </head>
@@ -101,210 +170,263 @@
 
 <div id="confetti-wrapper"></div>
 
-<div id="musikids-player-card">
-    <span class="player-label">Música</span>
+<!-- ── BARRA SUPERIOR ── -->
+<div id="top-bar">
+  <button id="btn-menu" onclick="location.href='../index.html'">← Menu</button>
+
+  <div id="musikids-player-card">
+    <span class="player-label">🎵</span>
     <div class="player-controls">
-        <button class="player-btn" onclick="playPrev()">⏮️</button>
-        <button class="player-btn" onclick="toggleMusic()" id="play-pause-btn">▶️</button>
-        <button class="player-btn" onclick="playNext()">⏭️</button>
-        <button class="player-btn btn-shuffle" onclick="toggleShuffle()" id="shuffle-btn">🔀</button>
+      <button class="player-btn" onclick="playPrev()">⏮️</button>
+      <button class="player-btn" onclick="toggleMusic()" id="play-pause-btn">▶️</button>
+      <button class="player-btn" onclick="playNext()">⏭️</button>
+      <button class="player-btn btn-shuffle" onclick="toggleShuffle()" id="shuffle-btn">🔀</button>
     </div>
+  </div>
 </div>
-<div style="position: absolute; left: -9999px;"><div id="yt-audio-element"></div></div>
 
-<button id="btn-menu" onclick="location.href='../index.html'">MENU</button>
+<div style="position:absolute;left:-9999px;"><div id="yt-audio-element"></div></div>
 
-<header>Continhas MusiKids</header>
+<!-- ── CONTEÚDO ── -->
+<div id="page-content">
+  <header>Continhas MusiKids</header>
 
-<main>
-  <div id="simple-sum">0 + 0 = ?</div>
-  
-  <div class="answer-section">
-    <input type="text" inputmode="numeric" id="answer-input" placeholder="?" />
-    <button id="check-answer" class="action-btn">Verificar</button>
-    <button id="new-sum" class="action-btn">Nova Conta</button>
-  </div>
+  <main>
+    <div id="simple-sum">0 + 0 = ?</div>
 
-  <div id="feedback"></div>
-
-  <div style="width:100%">
-    <div style="display:flex; gap:5px; margin-bottom:10px;">
-        <input type="text" id="custom-sum-input" placeholder="Ou digite sua conta..." />
-        <button id="show-custom-answer-btn" class="action-btn" style="background:#ff9a4c; font-size:0.9rem;">Resposta</button>
+    <!-- Resposta da conta gerada -->
+    <div class="answer-section">
+      <div id="answer-display"></div>
+      <button id="check-answer" class="action-btn">Verificar</button>
+      <button id="new-sum" class="action-btn">Nova Conta</button>
     </div>
 
-    <div id="num-keyboard">
-      <button class="num-btn" data-val="7">7</button>
-      <button class="num-btn" data-val="8">8</button>
-      <button class="num-btn" data-val="9">9</button>
-      <button class="num-btn" data-val="+">+</button>
-      
-      <button class="num-btn" data-val="4">4</button>
-      <button class="num-btn" data-val="5">5</button>
-      <button class="num-btn" data-val="6">6</button>
-      <button class="num-btn" data-val="-">−</button>
-      
-      <button class="num-btn" data-val="1">1</button>
-      <button class="num-btn" data-val="2">2</button>
-      <button class="num-btn" data-val="3">3</button>
-      <button class="num-btn" data-val="*">×</button>
-      
-      <button class="num-btn" id="clear-custom-btn" style="background:#ff968a;">C</button>
-      <button class="num-btn" data-val="0">0</button>
-      <button class="num-btn" data-val=".">.</button>
-      <button class="num-btn" data-val="/">÷</button>
+    <div id="feedback"></div>
 
-      <button id="create-sum-btn" class="num-btn" style="grid-column: span 4; background:#5b9fca; color:white;">GERAR CONTA (=)</button>
+    <!-- Conta personalizada -->
+    <div style="width:100%; display:flex; flex-direction:column; gap:10px;">
+
+      <!-- Abas para escolher qual campo o teclado digita -->
+      <div class="field-tab">
+        <button id="tab-answer" class="active" onclick="setTarget('answer')">✏️ Resposta</button>
+        <button id="tab-custom" onclick="setTarget('custom')">🔢 Minha Conta</button>
+      </div>
+
+      <div style="display:flex; gap:8px; align-items:center;">
+        <div id="custom-display"></div>
+        <button id="show-custom-answer-btn" class="action-btn" style="background:#ff9a4c; font-size:0.9rem; padding:10px 12px;">Ver Resp.</button>
+      </div>
+
+      <!-- Teclado virtual -->
+      <div id="num-keyboard">
+        <button class="num-btn" data-val="7">7</button>
+        <button class="num-btn" data-val="8">8</button>
+        <button class="num-btn" data-val="9">9</button>
+        <button class="num-btn" data-val="+">+</button>
+
+        <button class="num-btn" data-val="4">4</button>
+        <button class="num-btn" data-val="5">5</button>
+        <button class="num-btn" data-val="6">6</button>
+        <button class="num-btn" data-val="-">−</button>
+
+        <button class="num-btn" data-val="1">1</button>
+        <button class="num-btn" data-val="2">2</button>
+        <button class="num-btn" data-val="3">3</button>
+        <button class="num-btn" data-val="*">×</button>
+
+        <button class="num-btn" id="clear-btn" style="background:#ff968a; color:#fff;">⌫</button>
+        <button class="num-btn" data-val="0">0</button>
+        <button class="num-btn" data-val=".">.</button>
+        <button class="num-btn" data-val="/"  >÷</button>
+
+        <button id="create-sum-btn" class="num-btn"
+          style="grid-column:span 4; background:#5b9fca; color:white; font-size:1.1rem;">
+          USAR MINHA CONTA (=)
+        </button>
+      </div>
     </div>
-  </div>
-</main>
+  </main>
+</div>
 
 <script src="../../js/musicas_data.js" onerror="console.log('Playlist offline')"></script>
 <script src="https://www.youtube.com/iframe_api"></script>
-
 <script>
-// --- LOGICA DO PLAYER ---
+// ── PLAYER ────────────────────────────────────────────────
 let playerYT;
 let currentIndex = parseInt(sessionStorage.getItem('musi_index')) || 0;
-let isShuffle = sessionStorage.getItem('musi_shuffle') === 'true';
-const getPlaylist = () => (typeof listaMusicasIds !== 'undefined') ? listaMusicasIds : ['dQw4w9WgXcQ'];
+let isShuffle    = sessionStorage.getItem('musi_shuffle') === 'true';
+const getPlaylist = () => typeof listaMusicasIds !== 'undefined' ? listaMusicasIds : ['dQw4w9WgXcQ'];
 
 function onYouTubeIframeAPIReady() {
-    playerYT = new YT.Player('yt-audio-element', {
-        height: '0', width: '0',
-        videoId: getPlaylist()[currentIndex],
-        playerVars: { 'autoplay': sessionStorage.getItem('musi_playing') === 'true' ? 1 : 0 },
-        events: { 
-            'onReady': () => { if(isShuffle) document.getElementById('shuffle-btn').classList.add('active'); updatePlayBtn(); },
-            'onStateChange': (e) => { if(e.data === 0) playNext(); updatePlayBtn(); } 
-        }
-    });
+  playerYT = new YT.Player('yt-audio-element', {
+    height: '0', width: '0',
+    videoId: getPlaylist()[currentIndex],
+    playerVars: { autoplay: sessionStorage.getItem('musi_playing') === 'true' ? 1 : 0 },
+    events: {
+      onReady() { if (isShuffle) document.getElementById('shuffle-btn').classList.add('active'); updatePlayBtn(); },
+      onStateChange(e) { if (e.data === 0) playNext(); updatePlayBtn(); }
+    }
+  });
 }
-function updatePlayBtn() { 
-    const btn = document.getElementById('play-pause-btn');
-    if(btn && playerYT?.getPlayerState) btn.innerText = playerYT.getPlayerState() === 1 ? "⏸️" : "▶️";
+function updatePlayBtn() {
+  const btn = document.getElementById('play-pause-btn');
+  if (btn && playerYT?.getPlayerState) btn.innerText = playerYT.getPlayerState() === 1 ? '⏸️' : '▶️';
 }
-function toggleMusic() { 
-    if(!playerYT?.playVideo) return;
-    playerYT.getPlayerState() === 1 ? playerYT.pauseVideo() : playerYT.playVideo();
-    setTimeout(updatePlayBtn, 200);
+function toggleMusic() {
+  if (!playerYT?.playVideo) return;
+  playerYT.getPlayerState() === 1 ? playerYT.pauseVideo() : playerYT.playVideo();
+  setTimeout(updatePlayBtn, 200);
 }
-function playNext() { 
-    let list = getPlaylist();
-    currentIndex = isShuffle ? Math.floor(Math.random() * list.length) : (currentIndex + 1) % list.length;
-    playerYT?.loadVideoById(list[currentIndex]);
-    sessionStorage.setItem('musi_index', currentIndex);
+function playNext() {
+  const list = getPlaylist();
+  currentIndex = isShuffle ? Math.floor(Math.random() * list.length) : (currentIndex + 1) % list.length;
+  playerYT?.loadVideoById(list[currentIndex]);
+  sessionStorage.setItem('musi_index', currentIndex);
 }
 function playPrev() {
-    let list = getPlaylist();
-    currentIndex = (currentIndex - 1 + list.length) % list.length;
-    playerYT?.loadVideoById(list[currentIndex]);
-    sessionStorage.setItem('musi_index', currentIndex);
+  const list = getPlaylist();
+  currentIndex = (currentIndex - 1 + list.length) % list.length;
+  playerYT?.loadVideoById(list[currentIndex]);
+  sessionStorage.setItem('musi_index', currentIndex);
 }
 function toggleShuffle() {
-    isShuffle = !isShuffle;
-    sessionStorage.setItem('musi_shuffle', isShuffle);
-    document.getElementById('shuffle-btn').classList.toggle('active');
+  isShuffle = !isShuffle;
+  sessionStorage.setItem('musi_shuffle', isShuffle);
+  document.getElementById('shuffle-btn').classList.toggle('active');
 }
 
-// --- LOGICA DO JOGO ---
-const sumDisplay = document.getElementById("simple-sum");
-const answerInput = document.getElementById("answer-input");
-const feedback = document.getElementById("feedback");
-const customInput = document.getElementById("custom-sum-input");
+// ── JOGO ──────────────────────────────────────────────────
+const sumDisplay    = document.getElementById('simple-sum');
+const answerDisplay = document.getElementById('answer-display');  // div, não input
+const customDisplay = document.getElementById('custom-display');  // div, não input
+const feedback      = document.getElementById('feedback');
 
 let currentSum = { expected: 0 };
+let activeTarget = 'answer'; // 'answer' ou 'custom'
 
-function generateSum() {
-    document.getElementById('confetti-wrapper').innerHTML = '';
-    const ops = ["+", "-", "*", "/"];
-    let op = ops[Math.floor(Math.random() * 4)];
-    let n1, n2;
-    if (op === "/") { n2 = Math.floor(Math.random() * 9) + 1; n1 = n2 * (Math.floor(Math.random() * 10)); }
-    else { n1 = Math.floor(Math.random() * 21); n2 = Math.floor(Math.random() * 21); }
-    if (op === "-" && n2 > n1) [n1, n2] = [n2, n1];
-    
-    const symbol = op === '*' ? '×' : op === '/' ? '÷' : op;
-    sumDisplay.textContent = `${n1} ${symbol} ${n2} = ?`;
-    
-    let result;
-    if(op === "+") result = n1 + n2;
-    if(op === "-") result = n1 - n2;
-    if(op === "*") result = n1 * n2;
-    if(op === "/") result = n1 / n2;
-    
-    currentSum.expected = result;
-    answerInput.value = "";
-    feedback.textContent = "";
-    answerInput.disabled = false;
-    answerInput.focus();
+// Qual display recebe os toques do teclado virtual
+function setTarget(t) {
+  activeTarget = t;
+  document.getElementById('tab-answer').classList.toggle('active', t === 'answer');
+  document.getElementById('tab-custom').classList.toggle('active', t === 'custom');
 }
 
-document.getElementById("check-answer").onclick = () => {
-    const val = parseFloat(answerInput.value);
-    if (val === currentSum.expected) {
-        feedback.textContent = "🌟 ACERTOU! PARABÉNS! 🌟";
-        lancarConfetes();
-        answerInput.disabled = true;
-        setTimeout(generateSum, 3000);
-    } else {
-        feedback.textContent = "Tente de novo! ✍️";
-    }
+function getActiveDisplay() {
+  return activeTarget === 'answer' ? answerDisplay : customDisplay;
+}
+
+// Gera conta aleatória
+function generateSum() {
+  document.getElementById('confetti-wrapper').innerHTML = '';
+  feedback.textContent = '';
+  answerDisplay.textContent = '';
+
+  const ops = ['+', '-', '*', '/'];
+  let op = ops[Math.floor(Math.random() * 4)];
+  let n1, n2;
+
+  if (op === '/') {
+    n2 = Math.floor(Math.random() * 9) + 1;
+    n1 = n2 * Math.floor(Math.random() * 10);
+  } else {
+    n1 = Math.floor(Math.random() * 21);
+    n2 = Math.floor(Math.random() * 21);
+  }
+  if (op === '-' && n2 > n1) [n1, n2] = [n2, n1];
+
+  const symbol = op === '*' ? '×' : op === '/' ? '÷' : op;
+  sumDisplay.textContent = `${n1} ${symbol} ${n2} = ?`;
+
+  const map = { '+': (a,b)=>a+b, '-': (a,b)=>a-b, '*': (a,b)=>a*b, '/': (a,b)=>a/b };
+  currentSum.expected = map[op](n1, n2);
+
+  setTarget('answer'); // foca a aba de resposta automaticamente
+}
+
+// Verifica resposta
+document.getElementById('check-answer').onclick = () => {
+  const val = parseFloat(answerDisplay.textContent);
+  if (isNaN(val)) { feedback.textContent = 'Digite um número! 🔢'; return; }
+
+  if (val === currentSum.expected) {
+    feedback.textContent = '🌟 ACERTOU! PARABÉNS! 🌟';
+    lancarConfetes();
+    setTimeout(generateSum, 3000);
+  } else {
+    feedback.textContent = 'Tente de novo! ✍️';
+  }
 };
 
-document.getElementById("new-sum").onclick = generateSum;
+document.getElementById('new-sum').onclick = generateSum;
 
-// Teclado
-let lastFocused = answerInput;
-answerInput.onfocus = () => lastFocused = answerInput;
-customInput.onfocus = () => lastFocused = customInput;
+// ── Teclado virtual ───────────────────────────────────────
+document.querySelectorAll('.num-btn').forEach(btn => {
+  btn.addEventListener('pointerdown', e => {
+    e.preventDefault(); // evita qualquer foco em input nativo
 
-document.querySelectorAll(".num-btn").forEach(btn => {
-    btn.onclick = () => {
-        const val = btn.getAttribute("data-val");
-        if (btn.id === "clear-custom-btn") { lastFocused.value = ""; return; }
-        if (btn.id === "create-sum-btn") {
-            try {
-                const expr = customInput.value.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-');
-                const res = eval(expr);
-                sumDisplay.textContent = customInput.value + " = ?";
-                currentSum.expected = res;
-                answerInput.value = "";
-                answerInput.focus();
-            } catch(e) { feedback.textContent = "Conta inválida!"; }
-            return;
-        }
-        if (val) {
-            const display = val === '*' ? '×' : val === '/' ? '÷' : val;
-            lastFocused.value += display;
-        }
-    };
+    // Botão apagar (⌫)
+    if (btn.id === 'clear-btn') {
+      const d = getActiveDisplay();
+      d.textContent = d.textContent.slice(0, -1);
+      return;
+    }
+
+    // Botão "usar minha conta"
+    if (btn.id === 'create-sum-btn') {
+      try {
+        const expr = customDisplay.textContent
+          .replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-');
+        const res = Function('"use strict"; return (' + expr + ')')();
+        sumDisplay.textContent = customDisplay.textContent + ' = ?';
+        currentSum.expected = res;
+        answerDisplay.textContent = '';
+        feedback.textContent = '';
+        setTarget('answer');
+      } catch { feedback.textContent = 'Conta inválida!'; }
+      return;
+    }
+
+    // Teclas normais
+    const val = btn.getAttribute('data-val');
+    if (!val) return;
+
+    const display = val === '*' ? '×' : val === '/' ? '÷' : val;
+    const d = getActiveDisplay();
+
+    // Impede que a resposta tenha operadores
+    if (activeTarget === 'answer' && ['+', '-', '×', '÷', '*', '/'].includes(display)) return;
+
+    d.textContent += display;
+  });
 });
 
-document.getElementById("show-custom-answer-btn").onclick = () => {
-    try {
-        const expr = customInput.value.replace(/×/g, '*').replace(/÷/g, '/');
-        feedback.textContent = "Resposta: " + eval(expr);
-    } catch(e) { feedback.textContent = "Erro na conta!"; }
+// Botão "Ver Resposta" da conta personalizada
+document.getElementById('show-custom-answer-btn').onclick = () => {
+  try {
+    const expr = customDisplay.textContent
+      .replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-');
+    const res = Function('"use strict"; return (' + expr + ')')();
+    feedback.textContent = '= ' + res;
+  } catch { feedback.textContent = 'Erro na conta!'; }
 };
 
+// ── Confetes ──────────────────────────────────────────────
 function lancarConfetes() {
-    const wrapper = document.getElementById('confetti-wrapper');
-    const cores = ['#ff71ce', '#01cdfe', '#fdf200', '#7c4dff', '#a1d578'];
-    for (let i = 0; i < 50; i++) {
-        const c = document.createElement('div');
-        c.style.position = 'absolute';
-        c.style.width = '10px'; c.style.height = '10px';
-        c.style.backgroundColor = cores[Math.floor(Math.random()*cores.length)];
-        c.style.left = Math.random() * 100 + 'vw';
-        c.style.top = '-10px';
-        c.style.borderRadius = '50%';
-        c.animate([
-            { transform: 'translateY(0) rotate(0)' },
-            { transform: `translateY(100vh) rotate(${Math.random()*360}deg)` }
-        ], { duration: Math.random()*2000 + 2000, easing: 'linear' });
-        wrapper.appendChild(c);
-    }
+  const wrapper = document.getElementById('confetti-wrapper');
+  const cores = ['#ff71ce','#01cdfe','#fdf200','#7c4dff','#a1d578'];
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.style.cssText = `
+      position:absolute; width:10px; height:10px; border-radius:50%;
+      background:${cores[Math.floor(Math.random()*cores.length)]};
+      left:${Math.random()*100}vw; top:-10px;
+    `;
+    c.animate([
+      { transform: 'translateY(0) rotate(0deg)' },
+      { transform: `translateY(105vh) rotate(${Math.random()*360}deg)` }
+    ], { duration: Math.random()*2000 + 2000, easing: 'linear' });
+    wrapper.appendChild(c);
+  }
 }
 
 generateSum();
