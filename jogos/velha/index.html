@@ -19,7 +19,7 @@
     overflow-x: hidden;
   }
 
-  /* --- PLAYER "LIGAR OS PONTOS" (O QUE VOCÊ GOSTOU) --- */
+  /* --- PLAYER --- */
   #musikids-player-card {
     background: white; 
     padding: 8px 18px; 
@@ -53,7 +53,7 @@
   .player-label { font-weight: 800; color: #FF4C8B; font-size: 0.9rem; margin-right: 2px; }
   .btn-shuffle.active { background: #21a7ff !important; }
 
-  /* --- RESTANTE DO JOGO --- */
+  /* --- JOGO --- */
   #menuButton {
     position: fixed; top: 12px; left: 12px; z-index: 1000;
     padding: 10px 20px; font-size: 1.1rem; border-radius: 9px; border: none;
@@ -81,11 +81,15 @@
     background: #ffe3eb; border-radius: 14px; height: 100px;
     display: flex; justify-content: center; align-items: center;
     font-size: 3.5rem; font-weight: 900; cursor: pointer; box-shadow: 0 4px 12px rgba(255,76,139,0.16);
+    transition: background 0.2s;
   }
   .cell.X { color: #f50057; }
   .cell.O { color: #2e7d32; }
   .cell.win { background-color: #ff6f91; color: white !important; }
   #message { font-size: 1.2rem; font-weight: 700; color: #bf1650; margin-top: 15px; text-align: center; }
+
+  /* Esconde o campo P2 quando modo CPU */
+  #p2-wrap.hidden { display: none; }
 
   @media (max-width: 700px) {
     #musikids-player-card { top: auto; bottom: 15px; right: 10px; scale: 0.85; }
@@ -98,10 +102,10 @@
 <div id="musikids-player-card">
     <span class="player-label">Música</span>
     <div class="player-controls">
-        <button class="player-btn" onclick="playPrev()"> ⏮️</button>
-        <button class="player-btn" onclick="toggleMusic()" id="play-pause-btn"> ▶️</button>
-        <button class="player-btn" onclick="playNext()"> ⏭️</button>
-        <button class="player-btn btn-shuffle" onclick="toggleShuffle()" id="shuffle-btn"> 🔀</button>
+        <button class="player-btn" onclick="playPrev()">⏮️</button>
+        <button class="player-btn" onclick="toggleMusic()" id="play-pause-btn">▶️</button>
+        <button class="player-btn" onclick="playNext()">⏭️</button>
+        <button class="player-btn btn-shuffle" onclick="toggleShuffle()" id="shuffle-btn">🔀</button>
     </div>
 </div>
 <div style="position: absolute; left: -9999px;"><div id="yt-audio-element"></div></div>
@@ -111,13 +115,15 @@
 
 <div id="config">
   <label>Modo de jogo:</label>
-  <select id="mode">
+  <select id="mode" onchange="onModeChange()">
     <option value="1vs1">1 vs 1</option>
     <option value="1vscpu">Contra Computador</option>
   </select>
   <div id="names-area">
     <input type="text" id="p1-name" placeholder="Jogador 1" value="Jogador 1">
-    <input type="text" id="p2-name" placeholder="Jogador 2" value="Jogador 2">
+    <div id="p2-wrap">
+      <input type="text" id="p2-name" placeholder="Jogador 2" value="Jogador 2">
+    </div>
   </div>
   <button class="start-btn" onclick="startGame()">Começar</button>
 </div>
@@ -133,12 +139,15 @@
 <script src="https://www.youtube.com/iframe_api"></script>
 
 <script>
-    // Lógica do Player (Integrada com sessionStorage para continuidade)
+    // ── PLAYER ──────────────────────────────────────────────
     let player;
     let currentIndex = parseInt(sessionStorage.getItem('musi_index')) || 0;
     let isShuffle = sessionStorage.getItem('musi_shuffle') === 'true';
 
     function onYouTubeIframeAPIReady() {
+        // Guard: se listaMusicasIds não existir (arquivo externo ausente), não quebra
+        if (typeof listaMusicasIds === 'undefined' || !listaMusicasIds.length) return;
+
         player = new YT.Player('yt-audio-element', {
             height: '0', width: '0',
             videoId: listaMusicasIds[currentIndex],
@@ -146,11 +155,11 @@
             events: {
                 'onReady': (e) => {
                     const savedTime = parseFloat(sessionStorage.getItem('musi_time')) || 0;
-                    if(savedTime > 0) e.target.seekTo(savedTime, true);
-                    if(isShuffle) document.getElementById('shuffle-btn').classList.add('active');
+                    if (savedTime > 0) e.target.seekTo(savedTime, true);
+                    if (isShuffle) document.getElementById('shuffle-btn').classList.add('active');
                 },
                 'onStateChange': (e) => {
-                    if(e.data === 0) playNext();
+                    if (e.data === 0) playNext();
                     updatePlayBtn();
                 }
             }
@@ -165,17 +174,22 @@
     }
 
     function toggleMusic() {
+        if (!player) return;
         player.getPlayerState() === 1 ? player.pauseVideo() : player.playVideo();
         setTimeout(updatePlayBtn, 100);
     }
 
     function playNext() {
-        currentIndex = isShuffle ? Math.floor(Math.random() * listaMusicasIds.length) : (currentIndex + 1) % listaMusicasIds.length;
+        if (!player || typeof listaMusicasIds === 'undefined') return;
+        currentIndex = isShuffle
+            ? Math.floor(Math.random() * listaMusicasIds.length)
+            : (currentIndex + 1) % listaMusicasIds.length;
         player.loadVideoById(listaMusicasIds[currentIndex]);
         sessionStorage.setItem('musi_index', currentIndex);
     }
 
     function playPrev() {
+        if (!player || typeof listaMusicasIds === 'undefined') return;
         currentIndex = (currentIndex - 1 + listaMusicasIds.length) % listaMusicasIds.length;
         player.loadVideoById(listaMusicasIds[currentIndex]);
         sessionStorage.setItem('musi_index', currentIndex);
@@ -188,17 +202,30 @@
     }
 
     setInterval(() => {
-        if(player && player.getCurrentTime) sessionStorage.setItem('musi_time', player.getCurrentTime());
+        if (player && player.getCurrentTime) sessionStorage.setItem('musi_time', player.getCurrentTime());
     }, 1000);
 
-    // Lógica do Jogo da Velha
+    // ── JOGO DA VELHA ────────────────────────────────────────
     let board = Array(9).fill(null);
     let currentPlayer = 'X';
     let active = false;
-    let names = [];
+    let names = ['Jogador 1', 'Jogador 2'];
+    let gameMode = '1vs1';
+
+    // Mostra/oculta campo do jogador 2 conforme o modo
+    function onModeChange() {
+        const mode = document.getElementById('mode').value;
+        document.getElementById('p2-wrap').classList.toggle('hidden', mode === '1vscpu');
+    }
 
     function startGame() {
-        names = [document.getElementById('p1-name').value, document.getElementById('p2-name').value];
+        gameMode = document.getElementById('mode').value;
+        const p1 = document.getElementById('p1-name').value.trim() || 'Jogador 1';
+        const p2 = gameMode === '1vscpu'
+            ? 'Computador'
+            : (document.getElementById('p2-name').value.trim() || 'Jogador 2');
+        names = [p1, p2];
+
         document.getElementById('config').style.display = 'none';
         document.getElementById('game').style.display = 'block';
         initBoard();
@@ -206,11 +233,13 @@
 
     function initBoard() {
         active = true;
+        currentPlayer = 'X';
         board.fill(null);
+
         const b = document.getElementById('board');
         b.innerHTML = '';
-        for(let i=0; i<9; i++) {
-            let c = document.createElement('div');
+        for (let i = 0; i < 9; i++) {
+            const c = document.createElement('div');
             c.className = 'cell';
             c.onclick = () => makeMove(i);
             b.appendChild(c);
@@ -219,33 +248,106 @@
     }
 
     function makeMove(i) {
-        if(!active || board[i]) return;
+        if (!active || board[i]) return;
+
         board[i] = currentPlayer;
         render();
-        if(checkWin()) {
-            document.getElementById('message').innerText = `${currentPlayer === 'X' ? names[0] : names[1]} Venceu! 🎉`;
+
+        const winCombo = checkWin();
+        if (winCombo) {
+            highlightWin(winCombo);
+            document.getElementById('message').innerText =
+                `${currentPlayer === 'X' ? names[0] : names[1]} Venceu! 🎉`;
             active = false;
             setTimeout(initBoard, 3000);
-        } else if(board.every(x => x)) {
-            document.getElementById('message').innerText = "Empate! 🤝";
+            return;
+        }
+
+        if (board.every(x => x)) {
+            document.getElementById('message').innerText = 'Empate! 🤝';
+            active = false;
             setTimeout(initBoard, 3000);
-        } else {
-            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-            document.getElementById('message').innerText = `Vez de ${currentPlayer === 'X' ? names[0] : names[1]}`;
+            return;
+        }
+
+        // Troca jogador
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        document.getElementById('message').innerText =
+            `Vez de ${currentPlayer === 'X' ? names[0] : names[1]}`;
+
+        // Se modo CPU e agora é a vez da CPU ('O'), agenda a jogada
+        if (gameMode === '1vscpu' && currentPlayer === 'O') {
+            active = false; // bloqueia cliques enquanto CPU "pensa"
+            setTimeout(cpuMove, 600);
         }
     }
 
     function render() {
         const cells = document.querySelectorAll('.cell');
         board.forEach((val, i) => {
-            cells[i].innerText = val;
-            if(val) cells[i].classList.add(val);
+            cells[i].innerText = val || '';
+            cells[i].className = 'cell' + (val ? ' ' + val : '');
         });
     }
 
+    // ── MINIMAX (CPU imbatível) ──────────────────────────────
+    function cpuMove() {
+        active = true;
+        const result = minimax(board.slice(), 'O');
+        makeMove(result.index);
+    }
+
+    function minimax(newBoard, player) {
+        const emptySpots = newBoard
+            .map((v, i) => v === null ? i : null)
+            .filter(i => i !== null);
+
+        if (checkWinFor(newBoard, 'X')) return { score: -10 };
+        if (checkWinFor(newBoard, 'O')) return { score: 10 };
+        if (emptySpots.length === 0) return { score: 0 };
+
+        const moves = emptySpots.map(i => {
+            newBoard[i] = player;
+            const result = minimax(newBoard, player === 'O' ? 'X' : 'O');
+            newBoard[i] = null;
+            return { index: i, score: result.score };
+        });
+
+        if (player === 'O') {
+            return moves.reduce((best, m) => m.score > best.score ? m : best);
+        } else {
+            return moves.reduce((best, m) => m.score < best.score ? m : best);
+        }
+    }
+
+    // Verifica vitória em qualquer tabuleiro passado por parâmetro
+    function checkWinFor(b, p) {
+        const wins = [
+            [0,1,2],[3,4,5],[6,7,8],
+            [0,3,6],[1,4,7],[2,5,8],
+            [0,4,8],[2,4,6]
+        ];
+        return wins.some(w => b[w[0]] === p && b[w[1]] === p && b[w[2]] === p);
+    }
+
+    // Verifica vitória no tabuleiro atual e retorna a combinação vencedora
     function checkWin() {
-        const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-        return wins.some(w => board[w[0]] && board[w[0]] === board[w[1]] && board[w[0]] === board[w[2]]);
+        const wins = [
+            [0,1,2],[3,4,5],[6,7,8],
+            [0,3,6],[1,4,7],[2,5,8],
+            [0,4,8],[2,4,6]
+        ];
+        return wins.find(w =>
+            board[w[0]] &&
+            board[w[0]] === board[w[1]] &&
+            board[w[0]] === board[w[2]]
+        ) || null;
+    }
+
+    // Destaca as células vencedoras
+    function highlightWin(combo) {
+        const cells = document.querySelectorAll('.cell');
+        combo.forEach(i => cells[i].classList.add('win'));
     }
 </script>
 </body>
